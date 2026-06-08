@@ -19,13 +19,26 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.S
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+//  Role seeding block
+using (var scope = app.Services.CreateScope())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    Task.Run(async () =>
+    {
+        string[] roles = { "User", "Member" }; // 👈 matches your teacher’s scheme
+
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+    }).GetAwaiter().GetResult();
 }
+
+
 
 app.UseHttpsRedirection();
 app.UseRouting();
