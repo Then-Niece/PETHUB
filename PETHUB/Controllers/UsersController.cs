@@ -1,28 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Models;
+using PETHUB.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PETHUB.Controllers
 {
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UsersController(ApplicationDbContext context)
+        public UsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            //var users = _userManager.Users.ToList();
+            // Only get users in the Admin role
+            // NOTE: Normally this would be "Admin"
+            // but per adviser’s naming scheme, Admins are stored as "User"
+            var users = await _userManager.GetUsersInRoleAsync("User");
+
+
+            // Build dictionary of user roles (optional if you want to show role column)
+            var userRoles = new Dictionary<string, string>();
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userRoles[user.Id] = roles.FirstOrDefault() ?? "No Role";
+            }
+            ViewBag.UserRoles = userRoles;
+            return View(users); // return the actual list of ApplicationUser, not just the dictionary
         }
 
         // GET: Users/Details/5
@@ -33,15 +52,21 @@ namespace PETHUB.Controllers
                 return NotFound();
             }
 
-            var applicationUser = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var applicationUser = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
             {
                 return NotFound();
             }
 
+            var roles = await _userManager.GetRolesAsync(applicationUser);
+            ViewBag.UserRoles = new Dictionary<string, string>
+    {
+        { applicationUser.Id, roles.FirstOrDefault() ?? "No Role" }
+    };
+
             return View(applicationUser);
         }
+
 
         // GET: Users/Create
         public IActionResult Create()
@@ -54,16 +79,44 @@ namespace PETHUB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FirstName,LastName,ContactNumber,Status,Address,Gender,Birthdate,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
+        public async Task<IActionResult> Create(UserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(applicationUser);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var user = new ApplicationUser
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    ContactNumber = model.ContactNumber,
+                    Status = "Active"
+                };
+
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    // Always assign Admin role here
+                    // ⚠ NOTE:
+                    // Normally this should assign the "Admin" role.
+                    // But per our adviser's naming scheme, Admins are called "Users".
+                    // So we assign "User" here to match the project convention.
+                    await _userManager.AddToRoleAsync(user, "User");
+
+                    return RedirectToAction(nameof(Index));
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
             }
-            return View(applicationUser);
+            return View(model);
         }
+
+
+
 
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(string id)
@@ -86,35 +139,45 @@ namespace PETHUB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("FirstName,LastName,ContactNumber,Status,Address,Gender,Birthdate,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
+        public async Task<IActionResult> Edit(string id, ApplicationUser model)
         {
-            if (id != applicationUser.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
+                var user = await _userManager.FindByIdAsync(id);
+                if (user == null)
                 {
-                    _context.Update(applicationUser);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+
+                // Update only allowed fields for Admins
+                user.UserName = model.UserName;
+                user.Email = model.Email;
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.ContactNumber = model.ContactNumber;
+                user.Status = model.Status;
+
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
                 {
-                    if (!ApplicationUserExists(applicationUser.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
             }
-            return View(applicationUser);
+
+            return View(model);
         }
+
 
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(string id)

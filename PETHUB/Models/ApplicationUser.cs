@@ -8,7 +8,8 @@ namespace PETHUB.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ContactNumber { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } = "Active";
+
 
         // Member-only fields (nullable for Admins)
         public string? Address { get; set; }
