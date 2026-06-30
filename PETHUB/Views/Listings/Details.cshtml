@@ -1,0 +1,59 @@
+@model PETHUB.Models.Listing
+
+@{
+    ViewData["Title"] = "Listing Details";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- Left side: image gallery -->
+        <div class="col-md-6">
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                <div id="listingCarousel" class="carousel slide shadow-sm" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded">
+                        @for (int i = 0; i < Model.Images.Count; i++)
+                        {
+                            var img = Model.Images.ElementAt(i);
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="@img.ImagePath" class="d-block w-100" alt="Listing image" style="height:400px;object-fit:cover;">
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#listingCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#listingCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="bg-light text-center py-5 rounded shadow-sm">
+                    <p class="text-muted">No images uploaded for this listing.</p>
+                </div>
+            }
+        </div>
+
+        <!-- Right side: listing info -->
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="fw-bold">@Model.Title</h3>
+                    <p class="text-muted mb-1">Posted on @Model.DatePosted.ToString("MMMM dd, yyyy")</p>
+                    <p class="mb-3">@Model.Description</p>
+                    <p><strong>Price:</strong> ₱@Model.Price</p>
+                    <p><strong>Location:</strong> @(string.IsNullOrEmpty(Model.Location) ? "Not specified" : Model.Location)</p>
+                    <p><strong>User:</strong> @(Model.UserId ?? "—")</p>
+                </div>
+                <div class="card-footer d-flex justify-content-center gap-3">
+                    <a asp-action="Edit" asp-route-id="@Model.ListingId" class="btn btn-warning px-4">Edit</a>
+                    <a asp-action="Index" class="btn btn-secondary px-4">← Back to Listings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
