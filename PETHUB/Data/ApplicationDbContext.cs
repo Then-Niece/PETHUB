@@ -13,5 +13,8 @@ namespace PETHUB.Data
 
         public DbSet<Listing> Listings { get; set; }
         public DbSet<ListingImage> ListingImages { get; set; }
+
+        public DbSet<LostFound> LostFounds { get; set; }
+        public DbSet<LostFoundImage> LostFoundImages { get; set; }
     }
 }
