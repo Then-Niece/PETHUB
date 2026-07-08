@@ -1,65 +1,43 @@
 @model IEnumerable<PETHUB.Models.LostFound>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lost & Found Reports";
 }
 
-<h1>Index</h1>
+<h1>Lost & Found</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New Report</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateReported)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Images)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.DateReported)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Images)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.LostFoundId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.LostFoundId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.LostFoundId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                @if (item.Images != null && item.Images.Any())
+                {
+                    <img src="@item.Images.First().ImagePath" class="card-img-top" alt="LostFound image" style="height:200px;object-fit:cover;">
+                }
+                else
+                {
+                    <img src="/images/no-image.png" class="card-img-top" alt="No image" style="height:200px;object-fit:cover;">
+                }
+
+                <div class="card-body">
+                    <h5 class="card-title">@item.Title</h5>
+                    <p class="card-text text-muted">@item.Description</p>
+                    <p><strong>Type:</strong> @item.Type</p>
+                    <p><small>Reported @item.DateReported.ToString("MMM dd, yyyy")</small></p>
+                    <p><small class="text-muted">Location: @(string.IsNullOrEmpty(item.Location) ? "Not specified" : item.Location)</small></p>
+                </div>
+
+                <div class="card-footer text-center">
+                    <a asp-action="Details" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-primary">View</a>
+                    <a asp-action="Edit" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

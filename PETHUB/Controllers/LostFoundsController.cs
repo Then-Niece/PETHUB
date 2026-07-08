@@ -1,8 +1,7 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PETHUB.Models;
 using PETHUB.Data;
+using PETHUB.Models;
 
 public class LostFoundsController : Controller
 {
@@ -13,138 +12,202 @@ public class LostFoundsController : Controller
         _context = context;
     }
 
-    // GET: LOSTFOUNDS
-    public async Task<IActionResult> Index()    
+    // GET: LostFounds
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.LostFounds.ToListAsync());
+        var lostfounds = await _context.LostFounds
+            .Include(l => l.Images)
+            .ToListAsync();
+        return View(lostfounds);
     }
 
-    // GET: LOSTFOUNDS/Details/5
-    public async Task<IActionResult> Details(int? lostfoundid)
+    // GET: LostFounds/Details/5
+    public async Task<IActionResult> Details(int? id)
     {
-        if (lostfoundid == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
         var lostfound = await _context.LostFounds
-            .FirstOrDefaultAsync(m => m.LostFoundId == lostfoundid);
-        if (lostfound == null)
-        {
-            return NotFound();
-        }
+            .Include(l => l.Images)
+            .FirstOrDefaultAsync(m => m.LostFoundId == id);
+
+        if (lostfound == null) return NotFound();
 
         return View(lostfound);
     }
 
-    // GET: LOSTFOUNDS/Create
-    public IActionResult Create()
-    {
-        return View();
-    }
+    // GET: LostFounds/Create
+    public IActionResult Create() => View();
 
-    // POST: LOSTFOUNDS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    // POST: LostFounds/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("LostFoundId,Title,Description,Type,DateReported,Location,Images")] LostFound lostfound)
+    public async Task<IActionResult> Create(LostFound lostFound, List<IFormFile> Images)
     {
         if (ModelState.IsValid)
         {
-            _context.Add(lostfound);
+            lostFound.DateReported = DateTime.Now;
+            _context.Add(lostFound);
+            await _context.SaveChangesAsync();
+
+            if (Images != null && Images.Count > 0)
+            {
+                var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                if (!Directory.Exists(uploadDir))
+                    Directory.CreateDirectory(uploadDir);
+
+                foreach (var file in Images)
+                {
+                    var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(uploadDir, uniqueFileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                        await file.CopyToAsync(stream);
+
+                    var lostFoundImage = new LostFoundImage
+                    {
+                        LostFoundId = lostFound.LostFoundId,
+                        ImagePath = "/images/" + uniqueFileName
+                    };
+                    _context.Add(lostFoundImage);
+                }
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+        return View(lostFound);
+    }
+
+    // GET: LostFounds/Edit/5
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var lostfound = await _context.LostFounds
+            .Include(l => l.Images)
+            .FirstOrDefaultAsync(m => m.LostFoundId == id);
+
+        if (lostfound == null) return NotFound();
+
+        return View(lostfound);
+    }
+
+    // POST: LostFounds/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, LostFound lostFound, List<IFormFile> Images)
+    {
+        if (id != lostFound.LostFoundId) return NotFound();
+
+        if (ModelState.IsValid)
+        {
+            var existing = await _context.LostFounds
+                .Include(l => l.Images)
+                .FirstOrDefaultAsync(l => l.LostFoundId == id);
+
+            if (existing == null) return NotFound();
+
+            existing.Title = lostFound.Title;
+            existing.Description = lostFound.Description;
+            existing.Type = lostFound.Type;
+            existing.Location = lostFound.Location;
+            existing.DateReported = DateTime.Now;
+
+            if (Images != null && Images.Count > 0)
+            {
+                var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                if (!Directory.Exists(uploadDir))
+                    Directory.CreateDirectory(uploadDir);
+
+                foreach (var file in Images)
+                {
+                    var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(uploadDir, uniqueFileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                        await file.CopyToAsync(stream);
+
+                    var lostFoundImage = new LostFoundImage
+                    {
+                        LostFoundId = existing.LostFoundId,
+                        ImagePath = "/images/" + uniqueFileName
+                    };
+                    _context.Add(lostFoundImage);
+                }
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        return View(lostfound);
+        return View(lostFound);
     }
 
-    // GET: LOSTFOUNDS/Edit/5
-    public async Task<IActionResult> Edit(int? lostfoundid)
+    // GET: LostFounds/Delete/5
+    public async Task<IActionResult> Delete(int? id)
     {
-        if (lostfoundid == null)
-        {
-            return NotFound();
-        }
-
-        var lostfound = await _context.LostFounds.FindAsync(lostfoundid);
-        if (lostfound == null)
-        {
-            return NotFound();
-        }
-        return View(lostfound);
-    }
-
-    // POST: LOSTFOUNDS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? lostfoundid, [Bind("LostFoundId,Title,Description,Type,DateReported,Location,Images")] LostFound lostfound)
-    {
-        if (lostfoundid != lostfound.LostFoundId)
-        {
-            return NotFound();
-        }
-
-        if (ModelState.IsValid)
-        {
-            try
-            {
-                _context.Update(lostfound);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LostFoundExists(lostfound.LostFoundId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        return View(lostfound);
-    }
-
-    // GET: LOSTFOUNDS/Delete/5
-    public async Task<IActionResult> Delete(int? lostfoundid)
-    {
-        if (lostfoundid == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
         var lostfound = await _context.LostFounds
-            .FirstOrDefaultAsync(m => m.LostFoundId == lostfoundid);
-        if (lostfound == null)
-        {
-            return NotFound();
-        }
+            .Include(l => l.Images)
+            .FirstOrDefaultAsync(m => m.LostFoundId == id);
+
+        if (lostfound == null) return NotFound();
 
         return View(lostfound);
     }
 
-    // POST: LOSTFOUNDS/Delete/5
+    // POST: LostFounds/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? lostfoundid)
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var lostfound = await _context.LostFounds.FindAsync(lostfoundid);
-        if (lostfound != null)
+        var lostFound = await _context.LostFounds
+            .Include(l => l.Images)
+            .FirstOrDefaultAsync(l => l.LostFoundId == id);
+
+        if (lostFound != null)
         {
-            _context.LostFounds.Remove(lostfound);
+            if (lostFound.Images != null && lostFound.Images.Any())
+            {
+                foreach (var img in lostFound.Images)
+                {
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", img.ImagePath.TrimStart('/'));
+                    if (System.IO.File.Exists(filePath))
+                        System.IO.File.Delete(filePath);
+
+                    _context.LostFoundImages.Remove(img);
+                }
+            }
+
+            _context.LostFounds.Remove(lostFound);
+            await _context.SaveChangesAsync();
         }
 
-        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
-    private bool LostFoundExists(int? lostfoundid)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveImage(int id)
     {
-        return _context.LostFounds.Any(e => e.LostFoundId == lostfoundid);
+        var image = await _context.LostFoundImages.FindAsync(id);
+        if (image != null)
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.ImagePath.TrimStart('/'));
+            if (System.IO.File.Exists(filePath))
+                System.IO.File.Delete(filePath);
+
+            _context.LostFoundImages.Remove(image);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Edit", new { id = image.LostFoundId });
+        }
+
+        return NotFound();
+    }
+
+    private bool LostFoundExists(int id)
+    {
+        return _context.LostFounds.Any(e => e.LostFoundId == id);
     }
 }
