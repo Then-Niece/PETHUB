@@ -147,7 +147,7 @@ namespace PETHUB.Controllers
             }
 
             var listing = await _context.Listings
-                .Include(l => l.Images) // ✅ load related images
+                .Include(l => l.Images) // load related images
                 .Include(l => l.User)   // optional: keep user info if needed
                 .FirstOrDefaultAsync(l => l.ListingId == id);
 

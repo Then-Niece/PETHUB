@@ -33,3 +33,12 @@ body {
     background-color: #ff69b4 !important; /* hot pink */
     color: white !important;
 }
+
+
+/*this makes the client side anchor to remove the default blue line as hyperlink*/
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+

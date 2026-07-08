@@ -1,0 +1,44 @@
+﻿@model IEnumerable<PETHUB.Models.Listing>
+
+@{
+    ViewData["Title"] = "Marketplace Client";
+}
+
+<h1 style="text-align: center;">Marketplace</h1>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3 mb-4">
+            <a asp-action="Details" asp-route-id="@item.ListingId">
+                <div class="card h-100 shadow-sm">
+                    @if (item.Images != null && item.Images.Any())
+                    {
+                        <img src="@item.Images.First().ImagePath" class="card-img-top" alt="Listing image" style="height:200px;object-fit:cover;">
+                    }
+                    else
+                    {
+                        <img src="/images/no-image.png" class="card-img-top" alt="No image" style="height:200px;object-fit:cover;">
+                    }
+
+               
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Title</h5>
+                            <p class="card-text text-muted">@item.Description</p>
+                            <p class="card-text"><strong>₱@item.Price</strong></p>
+                            <p class="card-text"><small>Posted @item.DatePosted.ToString("MMM dd, yyyy")</small></p>
+                            <!-- Location with fallback -->
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Location: @(string.IsNullOrEmpty(item.Location) ? "Not specified" : item.Location)
+                                </small>
+                            </p>
+                        </div>
+               
+                
+                </div>
+            </a>
+        </div>
+
+    }
+</div>

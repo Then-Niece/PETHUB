@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Marketplace\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
