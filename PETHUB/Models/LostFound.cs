@@ -21,6 +21,24 @@ namespace PETHUB.Models
 
         public string Location { get; set; }
 
+        // New fields
+        public string? Breed { get; set; } // optional
+
+        [Required]
+        public string PetType { get; set; } // required dropdown: "Dog" or "Cat"
+
+        public string? Sex { get; set; } // optional dropdown: "Male" or "Female"
+
+        [DataType(DataType.Date)]
+        public DateTime? LostDate { get; set; } // optional
+
+        // For registered members
+        public string? MemberId { get; set; } // FK to ApplicationUser
+
+        // For unregistered clients
+        public string? ClientName { get; set; }
+        public string? ClientContact { get; set; }
+
         public ICollection<LostFoundImage>? Images { get; set; }
     }
 }
