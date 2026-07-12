@@ -15,7 +15,62 @@ namespace PETHUB.Controllers
             _context = context;
         }
 
+        // GET: LostFounds/Create
+        public IActionResult Create() => View();
 
+        // POST: LostFounds/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(LostFound lostFound, List<IFormFile> Images)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                // Placeholder for future member linking
+                // lostFound.MemberId = _userManager.GetUserId(User);
+            }
+            else
+            {
+                // Require client info
+                if (string.IsNullOrEmpty(lostFound.ClientName) || string.IsNullOrEmpty(lostFound.ClientContact))
+                {
+                    ModelState.AddModelError("", "Name and contact are required for unregistered clients.");
+                }
+            }
+
+            if (ModelState.IsValid)
+            {
+                lostFound.DateReported = DateTime.Now;
+                _context.Add(lostFound);
+                await _context.SaveChangesAsync();
+
+                if (Images != null && Images.Count > 0)
+                {
+                    var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                    if (!Directory.Exists(uploadDir))
+                        Directory.CreateDirectory(uploadDir);
+
+                    foreach (var file in Images)
+                    {
+                        var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                        var filePath = Path.Combine(uploadDir, uniqueFileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                            await file.CopyToAsync(stream);
+
+                        var lostFoundImage = new LostFoundImage
+                        {
+                            LostFoundId = lostFound.LostFoundId,
+                            ImagePath = "/images/" + uniqueFileName
+                        };
+                        _context.Add(lostFoundImage);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            return View(lostFound);
+        }
         // GET: LOSTFOUNDS
         public async Task<IActionResult> Index()
         {

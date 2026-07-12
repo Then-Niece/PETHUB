@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
@@ -6,10 +7,12 @@ using PETHUB.Models;
 public class LostFoundsController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public LostFoundsController(ApplicationDbContext context)
+    public LostFoundsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     // GET: LostFounds
@@ -35,48 +38,7 @@ public class LostFoundsController : Controller
         return View(lostfound);
     }
 
-    // GET: LostFounds/Create
-    public IActionResult Create() => View();
-
-    // POST: LostFounds/Create
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(LostFound lostFound, List<IFormFile> Images)
-    {
-        if (ModelState.IsValid)
-        {
-            lostFound.DateReported = DateTime.Now;
-            _context.Add(lostFound);
-            await _context.SaveChangesAsync();
-
-            if (Images != null && Images.Count > 0)
-            {
-                var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-                if (!Directory.Exists(uploadDir))
-                    Directory.CreateDirectory(uploadDir);
-
-                foreach (var file in Images)
-                {
-                    var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                    var filePath = Path.Combine(uploadDir, uniqueFileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                        await file.CopyToAsync(stream);
-
-                    var lostFoundImage = new LostFoundImage
-                    {
-                        LostFoundId = lostFound.LostFoundId,
-                        ImagePath = "/images/" + uniqueFileName
-                    };
-                    _context.Add(lostFoundImage);
-                }
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-        return View(lostFound);
-    }
+  
 
     // GET: LostFounds/Edit/5
     public async Task<IActionResult> Edit(int? id)
@@ -110,6 +72,12 @@ public class LostFoundsController : Controller
             existing.Title = lostFound.Title;
             existing.Description = lostFound.Description;
             existing.Type = lostFound.Type;
+            existing.Breed = lostFound.Breed;
+            existing.PetType = lostFound.PetType;
+            existing.Sex = lostFound.Sex;
+            existing.LostDate = lostFound.LostDate;
+            existing.ClientName = lostFound.ClientName;
+            existing.ClientContact = lostFound.ClientContact;
             existing.Location = lostFound.Location;
             existing.DateReported = DateTime.Now;
 

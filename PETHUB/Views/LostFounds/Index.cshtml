@@ -4,35 +4,42 @@
     ViewData["Title"] = "Lost & Found Reports";
 }
 
-<h1>Lost & Found</h1>
+<h1>Lost & Found User (Admin)</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Report</a>
-</p>
-
-<div class="row">
+<div class="container">
     @foreach (var item in Model)
     {
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                @if (item.Images != null && item.Images.Any())
-                {
-                    <img src="@item.Images.First().ImagePath" class="card-img-top" alt="LostFound image" style="height:200px;object-fit:cover;">
-                }
-                else
-                {
-                    <img src="/images/no-image.png" class="card-img-top" alt="No image" style="height:200px;object-fit:cover;">
-                }
-
-                <div class="card-body">
-                    <h5 class="card-title">@item.Title</h5>
-                    <p class="card-text text-muted">@item.Description</p>
-                    <p><strong>Type:</strong> @item.Type</p>
-                    <p><small>Reported @item.DateReported.ToString("MMM dd, yyyy")</small></p>
-                    <p><small class="text-muted">Location: @(string.IsNullOrEmpty(item.Location) ? "Not specified" : item.Location)</small></p>
+        <div class="card mb-2 shadow-sm" style="border-left:5px solid @(item.Type == "Lost" ? "#dc3545" : "#198754");">
+            <div class="row g-0 align-items-center">
+                <!-- Thumbnail -->
+                <div class="col-auto">
+                    @if (item.Images != null && item.Images.Any())
+                    {
+                        <img src="@item.Images.First().ImagePath" alt="Pet image"
+                             class="img-thumbnail" style="width:100px;height:100px;object-fit:cover;">
+                    }
+                    else
+                    {
+                        <img src="/images/no-image.png" alt="No image"
+                             class="img-thumbnail" style="width:100px;height:100px;object-fit:cover;">
+                    }
                 </div>
 
-                <div class="card-footer text-center">
+                <!-- Details -->
+                <div class="col">
+                    <div class="card-body py-2">
+                        <h6 class="card-title mb-1">@item.Title</h6>
+                        <p class="mb-1 text-muted small">@item.Description</p>
+                        <p class="mb-0">
+                            <span class="badge bg-@(item.Type == "Lost" ? "danger" : "success")">@item.Type</span>
+                            <small class="text-muted"> | @item.DateReported.ToString("MMM dd, yyyy")</small>
+                            <small class="text-muted"> | @(string.IsNullOrEmpty(item.Location) ? "No location" : item.Location)</small>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="col-auto pe-3">
                     <a asp-action="Details" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-primary">View</a>
                     <a asp-action="Edit" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-warning">Edit</a>
                     <a asp-action="Delete" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-danger">Delete</a>
