@@ -43,12 +43,57 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+<div class="d-flex">
+
+    <!-- Sidebar -->
+    <nav class="sidebar bg-dark">
+        <ul class="nav flex-column">
+
+            @* Future Dashboard redirect *@
+@*             <li class="nav-item">
+                <a class="nav-link text-white" asp-area="" asp-controller="DashboardController" asp-action="Dashboard">
+                    Dashboard
+                </a>
+            </li>
+ *@ 
+            @* Lost and Found redirect *@
+           <li class="nav-item">
+                <a class="nav-link text-white" asp-area="" asp-controller="LostFounds" asp-action="Index">
+                    Lost & Found
+                </a>
+            </li>
+
+            @* Marketplace redirect *@
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-area="" asp-controller="Marketplace" asp-action="Index">
+                    Marketplace
+                </a>
+            </li>
+
+            @* Add User redirect *@
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-area="" asp-controller="Users" asp-action="Create">
+                    Add User
+                </a>
+            </li>
+
+            @* Add Member redirect *@
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-area="" asp-controller="Members" asp-action="Create">
+                    Add Member
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+
+    <!-- Main content -->
+    <div class="container flex-grow-1">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
+</div>
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2026 - PETHUB - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
