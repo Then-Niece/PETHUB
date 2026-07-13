@@ -1,0 +1,64 @@
+@model PETHUB.Models.LostFound
+
+@{
+    ViewData["Title"] = "Lost & Found Details";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- Left side: image gallery -->
+        <div class="col-md-6">
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                <div id="lostFoundCarousel" class="carousel slide shadow-sm" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded">
+                        @for (int i = 0; i < Model.Images.Count; i++)
+                        {
+                            var img = Model.Images.ElementAt(i);
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="@img.ImagePath" class="d-block w-100" alt="LostFound image" style="height:400px;object-fit:cover;">
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#lostFoundCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#lostFoundCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="bg-light text-center py-5 rounded shadow-sm">
+                    <p class="text-muted">No images uploaded for this report.</p>
+                </div>
+            }
+        </div>
+
+        <!-- Right side: report info -->
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="fw-bold">@Model.Title</h3>
+                    <p class="text-muted mb-1">Reported on @Model.DateReported.ToString("MMMM dd, yyyy")</p>
+                    <p class="mb-3">@Model.Description</p>
+                    <p><strong>Type:</strong> @Model.Type</p>
+                    <p><strong>Pet Type:</strong> @Model.PetType</p>
+                    <p><strong>Breed:</strong> @(string.IsNullOrEmpty(Model.Breed) ? "Not specified" : Model.Breed)</p>
+                    <p><strong>Sex:</strong> @(Model.Sex.HasValue ? Model.Sex.ToString() : "Not specified")</p>
+                    <p><strong>Lost Date:</strong> @(Model.LostDate.HasValue ? Model.LostDate.Value.ToString("MMM dd, yyyy") : "Not specified")</p>
+                    <p><strong>Location:</strong> @(string.IsNullOrEmpty(Model.Location) ? "Not specified" : Model.Location)</p>
+                    <p><strong>Reporter's Name:</strong> @Model.ClientName</p>
+                    <p><strong>Reporter's Contact:</strong> @Model.ClientContact</p>
+                </div>
+                <div class="card-footer d-flex justify-content-center gap-3">
+                    <a asp-action="Edit" asp-route-id="@Model.LostFoundId" class="btn btn-warning px-4">Edit</a>
+                    <a asp-action="Index" class="btn btn-secondary px-4">← Back to Reports</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

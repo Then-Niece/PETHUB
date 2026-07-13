@@ -1,0 +1,103 @@
+@model PETHUB.Models.LostFound
+
+@{
+    ViewData["Title"] = "Edit Lost & Found Report";
+}
+
+<h1 class="mb-4">Edit Report</h1>
+
+<div class="row justify-content-center">
+    <!-- Left side: image gallery -->
+    <div class="col-md-6">
+        @if (Model.Images != null && Model.Images.Any())
+        {
+            <div id="lostFoundCarousel" class="carousel slide shadow-sm" data-bs-ride="carousel">
+                <div class="carousel-inner rounded">
+                    @for (int i = 0; i < Model.Images.Count; i++)
+                    {
+                        var img = Model.Images.ElementAt(i);
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@img.ImagePath" class="d-block w-100" alt="LostFound image" style="height:400px;object-fit:cover;">
+                            <div class="carousel-caption d-flex justify-content-center">
+                                <form asp-action="RemoveImage" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@img.LostFoundImageId" />
+                                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#lostFoundCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#lostFoundCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="bg-light text-center py-5 rounded shadow-sm">
+                <p class="text-muted">No images uploaded for this report.</p>
+            </div>
+        }
+    </div>
+
+    <!-- Right side: form -->
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <form asp-action="Edit" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="LostFoundId" />
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Title" class="control-label"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Type" class="control-label"></label>
+                        <select asp-for="Type" class="form-control">
+                            <option value="Lost">Lost</option>
+                            <option value="Found">Found</option>
+                        </select>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Location" class="control-label"></label>
+                        <input asp-for="Location" class="form-control" />
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
+
+                    <!-- Upload new images -->
+                    <div class="form-group mb-3">
+                        <label>Upload New Images</label>
+                        <input type="file" name="Images" multiple class="form-control" />
+                        <small class="form-text text-muted">You can select multiple files.</small>
+                    </div>
+
+                    <div class="form-group d-flex justify-content-center gap-3">
+                        <input type="submit" value="Save" class="btn btn-primary px-4" />
+                        <a asp-action="Index" class="btn btn-secondary px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

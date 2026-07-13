@@ -1,0 +1,71 @@
+@model IEnumerable<PETHUB.Models.LostFound>
+
+@{
+    ViewData["Title"] = "Lost & Found Reports";
+}
+
+<h1>Lost & Found User (Admin)</h1>
+
+<div class="container">
+    @foreach (var item in Model)
+    {
+        <div class="card mb-2 shadow-sm" style="border-left:5px solid @(item.Type == LostFoundType.Lost ? "#dc3545" : "#198754");">
+            <div class="row g-0 align-items-center">
+                <!-- Thumbnail -->
+                <div class="col-auto">
+                    @if (item.Images != null && item.Images.Any())
+                    {
+                        <img src="@item.Images.First().ImagePath" alt="Pet image"
+                             class="img-thumbnail" style="width:100px;height:100px;object-fit:cover;">
+                    }
+                    else
+                    {
+                        <img src="/images/no-image.png" alt="No image"
+                             class="img-thumbnail" style="width:100px;height:100px;object-fit:cover;">
+                    }
+                </div>
+
+                <!-- Details -->
+                <div class="col">
+                    <div class="card-body py-2">
+                        <h6 class="card-title mb-1">@item.Title</h6>
+                        <p class="mb-1 text-muted small">@item.Description</p>
+                        <p class="mb-0">
+                            <span class="badge bg-@(item.Type == LostFoundType.Lost ? "danger" : "success")">@item.Type</span>
+                            <small class="text-muted"> | @item.DateReported.ToString("MMM dd, yyyy")</small>
+                            <small class="text-muted"> | @(string.IsNullOrEmpty(item.Location) ? "No location" : item.Location)</small>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="col-auto pe-3">
+                    <a asp-action="Details" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-primary">View</a>
+                    <a asp-action="Edit" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-danger">Delete</a>
+                </div>
+
+
+                <div class="card-footer text-end">
+                    @if (item.Status == ApprovalStatus.Pending)
+                    {
+                        <form asp-action="Approve" asp-route-id="@item.LostFoundId" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                        </form>
+                        <form asp-action="Reject" asp-route-id="@item.LostFoundId" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                        </form>
+                    }
+                    else if (item.Status == ApprovalStatus.Approved)
+                    {
+                        <span class="badge bg-success">Approved</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Rejected</span>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

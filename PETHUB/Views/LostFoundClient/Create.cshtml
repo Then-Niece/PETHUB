@@ -1,0 +1,108 @@
+@model PETHUB.Models.LostFound
+
+@{
+    ViewData["Title"] = "Create Lost & Found Report";
+}
+
+<h1>Create Lost & Found Report</h1>
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Type" class="control-label"></label>
+        <select asp-for="Type" class="form-control" id="typeSelect" asp-items="Html.GetEnumSelectList<PETHUB.Models.LostFoundType>()"></select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PetType" class="control-label"></label>
+        <select asp-for="PetType" class="form-control" asp-items="Html.GetEnumSelectList<PETHUB.Models.PetType>()"></select>
+        <span asp-validation-for="PetType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Sex" class="control-label"></label>
+        <select asp-for="Sex" class="form-control" asp-items="Html.GetEnumSelectList<PETHUB.Models.PetSex>()"></select>
+        <span asp-validation-for="Sex" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Breed" class="control-label"></label>
+        <input asp-for="Breed" class="form-control" />
+        <span asp-validation-for="Breed" class="text-danger"></span>
+    </div>
+
+    <div class="form-group" id="lostDateGroup" style="display:none">
+        <label asp-for="LostDate" class="control-label"></label>
+        <input asp-for="LostDate" type="date" class="form-control" />
+    </div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <!-- Hide client fields for members -->
+    }
+    else
+    {
+        <div class="form-group">
+            <label asp-for="ClientName"></label>
+            <input asp-for="ClientName" class="form-control" />
+            <span asp-validation-for="ClientName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ClientContact"></label>
+            <input asp-for="ClientContact" class="form-control" />
+            <span asp-validation-for="ClientContact" class="text-danger"></span>
+        </div>
+    }
+
+
+    <!-- File upload for images -->
+    <div class="form-group">
+        <label>Upload Images</label>
+        <input type="file" name="Images" multiple class="form-control" />
+        <small class="form-text text-muted">You can select multiple files.</small>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Location" class="control-label"></label>
+        <input asp-for="Location" class="form-control" placeholder="Enter city or area" />
+        <span asp-validation-for="Location" class="text-danger"></span>
+    </div>
+
+    <div class="form-group d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Submit Report</button>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+<script>
+        function toggleLostDate() {
+        const typeSelect = document.getElementById("typeSelect");
+        const lostDateGroup = document.getElementById("lostDateGroup");
+        // Assuming Lost = 0, Found = 1
+        lostDateGroup.style.display = typeSelect.value === "0" ? "block" : "none";
+        }
+        document.getElementById("typeSelect").addEventListener("change", toggleLostDate);
+        window.onload = toggleLostDate;
+
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

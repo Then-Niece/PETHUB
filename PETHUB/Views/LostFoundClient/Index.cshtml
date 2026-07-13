@@ -1,0 +1,59 @@
+@model IEnumerable<PETHUB.Models.LostFound>
+
+@{
+    ViewData["Title"] = "Lost & Found Reports";
+}
+
+<h1>Lost & Found Client</h1>
+
+<!-- Trigger button -->
+<button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#reportModal">
+    Add Report
+</button>
+
+<div class="row mt-4">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3 mb-4">
+            <a asp-action="Details" asp-route-id="@item.LostFoundId">
+                <div class="card h-100 shadow-sm">
+                    @if (item.Images != null && item.Images.Any())
+                    {
+                        <img src="@item.Images.First().ImagePath" class="card-img-top" alt="LostFound image" style="height:200px;object-fit:cover;">
+                    }
+                    else
+                    {
+                        <img src="/images/no-image.png" class="card-img-top" alt="No image" style="height:200px;object-fit:cover;">
+                    }
+
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+                        <p class="card-text text-muted">@item.Description</p>
+                        <p><strong>Type:</strong> @item.Type</p>
+                        <p><small>Reported @item.DateReported.ToString("MMM dd, yyyy")</small></p>
+                        <p><small class="text-muted">Location: @(string.IsNullOrEmpty(item.Location) ? "Not specified" : item.Location)</small></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+</div>
+
+<!-- Modal markup at the bottom -->
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+            <h4 class="mb-4">Choose how to report</h4>
+            <div class="d-grid gap-3">
+                <!-- Unregistered client -->
+                <a asp-controller="LostFoundClient" asp-action="Create" class="btn btn-lg btn-outline-primary">
+                    Report as Unregistered Client
+                </a>
+                <!-- Become a member -->
+                <a asp-controller="Account" asp-action="Register" class="btn btn-lg btn-success">
+                    Become a Member
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

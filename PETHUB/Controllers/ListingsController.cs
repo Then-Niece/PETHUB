@@ -252,7 +252,7 @@ namespace PETHUB.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var listing = await _context.Listings
-                .Include(l => l.Images) // ✅ include related images
+                .Include(l => l.Images) // include related images
                 .FirstOrDefaultAsync(l => l.ListingId == id);
 
             if (listing != null)
