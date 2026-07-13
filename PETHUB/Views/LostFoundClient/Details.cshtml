@@ -48,7 +48,7 @@
                     <p><strong>Type:</strong> @Model.Type</p>
                     <p><strong>Pet Type:</strong> @Model.PetType</p>
                     <p><strong>Breed:</strong> @(string.IsNullOrEmpty(Model.Breed) ? "Not specified" : Model.Breed)</p>
-                    <p><strong>Sex:</strong> @(string.IsNullOrEmpty(Model.Sex) ? "Not specified" : Model.Sex)</p>
+                    <p><strong>Sex:</strong> @(Model.Sex.HasValue ? Model.Sex.ToString() : "Not specified")</p>
                     <p><strong>Lost Date:</strong> @(Model.LostDate.HasValue ? Model.LostDate.Value.ToString("MMM dd, yyyy") : "Not specified")</p>
                     <p><strong>Location:</strong> @(string.IsNullOrEmpty(Model.Location) ? "Not specified" : Model.Location)</p>
                     <p><strong>Reporter's Name:</strong> @Model.ClientName</p>

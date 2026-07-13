@@ -38,7 +38,29 @@ public class LostFoundsController : Controller
         return View(lostfound);
     }
 
-  
+    // GET: LostFounds/Approve
+    [HttpPost]
+    public async Task<IActionResult> Approve(int id)
+    {
+        var report = await _context.LostFounds.FindAsync(id);
+        if (report == null) return NotFound();
+
+        report.Status = ApprovalStatus.Approved;
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    // GET: LostFounds/Reject
+    [HttpPost]
+    public async Task<IActionResult> Reject(int id)
+    {
+        var report = await _context.LostFounds.FindAsync(id);
+        if (report == null) return NotFound();
+
+        report.Status = ApprovalStatus.Rejected;
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
 
     // GET: LostFounds/Edit/5
     public async Task<IActionResult> Edit(int? id)

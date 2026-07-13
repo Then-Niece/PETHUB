@@ -40,6 +40,7 @@ namespace PETHUB.Controllers
             if (ModelState.IsValid)
             {
                 lostFound.DateReported = DateTime.Now;
+                lostFound.Status = ApprovalStatus.Pending;
                 _context.Add(lostFound);
                 await _context.SaveChangesAsync();
 
@@ -67,14 +68,23 @@ namespace PETHUB.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                return RedirectToAction(nameof(Index));
+                // Show confirmation modal
+                return RedirectToAction(nameof(SubmissionPending));
             }
             return View(lostFound);
         }
+
+        // GET: LostFounds/SubmissionPending
+        public IActionResult SubmissionPending()
+        {
+            return View();
+        }
+
         // GET: LOSTFOUNDS
         public async Task<IActionResult> Index()
         {
             var lostfounds = await _context.LostFounds
+                .Where(l => l.Status == ApprovalStatus.Approved)
                 .Include(l => l.Images)
                 .ToListAsync();
 
