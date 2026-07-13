@@ -41,4 +41,8 @@ a {
     color: inherit;
 }
 
-
+/*This is the CSS for the image preview container*/
+#imagePreviewContainer img {
+    border-radius: 6px;
+    object-fit: cover;
+}

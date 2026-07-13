@@ -82,9 +82,12 @@
                     <!-- Upload new images -->
                     <div class="form-group mb-3">
                         <label>Upload New Images</label>
-                        <input type="file" name="Images" multiple class="form-control" />
+                        <input type="file" id="imageInput" name="Images" multiple class="form-control" />
                         <small class="form-text text-muted">You can select multiple files.</small>
                     </div>
+
+                    <!-- Preview container -->
+                    <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2 mt-3"></div>
 
                     <div class="form-group d-flex justify-content-center gap-3">
                         <input type="submit" value="Save" class="btn btn-primary px-4" />
@@ -97,7 +100,13 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+        <script src="~/js/imagePreviewHelper.js"></script>
+        <script>
+            setupImagePreview("imageInput", "imagePreviewContainer");
+        </script>
+
+
     }
 }

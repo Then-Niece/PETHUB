@@ -1,8 +1,9 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PETHUB.Models;
 using PETHUB.Data;
+using PETHUB.Helpers;
+using PETHUB.Models;
 
 namespace PETHUB.Controllers
 {
@@ -46,27 +47,17 @@ namespace PETHUB.Controllers
 
                 if (Images != null && Images.Count > 0)
                 {
-                    var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-                    if (!Directory.Exists(uploadDir))
-                        Directory.CreateDirectory(uploadDir);
+                    var savedImages = await ImageUploadHelper.SaveImagesAsync(
+                        Images,
+                        lostFound.LostFoundId,
+                        (id, path) => new LostFoundImage { LostFoundId = id, ImagePath = path },
+                        "lostfound"
+                    );
 
-                    foreach (var file in Images)
-                    {
-                        var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                        var filePath = Path.Combine(uploadDir, uniqueFileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                            await file.CopyToAsync(stream);
-
-                        var lostFoundImage = new LostFoundImage
-                        {
-                            LostFoundId = lostFound.LostFoundId,
-                            ImagePath = "/images/" + uniqueFileName
-                        };
-                        _context.Add(lostFoundImage);
-                    }
+                    _context.AddRange(savedImages);
                     await _context.SaveChangesAsync();
                 }
+
 
                 // Show confirmation modal
                 return RedirectToAction(nameof(SubmissionPending));
