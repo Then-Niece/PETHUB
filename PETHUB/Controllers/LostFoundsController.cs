@@ -104,6 +104,7 @@ public class LostFoundsController : Controller
             existing.Location = lostFound.Location;
             existing.DateReported = DateTime.Now;
 
+            // na-apply diri ang imageuploadhelper
             if (Images != null && Images.Count > 0)
             {
                 var savedImages = await ImageUploadHelper.SaveImagesAsync(

@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
+using PETHUB.Helpers;
 using PETHUB.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PETHUB.Controllers
 {
@@ -104,28 +105,41 @@ namespace PETHUB.Controllers
                 await _context.SaveChangesAsync();
 
                 // Save images
+                //if (ImageFiles != null && ImageFiles.Count > 0)
+                //{
+                //    foreach (var file in ImageFiles)
+                //    {
+                //        var fileName = Path.GetFileName(file.FileName);
+                //        var filePath = Path.Combine("wwwroot/images", fileName);
+
+                //        using (var stream = new FileStream(filePath, FileMode.Create))
+                //        {
+                //            await file.CopyToAsync(stream);
+                //        }
+
+                //        var listingImage = new ListingImage
+                //        {
+                //            ListingId = listing.ListingId,
+                //            ImagePath = "/images/" + fileName
+                //        };
+
+                //        _context.Add(listingImage);
+                //    }
+                //    await _context.SaveChangesAsync();
+                //}
                 if (ImageFiles != null && ImageFiles.Count > 0)
                 {
-                    foreach (var file in ImageFiles)
-                    {
-                        var fileName = Path.GetFileName(file.FileName);
-                        var filePath = Path.Combine("wwwroot/images", fileName);
+                    var savedImages = await ImageUploadHelper.SaveImagesAsync(
+                        ImageFiles,
+                        listing.ListingId,
+                        (id, path) => new ListingImage { ListingId = id, ImagePath = path },
+                        "images"
+                    );
 
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(stream);
-                        }
-
-                        var listingImage = new ListingImage
-                        {
-                            ListingId = listing.ListingId,
-                            ImagePath = "/images/" + fileName
-                        };
-
-                        _context.Add(listingImage);
-                    }
+                    _context.AddRange(savedImages);
                     await _context.SaveChangesAsync();
                 }
+
 
                 return RedirectToAction(nameof(Index));
             }
