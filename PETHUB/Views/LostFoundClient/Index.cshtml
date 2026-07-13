@@ -19,12 +19,17 @@
                 <div class="card h-100 shadow-sm">
                     @if (item.Images != null && item.Images.Any())
                     {
-                        <img src="@item.Images.First().ImagePath" class="card-img-top" alt="LostFound image" style="height:200px;object-fit:cover;">
+                        <img src="@Url.Content(item.Images.First().ImagePath)"
+                             class="card-img-top" alt="LostFound image"
+                             style="height:200px;object-fit:cover;">
                     }
                     else
                     {
-                        <img src="/images/no-image.png" class="card-img-top" alt="No image" style="height:200px;object-fit:cover;">
+                        <img src="@Url.Content("~/images/no-image.png")"
+                             class="card-img-top" alt="No image"
+                             style="height:200px;object-fit:cover;">
                     }
+
 
                     <div class="card-body">
                         <h5 class="card-title">@item.Title</h5>

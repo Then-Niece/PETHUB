@@ -202,32 +202,15 @@ namespace PETHUB.Controllers
                 // Handle new images
                 if (ImageFiles != null && ImageFiles.Count > 0)
                 {
-                    foreach (var file in ImageFiles)
-                    {
-                        var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
-                        if (!Directory.Exists(uploadDir))
-                            Directory.CreateDirectory(uploadDir);
+                    var savedImages = await ImageUploadHelper.SaveImagesAsync(
+                        ImageFiles,
+                        existingListing.ListingId,
+                        (id, path) => new ListingImage { ListingId = id, ImagePath = path },
+                        "marketplace"
+                    );
 
-                        // Generate unique filename using GUID
-                        var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        var filePath = Path.Combine(uploadDir, uniqueFileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(stream);
-                        }
-
-                        var listingImage = new ListingImage
-                        {
-                            ListingId = existingListing.ListingId,
-                            ImagePath = "/images/" + uniqueFileName
-                        };
-
-                        _context.Add(listingImage);
-                    }
+                    _context.AddRange(savedImages);
                 }
-
-
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
