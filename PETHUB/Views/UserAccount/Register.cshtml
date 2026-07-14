@@ -1,0 +1,96 @@
+﻿@model PETHUB.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container mt-4">
+    <h2>Register</h2>
+    <hr />
+
+    <form asp-action="Register" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!-- Common fields -->
+
+
+        <div class="mb-3">
+            <label asp-for="FirstName" class="form-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ContactNumber" class="form-label"></label>
+            <input asp-for="ContactNumber" class="form-control" />
+            <span asp-validation-for="ContactNumber" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Address" class="form-label"></label>
+            <input asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <!-- Gender radio buttons -->
+        <div class="mb-3">
+            <label class="form-label">Gender</label><br />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" asp-for="Gender" value="Male" id="genderMale" />
+                <label class="form-check-label" for="genderMale">Male</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" asp-for="Gender" value="Female" id="genderFemale" />
+                <label class="form-check-label" for="genderFemale">Female</label>
+            </div>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Birthdate" class="form-label"></label>
+            <input asp-for="Birthdate" type="date" class="form-control" />
+            <span asp-validation-for="Birthdate" class="text-danger"></span>
+        </div>
+
+
+
+        <div class="mb-3">
+            <label asp-for="UserName" class="form-label"></label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ConfirmPassword" class="form-label"></label>
+            <input asp-for="ConfirmPassword" type="password" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Register</button>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
