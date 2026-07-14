@@ -1,0 +1,114 @@
+﻿@model PETHUB.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h1>Admin Dashboard</h1>
+<hr />
+
+<div>
+    <div>
+        <h2>Overview</h2>
+        <div>
+            <div>
+                <h3>Total Members</h3>
+                <h1>@Model.TotalMembers</h1>
+            </div>
+
+            <div>
+                <h3>Total Users</h3>
+                <h1>@Model.TotalUsers</h1>
+            </div>
+
+            <div>
+                <h3>Total Participants</h3>
+                <h1>@Model.TotalParticipants</h1>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div>
+        <h2>Posts Analytics <small style="color: gray; font-size: 0.6em;">(Not Yet Implemented)</small></h2>
+        <div>
+            <label>Timeframe:</label>
+            <select disabled>
+                <option>Last 7 Days</option>
+                <option>Last 30 Days</option>
+                <option>Last 3 Months</option>
+                <option>Last Year</option>
+            </select>
+        </div>
+        <div>
+            <h3>Graph Placeholder</h3>
+            <div style="height:300px; background-color: #f8f9fa; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #6c757d;">
+                [Posts Per Timeframe Chart]
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div>
+        <h2>Pending Approvals</h2>
+        <div>
+            <div>
+                <h3>Marketplace</h3>
+                <h1>@Model.PendingMarketplaceListings</h1>
+                <a asp-controller="Listings" asp-action="Index" class="btn btn-primary">Go</a>
+            </div>
+
+            <div>
+                <h3>Lost &amp; Found</h3>
+                <h1>@Model.PendingLostAndFoundPosts</h1>
+                <a asp-controller="LostFounds" asp-action="Index" class="btn btn-primary">Go</a>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div>
+        <h2>Lost &amp; Found Statistics <small style="color: gray; font-size: 0.6em;">(Not Yet Implemented)</small></h2>
+        <div>
+            <label>Timeframe:</label>
+            <select disabled>
+                <option>Today</option>
+                <option>Last 7 Days</option>
+                <option>Last 30 Days</option>
+                <option>Last Year</option>
+            </select>
+        </div>
+        <div>
+            <div>
+                <h3>Current Lost Pets</h3>
+                <h1>-</h1>
+            </div>
+            <div>
+                <h3>Current Found Pets</h3>
+                <h1>-</h1>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div>
+        <h2>Pending Reports</h2>
+        <div>
+            <div>
+                <h3>Marketplace Reports</h3>
+                <h1>@Model.PendingMarketplaceReports</h1>
+                <button type="button" class="btn btn-warning">Review Reports</button>
+            </div>
+
+            <div>
+                <h3>Lost &amp; Found Reports</h3>
+                <h1>@Model.PendingLostAndFoundReports</h1>
+                <button type="button" class="btn btn-warning">Review Reports</button>
+            </div>
+        </div>
+    </div>
+</div>
