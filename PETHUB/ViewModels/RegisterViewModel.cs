@@ -32,5 +32,12 @@ namespace PETHUB.ViewModels
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "You must accept the Terms and Conditions.")]
+        [Display(Name = "I agree to the Terms and Conditions")]
+        public bool AcceptTerms { get; set; }
+
+
+
     }
 }

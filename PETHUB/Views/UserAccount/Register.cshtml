@@ -84,10 +84,33 @@
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
 
+        <div class="mb-3 form-check">
+            <input asp-for="AcceptTerms" class="form-check-input" />
+
+            <label asp-for="AcceptTerms" class="form-check-label">
+                I have read, understood, and agree to the
+                <a href="#"
+                   class="text-primary text-decoration-underline"
+                   data-bs-toggle="modal"
+                   data-bs-target="#termsModal">
+                    PetHub Terms and Conditions
+                </a>
+            </label>
+
+            <span asp-validation-for="AcceptTerms" class="text-danger"></span>
+        </div>
+
+
+
         <button type="submit" class="btn btn-success">Register</button>
         <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+
+
     </form>
 </div>
+
+
+<partial name="_TermsAndConditionsModal" />
 
 @section Scripts {
     @{

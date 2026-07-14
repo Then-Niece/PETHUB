@@ -30,6 +30,14 @@ namespace PETHUB.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
+
+            // Ensure Terms are accepted
+            if (!model.AcceptTerms)
+            {
+                ModelState.AddModelError("AcceptTerms", "You must accept the Terms and Conditions.");
+                return View(model);
+            }
+
             var user = new ApplicationUser
             {
                 UserName = model.UserName,
@@ -40,7 +48,8 @@ namespace PETHUB.Controllers
                 Address = model.Address,
                 Gender = model.Gender,
                 Birthdate = model.Birthdate,
-                Status = "Active" // always default
+                Status = "Active", // always default
+                AcceptedTermsDate = DateTime.UtcNow // 
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -55,6 +64,13 @@ namespace PETHUB.Controllers
                 ModelState.AddModelError(string.Empty, error.Description);
             return View(model);
         }
+
+        //terms and conditions get method
+        public IActionResult Terms()
+        {
+            return View();
+        }
+
 
     }
 }
