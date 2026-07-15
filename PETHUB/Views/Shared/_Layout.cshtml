@@ -38,9 +38,25 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="LostFoundClient" asp-action="Index">Lost & Found Client</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="UserAccount" asp-action="Register">Register</a>
-                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <form asp-controller="UserAccount" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="nav-link btn btn-link">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="UserAccount" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="UserAccount" asp-action="Register">Register</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -49,8 +65,8 @@
 <div class="d-flex">
 
     <!-- Sidebar -->
-    <nav class="sidebar bg-dark">
-        <ul class="nav flex-column">
+    @* <nav class="sidebar bg-dark">
+        <ul class="nav flex-column"> *@
 
             @* Future Dashboard redirect *@
 @*             <li class="nav-item">
@@ -60,35 +76,35 @@
             </li>
  *@ 
             @* Lost and Found redirect *@
-           <li class="nav-item">
+          @*  <li class="nav-item">
                 <a class="nav-link text-white" asp-area="" asp-controller="LostFounds" asp-action="Index">
                     Lost & Found
                 </a>
-            </li>
+            </li> *@
 
             @* Marketplace redirect *@
-            <li class="nav-item">
+           @*  <li class="nav-item">
                 <a class="nav-link text-white" asp-area="" asp-controller="Listings" asp-action="Index">
                     Marketplace
                 </a>
-            </li>
+            </li> *@
 
             @* Add User redirect *@
-            <li class="nav-item">
+           @*  <li class="nav-item">
                 <a class="nav-link text-white" asp-area="" asp-controller="Users" asp-action="Create">
                     Add User
                 </a>
-            </li>
+            </li> *@
 
             @* Add Member redirect *@
-            <li class="nav-item">
+           @*  <li class="nav-item">
                 <a class="nav-link text-white" asp-area="" asp-controller="Members" asp-action="Create">
                     Add Member
                 </a>
             </li>
 
         </ul>
-    </nav>
+    </nav> *@
 
     <!-- Main content -->
     <div class="container flex-grow-1">
