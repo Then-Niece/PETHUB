@@ -24,7 +24,7 @@ namespace PETHUB.Controllers
         public async Task<IActionResult> Index()
         {
             var listings = await _context.Listings
-                .Include(l => l.User)
+                .Include(l => l.Member)
                 .Include(l => l.Images) // load related images
                 .ToListAsync();
 
@@ -41,7 +41,7 @@ namespace PETHUB.Controllers
             }
 
             var listing = await _context.Listings
-                .Include(l => l.User)    // keep user info
+                .Include(l => l.Member)    // keep user info
                 .Include(l => l.Images)  // load related images
                 .FirstOrDefaultAsync(m => m.ListingId == id);
 
@@ -162,7 +162,7 @@ namespace PETHUB.Controllers
 
             var listing = await _context.Listings
                 .Include(l => l.Images) // load related images
-                .Include(l => l.User)   // optional: keep user info if needed
+                .Include(l => l.Member)   // optional: keep user info if needed
                 .FirstOrDefaultAsync(l => l.ListingId == id);
 
             if (listing == null)
@@ -170,7 +170,7 @@ namespace PETHUB.Controllers
                 return NotFound();
             }
 
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", listing.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", listing.MemberId);
             return View(listing);
         }
 
@@ -232,7 +232,7 @@ namespace PETHUB.Controllers
             }
 
             var listing = await _context.Listings
-                .Include(l => l.User)
+                .Include(l => l.Member)
                 .Include(l => l.Images)
                 .FirstOrDefaultAsync(m => m.ListingId == id);
             if (listing == null)
@@ -301,6 +301,53 @@ namespace PETHUB.Controllers
             return NotFound();
         }
 
+        // GET: Listings/Approve
+        [HttpPost]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var report = await _context.Listings.FindAsync(id);
+            if (report == null) return NotFound();
+
+            report.Status = ListApprovalStatus.Approved;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Listings/Reject
+        [HttpPost]
+        public async Task<IActionResult> Reject(int id)
+        {
+            var report = await _context.Listings.FindAsync(id);
+            if (report == null) return NotFound();
+
+            report.Status = ListApprovalStatus.Rejected;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Listings/Sold
+        [HttpPost]
+        public async Task<IActionResult> Sold(int id)
+        {
+            var report = await _context.Listings.FindAsync(id);
+            if (report == null) return NotFound();
+
+            report.ListStatus = ListingStatus.Sold;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Listings/Adopted
+        [HttpPost]
+        public async Task<IActionResult> Adopted(int id)
+        {
+            var report = await _context.Listings.FindAsync(id);
+            if (report == null) return NotFound();
+
+            report.ListStatus = ListingStatus.Adopted;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
         private bool ListingExists(int id)
         {

@@ -253,28 +253,48 @@ namespace PETHUB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ListingId"));
 
+                    b.Property<string>("Breed")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DatePosted")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ListStatus")
+                        .HasColumnType("int");
+
                     b.Property<string>("Location")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("MemberId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("PetSex")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PetType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("ListingId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("MemberId");
 
                     b.ToTable("Listings");
                 });
@@ -310,6 +330,7 @@ namespace PETHUB.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LostFoundId"));
 
                     b.Property<string>("Breed")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClientContact")
@@ -332,13 +353,10 @@ namespace PETHUB.Migrations
                     b.Property<DateTime?>("LostDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("MemberId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("PetType")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Sex")
+                    b.Property<int>("Sex")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -351,7 +369,12 @@ namespace PETHUB.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("LostFoundId");
+
+                    b.HasIndex("UserID");
 
                     b.ToTable("LostFounds");
                 });
@@ -431,11 +454,11 @@ namespace PETHUB.Migrations
 
             modelBuilder.Entity("PETHUB.Models.Listing", b =>
                 {
-                    b.HasOne("PETHUB.Models.ApplicationUser", "User")
+                    b.HasOne("PETHUB.Models.ApplicationUser", "Member")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("MemberId");
 
-                    b.Navigation("User");
+                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("PETHUB.Models.ListingImage", b =>
@@ -447,6 +470,15 @@ namespace PETHUB.Migrations
                         .IsRequired();
 
                     b.Navigation("Listing");
+                });
+
+            modelBuilder.Entity("PETHUB.Models.LostFound", b =>
+                {
+                    b.HasOne("PETHUB.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PETHUB.Models.LostFoundImage", b =>

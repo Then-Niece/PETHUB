@@ -45,13 +45,16 @@ namespace PETHUB.Models
         [DataType(DataType.Date)]
         public DateTime DateReported { get; set; }
 
+        [Required]
         public string Location { get; set; }
 
         // New fields
+        [Required]
         public string? Breed { get; set; } // optional
 
         [Required]
         public PetType PetType { get; set; } // required dropdown: "Dog" or "Cat"
+        [Required]
 
         public PetSex? Sex { get; set; } // optional dropdown: "Male" or "Female"
 
@@ -59,8 +62,8 @@ namespace PETHUB.Models
         public DateTime? LostDate { get; set; } // optional
 
         // For registered members
-        public string? MemberId { get; set; } // FK to ApplicationUser
-
+        public string? UserID { get; set; } // FK to ApplicationUser
+        public ApplicationUser? User { get; set; }
         // For unregistered clients
         public string? ClientName { get; set; }
         public string? ClientContact { get; set; }

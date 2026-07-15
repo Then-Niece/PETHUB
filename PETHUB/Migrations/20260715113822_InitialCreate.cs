@@ -170,20 +170,56 @@ namespace PETHUB.Migrations
                     ListingId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Price = table.Column<int>(type: "int", nullable: false),
                     DatePosted = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Breed = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MemberId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ListStatus = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    PetType = table.Column<int>(type: "int", nullable: false),
+                    PetSex = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Listings", x => x.ListingId);
                     table.ForeignKey(
-                        name: "FK_Listings_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Listings_AspNetUsers_MemberId",
+                        column: x => x.MemberId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LostFounds",
+                columns: table => new
+                {
+                    LostFoundId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    DateReported = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Breed = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PetType = table.Column<int>(type: "int", nullable: false),
+                    Sex = table.Column<int>(type: "int", nullable: false),
+                    LostDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ClientName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClientContact = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LostFounds", x => x.LostFoundId);
+                    table.ForeignKey(
+                        name: "FK_LostFounds_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -203,6 +239,26 @@ namespace PETHUB.Migrations
                         column: x => x.ListingId,
                         principalTable: "Listings",
                         principalColumn: "ListingId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LostFoundImages",
+                columns: table => new
+                {
+                    LostFoundImageId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LostFoundId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LostFoundImages", x => x.LostFoundImageId);
+                    table.ForeignKey(
+                        name: "FK_LostFoundImages_LostFounds_LostFoundId",
+                        column: x => x.LostFoundId,
+                        principalTable: "LostFounds",
+                        principalColumn: "LostFoundId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -251,9 +307,19 @@ namespace PETHUB.Migrations
                 column: "ListingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Listings_UserId",
+                name: "IX_Listings_MemberId",
                 table: "Listings",
-                column: "UserId");
+                column: "MemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LostFoundImages_LostFoundId",
+                table: "LostFoundImages",
+                column: "LostFoundId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LostFounds_UserID",
+                table: "LostFounds",
+                column: "UserID");
         }
 
         /// <inheritdoc />
@@ -278,10 +344,16 @@ namespace PETHUB.Migrations
                 name: "ListingImages");
 
             migrationBuilder.DropTable(
+                name: "LostFoundImages");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Listings");
+
+            migrationBuilder.DropTable(
+                name: "LostFounds");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -47,7 +47,7 @@
                     <p class="mb-3">@Model.Description</p>
                     <p><strong>Price:</strong> ₱@Model.Price</p>
                     <p><strong>Location:</strong> @(string.IsNullOrEmpty(Model.Location) ? "Not specified" : Model.Location)</p>
-                    <p><strong>User:</strong> @(Model.UserId ?? "—")</p>
+                    <p><strong>User:</strong> @(Model.MemberId ?? "—")</p>
                 </div>
                 <div class="card-footer d-flex justify-content-center gap-3">
                     <a asp-action="Edit" asp-route-id="@Model.ListingId" class="btn btn-warning px-4">Edit</a>

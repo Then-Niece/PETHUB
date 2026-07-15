@@ -24,7 +24,7 @@ namespace PETHUB.Controllers
         public async Task<IActionResult> Index()
         {
             var listings = await _context.Listings
-               .Include(l => l.User)
+               .Include(l => l.Member)
                .Include(l => l.Images) // load related images
                .ToListAsync();
 
@@ -40,7 +40,7 @@ namespace PETHUB.Controllers
             }
 
             var listing = await _context.Listings
-                .Include(l => l.User)    // keep user info
+                .Include(l => l.Member)    // keep user info
                 .Include(l => l.Images)  // load related images
                 .FirstOrDefaultAsync(m => m.ListingId == id);
 

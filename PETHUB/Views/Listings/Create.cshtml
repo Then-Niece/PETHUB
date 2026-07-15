@@ -7,22 +7,58 @@
 <h1>Create Listing</h1>
 
 <form asp-action="Create" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <!-- Title -->
     <div class="form-group">
         <label asp-for="Title" class="control-label"></label>
         <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
+    <!-- Description -->
     <div class="form-group">
         <label asp-for="Description" class="control-label"></label>
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
+    <!-- Type Switch (Adoption vs Sale) -->
     <div class="form-group">
+        <label asp-for="Type" class="control-label"></label>
+        <select asp-for="Type" class="form-select" id="typeSelect"
+                asp-items="Html.GetEnumSelectList<PETHUB.Models.ListType>()"></select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <!-- Price (hidden if For Adoption) -->
+    <div class="form-group" id="priceGroup">
         <label asp-for="Price" class="control-label"></label>
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <!-- Pet Type -->
+    <div class="form-group">
+        <label asp-for="PetType" class="control-label"></label>
+        <select asp-for="PetType" class="form-select"
+                asp-items="Html.GetEnumSelectList<PETHUB.Models.ListPetType>()"></select>
+        <span asp-validation-for="PetType" class="text-danger"></span>
+    </div>
+
+    <!-- Pet Sex -->
+    <div class="form-group">
+        <label asp-for="PetSex" class="control-label"></label>
+        <select asp-for="PetSex" class="form-select"
+                asp-items="Html.GetEnumSelectList<PETHUB.Models.ListPetSex>()"></select>
+        <span asp-validation-for="PetSex" class="text-danger"></span>
+    </div>
+
+    <!-- Breed -->
+    <div class="form-group">
+        <label asp-for="Breed" class="control-label"></label>
+        <input asp-for="Breed" class="form-control" />
+        <span asp-validation-for="Breed" class="text-danger"></span>
     </div>
 
     <!-- File upload for images -->
@@ -35,17 +71,51 @@
     <!-- Preview container -->
     <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2 mt-3"></div>
 
+    <!-- Location -->
     <div class="form-group mb-3">
         <label asp-for="Location" class="control-label"></label>
         <input asp-for="Location" class="form-control" placeholder="Enter city or area" />
         <span asp-validation-for="Location" class="text-danger"></span>
     </div>
 
+    <!-- Submit + Back -->
     <div class="form-group d-flex gap-2">
-        <input type="submit" value="Create" class="btn btn-primary" />
+        <button type="submit" class="btn btn-primary">Create Listing</button>
         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
 </form>
+
+<script>
+    function togglePriceField() {
+        const typeSelect = document.getElementById("typeSelect");
+        const priceGroup = document.getElementById("priceGroup");
+        const priceInput = document.getElementById("Price");
+
+        // Enum values: For_Adoption = 0, For_Sale = 1
+        if (typeSelect.value === "0") {
+            // For Adoption: hide Price, force submitted value to 0
+            priceGroup.style.display = "none";
+            priceInput.value = 0;
+
+            // Disable validation temporarily
+            if (priceInput.hasAttribute("data-val-required") && !priceInput.dataset.origRequiredMsg) {
+                priceInput.dataset.origRequiredMsg = priceInput.getAttribute("data-val-required");
+            }
+            priceInput.removeAttribute("required");
+            priceInput.removeAttribute("data-val-required");
+        } else {
+            // For Sale: show Price and restore validation
+            priceGroup.style.display = "block";
+
+            if (priceInput.dataset.origRequiredMsg) {
+                priceInput.setAttribute("data-val-required", priceInput.dataset.origRequiredMsg);
+            }
+        }
+    }
+
+    document.getElementById("typeSelect").addEventListener("change", togglePriceField);
+    window.onload = togglePriceField;
+</script>
 
 @section Scripts {
     @{
@@ -55,7 +125,5 @@
         <script>
             setupImagePreview("imageInput", "imagePreviewContainer");
         </script>
-
-
     }
 }
