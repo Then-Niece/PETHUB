@@ -44,7 +44,6 @@ namespace PETHUB.Controllers
                 .Include(l => l.Member)    // keep user info
                 .Include(l => l.Images)  // load related images
                 .FirstOrDefaultAsync(m => m.ListingId == id);
-
             if (listing == null)
             {
                 return NotFound();
@@ -133,7 +132,7 @@ namespace PETHUB.Controllers
                         ImageFiles,
                         listing.ListingId,
                         (id, path) => new ListingImage { ListingId = id, ImagePath = path },
-                        "images"
+                        "marketplace"
                     );
 
                     _context.AddRange(savedImages);
@@ -164,7 +163,6 @@ namespace PETHUB.Controllers
                 .Include(l => l.Images) // load related images
                 .Include(l => l.Member)   // optional: keep user info if needed
                 .FirstOrDefaultAsync(l => l.ListingId == id);
-
             if (listing == null)
             {
                 return NotFound();
@@ -178,10 +176,21 @@ namespace PETHUB.Controllers
         // POST: Listings/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Listing listing, List<IFormFile> ImageFiles)
         {
+            if (!ModelState.IsValid)
+            {
+                foreach (var item in ModelState)
+                {
+                    foreach (var error in item.Value.Errors)
+                    {
+                        Console.WriteLine($"{item.Key}: {error.ErrorMessage}");
+                    }
+                }
+            }
             if (id != listing.ListingId) return NotFound();
 
             if (ModelState.IsValid)
@@ -198,6 +207,10 @@ namespace PETHUB.Controllers
                 existingListing.Price = listing.Price;
                 existingListing.Location = listing.Location;
                 existingListing.DatePosted = DateTime.Now;
+                existingListing.Breed = listing.Breed;
+                existingListing.PetType = listing.PetType;
+                existingListing.PetSex = listing.PetSex;
+                existingListing.Type = listing.Type;
 
                 // Handle new images
                 if (ImageFiles != null && ImageFiles.Count > 0)

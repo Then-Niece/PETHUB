@@ -25,6 +25,7 @@ namespace PETHUB.Controllers
         {
             var listings = await _context.Listings
                .Include(l => l.Member)
+               .Where(l => l.Status == ListApprovalStatus.Approved)
                .Include(l => l.Images) // load related images
                .ToListAsync();
 

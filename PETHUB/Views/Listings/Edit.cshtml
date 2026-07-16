@@ -7,52 +7,88 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-10">
+
             <h1 class="text-center mb-4">Edit Listing</h1>
 
             <div class="row">
-                <!-- Left side: Current Images inside a card -->
+
+                <!-- LEFT SIDE -->
                 <div class="col-md-5">
                     <div class="card shadow-sm">
                         <div class="card-header bg-light">
                             <h5 class="mb-0">Current Images</h5>
                         </div>
+
                         <div class="card-body">
+
                             @if (Model.Images != null && Model.Images.Any())
                             {
                                 <div class="row">
+
                                     @foreach (var img in Model.Images)
                                     {
                                         <div class="col-12 mb-3 text-center">
+
                                             <img src="@img.ImagePath"
                                                  class="img-fluid rounded shadow-sm"
                                                  style="height:150px;object-fit:cover;" />
 
-                                            <form asp-action="RemoveImage" method="post" class="mt-2">
+                                            <form asp-action="RemoveImage"
+                                                  method="post"
+                                                  class="mt-2">
+
                                                 @Html.AntiForgeryToken()
-                                                <input type="hidden" name="id" value="@img.ListingImageId" />
-                                                <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@img.ListingImageId" />
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-danger">
+                                                    Remove
+                                                </button>
+
                                             </form>
+
                                         </div>
                                     }
+
                                 </div>
                             }
                             else
                             {
-                                <p class="text-muted text-center mb-0">No images yet — upload one!</p>
+                                <p class="text-muted text-center">
+                                    No images yet — upload one!
+                                </p>
                             }
+
                         </div>
                     </div>
                 </div>
 
-                <!-- Right side: Edit form -->
+                <!-- RIGHT SIDE -->
                 <div class="col-md-7">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <form asp-action="Edit" method="post" enctype="multipart/form-data">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" asp-for="ListingId" />
 
-                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="card shadow-sm">
+
+                        <div class="card-body">
+
+                            <form asp-action="Edit"
+                                  method="post"
+                                  enctype="multipart/form-data">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden" asp-for="ListingId" />
+                                <input type="hidden" asp-for="Status" />
+                                <input type="hidden" asp-for="ListStatus" />
+                                <input type="hidden" asp-for="MemberId" />
+                                <input type="hidden" asp-for="DatePosted" />
+
+                                <div asp-validation-summary="ModelOnly"
+                                     class="text-danger"></div>
+
+                                <!-- TITLE -->
 
                                 <div class="form-group mb-3">
                                     <label asp-for="Title"></label>
@@ -60,76 +96,186 @@
                                     <span asp-validation-for="Title" class="text-danger"></span>
                                 </div>
 
-                                <div class="form-group mb-3">
-                                    <label asp-for="Description"></label>
-                                    <textarea asp-for="Description" class="form-control"></textarea>
-                                    <span asp-validation-for="Description" class="text-danger"></span>
-                                </div>
+                                <!-- DESCRIPTION -->
 
                                 <div class="form-group mb-3">
-                                    <label asp-for="Price"></label>
-                                    <input asp-for="Price" class="form-control" />
-                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                    <label asp-for="Description"></label>
+                                    <textarea asp-for="Description"
+                                              class="form-control"></textarea>
+                                    <span asp-validation-for="Description"
+                                          class="text-danger"></span>
                                 </div>
+
+                                <!-- TYPE -->
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="Type"></label>
+
+                                    <select asp-for="Type"
+                                            id="typeSelect"
+                                            class="form-select"
+                                            asp-items="Html.GetEnumSelectList<PETHUB.Models.ListType>()">
+                                    </select>
+
+                                    <span asp-validation-for="Type"
+                                          class="text-danger"></span>
+                                </div>
+
+                                <!-- PRICE -->
+
+                                <div class="form-group mb-3" id="priceGroup">
+                                    <label asp-for="Price"></label>
+                                    <input asp-for="Price"
+                                           class="form-control" />
+                                    <span asp-validation-for="Price"
+                                          class="text-danger"></span>
+                                </div>
+
+                                <!-- PET TYPE -->
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="PetType"></label>
+
+                                    <select asp-for="PetType"
+                                            class="form-select"
+                                            asp-items="Html.GetEnumSelectList<PETHUB.Models.ListPetType>()">
+                                    </select>
+
+                                    <span asp-validation-for="PetType"
+                                          class="text-danger"></span>
+                                </div>
+
+                                <!-- PET SEX -->
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="PetSex"></label>
+
+                                    <select asp-for="PetSex"
+                                            class="form-select"
+                                            asp-items="Html.GetEnumSelectList<PETHUB.Models.ListPetSex>()">
+                                    </select>
+
+                                    <span asp-validation-for="PetSex"
+                                          class="text-danger"></span>
+                                </div>
+
+                                <!-- BREED -->
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="Breed"></label>
+                                    <input asp-for="Breed"
+                                           class="form-control" />
+                                    <span asp-validation-for="Breed"
+                                          class="text-danger"></span>
+                                </div>
+
+                                <!-- LOCATION -->
 
                                 <div class="form-group mb-3">
                                     <label asp-for="Location"></label>
-                                    <input asp-for="Location" class="form-control" />
-                                    <span asp-validation-for="Location" class="text-danger"></span>
+                                    <input asp-for="Location"
+                                           class="form-control" />
+                                    <span asp-validation-for="Location"
+                                          class="text-danger"></span>
                                 </div>
+
+                                <!-- IMAGES -->
 
                                 <div class="form-group mb-3">
                                     <label>Add More Images</label>
-                                    <input type="file" id="imageInput" name="ImageFiles" multiple class="form-control" id="imageUpload" />
-                                    <small class="form-text text-muted">You can select multiple files.</small>
-                                    <div id="preview" class="mt-2"></div>
+
+                                    <input type="file"
+                                           id="imageInput"
+                                           name="ImageFiles"
+                                           multiple
+                                           class="form-control" />
+
+                                    <small class="form-text text-muted">
+                                        You can select multiple files.
+                                    </small>
                                 </div>
 
-                                <!-- Preview container -->
-                                <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2 mt-3"></div>
+                                <div id="imagePreviewContainer"
+                                     class="d-flex flex-wrap gap-2 mt-3"></div>
 
-                                <div class="d-flex justify-content-between">
-                                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                                    <a asp-action="Index" class="btn btn-secondary">Back to Listings</a>
+                                <div class="d-flex justify-content-between mt-4">
+
+                                    <button type="submit"
+                                            class="btn btn-primary">
+                                        Save Changes
+                                    </button>
+
+                                    <a asp-action="Index"
+                                       class="btn btn-secondary">
+                                        Back to Listings
+                                    </a>
+
                                 </div>
+
                             </form>
+
                         </div>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
     </div>
 </div>
 
-@section Scripts {
+@section Scripts
+{
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script>
-        document.getElementById("imageUpload").addEventListener("change", function (event) {
-            const preview = document.getElementById("preview");
-            preview.innerHTML = "";
-            for (const file of event.target.files) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.className = "img-fluid rounded shadow-sm me-2 mb-2";
-                    img.style.height = "100px";
-                    img.style.objectFit = "cover";
-                    preview.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    </script>
-
-
     <script src="~/js/imagePreviewHelper.js"></script>
+
     <script>
         setupImagePreview("imageInput", "imagePreviewContainer");
+
+        function togglePriceField() {
+
+            const typeSelect = document.getElementById("typeSelect");
+            const priceGroup = document.getElementById("priceGroup");
+            const priceInput = document.getElementById("Price");
+
+            if (typeSelect.value === "0") {
+
+                priceGroup.style.display = "none";
+                priceInput.value = 0;
+
+                if (priceInput.hasAttribute("data-val-required") &&
+                    !priceInput.dataset.origRequiredMsg) {
+
+                    priceInput.dataset.origRequiredMsg =
+                        priceInput.getAttribute("data-val-required");
+                }
+
+                priceInput.removeAttribute("required");
+                priceInput.removeAttribute("data-val-required");
+            }
+            else {
+
+                priceGroup.style.display = "block";
+
+                if (priceInput.dataset.origRequiredMsg) {
+
+                    priceInput.setAttribute(
+                        "data-val-required",
+                        priceInput.dataset.origRequiredMsg
+                    );
+                }
+            }
+        }
+
+        document
+            .getElementById("typeSelect")
+            .addEventListener("change", togglePriceField);
+
+        window.onload = togglePriceField;
     </script>
-
-
 }
