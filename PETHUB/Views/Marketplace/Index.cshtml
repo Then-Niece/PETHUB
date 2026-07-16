@@ -4,41 +4,119 @@
     ViewData["Title"] = "Marketplace Client";
 }
 
-<h1 style="text-align: center;">Marketplace</h1>
+<h1 class="text-center">Marketplace</h1>
 
-<div class="row">
+<!-- Add Listing Button -->
+@if (User.IsInRole("Member") || User.IsInRole("User"))
+{
+    <a asp-controller="Listings"
+       asp-action="Create"
+       class="btn btn-primary btn-lg">
+        Add Listing
+    </a>
+}
+else
+{
+    <button type="button"
+            class="btn btn-primary btn-lg"
+            data-bs-toggle="modal"
+            data-bs-target="#reportModal">
+        Add Listing
+    </button>
+}
+
+<div class="row mt-4">
     @foreach (var item in Model)
     {
         <div class="col-md-3 mb-4">
-            <a asp-action="Details" asp-route-id="@item.ListingId">
+            <a asp-action="Details" asp-route-id="@item.ListingId" class="text-decoration-none text-dark">
                 <div class="card h-100 shadow-sm">
+
                     @if (item.Images != null && item.Images.Any())
                     {
-                        <img src="@item.Images.First().ImagePath" class="card-img-top" alt="Listing image" style="height:200px;object-fit:cover;">
+                        <img src="@item.Images.First().ImagePath"
+                             class="card-img-top"
+                             alt="Listing image"
+                             style="height:200px;object-fit:cover;" />
                     }
                     else
                     {
-                        <img src="/images/no-image.png" class="card-img-top" alt="No image" style="height:200px;object-fit:cover;">
+                        <img src="/images/no-image.png"
+                             class="card-img-top"
+                             alt="No image"
+                             style="height:200px;object-fit:cover;" />
                     }
 
-               
-                        <div class="card-body">
-                            <h5 class="card-title">@item.Title</h5>
-                            <p class="card-text text-muted">@item.Description</p>
-                            <p class="card-text"><strong>₱@item.Price</strong></p>
-                            <p class="card-text"><small>Posted @item.DatePosted.ToString("MMM dd, yyyy")</small></p>
-                            <!-- Location with fallback -->
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    Location: @(string.IsNullOrEmpty(item.Location) ? "Not specified" : item.Location)
-                                </small>
-                            </p>
-                        </div>
-               
-                
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+
+                        <p class="card-text text-muted">
+                            @item.Description
+                        </p>
+
+                        <p class="card-text">
+                            <strong>₱@item.Price</strong>
+                        </p>
+
+                        <p class="card-text">
+                            <small>
+                                Posted @item.DatePosted.ToString("MMM dd, yyyy")
+                            </small>
+                        </p>
+
+                        <p class="card-text">
+                            <small class="text-muted">
+                                Location:
+                                @(string.IsNullOrEmpty(item.Location)
+                                    ? "Not specified"
+                                    : item.Location)
+                            </small>
+                        </p>
+                    </div>
+
                 </div>
             </a>
         </div>
-
     }
+</div>
+
+<!-- Guest Modal -->
+<div class="modal fade"
+     id="reportModal"
+     tabindex="-1"
+     aria-labelledby="reportModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content text-center p-4">
+
+            <h4 class="mb-3">
+                Only registered members can create marketplace listings.
+            </h4>
+
+            <p class="text-muted">
+                Please log in or register to create a listing.
+            </p>
+
+            <div class="d-grid gap-3">
+
+                <a asp-controller="UserAccount"
+                   asp-action="Login"
+                   class="btn btn-primary btn-lg">
+                    Login
+                </a>
+
+                <a asp-controller="UserAccount"
+                   asp-action="Register"
+                   class="btn btn-success btn-lg">
+                    Become a Member
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
