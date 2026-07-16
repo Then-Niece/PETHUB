@@ -43,6 +43,7 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication(); //Added to identify the user and redirect appropriately to the guest page if not authenticated
 app.UseAuthorization();
 
 app.MapStaticAssets();

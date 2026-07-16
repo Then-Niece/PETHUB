@@ -8,7 +8,12 @@ namespace PETHUB.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Marketplace");
+            }
+
+            return View("Guest");
         }
 
         public IActionResult Privacy()
