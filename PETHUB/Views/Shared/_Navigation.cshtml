@@ -35,9 +35,9 @@
 
                     <li class="nav-item">
                         <a class="nav-link text-dark"
-                           asp-controller="Marketplace"
-                           asp-action="Index">
-                            Marketplace Client
+                           asp-controller="Listings"
+                           asp-action="Marketplace">
+                            Marketplace
                         </a>
                     </li>
 
@@ -53,7 +53,7 @@
                        MEMBER + USER (ADMIN)
                        ========================================================== *@
 
-                    @if (User.IsInRole("Member") || User.IsInRole("User"))
+                    @if (User.IsInRole("Member") || User.IsInRole("Admin"))
                     {
                     }
 
@@ -61,7 +61,7 @@
                        USER (ADMIN) ONLY
                        ========================================================== *@
 
-                    @if (User.IsInRole("User"))
+                    @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark"
@@ -73,9 +73,9 @@
 
                         <li class="nav-item">
                             <a class="nav-link text-dark"
-                               asp-controller="Users"
+                               asp-controller="Admins"
                                asp-action="Index">
-                                Add Users
+                                Add Admins
                             </a>
                         </li>
 

@@ -7,7 +7,7 @@
 <h1 class="text-center">Marketplace</h1>
 
 <!-- Add Listing Button -->
-@if (User.IsInRole("Member") || User.IsInRole("User"))
+@if (User.IsInRole("Member") || User.IsInRole("Admin"))
 {
     <a asp-controller="Listings"
        asp-action="Create"
@@ -29,7 +29,7 @@ else
     @foreach (var item in Model)
     {
         <div class="col-md-3 mb-4">
-            <a asp-action="Details" asp-route-id="@item.ListingId" class="text-decoration-none text-dark">
+            <a asp-action="MarketplaceDetails" asp-route-id="@item.ListingId" class="text-decoration-none text-dark">
                 <div class="card h-100 shadow-sm">
 
                     @if (item.Images != null && item.Images.Any())

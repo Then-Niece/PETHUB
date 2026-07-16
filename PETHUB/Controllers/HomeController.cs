@@ -10,7 +10,7 @@ namespace PETHUB.Controllers
         {
             if (User.Identity?.IsAuthenticated == true)
             {
-                return RedirectToAction("Index", "Marketplace");
+                return RedirectToAction("Marketplace", "Listings");
             }
 
             return View("Guest");

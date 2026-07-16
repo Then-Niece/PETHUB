@@ -33,8 +33,21 @@ namespace PETHUB.Controllers
             return View(listings);
         }
 
+        // GET: Marketplace Listing for Client POV
+        public async Task<IActionResult> Marketplace()
+        {
+            var listings = await _context.Listings
+               .Include(l => l.Member)
+               .Where(l => l.Status == ListApprovalStatus.Approved)
+               .Include(l => l.Images) // load related images
+               .ToListAsync();
 
-        // GET: Listings/Details/5
+            return View(listings);
+        }
+
+
+        // GET: Listings/Details/AdminView
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -54,6 +67,27 @@ namespace PETHUB.Controllers
             return View(listing);
         }
 
+
+        // GET: Listings/Details/For Client POV
+        public async Task<IActionResult> MarketplaceDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var listing = await _context.Listings
+                .Include(l => l.Member)    // keep user info
+                .Include(l => l.Images)  // load related images
+                .FirstOrDefaultAsync(m => m.ListingId == id);
+
+            if (listing == null)
+            {
+                return NotFound();
+            }
+
+            return View(listing);
+        }
 
         // GET: Listings/Create
         public IActionResult Create()

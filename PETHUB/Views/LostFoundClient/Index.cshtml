@@ -7,7 +7,7 @@
 <h1 style="text-align: center;">Lost & Found Client</h1>
 
 <!-- Add Report Button -->
-@if (User.IsInRole("Member") || User.IsInRole("User"))
+@if (User.IsInRole("Member") || User.IsInRole("Admin"))
 {
     <a asp-controller="LostFoundClient"
        asp-action="Create"
