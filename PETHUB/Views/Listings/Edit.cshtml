@@ -80,7 +80,7 @@
 
                                 <div class="form-group mb-3">
                                     <label>Add More Images</label>
-                                    <input type="file" id="imageInput" name="ImageFiles" multiple class="form-control" id="imageUpload" />
+                                    <input type="file" id="imageInput" name="ImageFiles" multiple class="form-control" />
                                     <small class="form-text text-muted">You can select multiple files.</small>
                                     <div id="preview" class="mt-2"></div>
                                 </div>
@@ -101,35 +101,19 @@
     </div>
 </div>
 
+
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script>
-        document.getElementById("imageUpload").addEventListener("change", function (event) {
-            const preview = document.getElementById("preview");
-            preview.innerHTML = "";
-            for (const file of event.target.files) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.className = "img-fluid rounded shadow-sm me-2 mb-2";
-                    img.style.height = "100px";
-                    img.style.objectFit = "cover";
-                    preview.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    </script>
-
-
     <script src="~/js/imagePreviewHelper.js"></script>
     <script>
-        setupImagePreview("imageInput", "imagePreviewContainer");
+        setupImagePreview("imageInput", "preview");
     </script>
+}
+
 
 
 }

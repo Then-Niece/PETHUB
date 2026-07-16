@@ -133,7 +133,7 @@ namespace PETHUB.Controllers
                         ImageFiles,
                         listing.ListingId,
                         (id, path) => new ListingImage { ListingId = id, ImagePath = path },
-                        "images"
+                        "marketplace"
                     );
 
                     _context.AddRange(savedImages);
