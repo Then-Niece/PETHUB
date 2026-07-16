@@ -62,8 +62,8 @@ namespace PETHUB.Models
         public DateTime? LostDate { get; set; } // optional
 
         // For registered members
-        public string? MemberID { get; set; } // FK to ApplicationUser
-        public ApplicationUser? Member { get; set; }
+        public string? UserId { get; set; } // FK to ApplicationUser
+        public ApplicationUser? User { get; set; }
         // For unregistered clients
         public string? ClientName { get; set; }
         public string? ClientContact { get; set; }
