@@ -48,7 +48,7 @@ namespace PETHUB.Controllers
                 Address = model.Address,
                 Gender = model.Gender,
                 Birthdate = model.Birthdate,
-                Status = "Active", // always default
+                Status = UserStatus.Active,
                 AcceptedTermsDate = DateTime.UtcNow // 
             };
 

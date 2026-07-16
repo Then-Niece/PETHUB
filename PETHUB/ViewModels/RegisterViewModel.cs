@@ -12,7 +12,9 @@ namespace PETHUB.ViewModels
         [Required]
         public string LastName { get; set; }
 
-        [Phone]
+        [Required]
+        [StringLength(11, MinimumLength = 11, ErrorMessage = "Contact number must be exactly 11 digits.")]
+        [RegularExpression(@"^\d{11}$", ErrorMessage = "Contact number must contain only numbers.")]
         public string ContactNumber { get; set; }
 
         public string Address { get; set; }

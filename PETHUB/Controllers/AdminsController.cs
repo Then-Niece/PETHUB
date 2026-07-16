@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace PETHUB.Controllers
 {
-    public class UsersController : Controller
+    public class AdminsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public AdminsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -30,7 +30,7 @@ namespace PETHUB.Controllers
             // Only get users in the Admin role
             // NOTE: Normally this would be "Admin"
             // but per adviser’s naming scheme, Admins are stored as "User"
-            var users = await _userManager.GetUsersInRoleAsync("User");
+            var users = await _userManager.GetUsersInRoleAsync("Admin");
 
 
             // Build dictionary of user roles (optional if you want to show role column)
@@ -79,7 +79,7 @@ namespace PETHUB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(UserViewModel model)
+        public async Task<IActionResult> Create(AdminViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace PETHUB.Controllers
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     ContactNumber = model.ContactNumber,
-                    Status = "Active"
+                    Status = UserStatus.Active
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -102,7 +102,7 @@ namespace PETHUB.Controllers
                     // Normally this should assign the "Admin" role.
                     // But per our adviser's naming scheme, Admins are called "Users".
                     // So we assign "User" here to match the project convention.
-                    await _userManager.AddToRoleAsync(user, "User");
+                    await _userManager.AddToRoleAsync(user, "Admin");
 
                     return RedirectToAction(nameof(Index));
                 }

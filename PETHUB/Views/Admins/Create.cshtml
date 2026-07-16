@@ -1,16 +1,15 @@
-@model PETHUB.Models.ApplicationUser
+@model PETHUB.ViewModels.AdminViewModel
 
 @{
-    ViewData["Title"] = "Edit User";
+    ViewData["Title"] = "Create Admin";
 }
 
 <div class="container mt-4">
-    <h2>Edit User</h2>
+    <h2>Create Admin</h2>
     <hr />
-    <form asp-action="Edit">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <input type="hidden" asp-for="Id" />
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="mb-3">
             <label asp-for="FirstName" class="form-label"></label>
@@ -31,9 +30,9 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="Status" class="form-label"></label>
-            <input asp-for="Status" class="form-control" />
-            <span asp-validation-for="Status" class="text-danger"></span>
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
@@ -43,9 +42,15 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="Email" class="form-label"></label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Status" class="form-label"></label>
+            <input asp-for="Status" class="form-control" value="Active" readonly />
+            <span asp-validation-for="Status" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-success">Save</button>

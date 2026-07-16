@@ -26,7 +26,7 @@ using (var scope = app.Services.CreateScope())
 
     Task.Run(async () =>
     {
-        string[] roles = { "User", "Member" };
+        string[] roles = { "Admin", "Member" };
 
         foreach (var role in roles)
         {

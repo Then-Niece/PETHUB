@@ -46,6 +46,12 @@
                         <span class="badge bg-info">@ViewBag.MemberRoles[item.Id]</span>
                     </td>
                     <td>
+                        <span class="badge @(item.Status == UserStatus.Active ? "bg-success" : "bg-secondary")">
+                            @(item.Status == UserStatus.Active ? "Active" : "Inactive")
+                        </span>
+                    </td>
+
+                    <td>
                         <div class="btn-group" role="group">
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
                             <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>

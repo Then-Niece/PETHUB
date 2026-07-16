@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace PETHUB.Controllers
         }
 
         // GET: Listings
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Index()
         {
             var listings = await _context.Listings
@@ -59,34 +61,6 @@ namespace PETHUB.Controllers
             return View();
         }
 
-        /*
-    NOTE: Simplified Admin POV version of ListingsController
-
-    - UserId handling:
-        Normally, Listing.UserId must match a valid ApplicationUser.Id (GUID string).
-        Here we hardcoded "Admin" or removed binding to avoid foreign key errors.
-        This means listings are not linked to real users yet.
-
-    - DatePosted:
-        Auto-set in the controller (DateTime.Now) instead of requiring manual input.
-        This avoids validation blocking when the field is left empty.
-
-    - Bind attribute:
-        Removed [Bind("Title,Description,Price")] restriction so EF can accept all fields.
-        Otherwise, ModelState would fail because required fields weren’t included.
-
-    - Identity integration:
-        Cut out ViewBag.UserId dropdown and foreign key enforcement.
-        This is temporary until login/roles are implemented.
-        For now, listings exist without a valid ApplicationUser reference.
-
-    TL;DR:
-        Cuts were made to bypass ASP.NET Identity requirements and keep CRUD working
-        for demo purposes. Once authentication is added, restore UserId binding and
-        link listings to actual users.
-*/
-
-
 
         // POST: Listings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -102,30 +76,6 @@ namespace PETHUB.Controllers
                 // Location is automatically bound from the form
                 _context.Add(listing);
                 await _context.SaveChangesAsync();
-
-                // Save images
-                //if (ImageFiles != null && ImageFiles.Count > 0)
-                //{
-                //    foreach (var file in ImageFiles)
-                //    {
-                //        var fileName = Path.GetFileName(file.FileName);
-                //        var filePath = Path.Combine("wwwroot/images", fileName);
-
-                //        using (var stream = new FileStream(filePath, FileMode.Create))
-                //        {
-                //            await file.CopyToAsync(stream);
-                //        }
-
-                //        var listingImage = new ListingImage
-                //        {
-                //            ListingId = listing.ListingId,
-                //            ImagePath = "/images/" + fileName
-                //        };
-
-                //        _context.Add(listingImage);
-                //    }
-                //    await _context.SaveChangesAsync();
-                //}
                 if (ImageFiles != null && ImageFiles.Count > 0)
                 {
                     var savedImages = await ImageUploadHelper.SaveImagesAsync(

@@ -1,13 +1,13 @@
 @model IEnumerable<PETHUB.Models.ApplicationUser>
 
 @{
-    ViewData["Title"] = "Users (Admins)";
+    ViewData["Title"] = "Admins";
 }
 
 <div class="container mt-4">
-    <h2 class="mb-3">Users (Admins)</h2>
+    <h2 class="mb-3">Admins</h2>
     <p>
-        <a asp-action="Create" class="btn btn-primary">Add New User</a>
+        <a asp-action="Create" class="btn btn-primary">Add New Admin</a>
     </p>
 
     <table class="table table-striped table-hover">
@@ -36,8 +36,8 @@
                         <span class="badge bg-primary">@ViewBag.UserRoles[item.Id]</span>
                     </td>
                     <td>
-                        <span class="badge @(item.Status == "Active" ? "bg-success" : "bg-secondary")">
-                            @(item.Status == "Active" ? "✔ Active" : "✖ Inactive")
+                        <span class="badge @(item.Status == UserStatus.Active ? "bg-success" : "bg-secondary")">
+                            @(item.Status == UserStatus.Active ? "Active" : "Inactive")
                         </span>
                     </td>
                     <td>
