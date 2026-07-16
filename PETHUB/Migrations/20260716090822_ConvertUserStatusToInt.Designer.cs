@@ -12,8 +12,8 @@ using PETHUB.Data;
 namespace PETHUB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260716052010_PictureField")]
-    partial class PictureField
+    [Migration("20260716090822_ConvertUserStatusToInt")]
+    partial class ConvertUserStatusToInt
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -163,6 +163,9 @@ namespace PETHUB.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime?>("AcceptedTermsDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
@@ -224,9 +227,8 @@ namespace PETHUB.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");

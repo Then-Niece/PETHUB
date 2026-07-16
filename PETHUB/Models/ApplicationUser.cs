@@ -8,7 +8,7 @@ namespace PETHUB.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ContactNumber { get; set; }
-        public string Status { get; set; } = "Active";
+        public UserStatus Status { get; set; } = UserStatus.Active;
 
 
         // Member-only fields (nullable for Admins)
@@ -20,4 +20,11 @@ namespace PETHUB.Models
         public DateTime? AcceptedTermsDate { get; set; }
         
     }
+
+    public enum UserStatus
+    {
+        Active,
+        Inactive
+    }
+
 }

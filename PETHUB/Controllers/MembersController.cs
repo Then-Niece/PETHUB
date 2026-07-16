@@ -90,7 +90,7 @@ namespace PETHUB.Controllers
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     ContactNumber = model.ContactNumber,
-                    Status = model.Status ?? "Active",
+                    Status = UserStatus.Active,
 
                     // Member-only fields
                     Address = model.Address,

@@ -12,7 +12,7 @@ using PETHUB.Data;
 namespace PETHUB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260715113822_InitialCreate")]
+    [Migration("20260716080959_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -162,6 +162,9 @@ namespace PETHUB.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("AcceptedTermsDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");

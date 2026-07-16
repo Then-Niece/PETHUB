@@ -36,8 +36,8 @@
                         <span class="badge bg-primary">@ViewBag.UserRoles[item.Id]</span>
                     </td>
                     <td>
-                        <span class="badge @(item.Status == "Active" ? "bg-success" : "bg-secondary")">
-                            @(item.Status == "Active" ? "✔ Active" : "✖ Inactive")
+                        <span class="badge @(item.Status == UserStatus.Active ? "bg-success" : "bg-secondary")">
+                            @(item.Status == UserStatus.Active ? "Active" : "Inactive")
                         </span>
                     </td>
                     <td>

@@ -30,8 +30,8 @@
 
         <dt class="col-sm-3">Status</dt>
         <dd class="col-sm-9">
-            <span class="badge @(Model.Status == "Active" ? "bg-success" : "bg-secondary")">
-                @(Model.Status == "Active" ? "✔ Active" : "✖ Inactive")
+            <span class="badge @(Model.Status == UserStatus.Active ? "bg-success" : "bg-secondary")">
+                @(Model.Status == UserStatus.Active ? "Active" : "Inactive")
             </span>
         </dd>
     </dl>

@@ -32,9 +32,12 @@
 
         <div class="mb-3">
             <label asp-for="Status" class="form-label"></label>
-            <input asp-for="Status" class="form-control" />
+            <select asp-for="Status" class="form-select"
+                    asp-items="Html.GetEnumSelectList<UserStatus>()">
+            </select>
             <span asp-validation-for="Status" class="text-danger"></span>
         </div>
+
 
         <div class="mb-3">
             <label asp-for="UserName" class="form-label"></label>

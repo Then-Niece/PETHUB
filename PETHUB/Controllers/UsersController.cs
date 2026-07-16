@@ -90,7 +90,7 @@ namespace PETHUB.Controllers
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     ContactNumber = model.ContactNumber,
-                    Status = "Active"
+                    Status = UserStatus.Active
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
