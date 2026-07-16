@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PETHUB.ViewModels
 {
-    public class UserViewModel
+    public class AdminViewModel
     {
         // Purpose: Used only in UsersController Create/Edit views.
         // Captures Admin fields from the form, then maps to ApplicationUser.
