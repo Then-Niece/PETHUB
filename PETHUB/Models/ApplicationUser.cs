@@ -15,5 +15,9 @@ namespace PETHUB.Models
         public string? Address { get; set; }
         public string? Gender { get; set; }
         public DateTime? Birthdate { get; set; }
+
+        // New property for the date when terms were accepted.
+        public DateTime? AcceptedTermsDate { get; set; }
+        
     }
 }

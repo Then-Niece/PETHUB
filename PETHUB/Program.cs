@@ -26,7 +26,7 @@ using (var scope = app.Services.CreateScope())
 
     Task.Run(async () =>
     {
-        string[] roles = { "User", "Member" }; // 👈 matches your teacher’s scheme
+        string[] roles = { "User", "Member" };
 
         foreach (var role in roles)
         {
