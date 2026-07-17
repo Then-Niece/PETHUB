@@ -34,6 +34,8 @@ namespace PETHUB.Controllers
         }
 
         // GET: Marketplace Listing for Client POV
+        [Authorize(Roles = "Member")]
+        [AllowAnonymous]
         public async Task<IActionResult> Marketplace()
         {
             var listings = await _context.Listings
@@ -123,8 +125,8 @@ namespace PETHUB.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-
-                return RedirectToAction(nameof(Index));
+                //fixed. this redirects now to the marketplace method that only member and client can access
+                return RedirectToAction(nameof(Marketplace));
             }
             return View(listing);
         }
