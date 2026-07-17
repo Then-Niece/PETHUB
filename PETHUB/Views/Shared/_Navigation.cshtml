@@ -30,7 +30,7 @@
 
                     @* ==========================================================
                        PAGES AVAILABLE TO EVERYONE
-                       (Guest + Member + User)
+                       (Guest + Member + Admin)
                        ========================================================== *@
 
                     <li class="nav-item">
@@ -43,14 +43,14 @@
 
                     <li class="nav-item">
                         <a class="nav-link text-dark"
-                           asp-controller="LostFoundClient"
-                           asp-action="Index">
+                           asp-controller="LostFounds"
+                           asp-action="Browse">
                             Lost & Found
                         </a>
                     </li>
 
                     @* ==========================================================
-                       MEMBER + USER (ADMIN)
+                       MEMBER + ADMIN
                        ========================================================== *@
 
                     @if (User.IsInRole("Member") || User.IsInRole("Admin"))
@@ -58,7 +58,7 @@
                     }
 
                     @* ==========================================================
-                       USER (ADMIN) ONLY
+                       ADMIN ONLY
                        ========================================================== *@
 
                     @if (User.IsInRole("Admin"))
@@ -126,9 +126,18 @@
                     else
                     {
                         <li class="nav-item">
-                            <span class="nav-link text-muted">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <span class="nav-link text-muted">
+                                Hello, Admin @User.Identity.Name
+                                </span>
+                            }else
+                            {
+                                <span class="nav-link text-muted">
                                 Hello, @User.Identity.Name
-                            </span>
+                                </span>
+                            }
+                            
                         </li>
 
                         <li class="nav-item">

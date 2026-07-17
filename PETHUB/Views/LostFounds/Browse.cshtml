@@ -4,12 +4,12 @@
     ViewData["Title"] = "Lost & Found Reports";
 }
 
-<h1 style="text-align: center;">Lost & Found Client</h1>
+<h1 style="text-align: center;">Lost & Found </h1>
 
 <!-- Add Report Button -->
 @if (User.IsInRole("Member") || User.IsInRole("Admin"))
 {
-    <a asp-controller="LostFoundClient"
+    <a asp-controller="LostFounds"
        asp-action="Create"
        class="btn btn-primary btn-lg">
         Add Report
@@ -99,7 +99,7 @@ else
             <div class="d-grid gap-3">
 
                 <!-- Continue as Guest -->
-                <a asp-controller="LostFoundClient"
+                <a asp-controller="LostFounds"
                    asp-action="Create"
                    class="btn btn-lg btn-outline-primary">
                     Continue as Guest
