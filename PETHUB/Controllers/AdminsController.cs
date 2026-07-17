@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 
 namespace PETHUB.Controllers
 {
+    // Administrator management is never available through a direct URL to members or clients.
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public class AdminsController : Controller
     {
         private readonly ApplicationDbContext _context;

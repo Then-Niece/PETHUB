@@ -30,6 +30,12 @@ namespace PETHUB.Models
         Female
     }
 
+    public enum ReportResolutionStatus
+    {
+        Open,
+        Resolved
+    }
+
     public class LostFound
     {
         public int LostFoundId { get; set; }
@@ -71,5 +77,8 @@ namespace PETHUB.Models
         public ICollection<LostFoundImage>? Images { get; set; }
 
         public ApprovalStatus Status { get; set; } = ApprovalStatus.Pending; // default to Pending
+
+        // Public-facing state; separate from the admin-only approval decision.
+        public ReportResolutionStatus ResolutionStatus { get; set; } = ReportResolutionStatus.Open;
     }
 }

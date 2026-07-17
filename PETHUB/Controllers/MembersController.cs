@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 
 namespace PETHUB.Controllers
 {
+    // Member account administration is an admin-only responsibility.
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public class MembersController : Controller
     {
         private readonly ApplicationDbContext _context;

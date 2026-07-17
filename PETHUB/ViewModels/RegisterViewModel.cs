@@ -21,7 +21,20 @@ namespace PETHUB.ViewModels
         public string Gender { get; set; }
 
         [DataType(DataType.Date)]
+        [CustomValidation(typeof(RegisterViewModel), nameof(ValidateAdultBirthdate))]
         public DateTime? Birthdate { get; set; }
+
+        // Server-side validation prevents bypassing the date picker.
+        public static ValidationResult? ValidateAdultBirthdate(DateTime? birthdate, ValidationContext context)
+        {
+            if (!birthdate.HasValue) return new ValidationResult("Birthdate is required.");
+            var today = DateTime.Today;
+            var age = today.Year - birthdate.Value.Year;
+            if (birthdate.Value.Date > today.AddYears(-age)) age--;
+            return birthdate.Value.Date > today || age < 18
+                ? new ValidationResult("You must be at least 18 years old to register.")
+                : ValidationResult.Success;
+        }
 
         [Required]
         [EmailAddress]

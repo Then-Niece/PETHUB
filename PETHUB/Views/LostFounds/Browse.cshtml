@@ -6,6 +6,12 @@
 
 <h1 style="text-align: center;">Lost & Found </h1>
 
+<!-- Visitors may narrow public reports by pet type. -->
+<form method="get" class="d-flex justify-content-center gap-2 mb-3">
+    <select name="petTypeFilter" class="form-select w-auto"><option value="">Dogs and cats</option><option value="Dog">Dogs</option><option value="Cat">Cats</option></select>
+    <button class="btn btn-outline-secondary">Filter</button>
+</form>
+
 <!-- Add Report Button -->
 @if (User.IsInRole("Member") || User.IsInRole("Admin"))
 {
@@ -29,7 +35,7 @@ else
     @foreach (var item in Model)
     {
         <div class="col-md-3 mb-4">
-            <a asp-action="Details" asp-route-id="@item.LostFoundId">
+            <a asp-action="BrowseDetails" asp-route-id="@item.LostFoundId">
                 <div class="card h-100 shadow-sm">
 
                     @if (item.Images != null && item.Images.Any())
@@ -49,6 +55,7 @@ else
 
                     <div class="card-body">
                         <h5 class="card-title">@item.Title</h5>
+                        @if (item.ResolutionStatus == ReportResolutionStatus.Resolved) { <span class="badge bg-success">@item.Type report resolved</span> }
 
                         <p class="card-text text-muted">
                             @item.Description

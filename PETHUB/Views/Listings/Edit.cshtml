@@ -205,7 +205,13 @@
                                         Save Changes
                                     </button>
 
-                                    <a asp-action="Index"
+                                    @if (User.IsInRole("Member") && Model.ListStatus != ListingStatus.Sold)
+                                    {
+                                        <!-- Ownership is verified again by the Sold action. -->
+                                        <button type="submit" form="markSold" class="btn btn-success">Mark as Sold</button>
+                                    }
+
+                                    <a asp-action="Marketplace"
                                        class="btn btn-secondary">
                                         Back to Listings
                                     </a>
@@ -213,6 +219,11 @@
                                 </div>
 
                             </form>
+
+                            @if (User.IsInRole("Member") && Model.ListStatus != ListingStatus.Sold)
+                            {
+                                <form id="markSold" asp-action="Sold" asp-route-id="@Model.ListingId" method="post"></form>
+                            }
 
                         </div>
 

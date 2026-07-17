@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
+using PETHUB.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,24 +26,50 @@ namespace PETHUB.Controllers
         // GET: Listings
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Index()
+            => RedirectToAction(nameof(Approvals));
+
+        // One moderation page for Marketplace and Lost & Found, with shared filters.
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Approvals(string? statusFilter, string? petTypeFilter)
         {
             var listings = await _context.Listings
                 .Include(l => l.Member)
                 .Include(l => l.Images) // load related images
                 .ToListAsync();
+            var reports = await _context.LostFounds
+                .Include(l => l.User)
+                .Include(l => l.Images)
+                .ToListAsync();
 
-            return View(listings);
+            if (Enum.TryParse<ListApprovalStatus>(statusFilter, true, out var listingStatus))
+                listings = listings.Where(l => l.Status == listingStatus).ToList();
+            if (Enum.TryParse<ApprovalStatus>(statusFilter, true, out var reportStatus))
+                reports = reports.Where(l => l.Status == reportStatus).ToList();
+            if (Enum.TryParse<ListPetType>(petTypeFilter, true, out var listingPetType))
+                listings = listings.Where(l => l.PetType == listingPetType).ToList();
+            if (Enum.TryParse<PetType>(petTypeFilter, true, out var reportPetType))
+                reports = reports.Where(l => l.PetType == reportPetType).ToList();
+
+            return View(new ApprovalDashboardViewModel
+            {
+                Listings = listings,
+                LostFounds = reports,
+                StatusFilter = statusFilter,
+                PetTypeFilter = petTypeFilter
+            });
         }
 
         // GET: Marketplace Listing for Client and Member
         [AllowAnonymous]
-        public async Task<IActionResult> Marketplace()
+        public async Task<IActionResult> Marketplace(string? petTypeFilter)
         {
             var listings = await _context.Listings
                .Include(l => l.Member)
                .Where(l => l.Status == ListApprovalStatus.Approved)
                .Include(l => l.Images) // load related images
                .ToListAsync();
+            if (Enum.TryParse<ListPetType>(petTypeFilter, true, out var petType))
+                listings = listings.Where(l => l.PetType == petType).ToList();
 
             return View(listings);
         }
@@ -60,7 +87,8 @@ namespace PETHUB.Controllers
             var listing = await _context.Listings
                 .Include(l => l.Member)    // keep user info
                 .Include(l => l.Images)  // load related images
-                .FirstOrDefaultAsync(m => m.ListingId == id);
+                // Visitors and members cannot enumerate pending or rejected listings by ID.
+                .FirstOrDefaultAsync(m => m.ListingId == id && m.Status == ListApprovalStatus.Approved);
             if (listing == null)
             {
                 return NotFound();
@@ -111,6 +139,8 @@ namespace PETHUB.Controllers
             if (ModelState.IsValid)
             {
                 listing.DatePosted = DateTime.Now;
+                // The server, rather than a hidden form field, assigns ownership.
+                listing.MemberId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 // Location is automatically bound from the form
                 _context.Add(listing);
@@ -244,7 +274,7 @@ namespace PETHUB.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(User.IsInRole("Admin") ? nameof(Approvals) : nameof(Marketplace));
         }
 
 
@@ -327,7 +357,7 @@ namespace PETHUB.Controllers
             _context.Listings.Remove(listing);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(User.IsInRole("Admin") ? nameof(Approvals) : nameof(Marketplace));
         }
 
         // POST: Listings/EDIT/REMOVEIMAGE/5
@@ -336,9 +366,11 @@ namespace PETHUB.Controllers
         [Authorize(Roles = "Member,Admin")]
         public async Task<IActionResult> RemoveImage(int id)
         {
-            var image = await _context.ListingImages.FindAsync(id);
+            var image = await _context.ListingImages.Include(i => i.Listing).FirstOrDefaultAsync(i => i.ListingImageId == id);
             if (image != null)
             {
+                if (!User.IsInRole("Admin") && image.Listing?.MemberId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+                    return Forbid();
                 // Delete file from wwwroot/images
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.ImagePath.TrimStart('/'));
                 if (System.IO.File.Exists(filePath))
@@ -367,7 +399,7 @@ namespace PETHUB.Controllers
 
             report.Status = ListApprovalStatus.Approved;
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Approvals));
         }
 
         // GET: Listings/Reject
@@ -380,7 +412,7 @@ namespace PETHUB.Controllers
 
             report.Status = ListApprovalStatus.Rejected;
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Approvals));
         }
 
         // GET: Listings/Sold
@@ -391,9 +423,11 @@ namespace PETHUB.Controllers
             var report = await _context.Listings.FindAsync(id);
             if (report == null) return NotFound();
 
+            if (report.MemberId != User.FindFirstValue(ClaimTypes.NameIdentifier)) return Forbid();
+
             report.ListStatus = ListingStatus.Sold;
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Marketplace));
         }
 
         // GET: Listings/Adopted
@@ -404,9 +438,11 @@ namespace PETHUB.Controllers
             var report = await _context.Listings.FindAsync(id);
             if (report == null) return NotFound();
 
+            if (report.MemberId != User.FindFirstValue(ClaimTypes.NameIdentifier)) return Forbid();
+
             report.ListStatus = ListingStatus.Adopted;
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Marketplace));
         }
 
         private bool ListingExists(int id)

@@ -5,282 +5,170 @@ using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
+using System.Security.Claims;
 
 public class LostFoundsController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-
     public LostFoundsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
-    {
-        _context = context;
-        _userManager = userManager;
-    }
+    { _context = context; _userManager = userManager; }
 
-    // GET: LostFounds
-    public async Task<IActionResult> Index()
-    {
-        var lostfounds = await _context.LostFounds
-            .Include(l => l.Images)
-            .ToListAsync();
-        return View(lostfounds);
-    }
+    // The old admin endpoint stays safe and leads to the shared moderation queue.
+    [Authorize(Roles = "Admin")]
+    public IActionResult Index() => RedirectToAction("Approvals", "Listings");
 
-    // GET: LostFounds/Details/5
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null) return NotFound();
-
-        var lostfound = await _context.LostFounds
-            .Include(l => l.Images)
-            .FirstOrDefaultAsync(m => m.LostFoundId == id);
-
-        if (lostfound == null) return NotFound();
-
-        return View(lostfound);
+        var report = await _context.LostFounds.Include(l => l.User).Include(l => l.Images)
+            .FirstOrDefaultAsync(l => l.LostFoundId == id);
+        return report == null ? NotFound() : View(report);
     }
 
-    // GET: LostFounds/Approve
-    [HttpPost]
+    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Admin")]
     public async Task<IActionResult> Approve(int id)
     {
         var report = await _context.LostFounds.FindAsync(id);
         if (report == null) return NotFound();
-
         report.Status = ApprovalStatus.Approved;
         await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction("Approvals", "Listings");
     }
 
-    // GET: LostFounds/Reject
-    [HttpPost]
+    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Admin")]
     public async Task<IActionResult> Reject(int id)
     {
         var report = await _context.LostFounds.FindAsync(id);
         if (report == null) return NotFound();
-
         report.Status = ApprovalStatus.Rejected;
         await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction("Approvals", "Listings");
     }
 
-    // GET: LostFounds/Edit/5
+    [Authorize(Roles = "Member,Admin")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null) return NotFound();
-
-        var lostfound = await _context.LostFounds
-            .Include(l => l.Images)
-            .FirstOrDefaultAsync(m => m.LostFoundId == id);
-
-        if (lostfound == null) return NotFound();
-
-        return View(lostfound);
+        var report = await _context.LostFounds.Include(l => l.Images).FirstOrDefaultAsync(l => l.LostFoundId == id);
+        if (report == null) return NotFound();
+        return CanManage(report) ? View(report) : Forbid();
     }
 
-    // POST: LostFounds/Edit/5
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Member,Admin")]
     public async Task<IActionResult> Edit(int id, LostFound lostFound, List<IFormFile> Images)
     {
         if (id != lostFound.LostFoundId) return NotFound();
+        var existing = await _context.LostFounds.Include(l => l.Images).FirstOrDefaultAsync(l => l.LostFoundId == id);
+        if (existing == null) return NotFound();
+        if (!CanManage(existing)) return Forbid(); // Clients never reach this action.
+        if (!ModelState.IsValid) return View(existing);
 
-        if (ModelState.IsValid)
-        {
-            var existing = await _context.LostFounds
-                .Include(l => l.Images)
-                .FirstOrDefaultAsync(l => l.LostFoundId == id);
-
-            if (existing == null) return NotFound();
-
-            existing.Title = lostFound.Title;
-            existing.Description = lostFound.Description;
-            existing.Type = lostFound.Type;
-            existing.Breed = lostFound.Breed;
-            existing.PetType = lostFound.PetType;
-            existing.Sex = lostFound.Sex;
-            existing.LostDate = lostFound.LostDate;
-            existing.ClientName = lostFound.ClientName;
-            existing.ClientContact = lostFound.ClientContact;
-            existing.Location = lostFound.Location;
-            existing.DateReported = DateTime.Now;
-
-            // na-apply diri ang imageuploadhelper
-            if (Images != null && Images.Count > 0)
-            {
-                var savedImages = await ImageUploadHelper.SaveImagesAsync(
-                    Images,
-                    lostFound.LostFoundId,
-                    (id, path) => new LostFoundImage { LostFoundId = id, ImagePath = path },
-                    "lostfound"
-                );
-
-                _context.AddRange(savedImages);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        return View(lostFound);
+        existing.Title = lostFound.Title; existing.Description = lostFound.Description;
+        existing.Type = lostFound.Type; existing.Breed = lostFound.Breed;
+        existing.PetType = lostFound.PetType; existing.Sex = lostFound.Sex;
+        existing.LostDate = lostFound.LostDate; existing.Location = lostFound.Location;
+        existing.DateReported = DateTime.Now;
+        if (Images?.Count > 0)
+            _context.AddRange(await ImageUploadHelper.SaveImagesAsync(Images, existing.LostFoundId,
+                (reportId, path) => new LostFoundImage { LostFoundId = reportId, ImagePath = path }, "lostfound"));
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Browse));
     }
 
-    // GET: LostFounds/Delete/5
+    [Authorize(Roles = "Member,Admin")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null) return NotFound();
-
-        var lostfound = await _context.LostFounds
-            .Include(l => l.Images)
-            .FirstOrDefaultAsync(m => m.LostFoundId == id);
-
-        if (lostfound == null) return NotFound();
-
-        return View(lostfound);
+        var report = await _context.LostFounds.Include(l => l.Images).FirstOrDefaultAsync(l => l.LostFoundId == id);
+        if (report == null) return NotFound();
+        return CanManage(report) ? View(report) : Forbid();
     }
 
-    // POST: LostFounds/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken, Authorize(Roles = "Member,Admin")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var lostFound = await _context.LostFounds
-            .Include(l => l.Images)
-            .FirstOrDefaultAsync(l => l.LostFoundId == id);
-
-        if (lostFound != null)
+        var report = await _context.LostFounds.Include(l => l.Images).FirstOrDefaultAsync(l => l.LostFoundId == id);
+        if (report == null) return NotFound();
+        if (!CanManage(report)) return Forbid();
+        foreach (var image in report.Images ?? Enumerable.Empty<LostFoundImage>())
         {
-            if (lostFound.Images != null && lostFound.Images.Any())
-            {
-                foreach (var img in lostFound.Images)
-                {
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", img.ImagePath.TrimStart('/'));
-                    if (System.IO.File.Exists(filePath))
-                        System.IO.File.Delete(filePath);
-
-                    _context.LostFoundImages.Remove(img);
-                }
-            }
-
-            _context.LostFounds.Remove(lostFound);
-            await _context.SaveChangesAsync();
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.ImagePath.TrimStart('/'));
+            if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+            _context.LostFoundImages.Remove(image);
         }
-
-        return RedirectToAction(nameof(Index));
+        _context.LostFounds.Remove(report);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Browse));
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Member,Admin")]
     public async Task<IActionResult> RemoveImage(int id)
     {
-        var image = await _context.LostFoundImages.FindAsync(id);
-        if (image != null)
-        {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.ImagePath.TrimStart('/'));
-            if (System.IO.File.Exists(filePath))
-                System.IO.File.Delete(filePath);
-
-            _context.LostFoundImages.Remove(image);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Edit", new { id = image.LostFoundId });
-        }
-
-        return NotFound();
+        var image = await _context.LostFoundImages.Include(i => i.LostFound).FirstOrDefaultAsync(i => i.LostFoundImageId == id);
+        if (image == null) return NotFound();
+        if (image.LostFound == null || !CanManage(image.LostFound)) return Forbid();
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.ImagePath.TrimStart('/'));
+        if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+        _context.LostFoundImages.Remove(image); await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Edit), new { id = image.LostFoundId });
     }
 
-
-
-    // GET: LostFounds/Create
+    [AllowAnonymous]
     public IActionResult Create() => View();
 
-    // POST: LostFounds/Create
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken, AllowAnonymous]
     public async Task<IActionResult> Create(LostFound lostFound, List<IFormFile> Images)
     {
-        if (User.Identity.IsAuthenticated)
+        if (User.Identity?.IsAuthenticated == true)
         {
-            // Placeholder for future member linking
-            // lostFound.MemberId = _userManager.GetUserId(User);
+            // Registered members own their reports; client contact details are not overwritten.
+            lostFound.UserId = _userManager.GetUserId(User);
         }
-        else
-        {
-            // Require client info
-            if (string.IsNullOrEmpty(lostFound.ClientName) || string.IsNullOrEmpty(lostFound.ClientContact))
-            {
-                ModelState.AddModelError("", "Name and contact are required for unregistered clients.");
-            }
-        }
-
-        if (ModelState.IsValid)
-        {
-            lostFound.DateReported = DateTime.Now;
-            lostFound.Status = ApprovalStatus.Pending;
-            _context.Add(lostFound);
-            await _context.SaveChangesAsync();
-
-            if (Images != null && Images.Count > 0)
-            {
-                var savedImages = await ImageUploadHelper.SaveImagesAsync(
-                    Images,
-                    lostFound.LostFoundId,
-                    (id, path) => new LostFoundImage { LostFoundId = id, ImagePath = path },
-                    "lostfound"
-                );
-
-                _context.AddRange(savedImages);
-                await _context.SaveChangesAsync();
-            }
-
-
-            // Show confirmation modal
-            return RedirectToAction(nameof(SubmissionPending));
-        }
-        return View(lostFound);
+        else if (string.IsNullOrWhiteSpace(lostFound.ClientName) || string.IsNullOrWhiteSpace(lostFound.ClientContact))
+            ModelState.AddModelError("", "Name and contact are required for unregistered clients.");
+        if (!ModelState.IsValid) return View(lostFound);
+        lostFound.DateReported = DateTime.Now; lostFound.Status = ApprovalStatus.Pending;
+        _context.Add(lostFound); await _context.SaveChangesAsync();
+        if (Images?.Count > 0)
+        { _context.AddRange(await ImageUploadHelper.SaveImagesAsync(Images, lostFound.LostFoundId,
+            (reportId, path) => new LostFoundImage { LostFoundId = reportId, ImagePath = path }, "lostfound")); await _context.SaveChangesAsync(); }
+        return RedirectToAction(nameof(SubmissionPending));
     }
 
+    public IActionResult SubmissionPending() => View();
 
-    // GET: LostFounds/SubmissionPending
-    public IActionResult SubmissionPending()
-    {
-        return View();
-    }
-
-
-    // GET: LOSTFOUNDS
     [AllowAnonymous]
-    public async Task<IActionResult> Browse()
+    public async Task<IActionResult> Browse(string? petTypeFilter)
     {
-        var lostfounds = await _context.LostFounds
-            .Where(l => l.Status == ApprovalStatus.Approved)
-            .Include(l => l.Images)
-            .ToListAsync();
-
-        return View(lostfounds);
+        var reports = await _context.LostFounds.Where(l => l.Status == ApprovalStatus.Approved)
+            .Include(l => l.User).Include(l => l.Images).ToListAsync();
+        if (Enum.TryParse<PetType>(petTypeFilter, true, out var petType)) reports = reports.Where(l => l.PetType == petType).ToList();
+        ViewBag.PetTypeFilter = petTypeFilter;
+        return View(reports);
     }
 
-    // GET: LOSTFOUNDS/Details/5
+    [AllowAnonymous]
     public async Task<IActionResult> BrowseDetails(int? id)
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var lostfound = await _context.LostFounds
-                .Include(l => l.Images)
-                .FirstOrDefaultAsync(m => m.LostFoundId == id);
-
-
-        if (lostfound == null)
-        {
-            return NotFound();
-        }
-
-        return View(lostfound);
+        if (id == null) return NotFound();
+        var report = await _context.LostFounds.Include(l => l.User).Include(l => l.Images)
+            .FirstOrDefaultAsync(l => l.LostFoundId == id && l.Status == ApprovalStatus.Approved);
+        return report == null ? NotFound() : View(report);
     }
 
-    private bool LostFoundExists(int id)
+    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Member")]
+    public async Task<IActionResult> Resolve(int id)
     {
-        return _context.LostFounds.Any(e => e.LostFoundId == id);
+        var report = await _context.LostFounds.FindAsync(id);
+        if (report == null) return NotFound();
+        if (!CanManage(report)) return Forbid();
+        report.ResolutionStatus = ReportResolutionStatus.Resolved;
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Browse));
     }
+
+    // Admins may manage all records; members only records owned by their account.
+    private bool CanManage(LostFound report) => User.IsInRole("Admin") || report.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier);
 }

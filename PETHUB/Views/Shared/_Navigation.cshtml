@@ -79,20 +79,9 @@
                             </a>
                         </li>
 
+                        <!-- One destination prevents role navigation back into separate queues. -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Listings"
-                               asp-action="Index">
-                                Marketplace Approval
-                            </a>
-                        </li>
-                         
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="LostFounds"
-                               asp-action="Index">
-                                Lost & Found Approval
-                            </a>
+                            <a class="nav-link text-dark" asp-controller="Listings" asp-action="Approvals">Approvals</a>
                         </li>
 
                     }

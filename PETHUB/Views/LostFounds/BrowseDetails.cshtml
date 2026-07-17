@@ -43,6 +43,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <h3 class="fw-bold">@Model.Title</h3>
+                    @if (Model.ResolutionStatus == ReportResolutionStatus.Resolved) { <span class="badge bg-success">@Model.Type report resolved</span> }
                     <p class="text-muted mb-1">Reported on @Model.DateReported.ToString("MMMM dd, yyyy")</p>
                     <p class="mb-3">@Model.Description</p>
                     <p><strong>Type:</strong> @Model.Type</p>
@@ -51,11 +52,11 @@
                     <p><strong>Sex:</strong> @(Model.Sex.HasValue ? Model.Sex.ToString() : "Not specified")</p>
                     <p><strong>Lost Date:</strong> @(Model.LostDate.HasValue ? Model.LostDate.Value.ToString("MMM dd, yyyy") : "Not specified")</p>
                     <p><strong>Location:</strong> @(string.IsNullOrEmpty(Model.Location) ? "Not specified" : Model.Location)</p>
-                    <p><strong>Reporter's Name:</strong> @Model.ClientName</p>
+                    <p><strong>Reporter's Name:</strong> @(Model.User?.UserName ?? Model.ClientName ?? "Anonymous client")</p>
                     <p><strong>Reporter's Contact:</strong> @Model.ClientContact</p>
                 </div>
                 <div class="card-footer d-flex justify-content-center gap-3">
-                    <a asp-action="Index" class="btn btn-secondary px-4">← Back to Reports</a>
+                    <a asp-action="Browse" class="btn btn-secondary px-4">← Back to Reports</a>
                 </div>
             </div>
         </div>

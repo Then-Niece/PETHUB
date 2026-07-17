@@ -48,7 +48,7 @@
     <div class="col-md-5">
         <div class="card border-0 shadow-sm">
             <div class="card-body">
-                <form asp-action="Edit" enctype="multipart/form-data">
+                <form asp-action="Edit" method="post" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="LostFoundId" />
 
@@ -91,9 +91,18 @@
 
                     <div class="form-group d-flex justify-content-center gap-3">
                         <input type="submit" value="Save" class="btn btn-primary px-4" />
-                        <a asp-action="Index" class="btn btn-secondary px-4">Cancel</a>
+                        @if (User.IsInRole("Member") && Model.ResolutionStatus != ReportResolutionStatus.Resolved)
+                        {
+                            <!-- Only the report owner passes the matching server-side Resolve check. -->
+                            <button type="submit" form="resolveReport" class="btn btn-success">Mark as Resolved</button>
+                        }
+                        <a asp-action="Browse" class="btn btn-secondary px-4">Cancel</a>
                     </div>
                 </form>
+                @if (User.IsInRole("Member") && Model.ResolutionStatus != ReportResolutionStatus.Resolved)
+                {
+                    <form id="resolveReport" asp-action="Resolve" asp-route-id="@Model.LostFoundId" method="post"></form>
+                }
             </div>
         </div>
     </div>

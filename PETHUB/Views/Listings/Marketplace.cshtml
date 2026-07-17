@@ -6,6 +6,12 @@
 
 <h1 class="text-center">Marketplace</h1>
 
+<!-- Public filters do not reveal private approval decisions. -->
+<form method="get" class="d-flex justify-content-center gap-2 mb-3">
+    <select name="petTypeFilter" class="form-select w-auto"><option value="">Dogs and cats</option><option value="Dog">Dogs</option><option value="Cat">Cats</option></select>
+    <button class="btn btn-outline-secondary">Filter</button>
+</form>
+
 <!-- Add Listing Button -->
 @if (User.IsInRole("Member"))
 {
@@ -52,6 +58,7 @@ else{
 
                     <div class="card-body">
                         <h5 class="card-title">@item.Title</h5>
+                        @if (item.ListStatus == ListingStatus.Sold) { <span class="badge bg-danger">Sold</span> }
 
                         <p class="card-text text-muted">
                             @item.Description
@@ -75,6 +82,7 @@ else{
                                     : item.Location)
                             </small>
                         </p>
+                        <p class="card-text"><small>Posted by @(item.Member?.UserName ?? "Member") · @item.PetType</small></p>
                     </div>
 
                 </div>

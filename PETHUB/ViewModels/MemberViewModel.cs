@@ -24,7 +24,19 @@ namespace PETHUB.ViewModels
         public string Address { get; set; }
         public string Gender { get; set; }
 
+        [CustomValidation(typeof(MemberViewModel), nameof(ValidateAdultBirthdate))]
         public DateTime Birthdate { get; set; }
+
+        // Enforced on the server for members created by an administrator too.
+        public static ValidationResult? ValidateAdultBirthdate(DateTime birthdate, ValidationContext context)
+        {
+            var today = DateTime.Today;
+            var age = today.Year - birthdate.Year;
+            if (birthdate.Date > today.AddYears(-age)) age--;
+            return birthdate.Date > today || age < 18
+                ? new ValidationResult("Members must be at least 18 years old.")
+                : ValidationResult.Success;
+        }
     }
 
 }
