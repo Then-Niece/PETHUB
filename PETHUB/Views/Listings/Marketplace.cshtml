@@ -7,7 +7,7 @@
 <h1 class="text-center">Marketplace</h1>
 
 <!-- Add Listing Button -->
-@if (User.IsInRole("Member") || User.IsInRole("Admin"))
+@if (User.IsInRole("Member"))
 {
     <a asp-controller="Listings"
        asp-action="Create"
@@ -15,8 +15,11 @@
         Add Listing
     </a>
 }
-else
+else if(User.IsInRole("Admin"))
 {
+    //Admin Cannot add a Marketplace Listing
+}
+else{
     <button type="button"
             class="btn btn-primary btn-lg"
             data-bs-toggle="modal"

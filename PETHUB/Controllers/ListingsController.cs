@@ -8,6 +8,7 @@ using PETHUB.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PETHUB.Controllers
@@ -33,8 +34,7 @@ namespace PETHUB.Controllers
             return View(listings);
         }
 
-        // GET: Marketplace Listing for Client POV
-        [Authorize(Roles = "Member")]
+        // GET: Marketplace Listing for Client and Member
         [AllowAnonymous]
         public async Task<IActionResult> Marketplace()
         {
@@ -70,7 +70,8 @@ namespace PETHUB.Controllers
         }
 
 
-        // GET: Listings/Details/For Client POV
+        // GET: Listings/Details/For Client and Member
+        [AllowAnonymous]
         public async Task<IActionResult> MarketplaceDetails(int? id)
         {
             if (id == null)
@@ -92,6 +93,7 @@ namespace PETHUB.Controllers
         }
 
         // GET: Listings/Create
+        [Authorize(Roles = "Member")]
         public IActionResult Create()
         {
             return View();
@@ -103,6 +105,7 @@ namespace PETHUB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> Create(Listing listing, List<IFormFile> ImageFiles)
         {
             if (ModelState.IsValid)
@@ -134,10 +137,8 @@ namespace PETHUB.Controllers
 
 
 
-
-
-
         // GET: Listings/Edit/5
+        [Authorize(Roles = "Member,Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -146,15 +147,22 @@ namespace PETHUB.Controllers
             }
 
             var listing = await _context.Listings
-                .Include(l => l.Images) // load related images
-                .Include(l => l.Member)   // optional: keep user info if needed
+                .Include(l => l.Images)
+                .Include(l => l.Member)
                 .FirstOrDefaultAsync(l => l.ListingId == id);
+
             if (listing == null)
             {
                 return NotFound();
             }
 
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", listing.MemberId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!User.IsInRole("Admin") && listing.MemberId != userId)
+            {
+                return Forbid();
+            }
+
             return View(listing);
         }
 
@@ -165,8 +173,33 @@ namespace PETHUB.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Member,Admin")]
         public async Task<IActionResult> Edit(int id, Listing listing, List<IFormFile> ImageFiles)
         {
+            if (id != listing.ListingId)
+            {
+                return NotFound();
+            }
+
+            var existingListing = await _context.Listings
+                .Include(l => l.Images)
+                .FirstOrDefaultAsync(l => l.ListingId == id);
+
+            if (existingListing == null)
+            {
+                return NotFound();
+            }
+
+            // Get the currently logged-in user's ID
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Admin can edit any listing.
+            // Member can only edit their own listing.
+            if (!User.IsInRole("Admin") && existingListing.MemberId != userId)
+            {
+                return Forbid();
+            }
+
             if (!ModelState.IsValid)
             {
                 foreach (var item in ModelState)
@@ -176,45 +209,42 @@ namespace PETHUB.Controllers
                         Console.WriteLine($"{item.Key}: {error.ErrorMessage}");
                     }
                 }
-            }
-            if (id != listing.ListingId) return NotFound();
 
-            if (ModelState.IsValid)
+                ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", existingListing.MemberId);
+                return View(existingListing);
+            }
+
+            // Update fields
+            existingListing.Title = listing.Title;
+            existingListing.Description = listing.Description;
+            existingListing.Price = listing.Price;
+            existingListing.Location = listing.Location;
+            existingListing.DatePosted = DateTime.Now;
+            existingListing.Breed = listing.Breed;
+            existingListing.PetType = listing.PetType;
+            existingListing.PetSex = listing.PetSex;
+            existingListing.Type = listing.Type;
+
+            // Handle new images
+            if (ImageFiles != null && ImageFiles.Count > 0)
             {
-                var existingListing = await _context.Listings
-                    .Include(l => l.Images)
-                    .FirstOrDefaultAsync(l => l.ListingId == id);
+                var savedImages = await ImageUploadHelper.SaveImagesAsync(
+                    ImageFiles,
+                    existingListing.ListingId,
+                    (listingId, path) => new ListingImage
+                    {
+                        ListingId = listingId,
+                        ImagePath = path
+                    },
+                    "marketplace"
+                );
 
-                if (existingListing == null) return NotFound();
-
-                // Update fields
-                existingListing.Title = listing.Title;
-                existingListing.Description = listing.Description;
-                existingListing.Price = listing.Price;
-                existingListing.Location = listing.Location;
-                existingListing.DatePosted = DateTime.Now;
-                existingListing.Breed = listing.Breed;
-                existingListing.PetType = listing.PetType;
-                existingListing.PetSex = listing.PetSex;
-                existingListing.Type = listing.Type;
-
-                // Handle new images
-                if (ImageFiles != null && ImageFiles.Count > 0)
-                {
-                    var savedImages = await ImageUploadHelper.SaveImagesAsync(
-                        ImageFiles,
-                        existingListing.ListingId,
-                        (id, path) => new ListingImage { ListingId = id, ImagePath = path },
-                        "marketplace"
-                    );
-
-                    _context.AddRange(savedImages);
-                }
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.AddRange(savedImages);
             }
 
-            return View(listing);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -223,6 +253,8 @@ namespace PETHUB.Controllers
 
 
         // GET: Listings/Delete/5
+
+        [Authorize(Roles = "Member, Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -238,6 +270,13 @@ namespace PETHUB.Controllers
             {
                 return NotFound();
             }
+            //I added this to ensure that only the owner of the listing or an admin can delete it
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!User.IsInRole("Admin") && listing.MemberId != userId)
+            {
+                return Forbid();
+            }
 
             return View(listing);
         }
@@ -245,31 +284,48 @@ namespace PETHUB.Controllers
         // POST: Listings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Member,Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var listing = await _context.Listings
                 .Include(l => l.Images) // include related images
                 .FirstOrDefaultAsync(l => l.ListingId == id);
 
-            if (listing != null)
+            if (listing == null)
             {
-                // Delete image files from wwwroot/images
-                if (listing.Images != null && listing.Images.Any())
-                {
-                    foreach (var img in listing.Images)
-                    {
-                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", img.ImagePath.TrimStart('/'));
-                        if (System.IO.File.Exists(filePath))
-                        {
-                            System.IO.File.Delete(filePath);
-                        }
-                        _context.ListingImages.Remove(img);
-                    }
-                }
-
-                _context.Listings.Remove(listing);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Admin can delete any listing.
+            // Member can only delete their own listing.
+            if (!User.IsInRole("Admin") && listing.MemberId != userId)
+            {
+                return Forbid();
+            }
+
+            // Delete image files from wwwroot/images
+            if (listing.Images != null && listing.Images.Any())
+            {
+                foreach (var img in listing.Images)
+                {
+                    var filePath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot",
+                        img.ImagePath.TrimStart('/'));
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+
+                    _context.ListingImages.Remove(img);
+                }
+            }
+
+            _context.Listings.Remove(listing);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
@@ -277,6 +333,7 @@ namespace PETHUB.Controllers
         // POST: Listings/EDIT/REMOVEIMAGE/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Member,Admin")]
         public async Task<IActionResult> RemoveImage(int id)
         {
             var image = await _context.ListingImages.FindAsync(id);
@@ -302,6 +359,7 @@ namespace PETHUB.Controllers
 
         // GET: Listings/Approve
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Approve(int id)
         {
             var report = await _context.Listings.FindAsync(id);
@@ -314,6 +372,7 @@ namespace PETHUB.Controllers
 
         // GET: Listings/Reject
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Reject(int id)
         {
             var report = await _context.Listings.FindAsync(id);
@@ -326,6 +385,7 @@ namespace PETHUB.Controllers
 
         // GET: Listings/Sold
         [HttpPost]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> Sold(int id)
         {
             var report = await _context.Listings.FindAsync(id);
@@ -338,6 +398,7 @@ namespace PETHUB.Controllers
 
         // GET: Listings/Adopted
         [HttpPost]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> Adopted(int id)
         {
             var report = await _context.Listings.FindAsync(id);
