@@ -34,9 +34,25 @@
 </div>
 
 <div class="container">
-    @foreach (var item in Model)
-    {
-        <div class="card mb-2 shadow-sm" style="border-left:5px solid @(item.Type == ListType.For_Adoption ? "#0d6efd" : "#fd7e14");">
+        @foreach (var item in Model)
+        {
+            string borderColor = "#6c757d"; //
+
+            if (item.Status == ListApprovalStatus.Pending)
+            {
+                borderColor = "#ffc107"; //yellow
+            }
+            else if (item.Status == ListApprovalStatus.Approved)
+            {
+                borderColor = "#198754"; //green
+            }
+            else if (item.Status == ListApprovalStatus.Rejected)
+            {
+                borderColor = "#dc3545"; //red
+            }
+
+            <div class="card mb-2 shadow-sm"
+                 style="border-left:5px solid @borderColor;">
             <div class="row g-0 align-items-center">
 
                 <!-- Thumbnail -->
@@ -64,20 +80,9 @@
                         <p class="mb-1 text-muted small">@item.Description</p>
 
                         <p class="mb-0">
-                            <span class="badge bg-@(item.Status == ListApprovalStatus.Approved ? "success" : item.Status == ListApprovalStatus.Rejected ? "danger" : "secondary")">@item.Status</span>
                             <span class="badge bg-@(item.Type == ListType.For_Adoption ? "primary" : "warning text-dark")">@item.Type</span>
                             <small class="text-muted"> | @item.DatePosted.ToString("MMM dd, yyyy")</small>
                             <small class="text-muted"> | @(string.IsNullOrEmpty(item.Location) ? "No location" : item.Location)</small>
-                        </p>
-
-                        <p class="mb-0 text-muted small">
-                            Breed: @(string.IsNullOrEmpty(item.Breed) ? "Not specified" : item.Breed) |
-                            Sex: @item.PetSex |
-                            Pet: @item.PetType
-                        </p>
-
-                        <p class="mb-0 fw-bold">
-                            @(item.Type == ListType.For_Adoption ? "For Adoption" : $"₱{item.Price}")
                         </p>
                     </div>
                 </div>
@@ -85,20 +90,13 @@
                 <!-- Actions -->
                 <div class="col-auto pe-3">
                     <a asp-action="Details" asp-route-id="@item.ListingId" class="btn btn-sm btn-outline-primary">View</a>
-                    <a asp-action="Edit" asp-route-id="@item.ListingId" class="btn btn-sm btn-outline-warning">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.ListingId" class="btn btn-sm btn-outline-danger">Delete</a>
                 </div>
 
                 <!-- Footer -->
                 <div class="card-footer text-end">
                     @if (item.Status == ListApprovalStatus.Pending)
                     {
-                        <form asp-action="Approve" asp-route-id="@item.ListingId" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
-                        </form>
-                        <form asp-action="Reject" asp-route-id="@item.ListingId" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
-                        </form>
+                        <span class="badge bg-warning">Pending</span>
                     }
                     else if (item.Status == ListApprovalStatus.Approved)
                     {

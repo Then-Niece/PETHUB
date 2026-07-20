@@ -145,7 +145,7 @@ namespace PETHUB.Controllers
 
 
         // GET: Listings/Edit/5
-        [Authorize(Roles = "Member,Admin")]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -180,7 +180,7 @@ namespace PETHUB.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Member,Admin")]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> Edit(int id, Listing listing, List<IFormFile> ImageFiles)
         {
             if (id != listing.ListingId)
@@ -261,7 +261,7 @@ namespace PETHUB.Controllers
 
         // GET: Listings/Delete/5
 
-        [Authorize(Roles = "Member, Admin")]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -291,7 +291,7 @@ namespace PETHUB.Controllers
         // POST: Listings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Member,Admin")]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var listing = await _context.Listings
@@ -340,7 +340,7 @@ namespace PETHUB.Controllers
         // POST: Listings/EDIT/REMOVEIMAGE/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Member,Admin")]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> RemoveImage(int id)
         {
             var image = await _context.ListingImages.FindAsync(id);

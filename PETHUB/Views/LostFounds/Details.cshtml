@@ -6,59 +6,195 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <!-- Left side: image gallery -->
+
+        <!-- ========================= -->
+        <!-- Left Side: Image Gallery -->
+        <!-- ========================= -->
         <div class="col-md-6">
+
+            @* CUSTOMIZE:
+               - Change carousel height (currently 400px)
+               - Change object-fit (cover, contain, etc.)
+            *@
             @if (Model.Images != null && Model.Images.Any())
             {
                 <div id="lostFoundCarousel" class="carousel slide shadow-sm" data-bs-ride="carousel">
+
                     <div class="carousel-inner rounded">
+
                         @for (int i = 0; i < Model.Images.Count; i++)
                         {
                             var img = Model.Images.ElementAt(i);
+
                             <div class="carousel-item @(i == 0 ? "active" : "")">
-                                <img src="@img.ImagePath" class="d-block w-100" alt="LostFound image" style="height:400px;object-fit:cover;">
+                                <img src="@img.ImagePath"
+                                     class="d-block w-100"
+                                     alt="Lost & Found Image"
+                                     style="height:400px; object-fit:cover;">
                             </div>
                         }
+
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#lostFoundCarousel" data-bs-slide="prev">
+
+                    <button class="carousel-control-prev"
+                            type="button"
+                            data-bs-target="#lostFoundCarousel"
+                            data-bs-slide="prev">
                         <span class="carousel-control-prev-icon"></span>
                         <span class="visually-hidden">Previous</span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#lostFoundCarousel" data-bs-slide="next">
+
+                    <button class="carousel-control-next"
+                            type="button"
+                            data-bs-target="#lostFoundCarousel"
+                            data-bs-slide="next">
                         <span class="carousel-control-next-icon"></span>
                         <span class="visually-hidden">Next</span>
                     </button>
+
                 </div>
             }
             else
             {
-                <div class="bg-light text-center py-5 rounded shadow-sm">
-                    <p class="text-muted">No images uploaded for this report.</p>
+                <div class="bg-light rounded shadow-sm d-flex justify-content-center align-items-center"
+                     style="height:400px;">
+                    <p class="text-muted mb-0">
+                        No images uploaded.
+                    </p>
                 </div>
             }
+
         </div>
 
-        <!-- Right side: report info -->
+        <!-- ========================= -->
+        <!-- Right Side: Report Details -->
+        <!-- ========================= -->
         <div class="col-md-5">
+
+            @* CUSTOMIZE:
+               - shadow-sm
+               - rounded corners
+               - border style
+            *@
             <div class="card border-0 shadow-sm">
+
                 <div class="card-body">
-                    <h3 class="fw-bold">@Model.Title</h3>
-                    <p class="text-muted mb-1">Reported on @Model.DateReported.ToString("MMMM dd, yyyy")</p>
-                    <p class="mb-3">@Model.Description</p>
-                    <p><strong>Type:</strong> @Model.Type</p>
-                    <p><strong>Pet Type:</strong> @Model.PetType</p>
-                    <p><strong>Breed:</strong> @(string.IsNullOrEmpty(Model.Breed) ? "Not specified" : Model.Breed)</p>
-                    <p><strong>Sex:</strong> @(Model.Sex.HasValue ? Model.Sex.ToString() : "Not specified")</p>
-                    <p><strong>Lost Date:</strong> @(Model.LostDate.HasValue ? Model.LostDate.Value.ToString("MMM dd, yyyy") : "Not specified")</p>
-                    <p><strong>Location:</strong> @(string.IsNullOrEmpty(Model.Location) ? "Not specified" : Model.Location)</p>
-                    <p><strong>Reporter's Name:</strong> @Model.ClientName</p>
-                    <p><strong>Reporter's Contact:</strong> @Model.ClientContact</p>
+
+                    <!-- Report Title -->
+                    <h2 class="fw-bold">
+                        @Model.Title
+                    </h2>
+
+                    <!-- Report Date -->
+                    <p class="text-muted">
+                        Reported on @Model.DateReported.ToString("MMMM dd, yyyy")
+                    </p>
+
+                    <hr />
+
+                    <!-- Description -->
+                    <h5>Description</h5>
+
+                    <p>
+                        @(string.IsNullOrWhiteSpace(Model.Description)
+                            ? "No description provided."
+                            : Model.Description)
+                    </p>
+
+                    <hr />
+
+                    <!-- Report Information -->
+                    <h5>Report Information</h5>
+
+                    <p>
+                        <strong>Report Type:</strong>
+                        @Model.Type
+                    </p>
+
+                    <p>
+                        <strong>Pet Type:</strong>
+                        @Model.PetType
+                    </p>
+
+                    <p>
+                        <strong>Breed:</strong>
+                        @(string.IsNullOrWhiteSpace(Model.Breed)
+                            ? "Not specified"
+                            : Model.Breed)
+                    </p>
+
+                    <p>
+                        <strong>Sex:</strong>
+                        @(Model.Sex.HasValue
+                            ? Model.Sex.ToString()
+                            : "Not specified")
+                    </p>
+
+                    <p>
+                        <strong>Lost Date:</strong>
+                        @(Model.LostDate.HasValue
+                            ? Model.LostDate.Value.ToString("MMMM dd, yyyy")
+                            : "Not specified")
+                    </p>
+
+                    <p>
+                        <strong>Location:</strong>
+                        @(string.IsNullOrWhiteSpace(Model.Location)
+                            ? "Not specified"
+                            : Model.Location)
+                    </p>
+
+                    <hr />
+
+                    <!-- Reporter Information -->
+                    <h5>Reporter Information</h5>
+
+                    <p>
+                        <strong>Name:</strong>
+                        @Model.ClientName
+                    </p>
+
+                    <p>
+                        <strong>Contact:</strong>
+                        @Model.ClientContact
+                    </p>
+
                 </div>
+
+                <!-- ========================= -->
+                <!-- DO NOT MODIFY BUTTONS -->
+                <!-- ========================= -->
                 <div class="card-footer d-flex justify-content-center gap-3">
-                    <a asp-action="Edit" asp-route-id="@Model.LostFoundId" class="btn btn-warning px-4">Edit</a>
-                    <a asp-action="Index" class="btn btn-secondary px-4">← Back to Reports</a>
+
+                    @if (Model.Status == ApprovalStatus.Pending)
+                    {
+                    <form asp-action="Approve" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@Model.LostFoundId" />
+
+                        <button type="submit" class="btn btn-success">
+                            Approve
+                        </button>
+                    </form>
+
+                    <form asp-action="Reject" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@Model.LostFoundId" />
+
+                        <button type="submit" class="btn btn-danger">
+                            Reject
+                        </button>
+                    </form>
+                    }
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary px-4">
+                        ← Back to Reports
+                    </a>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 </div>
