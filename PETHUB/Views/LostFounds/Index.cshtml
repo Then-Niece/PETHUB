@@ -6,11 +6,54 @@
 
 <h1>Lost & Found User (Admin)</h1>
 
+<div class="mb-3">
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        All
+    </a>
+
+    <a asp-action="Index"
+       asp-route-status="Pending"
+       class="btn btn-warning">
+        Pending
+    </a>
+
+    <a asp-action="Index"
+       asp-route-status="Approved"
+       class="btn btn-success">
+        Approved
+    </a>
+
+    <a asp-action="Index"
+       asp-route-status="Rejected"
+       class="btn btn-danger">
+        Rejected
+    </a>
+
+</div>
+
 <div class="container">
     @foreach (var item in Model)
     {
-        <div class="card mb-2 shadow-sm" style="border-left:5px solid @(item.Type == LostFoundType.Lost ? "#dc3545" : "#198754");">
-            <div class="row g-0 align-items-center">
+        string borderColor = "#6c757d";
+
+        if (item.Status == ApprovalStatus.Pending)
+        {
+            borderColor = "#ffc107"; //yellow
+        }
+        else if (item.Status == ApprovalStatus.Approved)
+        {
+            borderColor = "#198754"; //green
+        }
+        else if (item.Status == ApprovalStatus.Rejected)
+        {
+            borderColor = "#dc3545"; //red
+        }
+        <div class="card mb-2 shadow-sm"
+                style="border-left:5px solid @borderColor;">
+        <div class="row g-0 align-items-center">
+
                 <!-- Thumbnail -->
                 <div class="col-auto">
                     @if (item.Images != null && item.Images.Any())
@@ -46,20 +89,13 @@
                 <!-- Actions -->
                 <div class="col-auto pe-3">
                     <a asp-action="Details" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-primary">View</a>
-                    <a asp-action="Edit" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-warning">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.LostFoundId" class="btn btn-sm btn-outline-danger">Delete</a>
                 </div>
 
 
                 <div class="card-footer text-end">
                     @if (item.Status == ApprovalStatus.Pending)
                     {
-                        <form asp-action="Approve" asp-route-id="@item.LostFoundId" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
-                        </form>
-                        <form asp-action="Reject" asp-route-id="@item.LostFoundId" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
-                        </form>
+                        <span class="badge bg-warning">Pending</span>
                     }
                     else if (item.Status == ApprovalStatus.Approved)
                     {

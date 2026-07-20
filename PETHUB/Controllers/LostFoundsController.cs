@@ -20,12 +20,21 @@ public class LostFoundsController : Controller
 
     // GET: LostFounds
     [Authorize(Roles="Admin")]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string status)
     {
-        var lostfounds = await _context.LostFounds
+        var lostfounds = _context.LostFounds
             .Include(l => l.Images)
-            .ToListAsync();
-        return View(lostfounds);
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(status))
+        {
+            if (Enum.TryParse<ApprovalStatus>(status, out var selectedStatus))
+            {
+                lostfounds = lostfounds.Where(l => l.Status == selectedStatus);
+            }
+        }
+
+        return View(await lostfounds.ToListAsync());
     }
 
     // GET: LostFounds/Details/5
@@ -70,7 +79,7 @@ public class LostFoundsController : Controller
     }
 
     // GET: LostFounds/Edit/5
-    [Authorize(Roles = "Admin,Member")]
+    [Authorize(Roles = "Member")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null) return NotFound();
@@ -87,7 +96,7 @@ public class LostFoundsController : Controller
     // POST: LostFounds/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Admin,Member")]
+    [Authorize(Roles = "Member")]
     public async Task<IActionResult> Edit(int id, LostFound lostFound, List<IFormFile> Images)
     {
         if (id != lostFound.LostFoundId) return NotFound();
@@ -131,7 +140,7 @@ public class LostFoundsController : Controller
     }
 
     // GET: LostFounds/Delete/5
-    [Authorize(Roles = "Admin,Member")]
+    [Authorize(Roles = "Member")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null) return NotFound();
@@ -148,7 +157,7 @@ public class LostFoundsController : Controller
     // POST: LostFounds/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Admin,Member")]
+    [Authorize(Roles = "Member")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var lostFound = await _context.LostFounds
@@ -176,9 +185,10 @@ public class LostFoundsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    // POST: LostFounds/RemoveImage/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Admin,Member")]
+    [Authorize(Roles = "Member")]
     public async Task<IActionResult> RemoveImage(int id)
     {
         var image = await _context.LostFoundImages.FindAsync(id);

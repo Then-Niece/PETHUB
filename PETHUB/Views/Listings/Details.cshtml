@@ -6,7 +6,8 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <!-- Left side: image gallery -->
+
+        <!-- Left Side: Image Gallery -->
         <div class="col-md-6">
             @if (Model.Images != null && Model.Images.Any())
             {
@@ -15,43 +16,137 @@
                         @for (int i = 0; i < Model.Images.Count; i++)
                         {
                             var img = Model.Images.ElementAt(i);
+
                             <div class="carousel-item @(i == 0 ? "active" : "")">
-                                <img src="@img.ImagePath" class="d-block w-100" alt="Listing image" style="height:400px;object-fit:cover;">
+                                <img src="@img.ImagePath"
+                                     class="d-block w-100"
+                                     alt="Listing Image"
+                                     style="height:400px; object-fit:cover;">
                             </div>
                         }
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#listingCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+
+                    <button class="carousel-control-prev"
+                            type="button"
+                            data-bs-target="#listingCarousel"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
                         <span class="visually-hidden">Previous</span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#listingCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+
+                    <button class="carousel-control-next"
+                            type="button"
+                            data-bs-target="#listingCarousel"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
             }
             else
             {
-                <div class="bg-light text-center py-5 rounded shadow-sm">
-                    <p class="text-muted">No images uploaded for this listing.</p>
+                <div class="bg-light rounded shadow-sm d-flex justify-content-center align-items-center"
+                     style="height:400px;">
+                    <p class="text-muted mb-0">No images uploaded.</p>
                 </div>
             }
         </div>
 
-        <!-- Right side: listing info -->
+        <!-- Right Side: Listing Details -->
         <div class="col-md-5">
             <div class="card border-0 shadow-sm">
+
                 <div class="card-body">
-                    <h3 class="fw-bold">@Model.Title</h3>
-                    <p class="text-muted mb-1">Posted on @Model.DatePosted.ToString("MMMM dd, yyyy")</p>
-                    <p class="mb-3">@Model.Description</p>
-                    <p><strong>Price:</strong> ₱@Model.Price</p>
-                    <p><strong>Location:</strong> @(string.IsNullOrEmpty(Model.Location) ? "Not specified" : Model.Location)</p>
-                    <p><strong>User:</strong> @(Model.MemberId ?? "—")</p>
+
+                    <h2 class="fw-bold">@Model.Title</h2>
+
+                    <p class="text-muted">
+                        Posted on @Model.DatePosted.ToString("MMMM dd, yyyy")
+                    </p>
+
+                    <hr />
+
+                    <h5>Description</h5>
+
+                    <p>
+                        @(string.IsNullOrWhiteSpace(Model.Description)
+                            ? "No description provided."
+                            : Model.Description)
+                    </p>
+
+                    <hr />
+
+                    <h5>Listing Information</h5>
+
+                    <p>
+                        <strong>Listing Type:</strong>
+                        @(Model.Type == PETHUB.Models.ListType.For_Adoption
+                            ? "For Adoption"
+                            : "For Sale")
+                    </p>
+
+                    @if (Model.Type == PETHUB.Models.ListType.For_Adoption)
+                    {
+                        <p>
+                            <strong>Price:</strong>
+                            <span class="text-success fw-bold">Free for Adoption</span>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <strong>Price:</strong>
+                            ₱@Model.Price
+                        </p>
+                    }
+
+                    <p>
+                        <strong>Pet Type:</strong>
+                        @Model.PetType
+                    </p>
+
+                    <p>
+                        <strong>Pet Sex:</strong>
+                        @Model.PetSex
+                    </p>
+
+                    <p>
+                        <strong>Breed:</strong>
+                        @Model.Breed
+                    </p>
+
+                    <p>
+                        <strong>Location:</strong>
+                        @Model.Location
+                    </p>
+
                 </div>
+
                 <div class="card-footer d-flex justify-content-center gap-3">
-                    <a asp-action="Edit" asp-route-id="@Model.ListingId" class="btn btn-warning px-4">Edit</a>
-                    <a asp-action="Index" class="btn btn-secondary px-4">← Back to Listings</a>
+
+                    @if (Model.Status == ListApprovalStatus.Pending)
+                    {
+                        <form asp-action="Approve" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@Model.ListingId" />
+
+                            <button type="submit" class="btn btn-success">
+                                Approve
+                            </button>
+                        </form>
+
+                        <form asp-action="Reject" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@Model.ListingId" />
+
+                            <button type="submit" class="btn btn-danger">
+                                Reject
+                            </button>
+                        </form>
+                    }
+
+                    <a asp-action="Index" class="btn btn-secondary px-4">
+                        ← Back to Listings
+                    </a>
+
                 </div>
             </div>
         </div>

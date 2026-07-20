@@ -39,6 +39,7 @@ namespace PETHUB.Models
         [Display(Name = "For Sale")]
         For_Sale
     }
+
     public class Listing
     {
         [Key]
