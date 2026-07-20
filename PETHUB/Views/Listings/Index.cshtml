@@ -1,14 +1,11 @@
 @model IEnumerable<PETHUB.Models.Listing>
 
 @{
-    ViewData["Title"] = "Marketplace";
+    ViewData["Title"] = "Marketplace Approval";
 }
 
-<h1>Marketplace</h1>
+<h1>Marketplace Approval</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Listing</a>
-</p>
 
 <div class="container">
     @foreach (var item in Model)

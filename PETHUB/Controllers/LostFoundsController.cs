@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
@@ -18,6 +19,7 @@ public class LostFoundsController : Controller
     }
 
     // GET: LostFounds
+    [Authorize(Roles="Admin")]
     public async Task<IActionResult> Index()
     {
         var lostfounds = await _context.LostFounds
@@ -27,6 +29,7 @@ public class LostFoundsController : Controller
     }
 
     // GET: LostFounds/Details/5
+    [Authorize(Roles ="Admin")]
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null) return NotFound();
@@ -42,6 +45,7 @@ public class LostFoundsController : Controller
 
     // GET: LostFounds/Approve
     [HttpPost]
+    [Authorize(Roles ="Admin")]
     public async Task<IActionResult> Approve(int id)
     {
         var report = await _context.LostFounds.FindAsync(id);
@@ -54,6 +58,7 @@ public class LostFoundsController : Controller
 
     // GET: LostFounds/Reject
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Reject(int id)
     {
         var report = await _context.LostFounds.FindAsync(id);
@@ -65,6 +70,7 @@ public class LostFoundsController : Controller
     }
 
     // GET: LostFounds/Edit/5
+    [Authorize(Roles = "Admin,Member")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null) return NotFound();
@@ -81,6 +87,7 @@ public class LostFoundsController : Controller
     // POST: LostFounds/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,Member")]
     public async Task<IActionResult> Edit(int id, LostFound lostFound, List<IFormFile> Images)
     {
         if (id != lostFound.LostFoundId) return NotFound();
@@ -124,6 +131,7 @@ public class LostFoundsController : Controller
     }
 
     // GET: LostFounds/Delete/5
+    [Authorize(Roles = "Admin,Member")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null) return NotFound();
@@ -140,6 +148,7 @@ public class LostFoundsController : Controller
     // POST: LostFounds/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,Member")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var lostFound = await _context.LostFounds
@@ -169,6 +178,7 @@ public class LostFoundsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,Member")]
     public async Task<IActionResult> RemoveImage(int id)
     {
         var image = await _context.LostFoundImages.FindAsync(id);
@@ -190,11 +200,13 @@ public class LostFoundsController : Controller
 
 
     // GET: LostFounds/Create
+    [AllowAnonymous]
     public IActionResult Create() => View();
 
     // POST: LostFounds/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [AllowAnonymous]
     public async Task<IActionResult> Create(LostFound lostFound, List<IFormFile> Images)
     {
         if (User.Identity.IsAuthenticated)
@@ -240,6 +252,7 @@ public class LostFoundsController : Controller
 
 
     // GET: LostFounds/SubmissionPending
+    [AllowAnonymous]
     public IActionResult SubmissionPending()
     {
         return View();
@@ -259,6 +272,7 @@ public class LostFoundsController : Controller
     }
 
     // GET: LOSTFOUNDS/Details/5
+    [AllowAnonymous]
     public async Task<IActionResult> BrowseDetails(int? id)
     {
         if (id == null)

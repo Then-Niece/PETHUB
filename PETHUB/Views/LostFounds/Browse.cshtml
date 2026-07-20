@@ -7,13 +7,18 @@
 <h1 style="text-align: center;">Lost & Found </h1>
 
 <!-- Add Report Button -->
-@if (User.IsInRole("Member") || User.IsInRole("Admin"))
+<!-- Ony the member and client can add lost and found reports -->
+@if (User.IsInRole("Member"))
 {
     <a asp-controller="LostFounds"
        asp-action="Create"
        class="btn btn-primary btn-lg">
         Add Report
     </a>
+}
+else if (User.IsInRole("Admin"))
+{
+    //Admin Cannot add a Marketplace Listing
 }
 else
 {
@@ -29,7 +34,7 @@ else
     @foreach (var item in Model)
     {
         <div class="col-md-3 mb-4">
-            <a asp-action="Details" asp-route-id="@item.LostFoundId">
+            <a asp-action="BrowseDetails" asp-route-id="@item.LostFoundId">
                 <div class="card h-100 shadow-sm">
 
                     @if (item.Images != null && item.Images.Any())
