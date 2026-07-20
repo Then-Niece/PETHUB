@@ -1,4 +1,5 @@
 ﻿using PETHUB.Models;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace PETHUB.ViewModels
@@ -25,6 +26,8 @@ namespace PETHUB.ViewModels
         public string Gender { get; set; }
 
         public DateTime Birthdate { get; set; }
+
+        public IFormFile? IdPhoto { get; set; } // for ID photo upload in form when admin tries to add a member
     }
 
 }

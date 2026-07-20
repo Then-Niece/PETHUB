@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Models;
 using PETHUB.ViewModels;
+using PETHUB.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,14 +99,15 @@ namespace PETHUB.Controllers
                     Birthdate = model.Birthdate
                 };
 
+                member.IdPhotoPath = await IdPhotoUploadHelper.SaveIdPhotoAsync(model.IdPhoto);
+
                 // Create user with password
                 var result = await _userManager.CreateAsync(member, model.Password);
 
                 if (result.Succeeded)
                 {
-                    // 👇 Always assign Member role here
+                    // Always assign Member role here
                     await _userManager.AddToRoleAsync(member, "Member");
-
                     return RedirectToAction(nameof(Index));
                 }
 

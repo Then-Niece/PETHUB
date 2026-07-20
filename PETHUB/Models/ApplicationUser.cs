@@ -18,7 +18,10 @@ namespace PETHUB.Models
 
         // New property for the date when terms were accepted.
         public DateTime? AcceptedTermsDate { get; set; }
-        
+
+        // New property for Member ID
+        public string? IdPhotoPath { get; set; }
+
     }
 
     public enum UserStatus

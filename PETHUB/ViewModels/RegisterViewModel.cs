@@ -39,6 +39,11 @@ namespace PETHUB.ViewModels
         [Display(Name = "I agree to the Terms and Conditions")]
         public bool AcceptTerms { get; set; }
 
+        //make the member ID photo required for registration
+        [Required(ErrorMessage = "ID photo is required.")]
+        [Display(Name = "Add a Valid ID Photo")]
+        public IFormFile? IdPhoto { get; set; }
+
 
 
     }

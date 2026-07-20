@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity;
 using PETHUB.Data;
+using PETHUB.Helpers;
 using PETHUB.Models;
 using PETHUB.ViewModels;
 
@@ -27,6 +28,7 @@ namespace PETHUB.Controllers
         public IActionResult Register() => View();
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -52,6 +54,11 @@ namespace PETHUB.Controllers
                 AcceptedTermsDate = DateTime.UtcNow // 
             };
 
+           
+           
+            user.IdPhotoPath = await IdPhotoUploadHelper.SaveIdPhotoAsync(model.IdPhoto);
+            
+            
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
@@ -62,6 +69,7 @@ namespace PETHUB.Controllers
 
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
+
             return View(model);
         }
 
