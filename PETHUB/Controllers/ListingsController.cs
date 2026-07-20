@@ -124,7 +124,7 @@ namespace PETHUB.Controllers
                 }
 
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Marketplace));
             }
             return View(listing);
         }

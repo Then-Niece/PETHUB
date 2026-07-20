@@ -4,116 +4,433 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="container mt-4">
-    <h2>Register</h2>
-    <hr />
+<div class="container-fluid"
+     style="
+    min-height:calc(100vh - 57px);
+    background-image:url('/images/bg.png');
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;">
 
-    <form asp-action="Register" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row justify-content-center align-items-center py-5">
 
-        <!-- Common fields -->
+        <div class="col-xl-5 col-lg-6 col-md-8">
 
+            <div class="rounded-5 bg-white p-5 shadow">
 
-        <div class="mb-3">
-            <label asp-for="FirstName" class="form-label"></label>
-            <input asp-for="FirstName" class="form-control" />
-            <span asp-validation-for="FirstName" class="text-danger"></span>
-        </div>
+                <h3 class="fw-bold mb-4 text-center"
+                    style="color:#2D3748;">
+                    Create an account
+                </h3>
 
-        <div class="mb-3">
-            <label asp-for="LastName" class="form-label"></label>
-            <input asp-for="LastName" class="form-control" />
-            <span asp-validation-for="LastName" class="text-danger"></span>
-        </div>
+                <!-- Progress -->
+                <div class="d-flex justify-content-between align-items-center mb-5">
 
-        <div class="mb-3">
-            <label asp-for="Email" class="form-label"></label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
+                    <div class="flex-fill text-center">
+                        <div class="step-circle active" id="circle1">1</div>
+                        <small>Personal Info</small>
+                    </div>
 
-        <div class="mb-3">
-            <label asp-for="ContactNumber" class="form-label"></label>
-            <input asp-for="ContactNumber" class="form-control" />
-            <span asp-validation-for="ContactNumber" class="text-danger"></span>
-        </div>
+                    <div class="step-line"></div>
 
-        <div class="mb-3">
-            <label asp-for="Address" class="form-label"></label>
-            <input asp-for="Address" class="form-control" />
-            <span asp-validation-for="Address" class="text-danger"></span>
-        </div>
+                    <div class="flex-fill text-center">
+                        <div class="step-circle" id="circle2">2</div>
+                        <small>Contact Details</small>
+                    </div>
 
-        <!-- Gender radio buttons -->
-        <div class="mb-3">
-            <label class="form-label">Gender</label><br />
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" asp-for="Gender" value="Male" id="genderMale" />
-                <label class="form-check-label" for="genderMale">Male</label>
+                    <div class="step-line"></div>
+
+                    <div class="flex-fill text-center">
+                        <div class="step-circle" id="circle3">3</div>
+                        <small>Account Setup</small>
+                    </div>
+
+                </div>
+
+                <form asp-action="Register" method="post">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="text-danger mb-4">
+                    </div>
+
+                    <!-- ================= STEP 1 ================= -->
+
+                    <div id="step1">
+
+                       
+
+                        <!-- First Name / Last Name -->
+                        <div class="row">
+
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="FirstName" class="form-label fw-semibold"></label>
+
+                                <input asp-for="FirstName"
+                                       class="form-control rounded-3"
+                                       placeholder="First Name" />
+
+                                <span asp-validation-for="FirstName"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="LastName" class="form-label fw-semibold"></label>
+
+                                <input asp-for="LastName"
+                                       class="form-control rounded-3"
+                                       placeholder="Last Name" />
+
+                                <span asp-validation-for="LastName"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+                                Gender
+                            </label>
+
+                            <div class="d-flex gap-4">
+
+                                <div class="form-check">
+
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           asp-for="Gender"
+                                           value="Male"
+                                           id="Male" />
+
+                                    <label class="form-check-label" for="Male">
+                                        Male
+                                    </label>
+
+                                </div>
+
+                                <div class="form-check">
+
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           asp-for="Gender"
+                                           value="Female"
+                                           id="Female" />
+
+                                    <label class="form-check-label" for="Female">
+                                        Female
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                            <span asp-validation-for="Gender"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Birthdate -->
+
+                        <div class="mb-5">
+
+                            <label asp-for="Birthdate"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="Birthdate"
+                                   type="date"
+                                   class="form-control rounded-3" />
+
+                            <span asp-validation-for="Birthdate"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Continue -->
+
+                        <div class="d-grid">
+
+                            <button type="button"
+                                    id="next1"
+                                    class="btn fw-bold rounded-3 py-3 text-white"
+                                    style="background:#E76E51;">
+                                Continue →
+                            </button>
+
+                        </div>
+
+                        <p class="text-muted mt-4 mb-0 text-center">
+
+                            Already have an account?
+
+                            <a asp-controller="UserAccount"
+                               asp-action="Login"
+                               class="fw-bold text-decoration-none"
+                               style="color:#E76E51;">
+
+                                Sign In
+
+                            </a>
+
+                        </p>
+
+                    </div>
+
+                    <!-- ================= STEP 2 ================= -->
+
+                    <div id="step2" style="display:none;">
+
+                       
+
+                        <!-- Email -->
+                        <div class="mb-4">
+
+                            <label asp-for="Email"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="Email"
+                                   class="form-control rounded-3"
+                                   placeholder="Email Address" />
+
+                            <span asp-validation-for="Email"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Contact Number -->
+                        <div class="mb-4">
+
+                            <label asp-for="ContactNumber"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="ContactNumber"
+                                   class="form-control rounded-3"
+                                   placeholder="09XXXXXXXXX" />
+
+                            <span asp-validation-for="ContactNumber"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Address -->
+                        <div class="mb-5">
+
+                            <label asp-for="Address"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="Address"
+                                   class="form-control rounded-3"
+                                   placeholder="Complete Address" />
+
+                            <span asp-validation-for="Address"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="row">
+
+                            <div class="col-6">
+
+                                <button type="button"
+                                        id="back1"
+                                        class="btn btn-outline-secondary rounded-3 w-100 py-3">
+                                    ← Back
+                                </button>
+
+                            </div>
+
+                            <div class="col-6">
+
+                                <button type="button"
+                                        id="next2"
+                                        class="btn fw-bold rounded-3 w-100 py-3 text-white"
+                                        style="background:#E76E51;">
+                                    Continue →
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <p class="text-muted mt-4 mb-0 text-center">
+
+                            Already have an account?
+
+                            <a asp-controller="UserAccount"
+                               asp-action="Login"
+                               class="fw-bold text-decoration-none"
+                               style="color:#E76E51;">
+
+                                Sign In
+
+                            </a>
+
+                        </p>
+
+                    </div>
+
+                    <!-- ================= STEP 3 ================= -->
+
+                    <div id="step3" style="display:none;">
+
+                      
+
+                        <!-- Username -->
+                        <div class="mb-4">
+
+                            <label asp-for="UserName"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="UserName"
+                                   class="form-control rounded-3"
+                                   placeholder="Choose a username" />
+
+                            <span asp-validation-for="UserName"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-4">
+
+                            <label asp-for="Password"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="Password"
+                                   type="password"
+                                   class="form-control rounded-3"
+                                   placeholder="Create a password" />
+
+                            <span asp-validation-for="Password"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="mb-4">
+
+                            <label asp-for="ConfirmPassword"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="ConfirmPassword"
+                                   type="password"
+                                   class="form-control rounded-3"
+                                   placeholder="Confirm password" />
+
+                            <span asp-validation-for="ConfirmPassword"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Terms -->
+                        <div class="form-check mb-4">
+
+                            <input asp-for="AcceptTerms"
+                                   class="form-check-input" />
+
+                            <label asp-for="AcceptTerms"
+                                   class="form-check-label">
+
+                                I agree to the
+
+                                <a href="#"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#termsModal"
+                                   class="fw-semibold text-decoration-none"
+                                   style="color:#E76E51;">
+
+                                    PetHub Terms & Conditions
+
+                                </a>
+
+                                and
+                                <a href="#"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#termsModal"
+                                   class="fw-semibold text-decoration-none"
+                                   style="color:#E76E51;">
+                                    Privacy Policy
+                                </a>.
+
+                            </label>
+
+                            <span asp-validation-for="AcceptTerms"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="row">
+
+                            <div class="col-6">
+
+                                <button type="button"
+                                        id="back2"
+                                        class="btn btn-outline-secondary rounded-3 w-100 py-3">
+
+                                    ← Back
+
+                                </button>
+
+                            </div>
+
+                            <div class="col-6">
+
+                                <button type="submit"
+                                        class="btn fw-bold rounded-3 w-100 py-3 text-white"
+                                        style="background:#E76E51;">
+
+                                    Create Account
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <p class="text-muted mt-4 mb-0 text-center">
+
+                            Already have an account?
+
+                            <a asp-controller="UserAccount"
+                               asp-action="Login"
+                               class="fw-bold text-decoration-none"
+                               style="color:#E76E51;">
+
+                                Sign In
+
+                            </a>
+
+                        </p>
+
+                    </div>
+                </form>
+
+                   
             </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" asp-for="Gender" value="Female" id="genderFemale" />
-                <label class="form-check-label" for="genderFemale">Female</label>
-            </div>
-            <span asp-validation-for="Gender" class="text-danger"></span>
+
+
         </div>
+    </div>
 
-        <div class="mb-3">
-            <label asp-for="Birthdate" class="form-label"></label>
-            <input asp-for="Birthdate" type="date" class="form-control" />
-            <span asp-validation-for="Birthdate" class="text-danger"></span>
-        </div>
-
-
-
-        <div class="mb-3">
-            <label asp-for="UserName" class="form-label"></label>
-            <input asp-for="UserName" class="form-control" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="Password" class="form-label"></label>
-            <input asp-for="Password" type="password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="ConfirmPassword" class="form-label"></label>
-            <input asp-for="ConfirmPassword" type="password" class="form-control" />
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3 form-check">
-            <input asp-for="AcceptTerms" class="form-check-input" />
-
-            <label asp-for="AcceptTerms" class="form-check-label">
-                I have read, understood, and agree to the
-                <a href="#"
-                   class="text-primary text-decoration-underline"
-                   data-bs-toggle="modal"
-                   data-bs-target="#termsModal">
-                    PetHub Terms and Conditions
-                </a>
-            </label>
-
-            <span asp-validation-for="AcceptTerms" class="text-danger"></span>
-        </div>
-
-
-
-        <button type="submit" class="btn btn-success">Register</button>
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
-
-
-    </form>
 </div>
+    <partial name="_TermsAndConditionsModal" />
 
-
-<partial name="_TermsAndConditionsModal" />
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    @section Scripts
+    {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
     }
-}

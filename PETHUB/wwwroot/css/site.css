@@ -46,3 +46,78 @@ a {
     border-radius: 6px;
     object-fit: cover;
 }
+
+
+/*LOGIN*/
+.login-btn {
+    background-color: #E76E51;
+    border: none;
+    color: white;
+    transition: background-color 0.25s ease;
+}
+
+    .login-btn:hover {
+        background-color: #D95D41; /* Slightly darker */
+        color: white;
+    }
+
+    .login-btn:focus,
+    .login-btn:active {
+        background-color: #C95237;
+        color: white;
+        box-shadow: none;
+    }
+
+/*login validation*/
+
+.input-error {
+    border: 2px solid #dc3545 !important;
+    box-shadow: none !important;
+}
+
+    .input-error::placeholder {
+        color: #dc3545;
+        font-weight: 500;
+    }
+
+.input-group:focus-within .input-group-text {
+    border-color: #E76E51;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #E76E51;
+}
+
+
+
+/*register*/
+
+
+.step-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 2px solid #d6d6d6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    background: white;
+    font-weight: 600;
+}
+
+.step-circle.active {
+    background: #E76E51;
+    color: white;
+    border: none;
+}
+
+.step-line {
+    height: 2px;
+    background: #ddd;
+    flex: 1;
+    margin: 0 8px;
+    margin-top: -22px;
+}
+
