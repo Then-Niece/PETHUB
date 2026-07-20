@@ -24,14 +24,21 @@ namespace PETHUB.Controllers
 
         // GET: Listings
         [Authorize(Roles ="Admin")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string status)
         {
-            var listings = await _context.Listings
+            var listings = _context.Listings
                 .Include(l => l.Member)
                 .Include(l => l.Images) // load related images
-                .ToListAsync();
+                .AsQueryable();
 
-            return View(listings);
+            if (!string.IsNullOrEmpty(status))
+            {
+                if (Enum.TryParse<ListApprovalStatus>(status, out var selectedStatus))
+                {
+                    listings = listings.Where(l => l.Status == selectedStatus);
+                }
+            }
+            return View(await listings.ToListAsync());
         }
 
         // GET: Marketplace Listing for Client and Member

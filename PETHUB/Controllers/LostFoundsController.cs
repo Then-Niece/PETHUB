@@ -20,12 +20,21 @@ public class LostFoundsController : Controller
 
     // GET: LostFounds
     [Authorize(Roles="Admin")]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string status)
     {
-        var lostfounds = await _context.LostFounds
+        var lostfounds = _context.LostFounds
             .Include(l => l.Images)
-            .ToListAsync();
-        return View(lostfounds);
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(status))
+        {
+            if (Enum.TryParse<ApprovalStatus>(status, out var selectedStatus))
+            {
+                lostfounds = lostfounds.Where(l => l.Status == selectedStatus);
+            }
+        }
+
+        return View(await lostfounds.ToListAsync());
     }
 
     // GET: LostFounds/Details/5

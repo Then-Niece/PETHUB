@@ -6,6 +6,33 @@
 
 <h1>Lost & Found User (Admin)</h1>
 
+<div class="mb-3">
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        All
+    </a>
+
+    <a asp-action="Index"
+       asp-route-status="Pending"
+       class="btn btn-warning">
+        Pending
+    </a>
+
+    <a asp-action="Index"
+       asp-route-status="Approved"
+       class="btn btn-success">
+        Approved
+    </a>
+
+    <a asp-action="Index"
+       asp-route-status="Rejected"
+       class="btn btn-danger">
+        Rejected
+    </a>
+
+</div>
+
 <div class="container">
     @foreach (var item in Model)
     {
