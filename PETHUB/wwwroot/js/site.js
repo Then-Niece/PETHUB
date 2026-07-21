@@ -2,4 +2,15 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-    
+document.addEventListener("DOMContentLoaded", function () {
+
+    const btn = document.getElementById("sidebarToggle");
+    const sidebarContent = document.getElementById("sidebarContent");
+
+    if (btn && sidebarContent) {
+        btn.addEventListener("click", function () {
+            sidebarContent.classList.toggle("collapsed");
+        });
+    }
+
+});

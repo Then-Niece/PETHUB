@@ -25,7 +25,12 @@ namespace PETHUB.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register() => View();
+        public IActionResult Register()
+        {
+            ViewData["HideSidebar"] = true; // Hide the sidebar for the registration page
+            return View();
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -53,8 +58,6 @@ namespace PETHUB.Controllers
                 Status = UserStatus.Active,
                 AcceptedTermsDate = DateTime.UtcNow // 
             };
-
-           
            
             user.IdPhotoPath = await IdPhotoUploadHelper.SaveIdPhotoAsync(model.IdPhoto);
             
@@ -83,6 +86,7 @@ namespace PETHUB.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            ViewData["HideSidebar"] = true; // Hide the sidebar for the login page
             return View();
         }
 
@@ -119,6 +123,5 @@ namespace PETHUB.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-
     }
 }

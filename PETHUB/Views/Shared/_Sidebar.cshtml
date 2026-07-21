@@ -1,0 +1,75 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div class="sidebar">
+    <ul class="sidebar-menu">
+
+        <!-- Available to everyone -->
+        <li>
+            <a asp-controller="LostFounds" asp-action="Browse">
+                Lost & Found
+            </a>
+        </li>
+
+        <li>
+            <a asp-controller="Listings" asp-action="Marketplace">
+                Marketplace
+            </a>
+        </li>
+
+        @* ==========================================================
+            MEMBER + ADMIN
+        ========================================================== *@
+
+        @if (!(User.IsInRole("Admin") || User.IsInRole("Member")))
+        {
+            <li>
+                <a asp-controller="Home" asp-action="Index">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    About
+                </a>
+            </li>
+        }
+
+        @* ==========================================================
+            ADMIN ONLY
+        ========================================================== *@
+
+        @if (User.IsInRole("Admin"))
+        {
+            <li>
+                <a asp-controller="Members"
+                   asp-action="Index">
+                    Add Members
+                </a>
+            </li>
+
+            <li>
+                <a asp-controller="Admins"
+                   asp-action="Index">
+                    Add Admins
+                </a>
+            </li>
+
+            <li>
+                <a asp-controller="Listings"
+                   asp-action="Index">
+                    Marketplace Approval
+                </a>
+            </li>
+
+            <li>
+                <a asp-controller="LostFounds"
+                   asp-action="Index">
+                    Lost & Found Approval
+                </a>
+            </li>
+        }
+    </ul>
+</div>

@@ -4,67 +4,48 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PETHUB</title>
+
     <script type="importmap"></script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PETHUB.styles.css" asp-append-version="true" />
 </head>
 <body>
 
-    <!-- Navigation -->
     @await Html.PartialAsync("_Navigation")
 
-    <!-- Main Layout -->
+    <div class="app">
 
-    @* Sidebar (Currently Disabled) *@
+        @if (!(ViewData["HideSidebar"] as bool? ?? false))
+        {
+            <div id="sidebar-wrapper">
 
-    @* <nav class="sidebar bg-dark">
-        <ul class="nav flex-column"> *@
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                        <div id="sidebar-header">
+                            <button id="sidebarToggle">
+                                ☰
+                            </button>
+                        </div>
 
-            @* Future Dashboard redirect *@
-@*             <li class="nav-item">
-                <a class="nav-link text-white" asp-area="" asp-controller="DashboardController" asp-action="Dashboard">
-                    Dashboard
-                </a>
-            </li>
-*@
+                    <div id="sidebarContent">
 
-            @* Lost and Found redirect *@
-@*             <li class="nav-item">
-                <a class="nav-link text-white" asp-area="" asp-controller="LostFounds" asp-action="Index">
-                    Lost & Found
-                </a>
-            </li> *@
 
-            @* Marketplace redirect *@
-@*             <li class="nav-item">
-                <a class="nav-link text-white" asp-area="" asp-controller="Listings" asp-action="Index">
-                    Marketplace
-                </a>
-            </li> *@
+                        <aside id="sidebar">
+                            <partial name="_Sidebar" />
+                        </aside>
 
-            @* Add User redirect *@
-@*             <li class="nav-item">
-                <a class="nav-link text-white" asp-area="" asp-controller="Users" asp-action="Create">
-                    Add User
-                </a>
-            </li> *@
+                    </div>
+                }
 
-            @* Add Member redirect *@
-@*             <li class="nav-item">
-                <a class="nav-link text-white" asp-area="" asp-controller="Members" asp-action="Create">
-                    Add Member
-                </a>
-            </li>
+            </div>
+        }
 
-        </ul>
-    </nav> *@
-
-    <!-- Main content -->
-    <div class="container">
-        <main role="main" class="pb-3">
+        <main id="mainContent">
             @RenderBody()
         </main>
+
     </div>
 
     <footer class="border-top footer text-muted">
