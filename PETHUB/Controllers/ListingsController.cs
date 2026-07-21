@@ -421,6 +421,7 @@ namespace PETHUB.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
         private bool ListingExists(int id)
         {
             return _context.Listings.Any(e => e.ListingId == id);
