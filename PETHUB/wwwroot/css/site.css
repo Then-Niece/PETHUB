@@ -217,3 +217,12 @@ a {
         color: white;
         text-decoration: underline;
     }
+
+/* Css for our pethub logo */
+.navbar-logo {
+    height: 45px;
+    width: auto;
+    max-height: 50px;
+    min-height: 35px;
+    object-fit: contain;
+}

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PETHUB.Data;
 
@@ -11,9 +12,11 @@ using PETHUB.Data;
 namespace PETHUB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260721114844_AddPetFeedTables")]
+    partial class AddPetFeedTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -425,12 +428,12 @@ namespace PETHUB.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("PawCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
 
                     b.HasKey("PetFeedId");
 
@@ -490,33 +493,6 @@ namespace PETHUB.Migrations
                     b.HasIndex("PetFeedId");
 
                     b.ToTable("PetFeedImages");
-                });
-
-            modelBuilder.Entity("PETHUB.Models.PetFeedPaw", b =>
-                {
-                    b.Property<int>("PetFeedPawId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetFeedPawId"));
-
-                    b.Property<DateTime>("DatePawed")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("MemberId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("PetFeedId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PetFeedPawId");
-
-                    b.HasIndex("MemberId");
-
-                    b.HasIndex("PetFeedId");
-
-                    b.ToTable("PetFeedPaws");
                 });
 
             modelBuilder.Entity("PETHUB.Models.SavedPetFeed", b =>
@@ -675,25 +651,6 @@ namespace PETHUB.Migrations
                     b.Navigation("PetFeed");
                 });
 
-            modelBuilder.Entity("PETHUB.Models.PetFeedPaw", b =>
-                {
-                    b.HasOne("PETHUB.Models.ApplicationUser", "Member")
-                        .WithMany()
-                        .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PETHUB.Models.PetFeed", "PetFeed")
-                        .WithMany("Paws")
-                        .HasForeignKey("PetFeedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Member");
-
-                    b.Navigation("PetFeed");
-                });
-
             modelBuilder.Entity("PETHUB.Models.SavedPetFeed", b =>
                 {
                     b.HasOne("PETHUB.Models.ApplicationUser", "Member")
@@ -728,8 +685,6 @@ namespace PETHUB.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Images");
-
-                    b.Navigation("Paws");
 
                     b.Navigation("SavedByMembers");
                 });
