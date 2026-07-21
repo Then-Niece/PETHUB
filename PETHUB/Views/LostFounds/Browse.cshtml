@@ -12,7 +12,7 @@
 {
     <a asp-controller="LostFounds"
        asp-action="Create"
-       class="btn btn-primary btn-lg">
+       class="btn  btn-lg rounded-pill" style="background-color:#8ACE79; color:white;">
         Add Report
     </a>
 }
@@ -23,7 +23,8 @@ else if (User.IsInRole("Admin"))
 else
 {
     <button type="button"
-            class="btn btn-primary btn-lg"
+            class="btn btn-lg rounded-pill"
+            style="color:white; background-color:#8ACE79;"
             data-bs-toggle="modal"
             data-bs-target="#reportModal">
         Add Report

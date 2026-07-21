@@ -31,11 +31,11 @@ namespace PETHUB.Controllers
                 .ToListAsync();
 
             var latestLostFound = await _context.LostFounds
-    .Include(l => l.Images)
-    .Where(l => l.Status == ApprovalStatus.Approved)
-    .OrderByDescending(l => l.DateReported)
-    .Take(4)
-    .ToListAsync();
+                .Include(l => l.Images)
+                .Where(l => l.Status == ApprovalStatus.Approved)
+                .OrderByDescending(l => l.DateReported)
+                .Take(4)
+                .ToListAsync();
 
             var viewModel = new PublicLandingPageViewModel
             {

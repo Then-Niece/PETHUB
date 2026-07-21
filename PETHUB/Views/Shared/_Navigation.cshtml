@@ -5,162 +5,201 @@
 }
 
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+
         <div class="container-fluid">
 
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                PETHUB
-            </a>
+            <!-- NEW NAV -->
+            <nav class="navbar navbar-expand-lg sticky-top bg-white py-3 shadow-sm">
 
-            <button class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
+                <div class="container">
 
-                <span class="navbar-toggler-icon"></span>
+                    <!-- Logo -->
+                    <a class="navbar-brand fw-bold fs-3 d-flex align-items-center"
+                       asp-controller="Home"
+                       asp-action="PublicLandingPage"
+                       style="color:#2D3748;">
 
-            </button>
+                       @*  <span class="me-2" style="color:#8ACE79;">logo</span> *@
 
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        PetHub
 
-                <ul class="navbar-nav flex-grow-1">
+                    </a>
 
-                    @* ==========================================================
-                       PAGES AVAILABLE TO EVERYONE
-                       (Guest + Member + Admin)
-                       ========================================================== *@
+                    <!-- Mobile Button -->
+                    <button class="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbar">
 
-                    <li class="nav-item">
-                        <a class="nav-link text-dark"
-                           asp-controller="Listings"
-                           asp-action="Marketplace">
-                            Marketplace
-                        </a>
-                    </li>
+                        <span class="navbar-toggler-icon"></span>
 
-                    <li class="nav-item">
-                        <a class="nav-link text-dark"
-                           asp-controller="LostFounds"
-                           asp-action="Browse">
-                            Lost & Found
-                        </a>
-                    </li>
+                    </button>
 
-                    @* ==========================================================
-                       MEMBER + ADMIN
-                       ========================================================== *@
+                    <div class="navbar-collapse justify-content-end collapse"
+                         id="navbar">
 
-                    @if (User.IsInRole("Member") || User.IsInRole("Admin"))
-                    {
-                    }
+                        <!-- Navigation -->
+                        <ul class="navbar-nav">
 
-                    @* ==========================================================
-                       ADMIN ONLY
-                       ========================================================== *@
+                        @* ==========================================================
+                                           PAGES AVAILABLE TO EVERYONE
+                                           (Guest + Member + Admin)
+                        ========================================================== *@
 
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Members"
-                               asp-action="Index">
-                                Add Members
-                            </a>
-                        </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Admins"
-                               asp-action="Index">
-                                Add Admins
-                            </a>
-                        </li>
+                            <li class="nav-item mx-2">
+                                <a class="nav-link fw-semibold" asp-controller="LostFounds"
+                                   asp-action="Browse">
+                                    Lost & Found
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Listings"
-                               asp-action="Index">
-                                Marketplace Approval
-                            </a>
-                        </li>
-                         
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="LostFounds"
-                               asp-action="Index">
-                                Lost & Found Approval
-                            </a>
-                        </li>
+                            <li class="nav-item mx-2">
+                                <a class="nav-link fw-semibold" asp-controller="Listings"
+                                   asp-action="Marketplace">
+                                    Marketplace
+                                </a>
+                            </li>
 
-                    }
-                    
-                </ul>
+                
+                            
 
-                @* ==========================================================
-                   LOGIN / LOGOUT
-                   ========================================================== *@
+                             @* ==========================================================
+                                                    MEMBER + CLIENT
+                               ========================================================== *@
 
-                <ul class="navbar-nav">
+                            @if (User.IsInRole("Admin") || (User.IsInRole("Member")))
+                            {
+                            
 
-                    @if (!User.Identity!.IsAuthenticated)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="UserAccount"
-                               asp-action="Login">
-                                Login
-                            </a>
-                        </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item mx-2">
+                                    <a class="nav-link fw-semibold" asp-controller="Home" asp-action="Index">
+                                        Home
+                                    </a>
+                                </li>
 
-@*                         <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="UserAccount"
-                               asp-action="Register">
-                                Register
-                            </a>
-                        </li>
- *@                    }
-                    else
-                    {
-                        <li class="nav-item">
+                                <li class="nav-item mx-2">
+                                    <a class="nav-link fw-semibold" href="#">
+                                        About
+                                    </a>
+                                </li>
+                            }
+
+                            @* ==========================================================
+                               ADMIN ONLY
+                               ========================================================== *@
+
                             @if (User.IsInRole("Admin"))
                             {
-                                <span class="nav-link text-muted">
-                                Hello, Admin @User.Identity.Name
-                                </span>
-                            }else
-                            {
-                                <span class="nav-link text-muted">
-                                Hello, @User.Identity.Name
-                                </span>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                    asp-controller="Members"
+                                    asp-action="Index">
+                                        Add Members
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                    asp-controller="Admins"
+                                    asp-action="Index">
+                                        Add Admins
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                    asp-controller="Listings"
+                                    asp-action="Index">
+                                        Marketplace Approval
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                    asp-controller="LostFounds"
+                                    asp-action="Index">
+                                        Lost & Found Approval
+                                    </a>
+                                </li>
                             }
-                            
-                        </li>
+                            </ul>
 
-                        <li class="nav-item">
-                            <form asp-controller="UserAccount"
-                                  asp-action="Logout"
-                                  method="post"
-                                  class="d-inline">
+                           
 
-                                <button type="submit"
-                                        class="nav-link btn btn-link">
-                                    Logout
-                                </button>
+                        <!-- Buttons -->
+                        <div class="d-flex gap-3">
 
-                            </form>
-                        </li>
-                    }
+                           
+                        </div>
 
-                </ul>
+                        <ul class="navbar-nav d-flex gap-3">
 
-            </div>
+                            @if (!User.Identity!.IsAuthenticated)
+                            {
+                                <a asp-controller="UserAccount"
+                                   asp-action="Login"
+                                   class="btn rounded-pill fw-semibold px-4 text-white"
+                                   style="
+                                    background:#8ACE79;
+                                    border:none;
+                                    transition:.3s;"
+                                   onmouseover="this.style.background='#6FBF5E'"
+                                   onmouseout="this.style.background='#8ACE79'">
+
+                                    Login
+
+                                </a>
+                            }
+                            else
+                            {
+                                    <li class="nav-item">
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <span class="nav-link text-muted">
+                                                Hello, Admin @User.Identity.Name
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="nav-link text-muted">
+                                                Hello, @User.Identity.Name
+                                            </span>
+                                        }
+
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <form asp-controller="UserAccount"
+                                              asp-action="Logout"
+                                              method="post"
+                                              class="d-inline">
+
+                                            <button type="submit"
+                                                    class="nav-link btn btn-link">
+                                                Logout
+                                            </button>
+
+                                        </form>
+                                    </li>
+                            }
+
+                            </ul>
+
+                    </div>
+
+                </div>
+
+            </nav>
+
+
+
 
         </div>
 
-    </nav>
+
 
 </header>

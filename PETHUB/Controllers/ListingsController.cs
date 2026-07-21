@@ -40,6 +40,8 @@ namespace PETHUB.Controllers
                 {
                     listings = listings.Where(l => l.Status == selectedStatus);
                 }
+
+
             }
             return View(await listings.ToListAsync());
         }
