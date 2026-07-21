@@ -23,6 +23,7 @@ public class LostFoundsController : Controller
     public async Task<IActionResult> Index(string status)
     {
         var lostfounds = _context.LostFounds
+            .Include(l=>l.User)
             .Include(l => l.Images)
             .AsQueryable();
 
@@ -44,6 +45,7 @@ public class LostFoundsController : Controller
         if (id == null) return NotFound();
 
         var lostfound = await _context.LostFounds
+            .Include(l => l.User)
             .Include(l => l.Images)
             .FirstOrDefaultAsync(m => m.LostFoundId == id);
 
@@ -85,6 +87,7 @@ public class LostFoundsController : Controller
         if (id == null) return NotFound();
 
         var lostfound = await _context.LostFounds
+            .Include(l => l.User)
             .Include(l => l.Images)
             .FirstOrDefaultAsync(m => m.LostFoundId == id);
 
@@ -104,6 +107,7 @@ public class LostFoundsController : Controller
         if (ModelState.IsValid)
         {
             var existing = await _context.LostFounds
+                .Include(l => l.User)
                 .Include(l => l.Images)
                 .FirstOrDefaultAsync(l => l.LostFoundId == id);
 
@@ -146,6 +150,7 @@ public class LostFoundsController : Controller
         if (id == null) return NotFound();
 
         var lostfound = await _context.LostFounds
+            .Include(l => l.User)
             .Include(l => l.Images)
             .FirstOrDefaultAsync(m => m.LostFoundId == id);
 
@@ -161,6 +166,7 @@ public class LostFoundsController : Controller
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var lostFound = await _context.LostFounds
+            .Include(l => l.User)
             .Include(l => l.Images)
             .FirstOrDefaultAsync(l => l.LostFoundId == id);
 
@@ -221,8 +227,8 @@ public class LostFoundsController : Controller
     {
         if (User.Identity.IsAuthenticated)
         {
-            // Placeholder for future member linking
-            // lostFound.MemberId = _userManager.GetUserId(User);
+            // this is where it links the member
+            lostFound.UserId = _userManager.GetUserId(User);
         }
         else
         {
@@ -275,6 +281,7 @@ public class LostFoundsController : Controller
     {
         var lostfounds = await _context.LostFounds
             .Where(l => l.Status == ApprovalStatus.Approved)
+            .Include(l => l.User)
             .Include(l => l.Images)
             .ToListAsync();
 
@@ -291,6 +298,7 @@ public class LostFoundsController : Controller
         }
 
         var lostfound = await _context.LostFounds
+                .Include(l => l.User)
                 .Include(l => l.Images)
                 .FirstOrDefaultAsync(m => m.LostFoundId == id);
 

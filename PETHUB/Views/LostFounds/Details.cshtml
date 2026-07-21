@@ -130,12 +130,21 @@
                             : "Not specified")
                     </p>
 
-                    <p>
-                        <strong>Lost Date:</strong>
-                        @(Model.LostDate.HasValue
-                            ? Model.LostDate.Value.ToString("MMMM dd, yyyy")
-                            : "Not specified")
-                    </p>
+                    <!-- I added this conditional statement so that if the type is found then it hides the LostDate details -->
+                    <!-- But if the type is lost, then it shows the client details -->
+                    @if (Model.Type ==  LostFoundType.Found)
+                    {
+                        
+                    }else
+                    {
+                        <p>
+                            <strong>Lost Date:</strong>
+                            @(Model.LostDate.HasValue
+                                ? Model.LostDate.Value.ToString("MMMM dd, yyyy")
+                                : "Not specified")
+                        </p>
+                    }
+                   
 
                     <p>
                         <strong>Location:</strong>
@@ -149,15 +158,26 @@
                     <!-- Reporter Information -->
                     <h5>Reporter Information</h5>
 
-                    <p>
-                        <strong>Name:</strong>
-                        @Model.ClientName
-                    </p>
+                    <!-- I Added this conditional statement so that if the UserId is null then it means its a client report and it shows its details-->
+                    <!-- But if its a registered member, it shows its firstname and last name -->
+                    @if (Model.UserId == null)
+                    {
+                        <p>
+                            <strong>Name:</strong>
+                            @Model.ClientName
+                        </p>
 
-                    <p>
-                        <strong>Contact:</strong>
-                        @Model.ClientContact
-                    </p>
+                        <p>
+                            <strong>Contact:</strong>
+                            @Model.ClientContact
+                        </p>
+                    }else
+                    {
+                        <hr />
+                        <p><strong>Posted by:</strong> @Model.User?.FirstName @Model.User?.LastName</p>
+                        <p><strong>Contact Number:</strong> @Model.User?.ContactNumber</p>
+                    }
+
 
                 </div>
 

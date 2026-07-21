@@ -49,10 +49,53 @@
                     <p><strong>Pet Type:</strong> @Model.PetType</p>
                     <p><strong>Breed:</strong> @(string.IsNullOrEmpty(Model.Breed) ? "Not specified" : Model.Breed)</p>
                     <p><strong>Sex:</strong> @(Model.Sex.HasValue ? Model.Sex.ToString() : "Not specified")</p>
-                    <p><strong>Lost Date:</strong> @(Model.LostDate.HasValue ? Model.LostDate.Value.ToString("MMM dd, yyyy") : "Not specified")</p>
+                    @if (Model.Type == LostFoundType.Found)
+                    {
+
+                    }
+                    else
+                    {
+                        <p>
+                            <strong>Lost Date:</strong>
+                            @(Model.LostDate.HasValue
+                                ? Model.LostDate.Value.ToString("MMMM dd, yyyy")
+                                : "Not specified")
+                        </p>
+                    }
                     <p><strong>Location:</strong> @(string.IsNullOrEmpty(Model.Location) ? "Not specified" : Model.Location)</p>
-                    <p><strong>Reporter's Name:</strong> @Model.ClientName</p>
-                    <p><strong>Reporter's Contact:</strong> @Model.ClientContact</p>
+
+
+                    <!-- I Added this conditional statement so that if the UserId is null then it means its a client report and it shows its details-->
+                    <!-- But if its a registered member, it shows its firstname and last name -->
+                    @if (Model.UserId == null)
+                    {
+                        <hr />
+
+                        <!-- Reporter Information -->
+                        <h5>Reporter Information</h5>
+
+                        <hr />
+
+                        <p>
+                            <strong>Name:</strong>
+                            @Model.ClientName
+                        </p>
+
+                        <p>
+                            <strong>Contact:</strong>
+                            @Model.ClientContact
+                        </p>
+                    }
+                    else
+                    {
+                        <hr />
+
+                        <!-- Reporter Information -->
+                        <h5>Reporter Information (Member)</h5>
+                        <hr/>
+                        <p><strong>Posted by:</strong> @Model.User?.FirstName @Model.User?.LastName</p>
+                        <p><strong>Contact Number:</strong> @Model.User?.ContactNumber</p>
+                    }
                 </div>
                 <div class="card-footer d-flex justify-content-center gap-3">
                     <a asp-action="Browse" class="btn btn-secondary px-4">← Back to Reports</a>

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,12 @@ namespace PETHUB.Controllers
     public class ListingsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ListingsController(ApplicationDbContext context)
+        public ListingsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Listings
@@ -119,6 +122,8 @@ namespace PETHUB.Controllers
             {
                 listing.DatePosted = DateTime.Now;
 
+                // Attach the logged-in member
+                listing.MemberId = _userManager.GetUserId(User);
                 // Location is automatically bound from the form
                 _context.Add(listing);
                 await _context.SaveChangesAsync();
