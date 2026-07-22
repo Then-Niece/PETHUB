@@ -10,6 +10,9 @@ namespace PETHUB.Models
         public string ContactNumber { get; set; }
         public UserStatus Status { get; set; } = UserStatus.Active;
 
+        // Store registration date for  admins and members
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
 
         // Member-only fields (nullable for Admins)
         public string? Address { get; set; }
