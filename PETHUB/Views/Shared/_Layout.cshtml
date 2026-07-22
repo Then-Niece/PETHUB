@@ -23,20 +23,23 @@
 
                 @if (User.Identity?.IsAuthenticated == true)
                 {
+                    <div id="sidebarContent">
+
                         <div id="sidebar-header">
                             <button id="sidebarToggle">
                                 ☰
                             </button>
                         </div>
 
-                    <div id="sidebarContent">
-
-
                         <aside id="sidebar">
                             <partial name="_Sidebar" />
                         </aside>
 
                     </div>
+
+                    <button id="sidebarHandle" aria-label="Open sidebar">
+                        ☰
+                    </button>
                 }
 
             </div>
