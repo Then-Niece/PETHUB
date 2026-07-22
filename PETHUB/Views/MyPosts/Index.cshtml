@@ -1,0 +1,141 @@
+﻿@model PETHUB.ViewModels.MyPostsViewModel
+
+@{
+    ViewData["Title"] = "My Posts";
+}
+
+<h1 class="text-center">My Posts</h1>
+
+<div class="row mt-4">
+
+    @foreach (var post in Model.Posts)
+    {
+        if (post.Listing != null)
+        {
+            <div class="col-md-3 mb-4">
+
+                <a asp-controller="Listings"
+                   asp-action="MarketplaceDetails"
+                   asp-route-id="@post.Listing.ListingId"
+                   class="text-decoration-none text-dark">
+
+                    <div class="card h-100 shadow-sm">
+
+                        @if (post.Listing.Images != null && post.Listing.Images.Any())
+                        {
+                            <img src="@post.Listing.Images.First().ImagePath"
+                                 class="card-img-top"
+                                 alt="Listing image"
+                                 style="height:200px;object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <img src="~/images/no-image.png"
+                                 class="card-img-top"
+                                 alt="No image"
+                                 style="height:200px;object-fit:cover;" />
+                        }
+
+                        <div class="card-body">
+
+                            @if (post.Listing.Status == PETHUB.Models.ListApprovalStatus.Pending)
+                            {
+                                <span class="badge bg-warning text-dark mb-2">
+                                    Pending Approval
+                                </span>
+                            }
+                            else if (post.Listing.Status == PETHUB.Models.ListApprovalStatus.Rejected)
+                            {
+                                <span class="badge bg-danger mb-2">
+                                    Rejected
+                                </span>
+                            }
+
+                            <h5 class="card-title">
+                                @post.Listing.Title
+                            </h5>
+
+                            <p class="card-text">
+                                <strong>Type:</strong> @post.Listing.Type
+                            </p>
+
+                            <p class="card-text">
+                                <small>
+                                    Posted @post.Listing.DatePosted.ToString("MMM dd, yyyy")
+                                </small>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+        }
+        else if (post.Report != null)
+        {
+            <div class="col-md-3 mb-4">
+
+                <a asp-controller="LostFounds"
+                   asp-action="BrowseDetails"
+                   asp-route-id="@post.Report.LostFoundId"
+                   class="text-decoration-none text-dark">
+
+                    <div class="card h-100 shadow-sm">
+
+                        @if (post.Report.Images != null && post.Report.Images.Any())
+                        {
+                            <img src="@Url.Content(post.Report.Images.First().ImagePath)"
+                                 class="card-img-top"
+                                 alt="Lost & Found image"
+                                 style="height:200px;object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/images/no-image.png")"
+                                 class="card-img-top"
+                                 alt="No image"
+                                 style="height:200px;object-fit:cover;" />
+                        }
+
+                        <div class="card-body">
+
+                            @if (post.Report.Status == PETHUB.Models.ApprovalStatus.Pending)
+                            {
+                                <span class="badge bg-warning text-dark mb-2">
+                                    Pending Approval
+                                </span>
+                            }
+                            else if (post.Report.Status == PETHUB.Models.ApprovalStatus.Rejected)
+                            {
+                                <span class="badge bg-danger mb-2">
+                                    Rejected
+                                </span>
+                            }
+
+                            <h5 class="card-title">
+                                @post.Report.Title
+                            </h5>
+
+                            <p class="card-text">
+                                <strong>Type:</strong> @post.Report.Type
+                            </p>
+
+                            <p class="card-text">
+                                <small>
+                                    Reported @post.Report.DateReported.ToString("MMM dd, yyyy")
+                                </small>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+        }
+    }
+
+</div>

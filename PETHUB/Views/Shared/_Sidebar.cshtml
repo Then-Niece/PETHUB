@@ -71,5 +71,14 @@
                 </a>
             </li>
         }
+        @if(User.IsInRole("Member"))
+        {
+            <li>
+            <a asp-controller="MyPosts" asp-action="Index">
+                My Posts
+            </a>
+            </li>
+
+        }
     </ul>
 </div>
