@@ -103,9 +103,42 @@
                         <p><strong>Contact Number:</strong> @Model.User?.ContactNumber</p>
                     }
                 </div>
-                <div class="card-footer d-flex justify-content-center gap-3">
-                    <a asp-action="MyPosts" class="btn btn-secondary px-4">← Back to Reports</a>
-                </div>
+            <div class="card-footer d-flex justify-content-center gap-3">
+
+                @* Only allow editing when the report is Pending or Rejected. *@
+                @if (Model.Status == ApprovalStatus.Pending ||
+                     Model.Status == ApprovalStatus.Rejected)
+                {
+                    <a asp-controller="LostFounds"
+                       asp-action="Edit"
+                       asp-route-id="@Model.LostFoundId"
+                       class="btn btn-warning px-4">
+                        Edit
+                    </a>
+                }
+
+                @* Members can delete their own report.
+                   The controller also validates ownership as a backup. *@
+                <form asp-action="DeleteLostFound"
+                      asp-controller="MyPosts"
+                      asp-route-id="@Model.LostFoundId"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit"
+                            class="btn btn-danger px-4">
+                        Delete
+                    </button>
+                </form>
+
+                <a asp-controller="MyPosts"
+                   asp-action="Index"
+                   class="btn btn-secondary px-4">
+                    ← Back to My Posts
+                </a>
+
+            </div>            
             </div>
         </div>
     </div>

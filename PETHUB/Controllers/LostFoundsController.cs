@@ -91,7 +91,25 @@ public class LostFoundsController : Controller
             .Include(l => l.Images)
             .FirstOrDefaultAsync(m => m.LostFoundId == id);
 
-        if (lostfound == null) return NotFound();
+        if (lostfound == null)
+            return NotFound();
+
+        // Get the currently logged-in member.
+        var userId = _userManager.GetUserId(User);
+
+        // Only the owner can edit.
+        // Admins (if they ever use this action) bypass this check.
+        if (!User.IsInRole("Admin") && lostfound.UserId != userId)
+        {
+            return Forbid();
+        }
+
+        // Approved reports cannot be edited by members.
+        if (!User.IsInRole("Admin") &&
+            lostfound.Status == ApprovalStatus.Approved)
+        {
+            return Forbid();
+        }
 
         return View(lostfound);
     }
@@ -111,8 +129,24 @@ public class LostFoundsController : Controller
                 .Include(l => l.Images)
                 .FirstOrDefaultAsync(l => l.LostFoundId == id);
 
-            if (existing == null) return NotFound();
+            if (existing == null)
+                return NotFound();
 
+            // Get the currently logged-in member.
+            var userId = _userManager.GetUserId(User);
+
+            // Only the owner can save changes.
+            if (!User.IsInRole("Admin") && existing.UserId != userId)
+            {
+                return Forbid();
+            }
+
+            // Approved reports cannot be edited.
+            if (!User.IsInRole("Admin") &&
+                existing.Status == ApprovalStatus.Approved)
+            {
+                return Forbid();
+            }
             existing.Title = lostFound.Title;
             existing.Description = lostFound.Description;
             existing.Type = lostFound.Type;
@@ -138,7 +172,11 @@ public class LostFoundsController : Controller
                 _context.AddRange(savedImages);
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction(nameof(Index));
+            // Return members to the report they just edited.
+            return RedirectToAction(
+                "LostFoundDetails",
+                "MyPosts",
+                new { id = existing.LostFoundId });
         }
         return View(lostFound);
     }
@@ -172,6 +210,15 @@ public class LostFoundsController : Controller
 
         if (lostFound != null)
         {
+            // Get the currently logged-in member.
+            var userId = _userManager.GetUserId(User);
+
+            // Members can only delete their own reports.
+            if (!User.IsInRole("Admin") && lostFound.UserId != userId)
+            {
+                return Forbid();
+            }
+
             if (lostFound.Images != null && lostFound.Images.Any())
             {
                 foreach (var img in lostFound.Images)
@@ -188,7 +235,8 @@ public class LostFoundsController : Controller
             await _context.SaveChangesAsync();
         }
 
-        return RedirectToAction(nameof(Index));
+        // After deleting, return members to My Posts.
+        return RedirectToAction("Index", "MyPosts");
     }
 
     // POST: LostFounds/RemoveImage/5

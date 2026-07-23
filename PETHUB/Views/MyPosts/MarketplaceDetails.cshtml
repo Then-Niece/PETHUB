@@ -80,7 +80,7 @@
                         </a>
                     }
                     @* Allow the owner to delete the listing regardless of approval status. *@
-                    <form asp-action="Delete"
+                    <form asp-action="DeleteMarketplace"
                           asp-controller="MyPosts"
                           asp-route-id="@Model.ListingId"
                           method="post">

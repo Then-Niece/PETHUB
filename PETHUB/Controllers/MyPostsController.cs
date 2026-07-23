@@ -105,7 +105,7 @@ namespace PETHUB.Controllers
         // Deletes a marketplace listing owned by the currently logged-in member.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteMarketplace(int id)
         {
             // Retrieve the currently logged-in user's ID.
             var userId = _userManager.GetUserId(User);
@@ -151,6 +151,59 @@ namespace PETHUB.Controllers
             await _context.SaveChangesAsync();
 
             // Return the user to the My Posts page.
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: MyPosts/DeleteLostFound/5
+        // Deletes a lost and found report owned by the currently logged-in member.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteLostFound(int id)
+        {
+            // Retrieve the currently logged-in user's ID.
+            var userId = _userManager.GetUserId(User);
+
+            // Retrieve the report together with its images.
+            var report = await _context.LostFounds
+                .Include(r => r.Images)
+                .FirstOrDefaultAsync(r => r.LostFoundId == id);
+
+            // Return a 404 page if the report does not exist.
+            if (report == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure only the owner can delete it.
+            if (report.UserId != userId)
+            {
+                return Forbid();
+            }
+
+            // Delete image files from wwwroot.
+            if (report.Images != null && report.Images.Any())
+            {
+                foreach (var image in report.Images)
+                {
+                    var filePath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot",
+                        image.ImagePath.TrimStart('/'));
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+
+                    _context.LostFoundImages.Remove(image);
+                }
+            }
+
+            // Delete the report.
+            _context.LostFounds.Remove(report);
+            await _context.SaveChangesAsync();
+
+            // Return to My Posts.
             return RedirectToAction(nameof(Index));
         }
     }
