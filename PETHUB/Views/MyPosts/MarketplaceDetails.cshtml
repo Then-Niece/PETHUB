@@ -63,15 +63,13 @@
 
                     @* 
                         Only show the Edit button if the listing
-                        is still Pending or Rejected.
+                        is still Pending only.
 
                         Approved listings are locked and can no
                         longer be modified by members.
                     *@
 
-                    @if (Model.Status == ListApprovalStatus.Pending ||
-                         Model.Status == ListApprovalStatus.Rejected)
-                    {
+                    @if (Model.Status == ListApprovalStatus.Pending)                    {
                         <a asp-controller="Listings"
                            asp-action="Edit"
                            asp-route-id="@Model.ListingId"
@@ -79,6 +77,57 @@
                             Edit
                         </a>
                     }
+
+                    @* Approved listings can be marked as Sold or Adopted. *@
+                    @if (Model.Status == ListApprovalStatus.Approved)
+                    {
+                        @if (Model.ListStatus == ListingStatus.Pending)
+                        {
+                            if (Model.Type == ListType.For_Sale)
+                            {
+                                <form asp-action="MarkAsSold"
+                                      asp-controller="MyPosts"
+                                      asp-route-id="@Model.ListingId"
+                                      method="post"
+                                      style="display:inline;">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit" class="btn btn-success">
+                                        Mark as Sold
+                                    </button>
+                                </form>
+                            }
+                            else if (Model.Type == ListType.For_Adoption)
+                            {
+                                <form asp-action="MarkAsAdopted"
+                                      asp-controller="MyPosts"
+                                      asp-route-id="@Model.ListingId"
+                                      method="post"
+                                      style="display:inline;">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit" class="btn btn-success">
+                                        Mark as Adopted
+                                    </button>
+                                </form>
+                            }
+                        }
+                        else if (Model.ListStatus == ListingStatus.Sold)
+                        {
+                            <span class="badge bg-success align-self-center">
+                                Sold
+                            </span>
+                        }
+                        else if (Model.ListStatus == ListingStatus.Adopted)
+                        {
+                            <span class="badge bg-success align-self-center">
+                                Adopted
+                            </span>
+                        }
+                    }
+
                     @* Allow the owner to delete the listing regardless of approval status. *@
                     <form asp-action="DeleteMarketplace"
                           asp-controller="MyPosts"

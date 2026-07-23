@@ -206,5 +206,93 @@ namespace PETHUB.Controllers
             // Return to My Posts.
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkAsSold(int id)
+        {
+            // Retrieve the currently logged-in user's ID.
+            var userId = _userManager.GetUserId(User);
+
+            // Retrieve the listing.
+            var listing = await _context.Listings
+                .FirstOrDefaultAsync(l => l.ListingId == id);
+
+            // Ensure the listing exists.
+            if (listing == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure only the owner can perform this action.
+            if (listing.MemberId != userId)
+            {
+                return Forbid();
+            }
+
+            // Only approved listings may be marked as sold.
+            if (listing.Status != ListApprovalStatus.Approved)
+            {
+                return Forbid();
+            }
+
+            // Only listings that are still pending may be updated.
+            if (listing.ListStatus != ListingStatus.Pending)
+            {
+                return Forbid();
+            }
+
+            listing.ListStatus = ListingStatus.Sold;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(
+                nameof(MarketplaceDetails),
+                new { id = listing.ListingId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkAsAdopted(int id)
+        {
+            // Retrieve the currently logged-in user's ID.
+            var userId = _userManager.GetUserId(User);
+
+            // Retrieve the listing.
+            var listing = await _context.Listings
+                .FirstOrDefaultAsync(l => l.ListingId == id);
+
+            // Ensure the listing exists.
+            if (listing == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure only the owner can perform this action.
+            if (listing.MemberId != userId)
+            {
+                return Forbid();
+            }
+
+            // Only approved listings may be marked as adopted.
+            if (listing.Status != ListApprovalStatus.Approved)
+            {
+                return Forbid();
+            }
+
+            // Only listings that are still pending may be updated.
+            if (listing.ListStatus != ListingStatus.Pending)
+            {
+                return Forbid();
+            }
+
+            listing.ListStatus = ListingStatus.Adopted;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(
+                nameof(MarketplaceDetails),
+                new { id = listing.ListingId });
+        }
     }
 }

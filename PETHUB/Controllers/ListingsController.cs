@@ -52,7 +52,7 @@ namespace PETHUB.Controllers
         {
             var listings = await _context.Listings
                .Include(l => l.Member)
-               .Where(l => l.Status == ListApprovalStatus.Approved)
+               .Where(l => l.Status == ListApprovalStatus.Approved && l.ListStatus == ListingStatus.Pending)
                .Include(l => l.Images) // load related images
                .ToListAsync();
 
@@ -286,10 +286,6 @@ namespace PETHUB.Controllers
         }
 
 
-
-
-
-
         // GET: Listings/Delete/5
 
         [Authorize(Roles = "Member")]
@@ -420,34 +416,6 @@ namespace PETHUB.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        // GET: Listings/Sold
-        [HttpPost]
-        [Authorize(Roles = "Member")]
-        public async Task<IActionResult> Sold(int id)
-        {
-            var report = await _context.Listings.FindAsync(id);
-            if (report == null) return NotFound();
-
-            report.ListStatus = ListingStatus.Sold;
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        // GET: Listings/Adopted
-        [HttpPost]
-        [Authorize(Roles = "Member")]
-        public async Task<IActionResult> Adopted(int id)
-        {
-            var report = await _context.Listings.FindAsync(id);
-            if (report == null) return NotFound();
-
-            report.ListStatus = ListingStatus.Adopted;
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-
         private bool ListingExists(int id)
         {
             return _context.Listings.Any(e => e.ListingId == id);
