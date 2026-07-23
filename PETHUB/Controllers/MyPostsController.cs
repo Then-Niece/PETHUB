@@ -14,6 +14,41 @@ namespace PETHUB.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        //Find the post.
+        //Verify the logged-in user owns it.
+        //Display the owner - specific view.
+        public async Task<IActionResult> MarketplaceDetails(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var listing = await _context.Listings
+                .Include(l => l.Images)
+                .FirstOrDefaultAsync(l => l.ListingId == id);
+
+            if (listing == null)
+                return NotFound();
+
+            if (listing.MemberId != userId)
+                return Forbid(); //Restrict non owner to access someone else's post
+
+            return View(listing);
+        }
+        public async Task<IActionResult> LostFoundDetails(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var report = await _context.LostFounds
+                .Include(r => r.Images)
+                .FirstOrDefaultAsync(r => r.LostFoundId == id);
+
+            if (report == null)
+                return NotFound();
+
+            if (report.UserId != userId)
+                return Forbid(); //Restrict non owner to access someone else's post
+
+            return View(report);
+        }
         public MyPostsController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager)
@@ -63,6 +98,60 @@ namespace PETHUB.Controllers
                 .ToList();
 
             return View(model);
+        }
+
+        //Delete Functions
+        // POST: MyPosts/DeleteMarketplace/5
+        // Deletes a marketplace listing owned by the currently logged-in member.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            // Retrieve the currently logged-in user's ID.
+            var userId = _userManager.GetUserId(User);
+
+            // Retrieve the listing together with its images.
+            var listing = await _context.Listings
+                .Include(l => l.Images)
+                .FirstOrDefaultAsync(l => l.ListingId == id);
+
+            // Return a 404 page if the listing does not exist.
+            if (listing == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure that only the owner of the listing can delete it.
+            if (listing.MemberId != userId)
+            {
+                return Forbid();
+            }
+
+            // Delete image files from wwwroot.
+            if (listing.Images != null && listing.Images.Any())
+            {
+                foreach (var image in listing.Images)
+                {
+                    var filePath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot",
+                        image.ImagePath.TrimStart('/'));
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+
+                    _context.ListingImages.Remove(image);
+                }
+            }
+
+            // Delete the listing from the database.
+            _context.Listings.Remove(listing);
+            await _context.SaveChangesAsync();
+
+            // Return the user to the My Posts page.
+            return RedirectToAction(nameof(Index));
         }
     }
 }
