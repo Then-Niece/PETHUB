@@ -61,17 +61,24 @@
 
                 <div class="card-footer d-flex justify-content-center gap-3">
 
-                    @* Only allow editing while the listing is still pending approval. *@
-                    @if (Model.Status == PETHUB.Models.ListApprovalStatus.Pending)
+                    @* 
+                        Only show the Edit button if the listing
+                        is still Pending or Rejected.
+
+                        Approved listings are locked and can no
+                        longer be modified by members.
+                    *@
+
+                    @if (Model.Status == ListApprovalStatus.Pending ||
+                         Model.Status == ListApprovalStatus.Rejected)
                     {
-                        <a asp-action="Edit"
-                           asp-controller="Listings"
+                        <a asp-controller="Listings"
+                           asp-action="Edit"
                            asp-route-id="@Model.ListingId"
-                           class="btn btn-warning px-4">
+                           class="btn btn-warning">
                             Edit
                         </a>
                     }
-
                     @* Allow the owner to delete the listing regardless of approval status. *@
                     <form asp-action="Delete"
                           asp-controller="MyPosts"

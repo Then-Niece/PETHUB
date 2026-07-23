@@ -205,12 +205,28 @@
                                         Save Changes
                                     </button>
 
+                                @* 
+                                    Show a different Back button depending on the user's role.
+                                    - Admins return to the Listings page.
+                                    - Members return to their own Marketplace Details page.
+                                *@
+
+                                @if (User.IsInRole("Admin"))
+                                {
                                     <a asp-action="Index"
-                                       class="btn btn-secondary">
+                                        class="btn btn-secondary">
                                         Back to Listings
                                     </a>
-
-                                </div>
+                                }
+                                else
+                                {
+                                    <a asp-controller="MyPosts"
+                                        asp-action="MarketplaceDetails"
+                                        asp-route-id="@Model.ListingId"
+                                        class="btn btn-secondary">
+                                        Back
+                                    </a>
+}                                </div>
 
                             </form>
 

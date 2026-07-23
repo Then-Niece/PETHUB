@@ -170,9 +170,20 @@ namespace PETHUB.Controllers
                 return NotFound();
             }
 
+            // Get the ID of the currently logged-in user.
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            // Only the owner (or an admin) is allowed to edit this listing.
             if (!User.IsInRole("Admin") && listing.MemberId != userId)
+            {
+                return Forbid();
+            }
+
+            // Members are NOT allowed to edit an approved listing.
+            // Pending and Rejected listings may still be edited.
+            // Admins are exempt from this restriction.
+            if (!User.IsInRole("Admin") &&
+                listing.Status == ListApprovalStatus.Approved)
             {
                 return Forbid();
             }
@@ -208,8 +219,17 @@ namespace PETHUB.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // Admin can edit any listing.
-            // Member can only edit their own listing.
+            // Members can only edit their own listing.
             if (!User.IsInRole("Admin") && existingListing.MemberId != userId)
+            {
+                return Forbid();
+            }
+
+            // Even if someone manually submits the Edit form,
+            // approved listings are locked and cannot be modified.
+            // Admins are exempt.
+            if (!User.IsInRole("Admin") &&
+                existingListing.Status == ListApprovalStatus.Approved)
             {
                 return Forbid();
             }
@@ -258,7 +278,11 @@ namespace PETHUB.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            // Return the owner to the updated Marketplace Details page.
+            return RedirectToAction(
+                "MarketplaceDetails",
+                "MyPosts",
+                new { id = existingListing.ListingId });
         }
 
 
