@@ -11,6 +11,11 @@ namespace PETHUB.Models
         Rejected
     }
 
+    public enum ReportStatus
+    {
+        Active,
+        Resolved
+    }
     public enum LostFoundType
     {
         Lost,
@@ -71,5 +76,6 @@ namespace PETHUB.Models
         public ICollection<LostFoundImage>? Images { get; set; }
 
         public ApprovalStatus Status { get; set; } = ApprovalStatus.Pending; // default to Pending
+        public ReportStatus RStatus { get; set; } = ReportStatus.Active;
     }
 }

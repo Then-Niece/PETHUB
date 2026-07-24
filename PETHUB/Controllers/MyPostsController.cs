@@ -294,5 +294,49 @@ namespace PETHUB.Controllers
                 nameof(MarketplaceDetails),
                 new { id = listing.ListingId });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkReportResolved(int id)
+        {
+            // Retrieve the currently logged-in user's ID.
+            var userId = _userManager.GetUserId(User);
+
+            // Retrieve the report.
+            var report = await _context.LostFounds
+                .FirstOrDefaultAsync(r => r.LostFoundId == id);
+
+            // Ensure the report exists.
+            if (report == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure only the owner can perform this action.
+            if (report.UserId != userId)
+            {
+                return Forbid();
+            }
+
+            // Only approved reports may be resolved.
+            if (report.Status != ApprovalStatus.Approved)
+            {
+                return Forbid();
+            }
+
+            // Only active reports may be resolved.
+            if (report.RStatus != ReportStatus.Active)
+            {
+                return Forbid();
+            }
+
+            report.RStatus = ReportStatus.Resolved;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(
+                nameof(LostFoundDetails),
+                new { id = report.LostFoundId });
+        }
     }
 }

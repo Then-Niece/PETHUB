@@ -328,7 +328,7 @@ public class LostFoundsController : Controller
     public async Task<IActionResult> Browse()
     {
         var lostfounds = await _context.LostFounds
-            .Where(l => l.Status == ApprovalStatus.Approved)
+            .Where(l => l.Status == ApprovalStatus.Approved && l.RStatus == ReportStatus.Active)
             .Include(l => l.User)
             .Include(l => l.Images)
             .ToListAsync();

@@ -103,43 +103,72 @@
                         <p><strong>Contact Number:</strong> @Model.User?.ContactNumber</p>
                     }
                 </div>
-            <div class="card-footer d-flex justify-content-center gap-3">
+                <div class="card-footer d-flex justify-content-center gap-3">
 
-                @* Only allow editing when the report is Pending or Rejected. *@
-                @if (Model.Status == ApprovalStatus.Pending ||
-                     Model.Status == ApprovalStatus.Rejected)
-                {
-                    <a asp-controller="LostFounds"
-                       asp-action="Edit"
-                       asp-route-id="@Model.LostFoundId"
-                       class="btn btn-warning px-4">
-                        Edit
+                    @* Pending reports can still be edited. *@
+                    @if (Model.Status == ApprovalStatus.Pending)
+                    {
+                        <a asp-controller="LostFounds"
+                           asp-action="Edit"
+                           asp-route-id="@Model.LostFoundId"
+                           class="btn btn-warning px-4">
+                            Edit
+                        </a>
+                    }
+
+                    @* Approved reports that are still active can be resolved by the owner. *@
+                    @if (Model.Status == ApprovalStatus.Approved &&
+                         Model.RStatus == ReportStatus.Active)
+                    {
+                        <form asp-action="MarkReportResolved"
+                              asp-controller="MyPosts"
+                              asp-route-id="@Model.LostFoundId"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="btn btn-success px-4">
+                                @(Model.Type == LostFoundType.Lost
+                                    ? "Mark as Found"
+                                    : "Mark as Resolved")
+                            </button>
+                        </form>
+                    }
+
+                    @* Show a badge once the report has been resolved. *@
+                    @if (Model.Status == ApprovalStatus.Approved &&
+                         Model.RStatus == ReportStatus.Resolved)
+                    {
+                        <span class="btn btn-outline-success disabled px-4">
+                            @(Model.Type == LostFoundType.Lost
+                                ? "Found"
+                                : "Resolved")
+                        </span>
+                    }
+
+                    @* Members can always delete their own report.
+                       The controller still validates ownership. *@
+                    <form asp-action="DeleteLostFound"
+                          asp-controller="MyPosts"
+                          asp-route-id="@Model.LostFoundId"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit"
+                                class="btn btn-danger px-4">
+                            Delete
+                        </button>
+                    </form>
+
+                    <a asp-controller="MyPosts"
+                       asp-action="Index"
+                       class="btn btn-secondary px-4">
+                        ← Back to My Posts
                     </a>
-                }
 
-                @* Members can delete their own report.
-                   The controller also validates ownership as a backup. *@
-                <form asp-action="DeleteLostFound"
-                      asp-controller="MyPosts"
-                      asp-route-id="@Model.LostFoundId"
-                      method="post">
-
-                    @Html.AntiForgeryToken()
-
-                    <button type="submit"
-                            class="btn btn-danger px-4">
-                        Delete
-                    </button>
-                </form>
-
-                <a asp-controller="MyPosts"
-                   asp-action="Index"
-                   class="btn btn-secondary px-4">
-                    ← Back to My Posts
-                </a>
-
-            </div>            
-            </div>
+                </div>            
+        </div>
         </div>
     </div>
 </div>
