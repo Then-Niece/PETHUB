@@ -1,5 +1,4 @@
 ﻿using PETHUB.Models;
-using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace PETHUB.ViewModels

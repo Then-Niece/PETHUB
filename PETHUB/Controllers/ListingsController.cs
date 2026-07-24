@@ -6,11 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace PETHUB.Controllers
 {
@@ -26,7 +22,7 @@ namespace PETHUB.Controllers
         }
 
         // GET: Listings
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string status)
         {
             var listings = _context.Listings

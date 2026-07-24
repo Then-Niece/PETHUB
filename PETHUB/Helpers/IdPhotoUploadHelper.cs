@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace PETHUB.Helpers
+﻿namespace PETHUB.Helpers
 {
     public class IdPhotoUploadHelper
     {

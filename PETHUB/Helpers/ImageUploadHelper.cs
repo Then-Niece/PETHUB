@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace PETHUB.Helpers
+﻿namespace PETHUB.Helpers
 {
 
     //Review this Code
     public static class ImageUploadHelper
     {
-       public static async Task<List<TImage>> SaveImagesAsync<TImage>(List<IFormFile> files,int entityId,Func<int, string, TImage> createImage, string folderName = "images")
+        public static async Task<List<TImage>> SaveImagesAsync<TImage>(List<IFormFile> files, int entityId, Func<int, string, TImage> createImage, string folderName = "images")
         {
             var images = new List<TImage>();
 

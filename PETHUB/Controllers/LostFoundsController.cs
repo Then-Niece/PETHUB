@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
@@ -19,11 +18,11 @@ public class LostFoundsController : Controller
     }
 
     // GET: LostFounds
-    [Authorize(Roles="Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index(string status)
     {
         var lostfounds = _context.LostFounds
-            .Include(l=>l.User)
+            .Include(l => l.User)
             .Include(l => l.Images)
             .AsQueryable();
 
@@ -39,7 +38,7 @@ public class LostFoundsController : Controller
     }
 
     // GET: LostFounds/Details/5
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null) return NotFound();
@@ -56,7 +55,7 @@ public class LostFoundsController : Controller
 
     // GET: LostFounds/Approve
     [HttpPost]
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Approve(int id)
     {
         var report = await _context.LostFounds.FindAsync(id);

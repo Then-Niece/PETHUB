@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity;
-using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
 using PETHUB.ViewModels;
@@ -12,11 +9,11 @@ namespace PETHUB.Controllers
 {
     public class UserAccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager; 
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserAccountController(UserManager<ApplicationUser> userManager, 
+        public UserAccountController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
@@ -58,10 +55,10 @@ namespace PETHUB.Controllers
                 Status = UserStatus.Active,
                 AcceptedTermsDate = DateTime.UtcNow // 
             };
-           
+
             user.IdPhotoPath = await IdPhotoUploadHelper.SaveIdPhotoAsync(model.IdPhoto);
-            
-            
+
+
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {

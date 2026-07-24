@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Models;
-using System.Diagnostics;
 using PETHUB.ViewModels;
+using System.Diagnostics;
 
 namespace PETHUB.Controllers
 {

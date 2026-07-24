@@ -4,138 +4,357 @@
     ViewData["Title"] = "My Posts";
 }
 
-<h1 class="text-center">My Posts</h1>
+<h1 class="text-center mb-4">My Posts</h1>
 
-<div class="row mt-4">
+<div class="d-flex flex-column gap-3">
 
     @foreach (var post in Model.Posts)
     {
-        if (post.Listing != null)
+        @* ===========================
+           MARKETPLACE POSTS
+           =========================== *@
+        @if (post.Listing != null)
         {
-            <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
 
-                <a asp-controller="MyPosts"
-                   asp-action="MarketplaceDetails"
-                   asp-route-id="@post.Listing.ListingId"
-                   class="text-decoration-none text-dark">
+                <!-- Card Body -->
+                <div class="card-body d-flex justify-content-between align-items-center">
 
-                    <div class="card h-100 shadow-sm">
+                    <!-- LEFT SIDE -->
+                    <a asp-controller="MyPosts"
+                       asp-action="MarketplaceDetails"
+                       asp-route-id="@post.Listing.ListingId"
+                       class="d-flex align-items-center flex-grow-1 text-decoration-none text-dark">
 
-                        @if (post.Listing.Images != null && post.Listing.Images.Any())
-                        {
-                            <img src="@post.Listing.Images.First().ImagePath"
-                                 class="card-img-top"
-                                 alt="Listing image"
-                                 style="height:200px;object-fit:cover;" />
-                        }
-                        else
-                        {
-                            <img src="~/images/no-image.png"
-                                 class="card-img-top"
-                                 alt="No image"
-                                 style="height:200px;object-fit:cover;" />
-                        }
+                        <!-- Listing Thumbnail -->
+                        <div class="me-4">
 
-                        <div class="card-body">
-
-                            @if (post.Listing.Status == PETHUB.Models.ListApprovalStatus.Pending)
+                            @if (post.Listing.Images != null && post.Listing.Images.Any())
                             {
-                                <span class="badge bg-warning text-dark mb-2">
-                                    Pending Approval
-                                </span>
+                                <img src="@Url.Content(post.Listing.Images.First().ImagePath)"
+                                     class="img-fluid rounded"
+                                     alt="Listing Image"
+                                     style="width:140px;height:140px;object-fit:cover;" />
                             }
-                            else if (post.Listing.Status == PETHUB.Models.ListApprovalStatus.Rejected)
+                            else
                             {
-                                <span class="badge bg-danger mb-2">
-                                    Rejected
-                                </span>
+                                <img src="@Url.Content("~/images/no-image.png")"
+                                     class="img-fluid rounded"
+                                     alt="No Image"
+                                     style="width:140px;height:140px;object-fit:cover;" />
                             }
 
-                            <h5 class="card-title">
+                        </div>
+
+                        <!-- Listing Information -->
+                        <div>
+
+                            <h4 class="fw-bold">
                                 @post.Listing.Title
-                            </h5>
+                            </h4>
 
-                            <p class="card-text">
-                                <strong>Type:</strong> @post.Listing.Type
+                            <p class="mb-1">
+                                <strong>Created:</strong>
+                                @post.Listing.DatePosted.ToString("MMM dd, yyyy")
                             </p>
 
-                            <p class="card-text">
-                                <small>
-                                    Posted @post.Listing.DatePosted.ToString("MMM dd, yyyy")
-                                </small>
+                            <p class="mb-1">
+                                <strong>Listing Type:</strong>
+                                @post.Listing.Type
                             </p>
 
                         </div>
 
+                    </a>
+
+                    <!-- RIGHT SIDE -->
+                    <div class="d-flex flex-wrap gap-2 justify-content-end ms-4">
+
+                        <!-- View -->
+                        <a asp-controller="MyPosts"
+                           asp-action="MarketplaceDetails"
+                           asp-route-id="@post.Listing.ListingId"
+                           class="btn btn-outline-primary btn-sm">
+                            View
+                        </a>
+
+                        @* Pending listings can still be edited *@
+                        @if (post.Listing.Status == ListApprovalStatus.Pending)
+                        {
+                            <a asp-controller="Listings"
+                               asp-action="Edit"
+                               asp-route-id="@post.Listing.ListingId"
+                               class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+                        }
+
+                        @* Delete is always available *@
+                        <form asp-controller="MyPosts"
+                              asp-action="DeleteMarketplace"
+                              asp-route-id="@post.Listing.ListingId"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm w-100">
+                                Delete
+                            </button>
+
+                        </form>
+
+                        @* Approved + Pending lifecycle actions *@
+                        @if (post.Listing.Status == ListApprovalStatus.Approved &&
+                             post.Listing.ListStatus == ListingStatus.Pending)
+                        {
+                            if (post.Listing.Type == ListType.For_Sale)
+                            {
+                                <form asp-controller="MyPosts"
+                                      asp-action="MarkAsSold"
+                                      asp-route-id="@post.Listing.ListingId"
+                                      method="post">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="btn btn-success btn-sm w-100">
+                                        Mark as Sold
+                                    </button>
+
+                                </form>
+                            }
+                            else if (post.Listing.Type == ListType.For_Adoption)
+                            {
+                                <form asp-controller="MyPosts"
+                                      asp-action="MarkAsAdopted"
+                                      asp-route-id="@post.Listing.ListingId"
+                                      method="post">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="btn btn-success btn-sm w-100">
+                                        Mark as Adopted
+                                    </button>
+
+                                </form>
+                            }
+                        }
+
+                    </div>
+                    
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <strong>Approval:</strong>
+
+                        @if (post.Listing.Status == ListApprovalStatus.Pending)
+                        {
+                            <span class="badge bg-warning text-dark">
+                                Pending Approval
+                            </span>
+                        }
+                        else if (post.Listing.Status == ListApprovalStatus.Approved)
+                        {
+                            <span class="badge bg-success">
+                                Approved
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">
+                                Rejected
+                            </span>
+                        }
+
                     </div>
 
-                </a>
+                    <div>
+
+                        <strong>Status:</strong>
+
+                        @if (post.Listing.ListStatus == ListingStatus.Pending)
+                        {
+                            <span class="badge bg-secondary">
+                                Pending
+                            </span>
+                        }
+                        else if (post.Listing.ListStatus == ListingStatus.Sold)
+                        {
+                            <span class="badge bg-primary">
+                                Sold
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-info text-dark">
+                                Adopted
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
 
             </div>
         }
+
+        @* ===========================
+           LOST & FOUND POSTS
+           =========================== *@
         else if (post.Report != null)
         {
-            <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
 
-                <a asp-controller="MyPosts"
-                   asp-action="LostFoundDetails"
-                   asp-route-id="@post.Report.LostFoundId"
-                   class="text-decoration-none text-dark">
+                <!-- Card Body -->
+                <div class="card-body d-flex justify-content-between align-items-center">
 
-                    <div class="card h-100 shadow-sm">
+                    <!-- LEFT SIDE -->
+                    <a asp-controller="MyPosts"
+                       asp-action="LostFoundDetails"
+                       asp-route-id="@post.Report.LostFoundId"
+                       class="d-flex align-items-center flex-grow-1 text-decoration-none text-dark">
 
-                        @if (post.Report.Images != null && post.Report.Images.Any())
-                        {
-                            <img src="@Url.Content(post.Report.Images.First().ImagePath)"
-                                 class="card-img-top"
-                                 alt="Lost & Found image"
-                                 style="height:200px;object-fit:cover;" />
-                        }
-                        else
-                        {
-                            <img src="@Url.Content("~/images/no-image.png")"
-                                 class="card-img-top"
-                                 alt="No image"
-                                 style="height:200px;object-fit:cover;" />
-                        }
+                        <!-- Report Thumbnail -->
+                        <div class="me-4">
 
-                        <div class="card-body">
-
-                            @if (post.Report.Status == PETHUB.Models.ApprovalStatus.Pending)
+                            @if (post.Report.Images != null && post.Report.Images.Any())
                             {
-                                <span class="badge bg-warning text-dark mb-2">
-                                    Pending Approval
-                                </span>
+                                <img src="@Url.Content(post.Report.Images.First().ImagePath)"
+                                     class="img-fluid rounded"
+                                     alt="Report Image"
+                                     style="width:140px;height:140px;object-fit:cover;" />
                             }
-                            else if (post.Report.Status == PETHUB.Models.ApprovalStatus.Rejected)
+                            else
                             {
-                                <span class="badge bg-danger mb-2">
-                                    Rejected
-                                </span>
+                                <img src="@Url.Content("~/images/no-image.png")"
+                                     class="img-fluid rounded"
+                                     alt="No Image"
+                                     style="width:140px;height:140px;object-fit:cover;" />
                             }
 
-                            <h5 class="card-title">
+                        </div>
+
+                        <!-- Report Information -->
+                        <div>
+
+                            <h4 class="fw-bold">
                                 @post.Report.Title
-                            </h5>
+                            </h4>
 
-                            <p class="card-text">
-                                <strong>Type:</strong> @post.Report.Type
+                            <p class="mb-1">
+                                <strong>Created:</strong>
+                                @post.Report.DateReported.ToString("MMM dd, yyyy")
                             </p>
 
-                            <p class="card-text">
-                                <small>
-                                    Reported @post.Report.DateReported.ToString("MMM dd, yyyy")
-                                </small>
+                            <p class="mb-1">
+                                <strong>Report Type:</strong>
+                                @post.Report.Type
                             </p>
 
                         </div>
 
+                    </a>
+
+                    <!-- RIGHT SIDE -->
+                    <div class="d-flex flex-wrap gap-2 justify-content-end ms-4">
+
+                        <!-- View -->
+                        <a asp-controller="MyPosts"
+                           asp-action="LostFoundDetails"
+                           asp-route-id="@post.Report.LostFoundId"
+                           class="btn btn-outline-primary btn-sm">
+                            View
+                        </a>
+
+                        @* Pending reports can still be edited *@
+                        @if (post.Report.Status == ApprovalStatus.Pending)
+                        {
+                            <a asp-controller="LostFounds"
+                               asp-action="Edit"
+                               asp-route-id="@post.Report.LostFoundId"
+                               class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+                        }
+
+                        @* Delete is always available *@
+                        <form asp-controller="MyPosts"
+                              asp-action="DeleteLostFound"
+                              asp-route-id="@post.Report.LostFoundId"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm">
+                                Delete
+                            </button>
+
+                        </form>
+
                     </div>
 
-                </a>
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <strong>Approval:</strong>
+
+                        @if (post.Report.Status == ApprovalStatus.Pending)
+                        {
+                            <span class="badge bg-warning text-dark">
+                                Pending Approval
+                            </span>
+                        }
+                        else if (post.Report.Status == ApprovalStatus.Approved)
+                        {
+                            <span class="badge bg-success">
+                                Approved
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">
+                                Rejected
+                            </span>
+                        }
+
+                    </div>
+
+                    <div>
+
+                        <strong>Status:</strong>
+
+                        @if (post.Report.RStatus == ReportStatus.Active)
+                        {
+                            <span class="badge bg-secondary">
+                                Active
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-primary">
+                                Resolved
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
 
             </div>
         }
     }
 
 </div>
+
+```

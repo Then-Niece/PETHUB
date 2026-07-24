@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace PETHUB.Models
+﻿namespace PETHUB.Models
 {
     public class LostFoundImage
     {
