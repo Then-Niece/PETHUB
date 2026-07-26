@@ -4,135 +4,360 @@
     ViewData["Title"] = "Create Member";
 }
 
-<div class="container mt-4">
-    <h2>Create Member</h2>
-    <hr />
+<div class="container-fluid py-4">
 
-    <form asp-action="Create" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="crud-page">
 
-        <!-- Common fields -->
-        <div class="mb-3">
-            <label asp-for="FirstName" class="form-label"></label>
-            <input asp-for="FirstName" class="form-control" />
-            <span asp-validation-for="FirstName" class="text-danger"></span>
-        </div>
+        <div class="crud-card">
 
-        <div class="mb-3">
-            <label asp-for="LastName" class="form-label"></label>
-            <input asp-for="LastName" class="form-control" />
-            <span asp-validation-for="LastName" class="text-danger"></span>
-        </div>
+            <div class="crud-header">
 
-        <div class="mb-3">
-            <label asp-for="ContactNumber" class="form-label"></label>
-            <input asp-for="ContactNumber" class="form-control" />
-            <span asp-validation-for="ContactNumber" class="text-danger"></span>
-        </div>
+                <h2>Create Member</h2>
 
-        <div class="mb-3">
-            <label asp-for="Email" class="form-label"></label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
+                <p>
+                    Register a new member by completing the information below.
+                </p>
 
-        <div class="mb-3">
-            <label asp-for="UserName" class="form-label"></label>
-            <input asp-for="UserName" class="form-control" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="Password" class="form-label"></label>
-            <input asp-for="Password" type="password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-
-        <!-- Member-only fields -->
-        <div class="mb-3">
-            <label asp-for="Address" class="form-label"></label>
-            <input asp-for="Address" class="form-control" />
-            <span asp-validation-for="Address" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Gender</label><br />
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" asp-for="Gender" value="Male" id="genderMale" />
-                <label class="form-check-label" for="genderMale">Male</label>
             </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" asp-for="Gender" value="Female" id="genderFemale" />
-                <label class="form-check-label" for="genderFemale">Female</label>
-            </div>
-            <span asp-validation-for="Gender" class="text-danger"></span>
+
+            <form asp-action="Create" enctype="multipart/form-data">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-4">
+                </div>
+
+                <div class="crud-content">
+
+                    <!-- ==========================
+                         LEFT SIDE
+                    =========================== -->
+
+                    <div class="member-form">
+
+                        <div class="form-grid">
+
+                            <!-- Username -->
+                            <div class="form-group">
+
+                                <label asp-for="UserName">
+                                    Username
+                                </label>
+
+                                <input asp-for="UserName"
+                                       class="form-control custom-input" />
+
+                                <span asp-validation-for="UserName"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-group">
+
+                                <label asp-for="Email">
+                                    Email
+                                </label>
+
+                                <input asp-for="Email"
+                                       class="form-control custom-input" />
+
+                                <span asp-validation-for="Email"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                            <!-- First Name -->
+                            <div class="form-group">
+
+                                <label asp-for="FirstName">
+                                    First Name
+                                </label>
+
+                                <input asp-for="FirstName"
+                                       class="form-control custom-input" />
+
+                                <span asp-validation-for="FirstName"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                            <!-- Last Name -->
+                            <div class="form-group">
+
+                                <label asp-for="LastName">
+                                    Last Name
+                                </label>
+
+                                <input asp-for="LastName"
+                                       class="form-control custom-input" />
+
+                                <span asp-validation-for="LastName"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                            <!-- Contact -->
+                            <div class="form-group">
+
+                                <label asp-for="ContactNumber">
+                                    Contact Number
+                                </label>
+
+                                <input asp-for="ContactNumber"
+                                       class="form-control custom-input" />
+
+                                <span asp-validation-for="ContactNumber"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="form-group">
+
+                                <label>
+                                    Gender
+                                </label>
+
+                                <div class="gender-group">
+
+                                    <div class="form-check">
+
+                                        <input asp-for="Gender"
+                                               type="radio"
+                                               value="Male"
+                                               id="male"
+                                               class="form-check-input" />
+
+                                        <label for="male"
+                                               class="form-check-label">
+
+                                            Male
+
+                                        </label>
+
+                                    </div>
+
+                                    <div class="form-check">
+
+                                        <input asp-for="Gender"
+                                               type="radio"
+                                               value="Female"
+                                               id="female"
+                                               class="form-check-input" />
+
+                                        <label for="female"
+                                               class="form-check-label">
+
+                                            Female
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                                <span asp-validation-for="Gender"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                            <!-- Birthdate -->
+                            <div class="form-group">
+
+                                <label asp-for="Birthdate">
+                                    Birth Date
+                                </label>
+
+                                <input asp-for="Birthdate"
+                                       type="date"
+                                       class="form-control custom-input" />
+
+                                <span asp-validation-for="Birthdate"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                            <!-- Status -->
+                            <div class="form-group">
+
+                                <label>
+                                    Status
+                                </label>
+
+                                <input asp-for="Status"
+                                       readonly
+                                       value="Active"
+                                       class="form-control custom-input readonly-input" />
+
+                            </div>
+
+                            <!-- Password -->
+                            <div class="form-group full-width">
+
+                                <label asp-for="Password">
+                                    Password
+                                </label>
+
+                                <input asp-for="Password"
+                                       type="password"
+                                       class="form-control custom-input" />
+
+                                <span asp-validation-for="Password"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                            <!-- Address -->
+                            <div class="form-group full-width">
+
+                                <label asp-for="Address">
+                                    Address
+                                </label>
+
+                                <input asp-for="Address"
+                                       class="form-control custom-input" />
+
+                                <span asp-validation-for="Address"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ==========================
+                         RIGHT SIDE
+                    =========================== -->
+
+                    <div class="upload-panel">
+
+                        <h5>
+                            Valid ID
+                        </h5>
+
+                        <p class="upload-text">
+
+                            Upload a clear image of the member's valid ID.
+
+                        </p>
+
+                        <div class="upload-preview">
+
+                            <img id="idPhotoPreview"
+                                 src="#"
+                                 alt="Preview" />
+
+                            <div class="upload-placeholder">
+
+                                <i class="bi bi-card-image"></i>
+
+                                <p>
+
+                                    Image Preview
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <label asp-for="IdPhoto"
+                               class="upload-label">
+
+                            Valid ID
+                            <small>(Optional)</small>
+
+                        </label>
+
+                        <input asp-for="IdPhoto"
+                               type="file"
+                               class="form-control custom-input"
+                               id="IdPhotoInput" />
+
+                        <span asp-validation-for="IdPhoto"
+                              class="text-danger"></span>
+
+                    </div>
+
+                </div>
+
+                <div class="crud-footer">
+
+                    <a asp-action="Index"
+                       class="btn-cancel">
+
+                        Cancel
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn-primary-action">
+
+                        Create Member
+
+                    </button>
+
+                </div>
+
+            </form>
+
         </div>
 
+    </div>
 
-        <div class="mb-3">
-            <label asp-for="Birthdate" class="form-label"></label>
-            <input asp-for="Birthdate" type="date" class="form-control" />
-            <span asp-validation-for="Birthdate" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="Status" class="form-label"></label>
-            <input asp-for="Status" class="form-control" value="Active" readonly />
-            <span asp-validation-for="Status" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="IdPhoto" class="form-label">
-                Add a Valid ID Photo
-                <span class="text-secondary" style="font-size:0.6em;">( note: this is optional )</span>
-            </label>
-            <input asp-for="IdPhoto" type="file" class="form-control" id="IdPhotoInput" />
-            <span asp-validation-for="IdPhoto" class="text-danger"></span>
-
-            <!-- Preview for the ID Photo -->
-            <div class="mt-2">
-                <img id="idPhotoPreview" src="#" alt="ID Photo Preview" style="max-width:150px; display:none;" />
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-success">Save</button>
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </form>
 </div>
 
-@section Scripts {
+@section Scripts
+{
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
-       $("#IdPhotoInput").on("change", function () {
+        $("#IdPhotoInput").on("change", function() {
+
             var file = this.files[0];
+
             if (file) {
-                // check type
+
                 var validTypes = ["image/jpeg", "image/png", "image/jpg"];
+
                 if ($.inArray(file.type, validTypes) < 0) {
+
                     alert("Only JPG and PNG files are allowed.");
-                    $(this).val(""); // clear input
+
+                    $(this).val("");
+
                     return;
                 }
 
-                // check size (2MB max)
                 if (file.size > 2 * 1024 * 1024) {
+
                     alert("File size must be less than 2MB.");
-                    $(this).val(""); // clear input
+
+                    $(this).val("");
+
                     return;
                 }
 
                 var reader = new FileReader();
-                reader.onload = function (e) {
+
+                reader.onload = function(e) {
+
                     $("#idPhotoPreview")
                         .attr("src", e.target.result)
                         .show();
+
                 };
+
                 reader.readAsDataURL(file);
             }
+
         });
 
     </script>
+
 }
