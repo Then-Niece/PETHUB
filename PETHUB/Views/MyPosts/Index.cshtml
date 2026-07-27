@@ -70,84 +70,13 @@
                     <!-- RIGHT SIDE -->
                     <div class="d-flex flex-wrap gap-2 justify-content-end ms-4">
 
-                        <!-- View -->
-                        <a asp-controller="MyPosts"
-                           asp-action="MarketplaceDetails"
-                           asp-route-id="@post.Listing.ListingId"
-                           class="btn btn-outline-primary btn-sm">
-                            View
-                        </a>
-
-                        @* Pending listings can still be edited *@
-                        @if (post.Listing.Status == ListApprovalStatus.Pending)
-                        {
-                            <a asp-controller="Listings"
-                               asp-action="Edit"
-                               asp-route-id="@post.Listing.ListingId"
-                               class="btn btn-warning btn-sm">
-                                Edit
-                            </a>
-                        }
-
-                        @* Delete is always available *@
-                        <form asp-controller="MyPosts"
-                              asp-action="DeleteMarketplace"
-                              asp-route-id="@post.Listing.ListingId"
-                              method="post">
-
-                            @Html.AntiForgeryToken()
-
-                            <button type="submit"
-                                    class="btn btn-danger btn-sm w-100">
-                                Delete
-                            </button>
-
-                        </form>
-
-                        @* Approved + Pending lifecycle actions *@
-                        @if (post.Listing.Status == ListApprovalStatus.Approved &&
-                             post.Listing.ListStatus == ListingStatus.Pending)
-                        {
-                            if (post.Listing.Type == ListType.For_Sale)
-                            {
-                                <form asp-controller="MyPosts"
-                                      asp-action="MarkAsSold"
-                                      asp-route-id="@post.Listing.ListingId"
-                                      method="post">
-
-                                    @Html.AntiForgeryToken()
-
-                                    <button type="submit"
-                                            class="btn btn-success btn-sm w-100">
-                                        Mark as Sold
-                                    </button>
-
-                                </form>
-                            }
-                            else if (post.Listing.Type == ListType.For_Adoption)
-                            {
-                                <form asp-controller="MyPosts"
-                                      asp-action="MarkAsAdopted"
-                                      asp-route-id="@post.Listing.ListingId"
-                                      method="post">
-
-                                    @Html.AntiForgeryToken()
-
-                                    <button type="submit"
-                                            class="btn btn-success btn-sm w-100">
-                                        Mark as Adopted
-                                    </button>
-
-                                </form>
-                            }
-                        }
 
                     </div>
                     
                 </div>
 
                 <!-- Footer -->
-                <div class="card-footer d-flex justify-content-between align-items-center">
+                <div class="card-footer d-flex justify-content-end align-items-center">
 
                     <div>
 
@@ -174,30 +103,6 @@
 
                     </div>
 
-                    <div>
-
-                        <strong>Status:</strong>
-
-                        @if (post.Listing.ListStatus == ListingStatus.Pending)
-                        {
-                            <span class="badge bg-secondary">
-                                Pending
-                            </span>
-                        }
-                        else if (post.Listing.ListStatus == ListingStatus.Sold)
-                        {
-                            <span class="badge bg-primary">
-                                Sold
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-info text-dark">
-                                Adopted
-                            </span>
-                        }
-
-                    </div>
 
                 </div>
 
@@ -264,46 +169,13 @@
                     <!-- RIGHT SIDE -->
                     <div class="d-flex flex-wrap gap-2 justify-content-end ms-4">
 
-                        <!-- View -->
-                        <a asp-controller="MyPosts"
-                           asp-action="LostFoundDetails"
-                           asp-route-id="@post.Report.LostFoundId"
-                           class="btn btn-outline-primary btn-sm">
-                            View
-                        </a>
-
-                        @* Pending reports can still be edited *@
-                        @if (post.Report.Status == ApprovalStatus.Pending)
-                        {
-                            <a asp-controller="LostFounds"
-                               asp-action="Edit"
-                               asp-route-id="@post.Report.LostFoundId"
-                               class="btn btn-warning btn-sm">
-                                Edit
-                            </a>
-                        }
-
-                        @* Delete is always available *@
-                        <form asp-controller="MyPosts"
-                              asp-action="DeleteLostFound"
-                              asp-route-id="@post.Report.LostFoundId"
-                              method="post">
-
-                            @Html.AntiForgeryToken()
-
-                            <button type="submit"
-                                    class="btn btn-danger btn-sm">
-                                Delete
-                            </button>
-
-                        </form>
 
                     </div>
 
                 </div>
 
                 <!-- Footer -->
-                <div class="card-footer d-flex justify-content-between align-items-center">
+                <div class="card-footer d-flex justify-content-end align-items-end">
 
                     <div>
 
@@ -330,25 +202,6 @@
 
                     </div>
 
-                    <div>
-
-                        <strong>Status:</strong>
-
-                        @if (post.Report.RStatus == ReportStatus.Active)
-                        {
-                            <span class="badge bg-secondary">
-                                Active
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-primary">
-                                Resolved
-                            </span>
-                        }
-
-                    </div>
-
                 </div>
 
             </div>
@@ -357,4 +210,3 @@
 
 </div>
 
-```

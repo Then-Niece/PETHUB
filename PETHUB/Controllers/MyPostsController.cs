@@ -22,14 +22,19 @@ namespace PETHUB.Controllers
             var userId = _userManager.GetUserId(User);
 
             var listing = await _context.Listings
+                .Include(l => l.Member)
                 .Include(l => l.Images)
                 .FirstOrDefaultAsync(l => l.ListingId == id);
 
             if (listing == null)
+            {
                 return NotFound();
+            }
 
             if (listing.MemberId != userId)
+            {
                 return Forbid(); //Restrict non owner to access someone else's post
+            }
 
             return View(listing);
         }
@@ -38,14 +43,19 @@ namespace PETHUB.Controllers
             var userId = _userManager.GetUserId(User);
 
             var report = await _context.LostFounds
+                .Include(r => r.User)
                 .Include(r => r.Images)
                 .FirstOrDefaultAsync(r => r.LostFoundId == id);
 
             if (report == null)
+            {
                 return NotFound();
+            }
 
             if (report.UserId != userId)
+            {
                 return Forbid(); //Restrict non owner to access someone else's post
+            }
 
             return View(report);
         }
