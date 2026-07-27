@@ -1,0 +1,59 @@
+﻿<nav class="sidebar-nav">
+
+    <!-- Explore -->
+    <div class="sidebar-section">
+
+        <h6 class="sidebar-section-title">
+            Explore
+        </h6>
+
+        <a asp-controller="Listings"
+           asp-action="Marketplace"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Listings" ? "active" : "")">
+
+            <i data-lucide="shopping-bag"></i>
+
+            <span class="sidebar-text">
+                Marketplace
+            </span>
+
+        </a>
+
+        <a asp-controller="LostFounds"
+           asp-action="Browse"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "LostFounds" ? "active" : "")">
+
+            <i data-lucide="search"></i>
+
+            <span class="sidebar-text">
+                Lost &amp; Found
+            </span>
+
+        </a>
+
+    </div>
+
+    <hr class="sidebar-divider" />
+
+    <!-- My Content -->
+    <div class="sidebar-section">
+
+        <h6 class="sidebar-section-title">
+            My Content
+        </h6>
+
+        <a asp-controller="MyPosts"
+           asp-action="Index"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "MyPosts" ? "active" : "")">
+
+            <i data-lucide="file-text"></i>
+
+            <span class="sidebar-text">
+                My Posts
+            </span>
+
+        </a>
+
+    </div>
+
+</nav>

@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PETHUB.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -17,30 +18,23 @@
 
     <div class="app">
 
-        @if (!(ViewData["HideSidebar"] as bool? ?? false))
+        @if (!(ViewData["HideSidebar"] as bool? ?? false)
+            && User.Identity?.IsAuthenticated == true)
         {
             <div id="sidebar-wrapper">
 
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <div id="sidebarContent">
+                <aside id="sidebar">
 
-                        <div id="sidebar-header">
-                            <button id="sidebarToggle">
-                                ☰
-                            </button>
-                        </div>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <partial name="_AdminSidebar" />
+                    }
+                    else if (User.IsInRole("Member"))
+                    {
+                        <partial name="_MemberSidebar" />
+                    }
 
-                        <aside id="sidebar">
-                            <partial name="_Sidebar" />
-                        </aside>
-
-                    </div>
-
-                    <button id="sidebarHandle" aria-label="Open sidebar">
-                        ☰
-                    </button>
-                }
+                </aside>
 
             </div>
         }
@@ -61,6 +55,11 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+            lucide.createIcons();
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 

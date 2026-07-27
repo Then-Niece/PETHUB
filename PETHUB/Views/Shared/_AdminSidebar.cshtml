@@ -1,0 +1,110 @@
+﻿<nav class="sidebar-nav">
+
+    <!-- Explore -->
+    <div class="sidebar-section">
+
+        <h6 class="sidebar-section-title">
+            Explore
+        </h6>
+
+        <a asp-controller="Listings"
+           asp-action="Marketplace"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Listings" &&
+                                            ViewContext.RouteData.Values["Action"]?.ToString() == "Marketplace" ? "active" : "")">
+
+            <i data-lucide="shopping-bag"></i>
+
+            <span class="sidebar-text">
+                Marketplace
+            </span>
+
+        </a>
+
+        <a asp-controller="LostFounds"
+           asp-action="Browse"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "LostFounds" &&
+                                            ViewContext.RouteData.Values["Action"]?.ToString() == "Browse" ? "active" : "")">
+
+            <i data-lucide="search"></i>
+
+            <span class="sidebar-text">
+                Lost &amp; Found
+            </span>
+
+        </a>
+
+    </div>
+
+    <hr class="sidebar-divider" />
+
+    <!-- User Management -->
+    <div class="sidebar-section">
+
+        <h6 class="sidebar-section-title">
+            User Management
+        </h6>
+
+        <a asp-controller="Members"
+           asp-action="Index"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Members" ? "active" : "")">
+
+            <i data-lucide="users"></i>
+
+            <span class="sidebar-text">
+                Members
+            </span>
+
+        </a>
+
+        <a asp-controller="Admins"
+           asp-action="Index"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admins" ? "active" : "")">
+
+            <i data-lucide="user-cog"></i>
+
+            <span class="sidebar-text">
+                Admins
+            </span>
+
+        </a>
+
+    </div>
+
+    <hr class="sidebar-divider" />
+
+    <!-- Content Moderation -->
+    <div class="sidebar-section">
+
+        <h6 class="sidebar-section-title">
+            Content Moderation
+        </h6>
+
+        <a asp-controller="Listings"
+           asp-action="Index"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Listings" &&
+                                            ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+
+            <i data-lucide="badge-check"></i>
+
+            <span class="sidebar-text">
+                Marketplace Approval
+            </span>
+
+        </a>
+
+        <a asp-controller="LostFounds"
+           asp-action="Index"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "LostFounds" &&
+                                            ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+
+            <i data-lucide="shield-check"></i>
+
+            <span class="sidebar-text">
+                Lost &amp; Found Approval
+            </span>
+
+        </a>
+
+    </div>
+
+</nav>
