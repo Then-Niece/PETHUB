@@ -63,6 +63,7 @@
                                 </a>
                             </li>
 
+
                 
                             
 
@@ -72,7 +73,12 @@
 
                             @if (User.IsInRole("Admin") || (User.IsInRole("Member")))
                             {
-                            
+
+                            <li class="nav-item mx-2">
+                                <a class="nav-link fw-semibold" asp-controller="PetFeeds" asp-action="Feed">
+                                    PetFeed
+                                </a>
+                            </li>
 
                             }
                             else
@@ -88,6 +94,8 @@
                                         About
                                     </a>
                                 </li>
+
+                                
                             }
 
                             @* ==========================================================
@@ -125,6 +133,13 @@
                                     asp-controller="LostFounds"
                                     asp-action="Index">
                                         Lost & Found Approval
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                       asp-controller="PetFeeds"
+                                       asp-action="Index">
+                                        Pet Feeds
                                     </a>
                                 </li>
                             }

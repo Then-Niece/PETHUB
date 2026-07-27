@@ -18,7 +18,8 @@ namespace PETHUB.Helpers
             var folder = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "wwwroot",
-                "idphotos");
+                "uploads",
+                "memberids");
 
             // Full physical path
             var fullPath = Path.Combine(folder, fileName);
@@ -30,7 +31,7 @@ namespace PETHUB.Helpers
             }
 
             // Return the path that will be stored in the database
-            return "/idphotos/" + fileName;
+            return "/uploads/memberids/" + fileName;
         }
     }
 }

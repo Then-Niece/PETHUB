@@ -26,26 +26,6 @@ namespace PETHUB.Controllers
 
 
         // GET: Members
-        //public async Task<IActionResult> Index()
-        //{
-        //    // Only get users in the Member role
-        //    var members = await _userManager.GetUsersInRoleAsync("Member");
-
-        //    // Optional: build dictionary of roles if you want to display them
-        //    var memberRoles = new Dictionary<string, string>();
-        //    foreach (var member in members)
-        //    {
-        //        var roles = await _userManager.GetRolesAsync(member);
-        //        memberRoles[member.Id] = roles.FirstOrDefault() ?? "No Role";
-        //    }
-
-
-
-        //    ViewBag.MemberRoles = memberRoles;
-        //    return View(members); // pass the list of ApplicationUser objects
-        //}
-
-        // GET: Members
         public async Task<IActionResult> Index()
         {
             // Only get users in the Member role

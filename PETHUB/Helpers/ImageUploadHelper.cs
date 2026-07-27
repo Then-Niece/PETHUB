@@ -6,14 +6,14 @@ namespace PETHUB.Helpers
     //Review this Code
     public static class ImageUploadHelper
     {
-       public static async Task<List<TImage>> SaveImagesAsync<TImage>(List<IFormFile> files,int entityId,Func<int, string, TImage> createImage, string folderName = "images")
+       public static async Task<List<TImage>> SaveImagesAsync<TImage>(List<IFormFile> files,int entityId,Func<int, string, TImage> createImage, string folderName)
         {
             var images = new List<TImage>();
 
             if (files == null || files.Count == 0)
                 return images;
 
-            var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderName);
+            var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", folderName);
             if (!Directory.Exists(uploadDir))
                 Directory.CreateDirectory(uploadDir);
 
@@ -25,7 +25,7 @@ namespace PETHUB.Helpers
                 using (var stream = new FileStream(filePath, FileMode.Create))
                     await file.CopyToAsync(stream);
 
-                images.Add(createImage(entityId, $"/{folderName}/{uniqueFileName}"));
+                images.Add(createImage(entityId, $"/uploads/{folderName}/{uniqueFileName}"));
             }
 
             return images;

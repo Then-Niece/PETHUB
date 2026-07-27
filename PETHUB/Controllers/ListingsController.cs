@@ -216,14 +216,6 @@ namespace PETHUB.Controllers
 
             if (!ModelState.IsValid)
             {
-                foreach (var item in ModelState)
-                {
-                    foreach (var error in item.Value.Errors)
-                    {
-                        Console.WriteLine($"{item.Key}: {error.ErrorMessage}");
-                    }
-                }
-
                 ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", existingListing.MemberId);
                 return View(existingListing);
             }

@@ -1,0 +1,225 @@
+﻿@using System.Linq
+@model IEnumerable<PETHUB.ViewModels.PetFeedFeedViewModel>
+
+<div class="feed-container">
+
+    @foreach (var post in Model)
+    {
+        <div class="card mb-4 shadow-sm">
+
+            <div class="card-body">
+
+                <!-- POST HEADER -->
+                <div class="d-flex align-items-center mb-3">
+
+                    <img src="~/images/PETHUB-LOGO.png"
+                         class="rounded-circle me-2"
+                         style="width:40px;height:40px;" />
+
+                    <div>
+                        <strong>PETHUB</strong>
+                        <br />
+
+                        <small class="text-muted">
+                            @post.DateCreated.ToString("MMM dd, yyyy")
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <!-- POST CONTENT -->
+
+                <h4 class="fw-bold">
+                    @post.Title
+                </h4>
+
+                <p>
+                    @post.Content
+                </p>
+
+
+                <!-- IMAGES -->
+                @if (post.Images != null && post.Images.Any())
+                {
+                    var images = post.Images.ToList();
+
+                    @if (images.Count == 1)
+                    {
+                        <img src="@images[0].ImagePath"
+                             class="post-image w-100 rounded" />
+                    }
+                    else
+                    {
+                        <div class="image-grid">
+
+                            @foreach (var image in images.Take(4))
+                            {
+                                <img src="@image.ImagePath"
+                                     class="grid-image rounded" />
+                            }
+
+
+                            @if (images.Count > 4)
+                            {
+                                <div class="more-images">
+                                    +@(images.Count - 4)
+                                </div>
+                            }
+
+                        </div>
+                    }
+                }
+
+
+                <!-- PAW BUTTON -->
+
+                <div class="mt-3">
+                    🐾 @post.PawCount paws
+                </div>
+
+
+                <form asp-action="@(post.IsPawed ? "Unpaw" : "Paw")"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="id"
+                           value="@post.PetFeedId" />
+
+
+                    <button class="btn btn-primary mt-2">
+                        @(post.IsPawed ? "Remove Paw" : "Paw")
+                    </button>
+
+                </form>
+
+
+                <hr />
+
+
+                <!-- COMMENTS -->
+
+                <h6 class="fw-bold">
+                    Comments
+                </h6>
+
+
+                @if (post.Comments != null && post.Comments.Any())
+                {
+
+                    <div class="mt-3">
+
+                        @foreach (var comment in post.Comments)
+                        {
+                            <div class="card mb-3 border-0 bg-light">
+
+                                <div class="card-body p-3">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="rounded-circle bg-success text-white
+                                            d-flex justify-content-center
+                                            align-items-center"
+                                             style="width:35px;height:35px;">
+
+                                            @(comment.Member?.FirstName?.Substring(0, 1) ?? "?")
+
+                                        </div>
+
+
+                                        <div class="ms-2">
+
+                                            <strong>
+                                                @comment.Member?.FirstName
+                                                @comment.Member?.LastName
+                                            </strong>
+
+                                            <br />
+
+                                            <small class="text-muted">
+                                                @comment.DatePosted.ToString("MMM dd, yyyy")
+                                            </small>
+
+                                        </div>
+
+
+                                        @if (User.IsInRole("Admin") ||
+                                            comment.MemberId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                                        {
+                                            <form asp-action="DeleteComment"
+                                                  method="post"
+                                                  class="ms-auto">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@comment.CommentId" />
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-danger">
+                                                    Delete
+                                                </button>
+
+                                            </form>
+                                        }
+
+                                    </div>
+
+
+                                    <p class="mt-2 mb-0">
+                                        @comment.Content
+                                    </p>
+
+
+                                </div>
+
+                            </div>
+                        }
+
+
+                    </div>
+
+                }
+                else
+                {
+                    <p class="text-muted">
+                        No comments yet. Be the first to comment!
+                    </p>
+                }
+
+
+
+                <!-- ADD COMMENT -->
+
+                <form asp-action="AddComment"
+                      method="post"
+                      class="mt-3">
+
+
+                    <input type="hidden"
+                           name="id"
+                           value="@post.PetFeedId" />
+
+
+                    <textarea name="content"
+                              class="form-control"
+                              rows="2"
+                              placeholder="Write a comment..."></textarea>
+
+
+                    <button class="btn btn-primary mt-2">
+                        Comment
+                    </button>
+
+                </form>
+
+
+            </div>
+
+        </div>
+    }
+
+</div>

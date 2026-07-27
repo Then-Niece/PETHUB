@@ -67,6 +67,14 @@
             <input asp-for="ClientContact" class="form-control" />
             <span asp-validation-for="ClientContact" class="text-danger"></span>
         </div>
+
+        <div class="mb-3">
+            <label class="form-label">Upload a Valid Government ID</label>
+            <input type="file" name="ClientIdImage" id="ClientIdImage" class="form-control" accept=".jpg,.jpeg,.png" />
+            <small class="text-muted">JPG or PNG only (Max 2 MB) </small>
+
+            <img id="idPhotoPreview" class="mt-2 img-thumbnail" style="max-width:200px;display:none;" />
+        </div>
     }
 
 
@@ -93,26 +101,71 @@
 </form>
 
 <script>
-        function toggleLostDate() {
+    function toggleLostDate() {
         const typeSelect = document.getElementById("typeSelect");
         const lostDateGroup = document.getElementById("lostDateGroup");
-        // Assuming Lost = 0, Found = 1
-        lostDateGroup.style.display = typeSelect.value === "0" ? "block" : "none";
-        }
-        document.getElementById("typeSelect").addEventListener("change", toggleLostDate);
-        window.onload = toggleLostDate;
 
+        // Lost = 0, Found = 1
+        lostDateGroup.style.display = typeSelect.value === "0"
+            ? "block"
+            : "none";
+    }
+
+    document.getElementById("typeSelect").addEventListener("change", toggleLostDate);
+    window.onload = toggleLostDate;
 </script>
+
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-
-        <script src="~/js/imagePreviewHelper.js"></script>
-        <script>
-            setupImagePreview("imageInput", "imagePreviewContainer");
-        </script>
-
-
     }
+
+    <script src="~/js/imagePreviewHelper.js"></script>
+
+    <script>
+        setupImagePreview("imageInput", "imagePreviewContainer");
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $("#ClientIdImage").on("change", function () {
+
+            var file = this.files[0];
+
+            if (!file) {
+                $("#idPhotoPreview").hide();
+                return;
+            }
+
+            // Allowed file types
+            var validTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+            if ($.inArray(file.type, validTypes) === -1) {
+                alert("Only JPG and PNG files are allowed.");
+                $(this).val("");
+                $("#idPhotoPreview").hide();
+                return;
+            }
+
+            // Maximum file size = 2 MB
+            if (file.size > 2 * 1024 * 1024) {
+                alert("File size must be less than 2 MB.");
+                $(this).val("");
+                $("#idPhotoPreview").hide();
+                return;
+            }
+
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $("#idPhotoPreview")
+                    .attr("src", e.target.result)
+                    .show();
+            };
+
+            reader.readAsDataURL(file);
+        });
+    </script>
 }

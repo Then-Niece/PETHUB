@@ -71,5 +71,8 @@ namespace PETHUB.Models
         public ICollection<LostFoundImage>? Images { get; set; }
 
         public ApprovalStatus Status { get; set; } = ApprovalStatus.Pending; // default to Pending
+
+        //New Property for Client's Id
+        public string? ClientIdImagePath { get; set; }
     }
 }

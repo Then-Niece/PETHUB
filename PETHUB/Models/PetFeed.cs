@@ -19,7 +19,7 @@ namespace PETHUB.Models
 
         public string Content { get; set; }
 
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateCreated { get; set; }
 
         public PetFeedType Type { get; set; }
 
