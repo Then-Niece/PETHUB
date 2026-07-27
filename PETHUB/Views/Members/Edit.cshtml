@@ -4,91 +4,275 @@
     ViewData["Title"] = "Edit Member";
 }
 
-<div class="container mt-4">
-    <h2 class="mb-3">Edit Member</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-6">
+<div class="container-fluid py-4">
+
+    <div class="crud-page">
+
+        <div class="crud-card">
+
+            <div class="crud-header">
+
+                <h2>Edit Member</h2>
+
+                <p>
+                    Update the member information below.
+                </p>
+
+            </div>
+
             <form asp-action="Edit">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                 <input type="hidden" asp-for="Id" />
 
-                <!-- Common fields -->
-                <div class="mb-3">
-                    <label asp-for="UserName" class="form-label"></label>
-                    <input asp-for="UserName" class="form-control" />
-                    <span asp-validation-for="UserName" class="text-danger"></span>
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-4">
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="FirstName" class="form-label"></label>
-                    <input asp-for="FirstName" class="form-control" />
-                    <span asp-validation-for="FirstName" class="text-danger"></span>
-                </div>
+                <div class="crud-content">
 
-                <div class="mb-3">
-                    <label asp-for="LastName" class="form-label"></label>
-                    <input asp-for="LastName" class="form-control" />
-                    <span asp-validation-for="LastName" class="text-danger"></span>
-                </div>
+                  
 
-                <div class="mb-3">
-                    <label asp-for="Email" class="form-label"></label>
-                    <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
+                    <div class="form-grid">
 
-                <div class="mb-3">
-                    <label asp-for="ContactNumber" class="form-label"></label>
-                    <input asp-for="ContactNumber" class="form-control" />
-                    <span asp-validation-for="ContactNumber" class="text-danger"></span>
-                </div>
+                        <!-- Username -->
+                        <div class="form-group">
 
-                <!-- Member-only fields -->
-                <div class="mb-3">
-                    <label asp-for="Address" class="form-label"></label>
-                    <input asp-for="Address" class="form-control" />
-                    <span asp-validation-for="Address" class="text-danger"></span>
-                </div>
+                            <label asp-for="UserName">
+                                Username
+                            </label>
 
-                <div class="mb-3">
-                    <label class="form-label">Gender</label><br />
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" asp-for="Gender" value="Male" id="genderMale" />
-                        <label class="form-check-label" for="genderMale">Male</label>
+                            <input asp-for="UserName"
+                                   class="form-control custom-input" />
+
+                            <span asp-validation-for="UserName"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+
+                            <label asp-for="Email">
+                                Email
+                            </label>
+
+                            <input asp-for="Email"
+                                   class="form-control custom-input" />
+
+                            <span asp-validation-for="Email"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- First Name -->
+                        <div class="form-group">
+
+                            <label asp-for="FirstName">
+                                First Name
+                            </label>
+
+                            <input asp-for="FirstName"
+                                   class="form-control custom-input" />
+
+                            <span asp-validation-for="FirstName"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Last Name -->
+                        <div class="form-group">
+
+                            <label asp-for="LastName">
+                                Last Name
+                            </label>
+
+                            <input asp-for="LastName"
+                                   class="form-control custom-input" />
+
+                            <span asp-validation-for="LastName"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Contact -->
+                        <div class="form-group">
+
+                            <label asp-for="ContactNumber">
+                                Contact Number
+                            </label>
+
+                            <input asp-for="ContactNumber"
+                                   class="form-control custom-input" />
+
+                            <span asp-validation-for="ContactNumber"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="form-group">
+
+                            <label>
+                                Gender
+                            </label>
+
+                            <div class="gender-group">
+
+                                <div class="form-check">
+
+                                    <input asp-for="Gender"
+                                           class="form-check-input"
+                                           type="radio"
+                                           value="Male"
+                                           id="male" />
+
+                                    <label class="form-check-label"
+                                           for="male">
+
+                                        Male
+
+                                    </label>
+
+                                </div>
+
+                                <div class="form-check">
+
+                                    <input asp-for="Gender"
+                                           class="form-check-input"
+                                           type="radio"
+                                           value="Female"
+                                           id="female" />
+
+                                    <label class="form-check-label"
+                                           for="female">
+
+                                        Female
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                            <span asp-validation-for="Gender"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Birthdate -->
+                        <div class="form-group">
+
+                            <label asp-for="Birthdate">
+                                Birth Date
+                            </label>
+
+                            <input asp-for="Birthdate"
+                                   type="date"
+                                   class="form-control custom-input" />
+
+                            <span asp-validation-for="Birthdate"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Status -->
+                        <div class="form-group">
+
+                            <label asp-for="Status">
+                                Status
+                            </label>
+
+                            <select asp-for="Status"
+                                    asp-items="Html.GetEnumSelectList<UserStatus>()"
+                                    class="form-select custom-input">
+                            </select>
+
+                            <span asp-validation-for="Status"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Address -->
+                        <div class="form-group full-width">
+
+                            <label asp-for="Address">
+                                Address
+                            </label>
+
+                            <input asp-for="Address"
+                                   class="form-control custom-input" />
+
+                            <span asp-validation-for="Address"
+                                  class="text-danger"></span>
+
+                        </div>
+
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" asp-for="Gender" value="Female" id="genderFemale" />
-                        <label class="form-check-label" for="genderFemale">Female</label>
+
+                   
+
+                    <div class="upload-panel">
+
+                        <h5>
+                            Valid ID
+                        </h5>
+
+                        <p class="upload-text">
+
+                            Existing uploaded Valid ID.
+
+                        </p>
+
+                        <div class="upload-preview">
+
+                          
+
+                            <div class="upload-placeholder">
+
+                                <i class="bi bi-card-image"></i>
+
+                                <p>
+
+                                    No Valid ID Preview
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
                     </div>
-                    <span asp-validation-for="Gender" class="text-danger"></span>
+
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Birthdate" class="form-label"></label>
-                    <input asp-for="Birthdate" type="date" class="form-control" />
-                    <span asp-validation-for="Birthdate" class="text-danger"></span>
+                <div class="crud-footer">
+
+                    <a asp-action="Index"
+                       class="btn-cancel">
+
+                        Cancel
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn-primary-action">
+
+                        Save Changes
+
+                    </button>
+
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Status" class="form-label"></label>
-                    <select asp-for="Status" class="form-select"
-                            asp-items="Html.GetEnumSelectList<UserStatus>()">
-                    </select>
-                    <span asp-validation-for="Status" class="text-danger"></span>
-                </div>
-
-
-                <div class="mt-3">
-                    <button type="submit" class="btn btn-success">Save</button>
-                    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
-                </div>
             </form>
+
         </div>
+
     </div>
+
 </div>
 
-@section Scripts {
+@section Scripts
+{
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
