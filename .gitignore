@@ -361,4 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/PETHUB/wwwroot
+/PETHUB/wwwroot/idphotos
+/PETHUB/wwwroot/lostfound
+/PETHUB/wwwroot/marketplace
