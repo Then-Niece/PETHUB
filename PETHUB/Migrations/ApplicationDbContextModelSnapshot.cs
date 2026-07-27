@@ -180,6 +180,9 @@ namespace PETHUB.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -341,6 +344,9 @@ namespace PETHUB.Migrations
                     b.Property<string>("ClientContact")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ClientIdImagePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ClientName")
                         .HasColumnType("nvarchar(max)");
 
@@ -407,6 +413,143 @@ namespace PETHUB.Migrations
                     b.HasIndex("LostFoundId");
 
                     b.ToTable("LostFoundImages");
+                });
+
+            modelBuilder.Entity("PETHUB.Models.PetFeed", b =>
+                {
+                    b.Property<int>("PetFeedId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetFeedId"));
+
+                    b.Property<string>("AdminId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("PetFeedId");
+
+                    b.HasIndex("AdminId");
+
+                    b.ToTable("PetFeeds");
+                });
+
+            modelBuilder.Entity("PETHUB.Models.PetFeedComment", b =>
+                {
+                    b.Property<int>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DatePosted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MemberId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("PetFeedId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("PetFeedId");
+
+                    b.ToTable("PetFeedComments");
+                });
+
+            modelBuilder.Entity("PETHUB.Models.PetFeedImage", b =>
+                {
+                    b.Property<int>("PetFeedImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetFeedImageId"));
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PetFeedId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PetFeedImageId");
+
+                    b.HasIndex("PetFeedId");
+
+                    b.ToTable("PetFeedImages");
+                });
+
+            modelBuilder.Entity("PETHUB.Models.PetFeedPaw", b =>
+                {
+                    b.Property<int>("PetFeedPawId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetFeedPawId"));
+
+                    b.Property<DateTime>("DatePawed")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MemberId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("PetFeedId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PetFeedPawId");
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("PetFeedId");
+
+                    b.ToTable("PetFeedPaws");
+                });
+
+            modelBuilder.Entity("PETHUB.Models.SavedPetFeed", b =>
+                {
+                    b.Property<int>("SavedPetFeedId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SavedPetFeedId"));
+
+                    b.Property<string>("MemberId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("PetFeedId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SavedPetFeedId");
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("PetFeedId");
+
+                    b.ToTable("SavedPetFeeds");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -500,6 +643,85 @@ namespace PETHUB.Migrations
                     b.Navigation("LostFound");
                 });
 
+            modelBuilder.Entity("PETHUB.Models.PetFeed", b =>
+                {
+                    b.HasOne("PETHUB.Models.ApplicationUser", "Admin")
+                        .WithMany()
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Admin");
+                });
+
+            modelBuilder.Entity("PETHUB.Models.PetFeedComment", b =>
+                {
+                    b.HasOne("PETHUB.Models.ApplicationUser", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PETHUB.Models.PetFeed", "PetFeed")
+                        .WithMany("Comments")
+                        .HasForeignKey("PetFeedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("PetFeed");
+                });
+
+            modelBuilder.Entity("PETHUB.Models.PetFeedImage", b =>
+                {
+                    b.HasOne("PETHUB.Models.PetFeed", "PetFeed")
+                        .WithMany("Images")
+                        .HasForeignKey("PetFeedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PetFeed");
+                });
+
+            modelBuilder.Entity("PETHUB.Models.PetFeedPaw", b =>
+                {
+                    b.HasOne("PETHUB.Models.ApplicationUser", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PETHUB.Models.PetFeed", "PetFeed")
+                        .WithMany("Paws")
+                        .HasForeignKey("PetFeedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("PetFeed");
+                });
+
+            modelBuilder.Entity("PETHUB.Models.SavedPetFeed", b =>
+                {
+                    b.HasOne("PETHUB.Models.ApplicationUser", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PETHUB.Models.PetFeed", "PetFeed")
+                        .WithMany("SavedByMembers")
+                        .HasForeignKey("PetFeedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("PetFeed");
+                });
+
             modelBuilder.Entity("PETHUB.Models.Listing", b =>
                 {
                     b.Navigation("Images");
@@ -508,6 +730,17 @@ namespace PETHUB.Migrations
             modelBuilder.Entity("PETHUB.Models.LostFound", b =>
                 {
                     b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("PETHUB.Models.PetFeed", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Images");
+
+                    b.Navigation("Paws");
+
+                    b.Navigation("SavedByMembers");
                 });
 #pragma warning restore 612, 618
         }

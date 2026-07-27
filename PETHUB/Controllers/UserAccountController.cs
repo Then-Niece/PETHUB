@@ -107,7 +107,20 @@ namespace PETHUB.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    return RedirectToAction("Index", "PetFeeds");
+
+                }else if (await _userManager.IsInRoleAsync(user, "Member"))
+                {
+                    return RedirectToAction("Feed", "PetFeeds");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");

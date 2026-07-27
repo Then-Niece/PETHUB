@@ -16,7 +16,10 @@
                        asp-action="PublicLandingPage"
                        style="color:#2D3748;">
 
-                        <span class="me-2" style="color:#8ACE79;">logo</span>
+                    <img src="/images/PETHUB-LOGO.png"
+                         alt="PetHub Logo"
+                         class="navbar-logo me-2" />
+
                         PetHub
                     </a>
 
@@ -48,22 +51,49 @@
                             {
                                 <li class="nav-item mx-2">
                                     <a class="nav-link fw-semibold" asp-controller="Home"
-                                       asp-action="Index">
+                                    asp-action="Index">
                                         Home
                                     </a>
                                 </li>
 
                                 <li class="nav-item mx-2">
                                     <a class="nav-link fw-semibold" asp-controller="LostFounds"
-                                       asp-action="Browse">
+                                    asp-action="Browse">
                                         Lost & Found
                                     </a>
                                 </li>
 
                                 <li class="nav-item mx-2">
                                     <a class="nav-link fw-semibold" asp-controller="Listings"
-                                       asp-action="Marketplace">
+                                    asp-action="Marketplace">
                                         Marketplace
+                                    </a>
+                                </li>
+                            }
+
+
+                
+                            
+
+                             @* ==========================================================
+                                                    MEMBER + CLIENT
+                               ========================================================== *@
+
+                            @if (User.IsInRole("Admin") || (User.IsInRole("Member")))
+                            {
+
+                            <li class="nav-item mx-2">
+                                <a class="nav-link fw-semibold" asp-controller="PetFeeds" asp-action="Feed">
+                                    PetFeed
+                                </a>
+                            </li>
+
+                            }
+                            else
+                            {
+                                <li class="nav-item mx-2">
+                                    <a class="nav-link fw-semibold" asp-controller="Home" asp-action="Index">
+                                        Home
                                     </a>
                                 </li>
 
@@ -73,7 +103,56 @@
                                         About
                                     </a>
                                 </li>
+
+                                
                             }
+
+                            @* ==========================================================
+                               ADMIN ONLY
+                               ========================================================== *@
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                    asp-controller="Members"
+                                    asp-action="Index">
+                                        Add Members
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                    asp-controller="Admins"
+                                    asp-action="Index">
+                                        Add Admins
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                    asp-controller="Listings"
+                                    asp-action="Index">
+                                        Marketplace Approval
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                    asp-controller="LostFounds"
+                                    asp-action="Index">
+                                        Lost & Found Approval
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                       asp-controller="PetFeeds"
+                                       asp-action="Index">
+                                        Pet Feeds
+                                    </a>
+                                </li>
+                            }
+
                         </ul>
 
                         <ul class="navbar-nav d-flex gap-3">
@@ -124,13 +203,9 @@
                                     </form>
                                 </li>
                             }
-
-                            </ul>
                         </ul>
                     </div>
-
                 </div>
-
             </nav>
         </div>
 </header>

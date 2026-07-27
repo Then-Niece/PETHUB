@@ -21,11 +21,9 @@ namespace PETHUB.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            //var users = _userManager.Users.ToList();
-            // Only get users in the Admin role
-            // NOTE: Normally this would be "Admin"
-            // but per adviser’s naming scheme, Admins are stored as "User"
-            var users = await _userManager.GetUsersInRoleAsync("Admin");
+            var users = (await _userManager.GetUsersInRoleAsync("Admin"))
+                .OrderByDescending(u => u.CreatedAt) 
+                .ToList(); // Newest first
 
 
             // Build dictionary of user roles (optional if you want to show role column)

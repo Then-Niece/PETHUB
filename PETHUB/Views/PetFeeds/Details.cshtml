@@ -1,0 +1,80 @@
+@model PETHUB.Models.PetFeed
+
+@{
+    ViewData["Title"] = "PetFeed Details";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+
+        <!-- ========================= -->
+        <!-- Left Side: Image Gallery -->
+        <!-- ========================= -->
+        <div class="col-md-6">
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                <div id="petFeedCarousel" class="carousel slide shadow-sm" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded">
+                        @for (int i = 0; i < Model.Images.Count; i++)
+                        {
+                            var img = Model.Images.ElementAt(i);
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="@img.ImagePath"
+                                     class="d-block w-100"
+                                     alt="PetFeed Image"
+                                     style="height:400px; object-fit:cover;">
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#petFeedCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#petFeedCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="bg-light d-flex justify-content-center align-items-center rounded shadow-sm" style="height:400px;">
+                    <p class="text-muted mb-0">No images uploaded.</p>
+                </div>
+            }
+        </div>
+
+        <!-- ========================= -->
+        <!-- Right Side: Post Details -->
+        <!-- ========================= -->
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="fw-bold">@Model.Title</h2>
+                    <p class="text-muted">Created on @Model.DateCreated.ToString("MMMM dd, yyyy")</p>
+                    <hr />
+
+                    <h5>Content</h5>
+                    <p>@(string.IsNullOrWhiteSpace(Model.Content) ? "No content provided." : Model.Content)</p>
+                    <hr />
+
+                    <h5>Post Information</h5>
+                    <p><strong>Type:</strong> @Model.Type</p>
+                    <p><strong>Admin:</strong> @Model.Admin?.FirstName @Model.Admin?.LastName</p>
+                    <p><strong>Paws:</strong> @(Model.Paws?.Count() ?? 0)</p>
+                    <p><strong>Comments:</strong> @(Model.Comments?.Count() ?? 0)</p>
+                    <p><strong>Saved By Members:</strong> @(Model.SavedByMembers?.Count() ?? 0)</p>
+                </div>
+
+                <!-- ========================= -->
+                <!-- Action Buttons -->
+                <!-- ========================= -->
+                <div class="card-footer d-flex justify-content-center gap-3">
+                    <a asp-action="Edit" asp-route-id="@Model.PetFeedId" class="btn btn-warning px-4">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@Model.PetFeedId" class="btn btn-danger px-4">Delete</a>
+                    <a asp-action="Index" class="btn btn-secondary px-4">← Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

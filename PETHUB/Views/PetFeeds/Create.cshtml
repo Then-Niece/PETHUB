@@ -1,0 +1,61 @@
+@model PETHUB.ViewModels.PetFeedViewModel
+
+@{
+    ViewData["Title"] = "Create PetFeed Post";
+}
+
+<h1>Create PetFeed Post</h1>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <!-- Title -->
+    <div class="form-group mb-3">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <!-- Content -->
+    <div class="form-group mb-3">
+        <label asp-for="Content" class="control-label"></label>
+        <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <!-- Type (Announcement vs Pet Tip) -->
+    <div class="form-group mb-3">
+        <label asp-for="Type" class="control-label"></label>
+        <select asp-for="Type" class="form-select"
+                asp-items="Html.GetEnumSelectList<PETHUB.Models.PetFeedType>()"></select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <!-- File upload for images -->
+    <div class="form-group mb-3">
+        <label>Upload Images</label>
+        <input type="file" id="imageInput" name="Images" multiple class="form-control" />
+        <small class="form-text text-muted">You can select multiple files.</small>
+    </div>
+
+    <!-- Preview container -->
+    <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2 mt-3"></div>
+
+    <!-- Submit + Back -->
+    <div class="form-group d-flex gap-2 mt-3">
+        <button type="submit" class="btn btn-primary">Create Post</button>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+        <script src="~/js/imagePreviewHelper.js"></script>
+        <script>
+            setupImagePreview("imageInput", "imagePreviewContainer");
+        </script>
+    }
+}

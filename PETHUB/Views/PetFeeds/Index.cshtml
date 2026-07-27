@@ -1,0 +1,73 @@
+@model IEnumerable<PETHUB.Models.PetFeed>
+
+@{
+    ViewData["Title"] = "PetFeed Management";
+}
+
+<h1 class="mb-3">PetFeed Posts</h1>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">+ Create Post</a>
+</div>
+
+<div class="container">
+    @foreach (var item in Model)
+    {
+        string borderColor = "#6c757d"; // default gray
+
+        if (item.Type == PetFeedType.Announcement)
+        {
+            borderColor = "#0d6efd"; // blue for announcements
+        }
+        else if (item.Type == PetFeedType.PetTip)
+        {
+            borderColor = "#20c997"; // teal for tips
+        }
+
+        <div class="card mb-3 shadow-sm" style="border-left:5px solid @borderColor;">
+            <div class="row g-0 align-items-center">
+
+                <!-- Thumbnail -->
+                <div class="col-auto">
+                    @if (item.Images != null && item.Images.Any())
+                    {
+                        <img src="@Url.Content(item.Images.First().ImagePath)"
+                             alt="PetFeed image"
+                             class="img-thumbnail"
+                             style="width:100px;height:100px;object-fit:cover;">
+                    }
+                    else
+                    {
+                        <img src="@Url.Content("~/images/no-image.png")"
+                             alt="No image"
+                             class="img-thumbnail"
+                             style="width:100px;height:100px;object-fit:cover;">
+                    }
+                </div>
+
+                <!-- Details -->
+                <div class="col">
+                    <div class="card-body py-2">
+                        <h6 class="card-title mb-1">@item.Title</h6>
+                        <p class="mb-1 text-muted small">@item.Content</p>
+
+                        <p class="mb-0">
+                            <span class="badge bg-@(item.Type == PetFeedType.Announcement ? "primary" : "success")">
+                                @item.Type
+                            </span>
+                            <small class="text-muted"> | @item.DateCreated.ToString("MMM dd, yyyy")</small>
+                            <small class="text-muted"> | Posted by: @item.Admin?.FirstName @item.Admin?.LastName</small>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="col-auto pe-3">
+                    <a asp-action="Details" asp-route-id="@item.PetFeedId" class="btn btn-sm btn-outline-primary">View</a>
+                    <a asp-action="Edit" asp-route-id="@item.PetFeedId" class="btn btn-sm btn-outline-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.PetFeedId" class="btn btn-sm btn-outline-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -20,7 +20,20 @@ namespace PETHUB.Controllers
         {
             if (User.Identity?.IsAuthenticated == true)
             {
-                return RedirectToAction("Marketplace", "Listings");
+                if (User.IsInRole("Admin"))
+                {
+                    return RedirectToAction("Index", "PetFeeds");
+                }
+                else if (User.IsInRole("Member"))
+                {
+                    return RedirectToAction( "Feed", "PetFeeds");
+                }
+                else
+                {
+                    return RedirectToAction("Marketplace", "Listings");
+                }
+
+                
             }
 
             var latestListings = await _context.Listings

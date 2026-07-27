@@ -14,6 +14,14 @@ namespace PETHUB.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        public MyPostsController(
+           ApplicationDbContext context,
+           UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
         //Find the post.
         //Verify the logged-in user owns it.
         //Display the owner - specific view.
@@ -59,13 +67,7 @@ namespace PETHUB.Controllers
 
             return View(report);
         }
-        public MyPostsController(
-            ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager)
-        {
-            _context = context;
-            _userManager = userManager;
-        }
+       
 
         // Displays all posts created by the logged-in member.
         public async Task<IActionResult> Index()

@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="obj\**" />
+    <Content Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
@@ -25,8 +32,10 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="wwwroot\images\" />
-    <Folder Include="wwwroot\marketplace\" />
-    <Folder Include="wwwroot\idphotos\" />
+    <Folder Include="wwwroot\uploads\marketplace\" />
+    <Folder Include="wwwroot\uploads\memberids\" />
+    <Folder Include="wwwroot\uploads\clientids\" />
+    <Folder Include="wwwroot\uploads\petfeedimages\" />
   </ItemGroup>
 
 </Project>
