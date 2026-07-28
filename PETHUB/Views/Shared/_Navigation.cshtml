@@ -4,14 +4,15 @@
 
 <header>
 
-        <div class="container-fluid">
+        <div>
 
             <!-- NEW NAV -->
-            <nav class="navbar navbar-expand-lg sticky-top bg-white py-3 shadow-sm">
-                <div class="container">
+            <nav class="navbar navbar-expand-lg bg-white shadow-sm navbar-custom">
 
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center ms-2">
 
+                @if (User.IsInRole("Admin") || (User.IsInRole("Member")))
+                {
                     <button id="sidebarToggle"
                             class="btn border-0 me-3"
                             type="button">
@@ -19,6 +20,13 @@
                         <i data-lucide="menu"></i>
 
                     </button>
+                }
+                else
+                {
+                    //Nothing kaydili dapat maka kita ang client sa sidebar toggle
+                }
+
+                   
 
                     <a class="navbar-brand fw-bold fs-3 d-flex align-items-center"
                        asp-controller="Home"
@@ -105,7 +113,7 @@
                             {
                                 <li class="nav-item mx-2">
                                     <a class="nav-link fw-semibold" asp-controller="Home" asp-action="Index">
-                                        Home
+                                        About
                                     </a>
                                 </li>
 

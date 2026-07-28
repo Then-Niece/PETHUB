@@ -270,6 +270,14 @@ a {
     font-size: 30px;
 }
 
+
+/* for the navbar para align sya */
+.navbar-custom {
+    padding-left: 12px;
+    padding-right: 12px;
+} 
+
+
 /*SIDEBAR*/
 .app {
     display: flex;
