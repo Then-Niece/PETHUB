@@ -269,7 +269,6 @@ a {
     align-items: center;
     font-size: 30px;
 }
-    
 
 /*SIDEBAR*/
 .app {
@@ -305,9 +304,9 @@ a {
 }
 
 #sidebarToggle {
-    background: #8ACE79;
-    border: lightgray;
-    color: white;
+    background: transparent;
+    border: none;
+    color: #4B5563;
 }
 
 #sidebarHandle {

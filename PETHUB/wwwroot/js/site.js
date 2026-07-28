@@ -4,20 +4,21 @@
 // Write your JavaScript code.
 document.addEventListener("DOMContentLoaded", function () {
 
-    const btn = document.getElementById("sidebarToggle");
-    const handle = document.getElementById("sidebarHandle");
-    const sidebarContent = document.getElementById("sidebarContent");
+    const toggle = document.getElementById("sidebarToggle");
+    const sidebar = document.getElementById("sidebar-wrapper");
 
-    if (btn && sidebarContent) {
-        btn.addEventListener("click", function () {
-            sidebarContent.classList.toggle("collapsed");
+    if (toggle && sidebar) {
+
+        toggle.addEventListener("click", function () {
+
+            sidebar.classList.toggle("collapsed");
+
         });
+
     }
 
-    if (handle && sidebarContent) {
-        handle.addEventListener("click", function () {
-            sidebarContent.classList.remove("collapsed");
-        });
+    if (window.lucide) {
+        lucide.createIcons();
     }
 
 });
