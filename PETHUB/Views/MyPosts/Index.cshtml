@@ -4,9 +4,24 @@
     ViewData["Title"] = "My Posts";
 }
 
-<h1 class="text-center mb-4">My Posts</h1>
+@* Header and Edit Profile Button*@
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-<div class="d-flex flex-column gap-3">
+    <h2 class="mb-0">
+        My Posts
+    </h2>
+
+    <a asp-controller="MyProfile"
+       asp-action="Edit"
+       class="btn btn-outline-success">
+
+        <i class="bi bi-person-circle"></i>
+
+        Edit My Profile
+
+    </a>
+
+</div>
 
     @foreach (var post in Model.Posts)
     {
