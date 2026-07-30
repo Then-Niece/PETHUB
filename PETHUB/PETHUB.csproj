@@ -35,6 +35,7 @@
     <Folder Include="wwwroot\uploads\marketplace\" />
     <Folder Include="wwwroot\uploads\memberids\" />
     <Folder Include="wwwroot\uploads\clientids\" />
+    <Folder Include="wwwroot\uploads\profilepictures\" />
     <Folder Include="wwwroot\uploads\petfeedimages\" />
   </ItemGroup>
 
