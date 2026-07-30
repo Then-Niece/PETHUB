@@ -7,6 +7,18 @@
             Explore
         </h6>
 
+        <a asp-controller="PetFeeds"
+           asp-action="Feed"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PetFeeds" ? "active" : "")">
+
+            <i data-lucide="house"></i>
+
+            <span class="sidebar-text">
+                Home
+            </span>
+
+        </a>
+
         <a asp-controller="Listings"
            asp-action="Marketplace"
            class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Listings" ? "active" : "")">
