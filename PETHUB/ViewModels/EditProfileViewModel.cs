@@ -84,5 +84,24 @@ namespace PETHUB.ViewModels
         // Holds the uploaded profile picture during form submission.
         // This is not stored in the database and is only used for file upload.
         public IFormFile? ProfilePictureFile { get; set; }
+
+        // =========================================================
+        // PROFILE STATISTICS
+        // =========================================================
+
+        // Total Marketplace Listings created by this member.
+        public int MarketplaceListingsCount { get; set; }
+
+        // Total Lost & Found reports created by this member.
+        public int LostFoundReportsCount { get; set; }
+
+        // Total pets successfully sold.
+        public int PetsSoldCount { get; set; }
+
+        // Total pets successfully adopted.
+        public int PetsAdoptedCount { get; set; }
+
+        // Total resolved Lost & Found reports.
+        public int ResolvedReportsCount { get; set; }
     }
 }

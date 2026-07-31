@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Models;
+using PETHUB.Services;
 using PETHUB.ViewModels;
 
 namespace PETHUB.Controllers
@@ -13,13 +14,16 @@ namespace PETHUB.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IProfileService _profileService;
 
         public MyPostsController(
-           ApplicationDbContext context,
-           UserManager<ApplicationUser> userManager)
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            IProfileService profileService)
         {
             _context = context;
             _userManager = userManager;
+            _profileService = profileService;
         }
 
         //Find the post.
@@ -67,7 +71,7 @@ namespace PETHUB.Controllers
 
             return View(report);
         }
-       
+
 
         // Displays all posts created by the logged-in member.
         public async Task<IActionResult> Index()
@@ -88,6 +92,12 @@ namespace PETHUB.Controllers
                 .ToListAsync();
 
             var model = new MyPostsViewModel();
+
+            // Retrieve the logged-in user.
+            var user = await _userManager.GetUserAsync(User);
+
+            // Build the reusable profile information.
+            model.Profile = await _profileService.BuildProfileViewModelAsync(user);
 
             // Add marketplace listings.
             foreach (var listing in listings)
