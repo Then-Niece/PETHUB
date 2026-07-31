@@ -30,17 +30,17 @@ namespace PETHUB.Data
             {
                 admin = new ApplicationUser
                 {
-                    UserName = "sam",
-                    Email = "sam@gmail.com",
-                    FirstName = "Samantha",
-                    LastName = "Genon",
+                    UserName = "Admin",
+                    Email = "Admin@gmail.com",
+                    FirstName = "Admin",
+                    LastName = "Authorize",
                     ContactNumber = "09123456789",
                     Status = UserStatus.Active,
                     CreatedAt = DateTime.UtcNow,
                     EmailConfirmed = true
                 };
 
-                var result = await userManager.CreateAsync(admin, "Sam_1234");
+                var result = await userManager.CreateAsync(admin, "Admin!123");
 
                 if (result.Succeeded)
                 {
