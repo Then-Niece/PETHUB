@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Models;
+using PETHUB.Services;
 using PETHUB.ViewModels;
 
 namespace PETHUB.Controllers
@@ -21,6 +23,7 @@ namespace PETHUB.Controllers
 
         // Provides access to the web hosting environment, useful for file uploads.
         private readonly IWebHostEnvironment _environment;
+        private readonly IProfileService _profileService;
 
         // Relative folder inside wwwroot where Member Valid IDs are stored.
         private const string ProfilePictureFolder = "uploads/profilepictures";
@@ -34,16 +37,19 @@ namespace PETHUB.Controllers
         // URL prefix used to access uploaded Member Valid IDs.
         private const string MemberIdUrlPrefix = "/uploads/memberids/";
 
+
         // Receives required services through Dependency Injection.
         // ASP.NET Core automatically provides these services at runtime.
         public MyProfileController(
             UserManager<ApplicationUser> userManager,
             ApplicationDbContext context,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            IProfileService profileService)
         {
             _userManager = userManager;
             _context = context;
             _environment = environment;
+            _profileService = profileService;
         }
 
         //Get and Display the currently logged-in user's profile information(read-only).
@@ -57,30 +63,7 @@ namespace PETHUB.Controllers
                 return Unauthorized();
             }
 
-            var model = new EditProfileViewModel
-            {
-                FirstName = user.FirstName,
-                MiddleName = user.MiddleName,
-                LastName = user.LastName,
-                ContactNumber = user.ContactNumber,
-                Gender = user.Gender,
-                Birthdate = user.Birthdate,
-                Province = user.Province,
-                City = user.City,
-                Barangay = user.Barangay,
-                StreetAddress = user.StreetAddress,
-                Bio = user.Bio,
-
-                Email = user.Email,
-                CreatedAt = user.CreatedAt,
-                Status = user.Status,
-                AcceptedTermsDate = user.AcceptedTermsDate,
-
-                ProfilePicturePath = user.ProfilePicturePath,
-                IdPhotoPath = user.IdPhotoPath
-            };
-
-            return View(model);
+            return View(await _profileService.BuildProfileViewModelAsync(user));
         }
 
         // Displays the Edit My Profile page for the currently logged-in user.
@@ -98,33 +81,8 @@ namespace PETHUB.Controllers
                 return Unauthorized();
             }
 
-            // Map the ApplicationUser entity into the ViewModel.
-            var model = new EditProfileViewModel
-            {
-                // Editable fields
-                FirstName = user.FirstName,
-                MiddleName = user.MiddleName,
-                LastName = user.LastName,
-                ContactNumber = user.ContactNumber,
-                Gender = user.Gender,
-                Birthdate = user.Birthdate,
-                Province = user.Province,
-                City = user.City,
-                Barangay = user.Barangay,
-                StreetAddress = user.StreetAddress,
-                Bio = user.Bio,
-
-                // Read-only information
-                Email = user.Email,
-                CreatedAt = user.CreatedAt,
-                Status = user.Status,
-                AcceptedTermsDate = user.AcceptedTermsDate,
-                IdPhotoPath = user.IdPhotoPath,
-                ProfilePicturePath = user.ProfilePicturePath
-            };
-
             // Send the populated ViewModel to the view.
-            return View(model);
+            return View(await _profileService.BuildProfileViewModelAsync(user));
         }
 
         // Handles the submission of the Edit My Profile form.
@@ -355,5 +313,6 @@ namespace PETHUB.Controllers
             // Redirect back to the Edit page.
             return RedirectToAction(nameof(Edit));
         }
+
     }
 }

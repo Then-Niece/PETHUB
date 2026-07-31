@@ -4,6 +4,9 @@ namespace PETHUB.ViewModels
 {
     public class MyPostsViewModel
     {
+        // Logged-in user's profile information displayed at the top of the page.
+        public EditProfileViewModel Profile { get; set; } = new();
+
         // Combined Marketplace and Lost & Found posts.
         public List<(Listing? Listing, LostFound? Report)> Posts { get; set; } = new();
 

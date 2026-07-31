@@ -7,21 +7,21 @@
 @* Header and Edit Profile Button*@
 <div class="d-flex justify-content-between align-items-center mb-4">
 
-    <h2 class="mb-0">
+
+</div>
+
+    @* Profile Summary Card is displayed here *@
+
+    <a asp-controller="MyProfile"
+       asp-action="View"
+       class="text-decoration-none text-reset d-block">
+        <partial name="_ProfileSummaryCard" model="Model.Profile" />
+    </a>
+
+    <h2 class="mb-4 mt-4">
         My Posts
     </h2>
 
-    <a asp-controller="MyProfile"
-       asp-action="Edit"
-       class="btn btn-outline-success">
-
-        <i class="bi bi-person-circle"></i>
-
-        Edit My Profile
-
-    </a>
-
-</div>
 
     @foreach (var post in Model.Posts)
     {
