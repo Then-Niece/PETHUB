@@ -46,6 +46,43 @@ namespace PETHUB.Controllers
             _environment = environment;
         }
 
+        //Get and Display the currently logged-in user's profile information(read-only).
+        [HttpGet]
+        public async Task<IActionResult> View()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var model = new EditProfileViewModel
+            {
+                FirstName = user.FirstName,
+                MiddleName = user.MiddleName,
+                LastName = user.LastName,
+                ContactNumber = user.ContactNumber,
+                Gender = user.Gender,
+                Birthdate = user.Birthdate,
+                Province = user.Province,
+                City = user.City,
+                Barangay = user.Barangay,
+                StreetAddress = user.StreetAddress,
+                Bio = user.Bio,
+
+                Email = user.Email,
+                CreatedAt = user.CreatedAt,
+                Status = user.Status,
+                AcceptedTermsDate = user.AcceptedTermsDate,
+
+                ProfilePicturePath = user.ProfilePicturePath,
+                IdPhotoPath = user.IdPhotoPath
+            };
+
+            return View(model);
+        }
+
         // Displays the Edit My Profile page for the currently logged-in user.
         // This action retrieves the user's information from the database
         // and maps it into the EditProfileViewModel.
