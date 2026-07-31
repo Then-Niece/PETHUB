@@ -244,24 +244,19 @@
 
                         <div class="upload-preview">
 
-                            <img id="idPhotoPreview"
-                                 src="#"
-                                 alt="Preview" />
+                            <div id="idPhotoPreview"
+                                 class="d-flex flex-wrap gap-2">
+                            </div>
 
-                            <div class="upload-placeholder">
-
+                            <div id="idPhotoPlaceholder" class="upload-placeholder">
                                 <i class="bi bi-card-image"></i>
 
                                 <p>
-
                                     Image Preview
-
                                 </p>
-
                             </div>
 
                         </div>
-
                         <label asp-for="IdPhoto"
                                class="upload-label">
 
@@ -314,48 +309,13 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/imagePreviewHelper.js"></script>
 
     <script>
-        $("#IdPhotoInput").on("change", function() {
 
-            var file = this.files[0];
-
-            if (file) {
-
-                var validTypes = ["image/jpeg", "image/png", "image/jpg"];
-
-                if ($.inArray(file.type, validTypes) < 0) {
-
-                    alert("Only JPG and PNG files are allowed.");
-
-                    $(this).val("");
-
-                    return;
-                }
-
-                if (file.size > 2 * 1024 * 1024) {
-
-                    alert("File size must be less than 2MB.");
-
-                    $(this).val("");
-
-                    return;
-                }
-
-                var reader = new FileReader();
-
-                reader.onload = function(e) {
-
-                    $("#idPhotoPreview")
-                        .attr("src", e.target.result)
-                        .show();
-
-                };
-
-                reader.readAsDataURL(file);
-            }
-
+        setupImagePreview("IdPhotoInput", "idPhotoPreview", {
+        multiple: false,
+        placeholderId: "idPhotoPlaceholder"
         });
 
     </script>

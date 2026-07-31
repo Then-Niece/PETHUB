@@ -116,18 +116,20 @@ namespace PETHUB.Controllers
         [Authorize(Roles = "Member")]
         public async Task<IActionResult> Create(Listing listing, List<IFormFile> ImageFiles)
         {
-            if (ModelState.IsValid)
-            {
-                listing.DatePosted = DateTime.Now;
+            if (!ModelState.IsValid)
+                return View(listing);
 
-                // Attach the logged-in member
-                listing.MemberId = _userManager.GetUserId(User);
-                // Location is automatically bound from the form
-                _context.Add(listing);
-                await _context.SaveChangesAsync();
-                if (ImageFiles != null && ImageFiles.Count > 0)
+            listing.DatePosted = DateTime.Now;
+            listing.MemberId = _userManager.GetUserId(User);
+
+            _context.Add(listing);
+            await _context.SaveChangesAsync();
+
+            if (ImageFiles != null && ImageFiles.Count > 0)
+            {
+                try
                 {
-                    var savedImages = await ImageUploadHelper.SaveImagesAsync(
+                    var savedImages = await ImageHelper.SaveImagesAsync(
                         ImageFiles,
                         listing.ListingId,
                         (id, path) => new ListingImage { ListingId = id, ImagePath = path },
@@ -137,12 +139,16 @@ namespace PETHUB.Controllers
                     _context.AddRange(savedImages);
                     await _context.SaveChangesAsync();
                 }
-
-                //fixed. this redirects now to the marketplace method that only member and client can access
-                return RedirectToAction(nameof(Marketplace));
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", "Some images could not be uploaded.");
+                    return View(listing);
+                }
             }
-            return View(listing);
+
+            return RedirectToAction(nameof(Marketplace));
         }
+
 
 
 
@@ -250,7 +256,7 @@ namespace PETHUB.Controllers
             // Handle new images
             if (ImageFiles != null && ImageFiles.Count > 0)
             {
-                var savedImages = await ImageUploadHelper.SaveImagesAsync(
+                var savedImages = await ImageHelper.SaveImagesAsync(
                     ImageFiles,
                     existingListing.ListingId,
                     (listingId, path) => new ListingImage
@@ -358,26 +364,25 @@ namespace PETHUB.Controllers
         [Authorize(Roles = "Member")]
         public async Task<IActionResult> RemoveImage(int id)
         {
-            var image = await _context.ListingImages.FindAsync(id);
-            if (image != null)
-            {
-                // Delete file from wwwroot/images
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.ImagePath.TrimStart('/'));
-                if (System.IO.File.Exists(filePath))
-                {
-                    System.IO.File.Delete(filePath);
-                }
+            var image = await _context.ListingImages
+                .Include(i => i.Listing)
+                .FirstOrDefaultAsync(i => i.ListingImageId == id);
 
-                // Remove from DB
-                _context.ListingImages.Remove(image);
-                await _context.SaveChangesAsync();
+            if (image == null || image.Listing.MemberId != _userManager.GetUserId(User))
+                return NotFound();
 
-                // Redirect back to Edit view of the listing
-                return RedirectToAction("Edit", new { id = image.ListingId });
-            }
+            var listingId = await ImageHelper.RemoveImageAsync(
+                _context,
+                _context.ListingImages,
+                id,
+                img => img.ImagePath,
+                img => img.ListingId
+            );
+            return RedirectToAction("Edit", new { id = listingId });
 
-            return NotFound();
         }
+
+
 
         // GET: Listings/Approve
         [HttpPost]

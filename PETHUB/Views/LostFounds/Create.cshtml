@@ -71,9 +71,10 @@
         <div class="mb-3">
             <label class="form-label">Upload a Valid Government ID</label>
             <input type="file" name="ClientIdImage" id="ClientIdImage" class="form-control" accept=".jpg,.jpeg,.png" />
-            <small class="text-muted">JPG or PNG only (Max 2 MB) </small>
 
-            <img id="idPhotoPreview" class="mt-2 img-thumbnail" style="max-width:200px;display:none;" />
+            <div id="idPhotoPreview"
+                 class="d-flex flex-wrap gap-2 mt-2">
+            </div>
         </div>
     }
 
@@ -126,46 +127,10 @@
     <script>
         setupImagePreview("imageInput", "imagePreviewContainer");
     </script>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <!-- uses the same js na helper but mag refer ra sya if naka true or false ang multiple para makabaw ang helper kung unsaon -->
     <script>
-        $("#ClientIdImage").on("change", function () {
-
-            var file = this.files[0];
-
-            if (!file) {
-                $("#idPhotoPreview").hide();
-                return;
-            }
-
-            // Allowed file types
-            var validTypes = ["image/jpeg", "image/jpg", "image/png"];
-
-            if ($.inArray(file.type, validTypes) === -1) {
-                alert("Only JPG and PNG files are allowed.");
-                $(this).val("");
-                $("#idPhotoPreview").hide();
-                return;
-            }
-
-            // Maximum file size = 2 MB
-            if (file.size > 2 * 1024 * 1024) {
-                alert("File size must be less than 2 MB.");
-                $(this).val("");
-                $("#idPhotoPreview").hide();
-                return;
-            }
-
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $("#idPhotoPreview")
-                    .attr("src", e.target.result)
-                    .show();
-            };
-
-            reader.readAsDataURL(file);
+        setupImagePreview("ClientIdImage", "idPhotoPreview", {
+        multiple: false
         });
     </script>
 }

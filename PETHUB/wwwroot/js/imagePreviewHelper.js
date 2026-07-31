@@ -1,11 +1,30 @@
-﻿//This is an image preview helper function that allows users to preview selected images before uploading them. It also provides a remove button for each image preview, allowing users to remove images from the selection.
-//Fixed problem: This doesnt reset the preview images
+﻿//LEARN THIS CODE!!!
 
-//LEARN THIS CODE!!!
+// This is an image preview helper function that allows users to preview selected images before uploading them.
+// It also provides a remove button for each image preview, allowing users to remove images from the selection.
+//
+// Fixed problem: This doesnt reset the preview images
+//
+// NEW:
+// Added an optional "options" parameter so the same helper can work for both:
+// - Multiple image uploads (default behavior - existing pages won't break)
+// - Single image uploads (ex. ID Photo in Register page)
 
-let selectedFiles = [];
+function setupImagePreview(inputId, previewContainerId, options = {}) {
 
-function setupImagePreview(inputId, previewContainerId) {
+    // NEW:
+    // Each uploader gets its own file storage.
+    // Prevents the pet images and ID image from mixing together.
+    let selectedFiles = [];
+
+    // NEW:
+    // Default settings.
+    // Existing pages automatically use multiple = true, so no changes are needed.
+    const settings = {
+        multiple: true,
+        ...options
+    };
+
     const imageInput = document.getElementById(inputId);
     const previewContainer = document.getElementById(previewContainerId);
 
@@ -13,8 +32,22 @@ function setupImagePreview(inputId, previewContainerId) {
 
     imageInput.addEventListener("change", function () {
 
-        // Add newly selected files
-        selectedFiles.push(...Array.from(this.files));
+        // NEW:
+        // If this input only accepts one image,
+        // replace the previous image instead of adding another one.
+        if (settings.multiple) {
+
+            // Existing behavior for multiple image uploads.
+            selectedFiles.push(...Array.from(this.files));
+
+        } else {
+
+            // NEW:
+            // For single image uploads (ID Photo),
+            // keep only the newly selected file.
+            selectedFiles = Array.from(this.files);
+
+        }
 
         // Update the real input
         const dataTransfer = new DataTransfer();
@@ -74,11 +107,36 @@ function setupImagePreview(inputId, previewContainerId) {
 
                     renderPreviews();
 
+                    // NEW:
+                    // Show placeholder again if all images are removed.
+                    if (selectedFiles.length === 0 && settings.placeholderId) {
+
+                        const placeholder = document.getElementById(settings.placeholderId);
+
+                        if (placeholder) {
+                            placeholder.style.display = "block";
+                        }
+
+                    }
+
                 });
 
                 previewDiv.appendChild(img);
                 previewDiv.appendChild(removeBtn);
                 previewContainer.appendChild(previewDiv);
+
+                // NEW:
+                // Hide placeholder when an image is selected.
+                // If a page does not have a placeholder, nothing happens.
+                if (settings.placeholderId) {
+
+                    const placeholder = document.getElementById(settings.placeholderId);
+
+                    if (placeholder) {
+                        placeholder.style.display = "none";
+                    }
+
+                }
 
             };
 
