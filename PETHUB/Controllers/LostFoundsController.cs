@@ -169,7 +169,7 @@ public class LostFoundsController : Controller
 
         if (Images != null && Images.Any(i => i.Length > 0))
         {
-            var savedImages = await ImageUploadHelper.SaveImagesAsync(
+            var savedImages = await ImageHelper.SaveImagesAsync(
                 Images,
                 existing.LostFoundId,
                 (imgId, path) => new LostFoundImage { LostFoundId = imgId, ImagePath = path },
@@ -254,7 +254,7 @@ public class LostFoundsController : Controller
         return RedirectToAction("Index", "MyPosts");
     }
 
-    
+
     // POST: LostFounds/RemoveImage/5
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -263,40 +263,28 @@ public class LostFoundsController : Controller
     {
         var userId = _userManager.GetUserId(User);
 
+        // Load image with LostFound included so we can check ownership
         var image = await _context.LostFoundImages
             .Include(i => i.LostFound)
-            .FirstOrDefaultAsync(i =>
-                i.LostFoundImageId == id &&
-                i.LostFound.UserId == userId);
+            .FirstOrDefaultAsync(i => i.LostFoundImageId == id);
 
-
-        if (image == null)
+        if (image == null || image.LostFound.UserId != userId)
             return NotFound();
 
-
-        var lostFoundId = image.LostFoundId;
-
-
-        var filePath = Path.Combine(
-            Directory.GetCurrentDirectory(),
-            "wwwroot",
-            image.ImagePath.TrimStart('/')
+        var lostFoundId = await ImageHelper.RemoveImageAsync(
+            _context,
+            _context.LostFoundImages,
+            id,
+            img => img.ImagePath,
+            img => img.LostFoundId
+        // no need to pass ownership check here, already done above
         );
 
-
-        if (System.IO.File.Exists(filePath))
-        {
-            System.IO.File.Delete(filePath);
-        }
-
-
-        _context.LostFoundImages.Remove(image);
-
-        await _context.SaveChangesAsync();
-
-
+        if (lostFoundId == null) return NotFound();
         return RedirectToAction("Edit", new { id = lostFoundId });
     }
+
+
 
 
 
@@ -312,40 +300,36 @@ public class LostFoundsController : Controller
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-            // this is where it links the member
             lostFound.UserId = _userManager.GetUserId(User);
         }
         else
         {
-            // Require client info
             if (string.IsNullOrEmpty(lostFound.ClientName) || string.IsNullOrEmpty(lostFound.ClientContact))
-            {
                 ModelState.AddModelError("", "Name and contact are required for unregistered clients.");
-            }
 
             if (ClientIdImage == null)
-            {
                 ModelState.AddModelError("", "A valid ID is required.");
-            }
         }
 
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
+            return View(lostFound);
+
+        lostFound.DateReported = DateTime.Now;
+        lostFound.Status = ApprovalStatus.Pending;
+
+        if (User.Identity?.IsAuthenticated != true && ClientIdImage != null)
         {
-            lostFound.DateReported = DateTime.Now;
-            lostFound.Status = ApprovalStatus.Pending;
+            lostFound.ClientIdImagePath = await ClientIdUploadHelper.SaveClientIdAsync(ClientIdImage);
+        }
 
-            //Save the Client's ID
-            if (User.Identity?.IsAuthenticated != true && ClientIdImage != null)
+        _context.Add(lostFound);
+        await _context.SaveChangesAsync();
+
+        if (Images != null && Images.Count > 0)
+        {
+            try
             {
-                lostFound.ClientIdImagePath = await ClientIdUploadHelper.SaveClientIdAsync(ClientIdImage);
-            }
-
-            _context.Add(lostFound);
-            await _context.SaveChangesAsync();
-
-            if (Images != null && Images.Count > 0)
-            {
-                var savedImages = await ImageUploadHelper.SaveImagesAsync(
+                var savedImages = await ImageHelper.SaveImagesAsync(
                     Images,
                     lostFound.LostFoundId,
                     (id, path) => new LostFoundImage { LostFoundId = id, ImagePath = path },
@@ -355,13 +339,16 @@ public class LostFoundsController : Controller
                 _context.AddRange(savedImages);
                 await _context.SaveChangesAsync();
             }
-
-
-            // Show confirmation modal
-            return RedirectToAction(nameof(SubmissionPending));
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "Some images could not be uploaded.");
+                return View(lostFound);
+            }
         }
-        return View(lostFound);
+
+        return RedirectToAction(nameof(SubmissionPending));
     }
+
 
 
     // GET: LostFounds/SubmissionPending

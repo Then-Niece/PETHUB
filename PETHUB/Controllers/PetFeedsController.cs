@@ -26,8 +26,8 @@ public class PetFeedsController : Controller
 
 
     // GET: PETFEEDS
-    [Authorize(Roles ="Admin")]
-    public async Task<IActionResult> Index()    
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Index()
     {
         var posts = await _context.PetFeeds
             .Include(p => p.Admin)
@@ -98,7 +98,7 @@ public class PetFeedsController : Controller
 
         if (model.Images != null && model.Images.Any(i => i.Length > 0))
         {
-            var savedImages = await ImageUploadHelper.SaveImagesAsync(
+            var savedImages = await ImageHelper.SaveImagesAsync(
                 model.Images,
                 petFeed.PetFeedId,
                 (id, path) => new PetFeedImage
@@ -168,7 +168,7 @@ public class PetFeedsController : Controller
 
         if (model.Images != null && model.Images.Any(i => i.Length > 0))
         {
-            var savedImages = await ImageUploadHelper.SaveImagesAsync(
+            var savedImages = await ImageHelper.SaveImagesAsync(
                 model.Images,
                 existingPetFeed.PetFeedId,
                 (petFeedId, path) => new PetFeedImage
@@ -192,7 +192,7 @@ public class PetFeedsController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int? id)
     {
-        if (id == null)  return NotFound();
+        if (id == null) return NotFound();
 
         var petfeed = await _context.PetFeeds
             .Include(p => p.Admin)
@@ -217,8 +217,8 @@ public class PetFeedsController : Controller
 
         if (petfeed != null)
         {
-           if (petfeed.Images != null && petfeed.Images.Any())
-           {
+            if (petfeed.Images != null && petfeed.Images.Any())
+            {
                 foreach (var image in petfeed.Images)
                 {
                     var filepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.ImagePath.TrimStart('/'));
@@ -227,14 +227,37 @@ public class PetFeedsController : Controller
 
                     _context.PetFeedImages.Remove(image);
                 }
-           }
+            }
 
-           _context.PetFeeds.Remove(petfeed);
-           await _context.SaveChangesAsync();
+            _context.PetFeeds.Remove(petfeed);
+            await _context.SaveChangesAsync();
         }
-        
+
         return RedirectToAction(nameof(Index));
     }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> RemoveImage(int id)
+    {
+        var petFeedId = await ImageHelper.RemoveImageAsync(
+            _context,
+            _context.PetFeedImages,
+            id,
+            img => img.ImagePath,   // how to get file path
+            img => img.PetFeedId    // how to get parent ID
+                                    // no ownership check needed for admins
+        );
+
+        if (petFeedId == null)
+            return NotFound();
+
+        return RedirectToAction("Edit", new { id = petFeedId });
+    }
+
+
 
     private bool PetFeedExists(int? petfeedid)
     {
@@ -247,30 +270,29 @@ public class PetFeedsController : Controller
     //==========================================================
 
     // MEMBER FEED
-    [Authorize(Roles = "Member, Admin")]
+    [AllowAnonymous]
     public async Task<IActionResult> Feed()
     {
         var userId = _userManager.GetUserId(User);
 
-
-        //var posts = await _context.PetFeeds
-        //    .Include(p => p.Images)
-        //    .Include(p => p.Paws)
-        //    .Include(p => p.Comments)
-        //        .ThenInclude(c => c.Member)
-        //    .OrderByDescending(p => p.Type == PetFeedType.Announcement)
-        //    .ThenByDescending(p => p.DateCreated)
-        //    .ToListAsync();
-
-        var posts = await _context.PetFeeds
+        var query = _context.PetFeeds
             .Include(p => p.Images)
             .Include(p => p.Paws)
             .Include(p => p.Comments)
                 .ThenInclude(c => c.Member)
             .AsSplitQuery()
             .OrderByDescending(p => p.Type == PetFeedType.Announcement)
-            .ThenByDescending(p => p.DateCreated)
-            .ToListAsync();
+            .ThenByDescending(p => p.DateCreated);
+
+        // If user is not authenticated OR is a client role → limit to 10
+        if (!User.Identity.IsAuthenticated)
+        {
+            query = query.Take(10)
+                         .OrderByDescending(p => p.Type == PetFeedType.PetTip)
+                         .ThenByDescending(p => p.DateCreated);
+        }
+
+        var posts = await query.ToListAsync();
 
         var model = posts.Select(p => new PetFeedFeedViewModel
         {
@@ -284,14 +306,14 @@ public class PetFeedsController : Controller
 
             PawCount = p.Paws.Count(),
 
-            IsPawed = p.Paws.Any(x => x.MemberId == userId),
+            IsPawed = userId != null && p.Paws.Any(x => x.MemberId == userId),
 
             CommentCount = p.Comments.Count(),
 
             Comments = p.Comments
-                //.OrderByDescending(c => c.DatePosted)
-                //.Take(3)
-                //.ToList()
+            //.OrderByDescending(c => c.DatePosted)
+            //.Take(3)
+            //.ToList()
 
         }).ToList();
 

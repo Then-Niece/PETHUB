@@ -89,9 +89,9 @@
             <input asp-for="IdPhoto" type="file" class="form-control" id="IdPhotoInput" />
             <span asp-validation-for="IdPhoto" class="text-danger"></span>
 
-            <!-- Preview for the ID Photo -->
-            <div class="mt-2">
-                <img id="idPhotoPreview" src="#" alt="ID Photo Preview" style="max-width:150px; display:none;" />
+            <!-- Preview container for the ID Photo -->
+            <div id="idPhotoPreview"
+                 class="d-flex flex-wrap gap-2 mt-2">
             </div>
         </div>
 
@@ -128,34 +128,13 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/imagePreviewHelper.js"></script>
+
     <script>
-        $("#IdPhotoInput").on("change", function(){
-            var file = this.files[0];
-            if (file) {
 
-                // check type
-            var validTypes = ["image/jpeg", "image/png", "image/jpg"];
-            if ($.inArray(file.type, validTypes) < 0) {
-                alert("Only JPG and PNG files are allowed.");
-                $(this).val(""); // clear input
-                return;
-            }
-
-            // check size (2MB max)
-            if (file.size > 2 * 1024 * 1024) {
-                alert("File size must be less than 2MB.");
-                $(this).val(""); // clear input
-                return;
-            }
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $("#idPhotoPreview")
-                        .attr("src", e.target.result)
-                        .show();
-                };
-                reader.readAsDataURL(file);
-            }  
+        setupImagePreview("IdPhotoInput", "idPhotoPreview", {
+        multiple: false
         });
+
     </script>
 }

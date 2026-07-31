@@ -27,7 +27,7 @@ else
             class="btn btn-lg rounded-pill"
             style="color:white; background-color:#8ACE79;"
             data-bs-toggle="modal"
-            data-bs-target="#reportModal">
+            data-bs-target="#guestActionModal">
         Add Report
     </button>
 }
@@ -90,34 +90,66 @@ else
 
 <!-- Guest Modal -->
 <div class="modal fade"
-     id="reportModal"
+     id="guestActionModal"
      tabindex="-1"
-     aria-labelledby="reportModalLabel"
      aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered">
 
-        <div class="modal-content text-center p-4">
+        <div class="modal-content border-0 shadow-lg rounded-4">
 
-            <h4 class="mb-4">
-                You need to be a member to access all reporting features.
-            </h4>
+            <div class="modal-body text-center p-5">
 
-            <div class="d-grid gap-3">
+                <img src="~/images/PETHUB-LOGO.png"
+                     asp-append-version="true"
+                     style="width:80px;"
+                     class="mb-4"
+                     alt="PetHub Logo" />
 
-                <!-- Continue as Guest -->
-                <a asp-controller="LostFounds"
-                   asp-action="Create"
-                   class="btn btn-lg btn-outline-primary">
-                    Continue as Guest
-                </a>
+                <span class="badge rounded-pill px-3 py-2 mb-3"
+                      style="background:#EAF8E6;color:#4F8D42;">
 
-                <!-- Become Member -->
-                <a asp-controller="UserAccount"
-                   asp-action="Register"
-                   class="btn btn-lg btn-success">
-                    Become a Member
-                </a>
+                    MEMBERS ONLY
+
+                </span>
+
+                <h3 class="fw-bold mb-3"
+                    style="color:#2D3748;">
+
+                    Join the PetHub Community
+
+                </h3>
+
+                <p class="text-muted mb-4"
+                   style="line-height:1.8;">
+
+                    Creating listings and submitting reports are exclusive
+                    to registered members. Create a free account or sign in
+                    to continue.
+
+                </p>
+
+                <div class="d-grid gap-3">
+
+                    <a asp-controller="UserAccount"
+                       asp-action="Register"
+                       class="btn btn-lg text-white rounded-pill"
+                       style="background:#8ACE79;">
+
+                        Become a Member
+
+                    </a>
+
+                    <a asp-controller="LostFound"
+                       asp-action="Create"
+                       class="btn btn-light rounded-pill"
+                       data-bs-dismiss="modal">
+
+                        Continue as Guest
+
+                    </a>
+
+                </div>
 
             </div>
 
