@@ -22,8 +22,17 @@ namespace PETHUB.Controllers
         // Provides access to the web hosting environment, useful for file uploads.
         private readonly IWebHostEnvironment _environment;
 
+        // Relative folder inside wwwroot where Member Valid IDs are stored.
         private const string ProfilePictureFolder = "uploads/profilepictures";
+
+        // URL prefix used to access uploaded Member Valid IDs.
         private const string ProfilePictureUrlPrefix = "/uploads/profilepictures/";
+
+        // Relative folder inside wwwroot where Member Valid IDs are stored.
+        private const string MemberIdFolder = "uploads/memberids";
+
+        // URL prefix used to access uploaded Member Valid IDs.
+        private const string MemberIdUrlPrefix = "/uploads/memberids/";
 
         // Receives required services through Dependency Injection.
         // ASP.NET Core automatically provides these services at runtime.
@@ -108,8 +117,12 @@ namespace PETHUB.Controllers
             // PROFILE PICTURE UPLOAD
             // ==========================================================
 
+            // Stores the current profile picture path.
             string? newProfilePicturePath = user.ProfilePicturePath;
 
+            // Stores the current Valid ID path.
+            // If the user does not upload a new ID, we'll keep this existing value.
+            string? newIdPhotoPath = user.IdPhotoPath;
             // Check whether the user selected a new profile picture.
             if (model.ProfilePictureFile != null)
             {
@@ -153,11 +166,6 @@ namespace PETHUB.Controllers
                     _environment.WebRootPath,
                     ProfilePictureFolder);
 
-                if (!Directory.Exists(uploadsFolderPath))
-                {
-                    Directory.CreateDirectory(uploadsFolderPath);
-                }
-
                 string uniqueFileName = $"{Guid.NewGuid()}{extension}";
                 string physicalFilePath = Path.Combine(uploadsFolderPath, uniqueFileName);
 
@@ -181,6 +189,92 @@ namespace PETHUB.Controllers
                 newProfilePicturePath = ProfilePictureUrlPrefix + uniqueFileName;
             }
 
+            // ==========================================================
+            // MEMBER VALID ID UPLOAD
+            // ==========================================================
+
+            // Only process if the user selected a new Valid ID.
+            if (model.IdPhotoFile != null)
+            {
+                // Allowed image extensions.
+                string[] allowedExtensions =
+                {
+                    ".jpg",
+                    ".jpeg",
+                    ".png",
+                    ".webp"
+                };
+
+                // Get the uploaded file's extension.
+                string extension = Path.GetExtension(model.IdPhotoFile.FileName)
+                                       .ToLowerInvariant();
+
+                // Reject unsupported file types.
+                if (!allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError(
+                        nameof(model.IdPhotoFile),
+                        "Only JPG, JPEG, PNG, and WEBP files are allowed.");
+
+                    return View(model);
+                }
+
+                // Maximum upload size (5 MB).
+                const long maxFileSize = 5 * 1024 * 1024;
+
+                // Reject oversized uploads.
+                if (model.IdPhotoFile.Length > maxFileSize)
+                {
+                    ModelState.AddModelError(
+                        nameof(model.IdPhotoFile),
+                        "Valid ID cannot exceed 5 MB.");
+
+                    return View(model);
+                }
+
+                // Build the physical folder path.
+                string uploadsFolderPath = Path.Combine(
+                    _environment.WebRootPath,
+                    MemberIdFolder);
+
+                // Generate a unique filename.
+                string uniqueFileName = $"{Guid.NewGuid()}{extension}";
+
+                // Build the physical path where the file will be saved.
+                string physicalFilePath = Path.Combine(
+                    uploadsFolderPath,
+                    uniqueFileName);
+
+                // Save the uploaded file.
+                using (var fileStream = new FileStream(
+                    physicalFilePath,
+                    FileMode.Create))
+                {
+                    await model.IdPhotoFile.CopyToAsync(fileStream);
+                }
+
+                // Delete the previous uploaded Valid ID if it belongs to this folder.
+                if (!string.IsNullOrEmpty(user.IdPhotoPath) &&
+                    user.IdPhotoPath.StartsWith(
+                        MemberIdUrlPrefix,
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    string oldFileName = Path.GetFileName(user.IdPhotoPath);
+
+                    string oldPhysicalPath = Path.Combine(
+                        uploadsFolderPath,
+                        oldFileName);
+
+                    if (System.IO.File.Exists(oldPhysicalPath))
+                    {
+                        System.IO.File.Delete(oldPhysicalPath);
+                    }
+                }
+
+                // Store the new URL so it can be saved later.
+                newIdPhotoPath = MemberIdUrlPrefix + uniqueFileName;
+            }
+
             // ==========================
             // Update editable fields
             // ==========================
@@ -201,7 +295,9 @@ namespace PETHUB.Controllers
 
             user.Bio = model.Bio;
 
+            // Update the profile picture or Valid ID paths.
             user.ProfilePicturePath = newProfilePicturePath;
+            user.IdPhotoPath = newIdPhotoPath;
 
             // Save the updated user through ASP.NET Identity.
             var result = await _userManager.UpdateAsync(user);

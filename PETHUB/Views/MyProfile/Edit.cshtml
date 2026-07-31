@@ -777,19 +777,18 @@
 
     <script>
 
-        // ============================================================
-        // Valid ID Preview
-        // ============================================================
+    // ============================================================
+    // Profile Picture Live Preview
+    // ============================================================
 
-        document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
         const profilePictureInput = document.getElementById("profilePictureInput");
         const profilePicturePreview = document.getElementById("profilePicturePreview");
-        const changeProfilePictureBtn = document.getElementById("changeProfilePictureBtn");
 
-        changeProfilePictureBtn.addEventListener("click", function () {
-            profilePictureInput.click();
-        });
+        // Exit safely if the controls are missing.
+        if (!profilePictureInput || !profilePicturePreview)
+            return;
 
         profilePictureInput.addEventListener("change", function () {
 
@@ -808,7 +807,70 @@
             }
 
         });
-        });
 
-    </script>
+    });
+
+</script>
+
+<script>
+
+// ============================================================
+// Valid ID Upload & Live Preview
+// ============================================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Get the hidden file input.
+    const validIdInput = document.getElementById("validIdInput");
+
+    // Get the Change Valid ID button.
+    const changeValidIdBtn = document.getElementById("changeValidIdBtn");
+
+    // Get the preview image.
+    const validIdPreview = document.getElementById("validIdPreview");
+
+    // Placeholder shown when there is no uploaded ID.
+    const validIdPlaceholder = document.getElementById("validIdPlaceholder");
+
+    // Stop if this user is not a Member.
+    if (!validIdInput || !changeValidIdBtn || !validIdPreview)
+        return;
+
+    // Open the hidden file picker.
+    changeValidIdBtn.addEventListener("click", function () {
+
+        validIdInput.click();
+
+    });
+
+    // Display a live preview after selecting a file.
+    validIdInput.addEventListener("change", function () {
+
+        if (this.files && this.files[0]) {
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+
+                validIdPreview.src = e.target.result;
+
+                // Show preview.
+                validIdPreview.classList.remove("d-none");
+
+                // Hide placeholder if it exists.
+                if (validIdPlaceholder) {
+                    validIdPlaceholder.classList.add("d-none");
+                }
+
+            };
+
+            reader.readAsDataURL(this.files[0]);
+
+        }
+
+    });
+
+});
+
+</script>
 }
