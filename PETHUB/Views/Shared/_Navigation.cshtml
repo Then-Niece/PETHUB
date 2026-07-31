@@ -1,18 +1,118 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@{
+    var controller = ViewContext.RouteData.Values["Controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["Action"]?.ToString();
+
+    bool isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+    bool isAdmin = User.IsInRole("Admin");
+    bool isMember = User.IsInRole("Member");
+
+    // Shared Pages (Member & Admin)
+    bool isFeed = controller == "PetFeeds" && action == "Feed";
+    bool isMarketplace = controller == "Listings" && action == "Marketplace";
+    bool isLostFound = controller == "LostFounds" && action == "Browse";
+
+    // Member Pages
+    bool isMyPosts = controller == "MyPosts";
+
+    // Admin Pages
+    bool isMembers = controller == "Members";
+    bool isAdmins = controller == "Admins";
+    bool isMarketplaceApproval = controller == "MarketplaceApprovals";
+    bool isLostFoundApproval = controller == "LostFoundApprovals";
+}
 
 <header>
 
-        <div>
+    @* Guest Navbar *@
+    @if (!isAuthenticated)
+    {
+        <nav class="navbar navbar-expand-lg bg-white shadow-sm navbar-custom">
 
-            <!-- NEW NAV -->
-            <nav class="navbar navbar-expand-lg bg-white shadow-sm navbar-custom">
+            <div class="container-fluid px-4">
 
-                <div class="d-flex align-items-center ms-2">
+                <!-- Logo -->
+                <a class="navbar-brand fw-bold fs-3 d-flex align-items-center"
+                   asp-controller="Home"
+                   asp-action="PublicLandingPage"
+                   style="color:#2D3748;">
 
-                @if (User.IsInRole("Admin") || (User.IsInRole("Member")))
-                {
+                    <img src="/images/PETHUB-LOGO.png"
+                         alt="PetHub Logo"
+                         class="navbar-logo me-2" />
+
+                    PetHub
+
+                </a>
+
+               
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#guestNavbar">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-end"
+                     id="guestNavbar">
+
+                    <ul class="navbar-nav align-items-center gap-lg-3">
+
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold"
+                               asp-controller="Home"
+                               asp-action="Index">
+                                Home
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold"
+                               asp-controller="Listings"
+                               asp-action="Marketplace">
+                                Marketplace
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold"
+                               asp-controller="LostFounds"
+                               asp-action="Browse">
+                                Lost &amp; Found
+                            </a>
+                        </li>
+
+                        <li class="nav-item ms-lg-2">
+                            <a asp-controller="UserAccount"
+                               asp-action="Login"
+                               class="btn rounded-pill px-4 fw-semibold text-white"
+                               style="background:#8ACE79; border:none;">
+
+                                Login
+
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </nav>
+    }
+
+    @* Member/Admin Navbar *@
+    else
+    {
+        <nav class="navbar navbar-expand-lg bg-white shadow-sm navbar-custom">
+
+            <div class="container-fluid px-4">
+
+                <!-- Left Side -->
+                <div class="d-flex align-items-center">
+
                     <button id="sidebarToggle"
                             class="btn border-0 me-3"
                             type="button">
@@ -20,22 +120,15 @@
                         <i data-lucide="menu"></i>
 
                     </button>
-                }
-                else
-                {
-                    //Nothing kaydili dapat maka kita ang client sa sidebar toggle
-                }
 
-                   
-
-                    <a class="navbar-brand fw-bold fs-3 d-flex align-items-center"
+                    <a class="navbar-brand fw-bold fs-3 d-flex align-items-center mb-0"
                        asp-controller="Home"
                        asp-action="PublicLandingPage"
                        style="color:#2D3748;">
 
-                    <img src="/images/PETHUB-LOGO.png"
-                         alt="PetHub Logo"
-                         class="navbar-logo me-2" />
+                        <img src="/images/PETHUB-LOGO.png"
+                             class="navbar-logo me-2"
+                             alt="PetHub Logo" />
 
                         PetHub
 
@@ -43,182 +136,251 @@
 
                 </div>
 
-                    <!-- Mobile Button -->
-                    <button class="navbar-toggler"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#navbar">
+                <!-- Center -->
+                <div class="flex-grow-1 d-flex justify-content-center">
 
-                        <span class="navbar-toggler-icon"></span>
+                    @* PetFeed *@
+                    @if (isFeed)
+                    {
+                        <div class="navbar-search">
+                            <div class="input-group">
 
+                                <span class="input-group-text">
+                                    <i data-lucide="search"></i>
+                                </span>
+
+                                <input class="form-control"
+                                       type="text"
+                                       placeholder="Search PetHub..." />
+
+                            </div>
+                        </div>
+                    }
+
+                    @*Marketplace *@
+                    else if (isMarketplace)
+                    {
+                        <div class="d-flex align-items-center gap-2">
+
+            
+
+                            <h5 class="mb-0 fw-semibold">
+                                Pet Marketplace
+                            </h5>
+
+                        </div>
+                    }
+
+                    @*Lost & Found *@
+                    else if (isLostFound)
+                    {
+                        <div class="d-flex align-items-center gap-2">
+
+
+                            <h5 class="mb-0 fw-semibold">
+                                Lost &amp; Found
+                            </h5>
+
+                        </div>
+                    }
+
+                    @* My Post *@
+                    else if (isMyPosts)
+                    {
+                        <div class="d-flex align-items-center gap-2">
+
+                            x`
+
+                        </div>
+                    }
+
+                    @* Members *@
+                    else if (isMembers)
+                    {
+                        <div class="d-flex align-items-center gap-2">
+
+                            <i data-lucide="users"></i>
+
+                            <h5 class="mb-0 fw-semibold">
+                                Members
+                            </h5>
+
+                        </div>
+                    }
+
+                    @*  Admin *@
+                    else if (isAdmins)
+                    {
+                        <div class="d-flex align-items-center gap-2">
+
+                            <i data-lucide="shield"></i>
+
+                            <h5 class="mb-0 fw-semibold">
+                                Administrators
+                            </h5>
+
+                        </div>
+                    }
+
+                    @* Marketplace Approval*@
+                    else if (isMarketplaceApproval)
+                    {
+                        <div class="d-flex align-items-center gap-2">
+
+                            <i data-lucide="badge-check"></i>
+
+                            <h5 class="mb-0 fw-semibold">
+                                Marketplace Approval
+                            </h5>
+
+                        </div>
+                    }
+
+                    @* Lost & Found Approval *@
+                    else if (isLostFoundApproval)
+                    {
+                        <div class="d-flex align-items-center gap-2">
+
+                            <i data-lucide="flag"></i>
+
+                            <h5 class="mb-0 fw-semibold">
+                                Lost &amp; Found Approval
+                            </h5>
+
+                        </div>
+                    }
+
+                </div>
+
+                <!-- Right Side -->
+                <div class="navbar-actions">
+
+                    <button class="navbar-icon-btn ">
+                        <i data-lucide="message-circle"></i>
                     </button>
 
-                    <div class="navbar-collapse justify-content-end collapse"
-                         id="navbar">
+                    <button class="navbar-icon-btn ">
+                        <i data-lucide="bell"></i>
+                    </button>
 
+                    <!-- Profile -->
+                    <div class="dropdown">
 
-                        <!-- Buttons -->
-                        <div class="d-flex gap-3">
+                        <button class="profile-button"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
 
-                        <!-- Navigation -->
-                        <ul class="navbar-nav">
+                            <div class="profile-avatar">
 
-                             @* ==========================================================
-                                                     CLIENT ONLY
-                               ========================================================== *@
+                                <img src="~/images/dogpic.jpg"
+                                     alt="Profile" />
 
-                            @if (!User.Identity!.IsAuthenticated)
-                            {
-                                <li class="nav-item mx-2">
-                                    <a class="nav-link fw-semibold" asp-controller="Home"
-                                    asp-action="Index">
-                                        Home
-                                    </a>
-                                </li>
+                            </div>
 
-                                <li class="nav-item mx-2">
-                                    <a class="nav-link fw-semibold" asp-controller="LostFounds"
-                                    asp-action="Browse">
-                                        Lost & Found
-                                    </a>
-                                </li>
+                            <i data-lucide="chevron-down"
+                               class="profile-chevron"></i>
 
-                                <li class="nav-item mx-2">
-                                    <a class="nav-link fw-semibold" asp-controller="Listings"
-                                    asp-action="Marketplace">
-                                        Marketplace
-                                    </a>
-                                </li>
-                            }
+                        </button>
 
+                        <ul class="dropdown-menu dropdown-menu-end profile-dropdown p-2">
 
-                
-                            
+                            <li class="px-3 py-2">
 
-                             @* ==========================================================
-                                                    MEMBER + CLIENT
-                               ========================================================== *@
+                                <div class="d-flex align-items-center gap-3">
 
-                            @if (User.IsInRole("Admin") || (User.IsInRole("Member")))
-                            {
+                                    <div class="profile-avatar profile-avatar-large">
 
-                            <li class="nav-item mx-2">
-                                <a class="nav-link fw-semibold" asp-controller="PetFeeds" asp-action="Feed">
-                                    PetFeed
-                                </a>
+                                        <img src="~/images/dogpic.jpg"
+                                             alt="Profile" />
+
+                                    </div>
+
+                                    <div>
+
+                                        <div class="fw-bold">
+
+                                            @User.Identity!.Name
+
+                                        </div>
+
+                                        <small class="text-muted">
+
+                                            @(isAdmin ? "Administrator" : "Member")
+
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
                             </li>
 
-                            }
-                            else
-                            {
-                                <li class="nav-item mx-2">
-                                    <a class="nav-link fw-semibold" asp-controller="Home" asp-action="Index">
-                                        About
-                                    </a>
-                                </li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
 
-                                
-                            }
+                            <li>
 
-                            @* ==========================================================
-                               ADMIN ONLY
-                               ========================================================== *@
+                                <a class="dropdown-item py-2"
+                                   href="#">
 
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark"
-                                    asp-controller="Members"
-                                    asp-action="Index">
-                                        Add Members
-                                    </a>
-                                </li>
+                                    <i data-lucide="user"
+                                       class="me-2"></i>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark"
-                                    asp-controller="Admins"
-                                    asp-action="Index">
-                                        Add Admins
-                                    </a>
-                                </li>
+                                    My Profile
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark"
-                                    asp-controller="Listings"
-                                    asp-action="Index">
-                                        Marketplace Approval
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark"
-                                    asp-controller="LostFounds"
-                                    asp-action="Index">
-                                        Lost & Found Approval
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark"
-                                       asp-controller="PetFeeds"
-                                       asp-action="Index">
-                                        Pet Feeds
-                                    </a>
-                                </li>
-                            }
-
-                        </ul>
-
-                        <ul class="navbar-nav d-flex gap-3">
-
-                            @if (!User.Identity!.IsAuthenticated)
-                            {
-                                <a asp-controller="UserAccount"
-                                   asp-action="Login"
-                                   class="btn rounded-pill fw-semibold px-4 text-white"
-                                   style="
-                                    background:#8ACE79;
-                                    border:none;
-                                    transition:.3s;"
-                                   onmouseover="this.style.background='#6FBF5E'"
-                                   onmouseout="this.style.background='#8ACE79'">
-                                    Login
                                 </a>
-                            }
-                            else
-                            {
-                                <li class="nav-item">
-                                    @if (User.IsInRole("Admin"))
-                                    {
-                                        <span class="nav-link text-muted">
-                                            Hello, Admin @User.Identity.Name
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="nav-link text-muted">
-                                            Hello, @User.Identity.Name
-                                        </span>
-                                    }
 
-                                </li>
+                            </li>
 
-                                <li class="nav-item">
-                                    <form asp-controller="UserAccount"
-                                            asp-action="Logout"
-                                            method="post"
-                                            class="d-inline">
+                            <li>
 
-                                        <button type="submit"
-                                                class="nav-link btn btn-link">
-                                            Logout
-                                        </button>
+                                <a class="dropdown-item py-2"
+                                   href="#">
 
-                                    </form>
-                                </li>
-                            }
+                                    <i data-lucide="settings"
+                                       class="me-2"></i>
+
+                                    Settings
+
+                                </a>
+
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+
+                            <li>
+
+                                <form asp-controller="UserAccount"
+                                      asp-action="Logout"
+                                      method="post">
+
+                                    <button type="submit"
+                                            class="dropdown-item py-2">
+
+                                        <i data-lucide="log-out"
+                                           class="me-2"></i>
+
+                                        Logout
+
+                                    </button>
+
+                                </form>
+
+                            </li>
+
                         </ul>
+
                     </div>
+
                 </div>
-            </nav>
-        </div>
+
+            </div>
+
+        </nav>
+    }
+
 </header>

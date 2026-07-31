@@ -18,7 +18,7 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    margin-bottom: 0;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -272,10 +272,10 @@ a {
 
 
 /* for the navbar para align sya */
-.navbar-custom {
+/*.navbar-custom {
     padding-left: 12px;
     padding-right: 12px;
-} 
+}*/ 
 
 
 /*SIDEBAR*/
@@ -347,3 +347,197 @@ a {
     flex: 1;
     padding: 20px;
 }
+
+
+
+
+/* ==========================================================
+   NAVBAR 
+========================================================== */
+
+.navbar-custom {
+    min-height: 72px;
+    background: #fff;
+}
+
+/* Navbar Right */
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 12px;
+}
+
+/* Sidebar Toggle */
+
+#sidebarToggle {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .2s ease;
+}
+
+    #sidebarToggle:hover {
+        background: #F3FAF1;
+    }
+
+    #sidebarToggle i {
+        width: 22px;
+        height: 22px;
+    }
+
+/* Search */
+
+.navbar-search {
+    width: 420px;
+}
+
+    .navbar-search .input-group-text,
+    .navbar-search .form-control {
+        background: #F0F2F5;
+        border: none;
+    }
+
+    .navbar-search .input-group-text {
+        border-radius: 50px 0 0 50px;
+        padding-left: 16px;
+        color: #65676B;
+    }
+
+    .navbar-search .form-control {
+        border-radius: 0 50px 50px 0;
+        padding-left: .35rem;
+        box-shadow: none;
+    }
+
+        .navbar-search .form-control::placeholder {
+            color: #65676B;
+        }
+
+        .navbar-search .form-control:focus {
+            background: #F0F2F5;
+            box-shadow: none;
+        }
+
+    .navbar-search .input-group {
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
+/* Message & Notification */
+
+.navbar-icon-btn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: #F2F3F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6B7280;
+    transition: all .2s ease;
+}
+
+    .navbar-icon-btn i {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2.2;
+    }
+
+    .navbar-icon-btn:hover,
+    .navbar-icon-btn.active {
+        background: #F3FAF1;
+        color: #8ACE79;
+    }
+
+        .navbar-icon-btn:hover i,
+        .navbar-icon-btn.active i {
+            color: #8ACE79;
+        }
+
+/* Profile */
+
+.profile-button {
+    border: none;
+    background: transparent;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .profile-button:hover {
+        background: transparent;
+    }
+
+.profile-avatar {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.profile-avatar-large {
+    width: 55px;
+    height: 55px;
+}
+
+.profile-chevron {
+    width: 16px !important;
+    height: 16px !important;
+    color: #6B7280;
+}
+
+/* Dropdown */
+
+.profile-dropdown {
+    min-width: 260px;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.08);
+}
+
+/* Dropdown Items */
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem .9rem;
+    border-radius: 12px;
+    color: #2D3748;
+    font-weight: 500;
+    transition: all .2s ease;
+}
+
+    .dropdown-item i {
+        width: 20px;
+        height: 20px;
+        color: #6B7280;
+        transition: all .2s ease;
+    }
+
+    .dropdown-item:hover {
+        background: #F3FAF1;
+        color: #8ACE79;
+    }
+
+        .dropdown-item:hover i {
+            color: #8ACE79;
+        }
+
