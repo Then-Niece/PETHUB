@@ -24,7 +24,9 @@ namespace PETHUB.Models
         public DateTime? AcceptedTermsDate { get; set; }
 
         // New property for Member ID
+        // This property is nullable because Admins may not have a Member ID.
         public string? IdPhotoPath { get; set; }
+
         // Stores the uploaded profile picture file path
         public string? ProfilePicturePath { get; set; }
 

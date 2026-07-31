@@ -61,7 +61,8 @@
                         <!-- Profile Picture -->
                         @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
                         {
-                            <img src="@Model.ProfilePicturePath"
+                            <img id="profilePicturePreview"
+                                 src="@Model.ProfilePicturePath"
                                  class="rounded-circle border mb-3"
                                  width="180"
                                  height="180"
@@ -69,13 +70,13 @@
                         }
                         else
                         {
-                            <img src="~/images/default-profile.png"
+                            <img id="profilePicturePreview"
+                                 src="~/images/default-profile.png"
                                  class="rounded-circle border mb-3"
                                  width="180"
                                  height="180"
                                  style="object-fit:cover;" />
                         }
-
                         <!-- Name -->
 
                         <h3 class="mb-1">
@@ -525,29 +526,68 @@
 
                                     <div class="col-md-8">
 
-                                        @if (!string.IsNullOrEmpty(Model.IdPhotoPath))
+                                        @* Only Members are allowed to upload and replace Valid IDs *@
+                                        @if (User.IsInRole("Member"))
                                         {
-                                            <img src="@Model.IdPhotoPath"
-                                                 class="img-thumbnail mb-3"
-                                                 style="max-width:350px; max-height:220px; object-fit:contain;" />
+                                            @* Display the currently uploaded Valid ID if one exists *@
+                                            @if (!string.IsNullOrEmpty(Model.IdPhotoPath))
+                                            {
+                                                <img src="@Model.IdPhotoPath"
+                                                     id="validIdPreview"
+                                                     class="img-thumbnail mb-3"
+                                                     style="max-width:350px; max-height:220px; object-fit:contain;" />
+                                            }
+                                            else
+                                            {
+                                                @* Placeholder shown when no Valid ID has been uploaded *@
+                                                <div id="validIdPlaceholder"
+                                                     class="border rounded d-flex justify-content-center align-items-center mb-3"
+                                                     style="width:350px; height:220px;">
+
+                                                    <span class="text-muted">
+                                                        No Valid ID Uploaded
+                                                    </span>
+
+                                                </div>
+
+                                                @* Hidden preview image that will be shown after selecting a file *@
+                                                <img id="validIdPreview"
+                                                     class="img-thumbnail mb-3 d-none"
+                                                     style="max-width:350px; max-height:220px; object-fit:contain;" />
+                                            }
+
+                                            @* Hidden file input used to upload a replacement Valid ID *@
+                                            <input asp-for="IdPhotoFile"
+                                                   type="file"
+                                                   id="validIdInput"
+                                                   accept=".jpg,.jpeg,.png,.webp"
+                                                   class="d-none" />
+
+                                            @* Opens the hidden file picker *@
+                                            <button type="button"
+                                                    id="changeValidIdBtn"
+                                                    class="btn btn-outline-success">
+
+                                                Change Valid ID
+
+                                            </button>
+
+                                            <span asp-validation-for="IdPhotoFile"
+                                                  class="text-danger d-block mt-2">
+                                            </span>
+
+                                            <small class="text-muted d-block mt-2">
+
+                                                Accepted formats:
+                                                JPG, JPEG, PNG, WEBP
+
+                                                <br />
+
+                                                Maximum file size:
+                                                5 MB
+
+                                            </small>
                                         }
-                                        else
-                                        {
-                                            <div class="border rounded d-flex justify-content-center align-items-center mb-3"
-                                                 style="width:350px; height:220px;">
-
-                                                <span class="text-muted">
-                                                    No Valid ID Uploaded
-                                                </span>
-
-                                            </div>
-                                        }
-
-                                        <button class="btn btn-outline-success" disabled>
-
-                                            Change Valid ID
-
-                                        </button>
 
                                     </div>
 
@@ -675,7 +715,7 @@
 
                                 <div class="d-flex justify-content-end gap-2">
 
-                                    <a asp-action="Index"
+                                    <a asp-action="Edit"
                                        class="btn btn-outline-secondary">
 
                                         Cancel
@@ -731,6 +771,43 @@
 
             });
 
+        });
+
+    </script>
+
+    <script>
+
+        // ============================================================
+        // Valid ID Preview
+        // ============================================================
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+        const profilePictureInput = document.getElementById("profilePictureInput");
+        const profilePicturePreview = document.getElementById("profilePicturePreview");
+        const changeProfilePictureBtn = document.getElementById("changeProfilePictureBtn");
+
+        changeProfilePictureBtn.addEventListener("click", function () {
+            profilePictureInput.click();
+        });
+
+        profilePictureInput.addEventListener("change", function () {
+
+            if (this.files && this.files[0]) {
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    profilePicturePreview.src = e.target.result;
+
+                };
+
+                reader.readAsDataURL(this.files[0]);
+
+            }
+
+        });
         });
 
     </script>
