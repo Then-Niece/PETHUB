@@ -5,6 +5,7 @@
     ViewData["Province"] = Model.Province;
     ViewData["City"] = Model.City;
     ViewData["Barangay"] = Model.Barangay;
+    ViewData["StreetAddress"] = Model.StreetAddress;
 }
 
 <div class="container-fluid py-4">
@@ -266,4 +267,5 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="~/js/address-helper.js" asp-append-version="true"></script>
 }

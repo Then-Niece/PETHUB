@@ -208,19 +208,7 @@
                             </div>
 
                             <!-- Address -->
-                            <div class="form-group full-width">
-
-                                <label asp-for="Address">
-                                    Address
-                                </label>
-
-                                <input asp-for="Address"
-                                       class="form-control custom-input" />
-
-                                <span asp-validation-for="Address"
-                                      class="text-danger"></span>
-
-                            </div>
+                            <partial name="Components/_AddressFields" />
 
                         </div>
 
@@ -319,5 +307,5 @@
         });
 
     </script>
-
+    <script src="~/js/address-helper.js"></script>
 }

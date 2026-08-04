@@ -5,6 +5,7 @@
     ViewData["Province"] = Model.Province;
     ViewData["City"] = Model.City;
     ViewData["Barangay"] = Model.Barangay;
+    ViewData["StreetAddress"] = Model.StreetAddress;
 }
 
 <div class="container py-4">
@@ -430,67 +431,8 @@
                                     Location
                                 </h6>
 
-                                <!-- Province -->
-                                <div class="row align-items-center mb-3">
-
-                                    <div class="col-md-4">
-                                        <label asp-for="Province" class="fw-semibold"></label>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <input asp-for="Province" class="form-control" />
-                                        <span asp-validation-for="Province" class="text-danger"></span>
-                                    </div>
-
-                                </div>
-
-                                <!-- City -->
-                                <div class="row align-items-center mb-3">
-
-                                    <div class="col-md-4">
-                                        <label asp-for="City" class="fw-semibold">
-                                            City / Municipality
-                                        </label>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <input asp-for="City" class="form-control" />
-                                        <span asp-validation-for="City" class="text-danger"></span>
-                                    </div>
-
-                                </div>
-
-                                <!-- Barangay -->
-                                <div class="row align-items-center mb-3">
-
-                                    <div class="col-md-4">
-                                        <label asp-for="Barangay" class="fw-semibold"></label>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <input asp-for="Barangay" class="form-control" />
-                                        <span asp-validation-for="Barangay" class="text-danger"></span>
-                                    </div>
-
-                                </div>
-
-                                <!-- Street Address -->
-                                <div class="row align-items-center">
-
-                                    <div class="col-md-4">
-                                        <label asp-for="StreetAddress" class="fw-semibold"></label>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <input asp-for="StreetAddress"
-                                               class="form-control" />
-                                        <span asp-validation-for="StreetAddress" class="text-danger"></span>
-                                    </div>
-
-                                </div>
-
+                                <partial name="Components/_AddressFields" />
                             </div>
-
                         </div>
                         @* ========================================================= *@
                         @* VERIFICATION                                              *@
@@ -761,6 +703,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="~/js/address-helper.js" asp-append-version="true"></script>
 
     <script>
 

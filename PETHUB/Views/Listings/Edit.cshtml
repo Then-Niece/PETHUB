@@ -5,6 +5,7 @@
     ViewData["Province"] = Model.Province;
     ViewData["City"] = Model.City;
     ViewData["Barangay"] = Model.Barangay;
+    ViewData["StreetAddress"] = Model.StreetAddress;
 }
 
 <div class="container mt-4">
@@ -292,4 +293,6 @@
 
         window.onload = togglePriceField;
     </script>
+    <script src="~/js/address-helper.js" asp-append-version="true"></script>
+
 }

@@ -5,6 +5,7 @@
     ViewData["Province"] = Model.Province;
     ViewData["City"] = Model.City;
     ViewData["Barangay"] = Model.Barangay;
+    ViewData["StreetAddress"] = Model.StreetAddress;
 }
 
 <h1 class="mb-4">Edit Report</h1>
@@ -131,7 +132,7 @@
         <script>
             setupImagePreview("imageInput", "imagePreviewContainer");
         </script>
-
-
     }
+    <script src="~/js/address-helper.js" asp-append-version="true"></script>
+
 }
