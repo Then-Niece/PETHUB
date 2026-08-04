@@ -83,7 +83,6 @@
                             </a>
                         </li>
 
-
                         <li class="nav-item mx-2">
                             <a class="nav-link fw-semibold" asp-controller="PetFeeds" asp-action="Feed">
                                 PetFeed
@@ -280,7 +279,9 @@
 
                             <div class="profile-avatar">
 
-                                <img src="~/images/dogpic.jpg"
+@*                                 <img src="@Model.ProfilePicturePath"
+ *@                                     
+                                <img src="~/uploads/clientids/"
                                      alt="Profile" />
 
                             </div>
@@ -328,16 +329,31 @@
                             </li>
 
                             <li>
+                                @if(User.IsInRole("Admin"))
+                                {
+                                    <a class="dropdown-item py-2"
+                                       asp-controller="PetFeeds"
+                                       asp-action="Index">
 
-                                <a class="dropdown-item py-2"
-                                   href="#">
+                                        <i data-lucide="user"
+                                           class="me-2"></i>
 
-                                    <i data-lucide="user"
-                                       class="me-2"></i>
+                                        Dashboard
+                                    </a>
 
-                                    My Profile
+                                }
+                                else if (User.IsInRole("Member"))
+                                {
+                                     <a class="dropdown-item py-2"
+                                       asp-controller="MyPosts"
+                                        asp-action="Index">
 
-                                </a>
+                                        <i data-lucide="user"
+                                           class="me-2"></i>
+
+                                        My Profile
+                                    </a>
+                                }
 
                             </li>
 

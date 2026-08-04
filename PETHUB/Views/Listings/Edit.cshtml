@@ -171,13 +171,8 @@
 
                                 <!-- LOCATION -->
 
-                                <div class="form-group mb-3">
-                                    <label asp-for="Location"></label>
-                                    <input asp-for="Location"
-                                           class="form-control" />
-                                    <span asp-validation-for="Location"
-                                          class="text-danger"></span>
-                                </div>
+                                <!-- Address Fields -->
+                                <partial name="Components/_AddressFields" />
 
                                 <!-- IMAGES -->
 

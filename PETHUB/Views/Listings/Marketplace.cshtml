@@ -4,7 +4,6 @@
     ViewData["Title"] = "Marketplace Client";
 }
 
-<h1 class="text-center">Marketplace</h1>
 
 <!-- Add Listing Button -->
 @if (User.IsInRole("Member"))
@@ -71,9 +70,9 @@ else{
                         <p class="card-text">
                             <small class="text-muted">
                                 Location:
-                                @(string.IsNullOrEmpty(item.Location)
+                                @(string.IsNullOrEmpty(item.City)
                                     ? "Not specified"
-                                    : item.Location)
+                                    : item.City + ", " + item.Province)
                             </small>
                         </p>
                     </div>

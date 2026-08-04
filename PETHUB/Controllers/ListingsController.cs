@@ -246,7 +246,10 @@ namespace PETHUB.Controllers
             existingListing.Title = listing.Title;
             existingListing.Description = listing.Description;
             existingListing.Price = listing.Price;
-            existingListing.Location = listing.Location;
+            existingListing.Province = listing.Province;
+            existingListing.City = listing.City;
+            existingListing.Barangay = listing.Barangay;
+            existingListing.StreetAddress = listing.StreetAddress;
             existingListing.DatePosted = DateTime.Now;
             existingListing.Breed = listing.Breed;
             existingListing.PetType = listing.PetType;

@@ -163,7 +163,10 @@ public class LostFoundsController : Controller
             existing.LostDate = lostFound.LostDate;
             existing.ClientName = lostFound.ClientName;
             existing.ClientContact = lostFound.ClientContact;
-            existing.Location = lostFound.Location;
+            existing.Province = lostFound.Province;
+            existing.City = lostFound.City;
+            existing.Barangay = lostFound.Barangay;
+            existing.StreetAddress = lostFound.StreetAddress;
             existing.DateReported = DateTime.Now;
 
 

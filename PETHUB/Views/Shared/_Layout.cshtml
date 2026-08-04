@@ -14,8 +14,8 @@
     <link rel="stylesheet" href="~/PETHUB.styles.css" asp-append-version="true" />
 </head>
 <body>
-
-    @await Html.PartialAsync("_Navigation")
+@*     Run the Navigation View Component and render its view. *@    
+       @await Component.InvokeAsync("Navigation")
 
     <div class="app">
 

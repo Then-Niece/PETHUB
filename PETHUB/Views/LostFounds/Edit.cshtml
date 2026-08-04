@@ -74,11 +74,8 @@
                         <span asp-validation-for="Type" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label asp-for="Location" class="control-label"></label>
-                        <input asp-for="Location" class="form-control" />
-                        <span asp-validation-for="Location" class="text-danger"></span>
-                    </div>
+                    <!-- Address Fields -->
+                    <partial name="Components/_AddressFields" />
 
                     <!-- Upload new images -->
                     <div class="form-group mb-3">
