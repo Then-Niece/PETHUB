@@ -62,23 +62,32 @@
                                 : "Not specified")
                         </p>
                     }
+                    <hr />
+
+                    <h5>Location</h5>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.StreetAddress))
+                    {
+                        <p>
+                            <strong>Street Address:</strong><br />
+                            @Model.StreetAddress
+                        </p>
+                    }
+
                     <p>
-                        <strong>Location:</strong>
-                        @if (string.IsNullOrEmpty(Model.City))
-                        {
-                            <span>Not specified</span>
-                        }
-                        else
-                        {
-                            <br />
-                            @if (!string.IsNullOrEmpty(Model.StreetAddress))
-                            {
-                                <span>@Model.StreetAddress<br /></span>
-                            }
-                            <span>@Model.Barangay<br />@Model.City<br />@Model.Province</span>
-                        }
+                        <strong>Barangay:</strong><br />
+                        @Model.Barangay
                     </p>
 
+                    <p>
+                        <strong>City:</strong><br />
+                        @Model.City
+                    </p>
+
+                    <p>
+                        <strong>Province:</strong><br />
+                        @Model.Province
+                    </p>
 
                     <!-- I Added this conditional statement so that if the UserId is null then it means its a client report and it shows its details-->
                     <!-- But if its a registered member, it shows its firstname and last name -->

@@ -96,7 +96,7 @@
                     {
                         <p>
                             <strong>Price:</strong>
-                            ₱@Model.Price
+                            ₱@Model.Price.ToString("N0")
                         </p>
                     }
 
@@ -115,26 +115,58 @@
                         @Model.Breed
                     </p>
 
+                    <hr />
+
+                    <h5>Location</h5>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.StreetAddress))
+                    {
+                        <p>
+                            <strong>Street Address:</strong><br />
+                            @Model.StreetAddress
+                        </p>
+                    }
+
                     <p>
-                        <strong>Location:</strong>
-                        <br />
-                        @if (!string.IsNullOrEmpty(Model.StreetAddress))
-                        {
-                            <span>@Model.StreetAddress<br /></span>
-                        }
-                        <span>@Model.Barangay<br />@Model.City<br />@Model.Province</span>
+                        <strong>Barangay:</strong><br />
+                        @Model.Barangay
                     </p>
 
+                    <p>
+                        <strong>City:</strong><br />
+                        @Model.City
+                    </p>
+
+                    <p>
+                        <strong>Province:</strong><br />
+                        @Model.Province
+                    </p>
+
+                    <hr />
                     <hr/>
 
                 </div>
                 
                 <!-- This part is for the member's valid ID photo and the name of the member will be shown in the card details aswell -->
                 <div class="card-body">
-                    <p><strong>Posted by:</strong> @Model.Member?.FirstName @Model.Member?.LastName</p>
 
-                    <div class="mt-3">
+                    <h5 class="fw-bold mb-3">Member Information</h5>
+
+                    <p>
+                        <strong>Posted by:</strong><br />
+                        @Model.Member?.FirstName @Model.Member?.LastName
+                    </p>
+
+                    <p>
+                        <strong>Contact Number:</strong><br />
+                        @(string.IsNullOrWhiteSpace(Model.Member?.ContactNumber)
+                            ? "Not Available"
+                            : Model.Member.ContactNumber)
+                    </p>
+
+                    <div class="mt-4">
                         <h6 class="fw-bold mb-2">Member Valid ID Photo</h6>
+
                         @if (!string.IsNullOrEmpty(Model.Member?.IdPhotoPath))
                         {
                             <div class="d-flex justify-content-center">
@@ -149,8 +181,8 @@
                             <p class="text-muted">No ID photo uploaded.</p>
                         }
                     </div>
-                </div>
 
+                </div>
                 <div class="card-footer d-flex justify-content-center gap-3">
 
                     @if (Model.Status == ListApprovalStatus.Pending)
