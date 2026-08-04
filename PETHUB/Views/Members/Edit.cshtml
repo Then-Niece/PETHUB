@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Edit Member";
+    ViewData["Province"] = Model.Province;
+    ViewData["City"] = Model.City;
+    ViewData["Barangay"] = Model.Barangay;
 }
 
 <div class="container-fluid py-4">
@@ -193,20 +196,7 @@
                         </div>
 
                         <!-- Address -->
-                        <div class="form-group full-width">
-
-                            <label asp-for="Address">
-                                Address
-                            </label>
-
-                            <input asp-for="Address"
-                                   class="form-control custom-input" />
-
-                            <span asp-validation-for="Address"
-                                  class="text-danger"></span>
-
-                        </div>
-
+                        <partial name="Components/_AddressFields" />
                     </div>
 
                    

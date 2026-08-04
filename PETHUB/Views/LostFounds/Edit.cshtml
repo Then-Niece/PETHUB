@@ -1,8 +1,10 @@
-
 @model PETHUB.Models.LostFound
 
 @{
     ViewData["Title"] = "Edit Lost & Found Report";
+    ViewData["Province"] = Model.Province;
+    ViewData["City"] = Model.City;
+    ViewData["Barangay"] = Model.Barangay;
 }
 
 <h1 class="mb-4">Edit Report</h1>

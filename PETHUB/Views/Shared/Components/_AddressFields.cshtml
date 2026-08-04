@@ -5,17 +5,46 @@
 
 <div class="mb-3">
     <label for="Province" class="form-label">Province</label>
-    <input type="text" name="Province" id="Province" class="form-control" />
+    <select id="Province"
+            name="Province"
+            class="form-select"
+            data-selected="@ViewData["Province"]">
+
+        <option value="">
+            Select Province
+        </option>
+
+    </select>
 </div>
 
 <div class="mb-3">
     <label for="City" class="form-label">City</label>
-    <input type="text" name="City" id="City" class="form-control" />
+    <select id="City"
+            name="City"
+            class="form-select"
+            data-selected="@ViewData["City"]"
+            disabled>
+
+        <option value="">
+            Select City
+        </option>
+
+    </select>
 </div>
 
 <div class="mb-3">
     <label for="Barangay" class="form-label">Barangay</label>
-    <input type="text" name="Barangay" id="Barangay" class="form-control" />
+    <select id="Barangay"
+            name="Barangay"
+            class="form-select"
+            data-selected="@ViewData["Barangay"]"
+            disabled>
+
+        <option value="">
+            Select Barangay
+        </option>
+
+    </select>
 </div>
 
 <div class="mb-3">

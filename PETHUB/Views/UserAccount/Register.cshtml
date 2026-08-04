@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Register";
+    ViewData["Province"] = "";
+    ViewData["City"] = "";
+    ViewData["Barangay"] = "";
 }
 
 <div class="container mt-4">
@@ -134,4 +137,6 @@
         });
 
     </script>
+
+    <script src="~/js/address-helper.js" asp-append-version="true"></script>
 }
