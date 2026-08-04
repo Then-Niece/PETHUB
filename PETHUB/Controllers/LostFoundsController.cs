@@ -304,15 +304,28 @@ public class LostFoundsController : Controller
         }
         else
         {
-            if (string.IsNullOrEmpty(lostFound.ClientName) || string.IsNullOrEmpty(lostFound.ClientContact))
-                ModelState.AddModelError("", "Name and contact are required for unregistered clients.");
+            if (string.IsNullOrWhiteSpace(lostFound.ClientName))
+            {
+                ModelState.AddModelError(nameof(LostFound.ClientName),
+                    "Name is required.");
+            }
+
+            if (string.IsNullOrWhiteSpace(lostFound.ClientContact))
+            {
+                ModelState.AddModelError(nameof(LostFound.ClientContact),
+                    "Contact number is required.");
+            }
 
             if (ClientIdImage == null)
-                ModelState.AddModelError("", "A valid ID is required.");
+            {
+                ModelState.AddModelError("ClientIdImage",
+                    "A valid ID is required.");
+            }
         }
 
         if (!ModelState.IsValid)
             return View(lostFound);
+        
 
         lostFound.DateReported = DateTime.Now;
         lostFound.Status = ApprovalStatus.Pending;
