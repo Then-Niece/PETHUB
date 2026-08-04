@@ -7,5 +7,8 @@ namespace PETHUB.ViewModels
         public List<Listing> MarketplaceListings { get; set; } = new();
 
         public List<LostFound> LostFoundReports { get; set; } = new();
+
+        public List<PetFeed> PetFeeds { get; set; } = new();
+
     }
 }

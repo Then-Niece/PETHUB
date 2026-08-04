@@ -50,10 +50,20 @@ namespace PETHUB.Controllers
                 .Take(4)
                 .ToListAsync();
 
+            var latestPetFeeds = await _context.PetFeeds
+            .Include(p => p.Images)
+            .Include(p => p.Admin)
+            .OrderByDescending(p => p.DateCreated)
+            .Take(3)
+            .ToListAsync();
+
+
+
             var viewModel = new PublicLandingPageViewModel
             {
                 MarketplaceListings = latestListings,
-                LostFoundReports = latestLostFound
+                LostFoundReports = latestLostFound,
+                PetFeeds = latestPetFeeds
             };
 
             return View("PublicLandingPage", viewModel);
