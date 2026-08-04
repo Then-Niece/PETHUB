@@ -4,7 +4,6 @@
     ViewData["Title"] = "Lost & Found Reports";
 }
 
-<h1>Lost & Found Admin</h1>
 
 <div class="mb-3">
 
@@ -81,7 +80,7 @@
                         <p class="mb-0">
                             <span class="badge bg-@(item.Type == LostFoundType.Lost ? "danger" : "success")">@item.Type</span>
                             <small class="text-muted"> | @item.DateReported.ToString("MMM dd, yyyy")</small>
-                            <small class="text-muted"> | @(string.IsNullOrEmpty(item.Location) ? "No location" : item.Location)</small>
+                            <small class="text-muted"> | @(string.IsNullOrEmpty(item.City) ? "No location" : item.City + ", " + item.Province)</small>
                         </p>
                     </div>
                 </div>

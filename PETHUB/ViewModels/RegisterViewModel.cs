@@ -17,7 +17,18 @@ namespace PETHUB.ViewModels
         [RegularExpression(@"^\d{11}$", ErrorMessage = "Contact number must contain only numbers.")]
         public string ContactNumber { get; set; }
 
-        public string Address { get; set; }
+        [Required(ErrorMessage = "Province is required.")]
+        public string Province { get; set; }
+
+        [Required(ErrorMessage = "City is required.")]
+        public string City { get; set; }
+
+        [Required(ErrorMessage = "Barangay is required.")]
+        public string Barangay { get; set; }
+
+        [StringLength(200)]
+        public string? StreetAddress { get; set; }
+
         public string Gender { get; set; }
 
         [DataType(DataType.Date)]

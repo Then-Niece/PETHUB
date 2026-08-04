@@ -36,19 +36,16 @@ namespace PETHUB.ViewModels
         public DateTime? Birthdate { get; set; }
 
         // Province where the member currently resides.
-        [StringLength(100, ErrorMessage = "Province cannot exceed 100 characters.")]
-        public string? Province { get; set; }
+        [Required(ErrorMessage = "Province is required.")]
+        public string Province { get; set; }
 
-        // City or municipality where the member resides.
-        [StringLength(100, ErrorMessage = "City cannot exceed 100 characters.")]
-        public string? City { get; set; }
+        [Required(ErrorMessage = "City is required.")]
+        public string City { get; set; }
 
-        // Barangay of the member's current address.
-        [StringLength(100, ErrorMessage = "Barangay cannot exceed 100 characters.")]
-        public string? Barangay { get; set; }
+        [Required(ErrorMessage = "Barangay is required.")]
+        public string Barangay { get; set; }
 
-        // Complete street address of the member.
-        [StringLength(200, ErrorMessage = "Street address cannot exceed 200 characters.")]
+        [StringLength(200)]
         public string? StreetAddress { get; set; }
 
         // Short biography displayed on the user's profile.

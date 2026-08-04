@@ -5,7 +5,6 @@
 }
 
 
-<h1 style="text-align: center;">Lost & Found </h1>
 
 <!-- Add Report Button -->
 <!-- Ony the member and client can add lost and found reports -->
@@ -74,9 +73,9 @@ else
                         <p>
                             <small class="text-muted">
                                 Location:
-                                @(string.IsNullOrEmpty(item.Location)
+                                @(string.IsNullOrEmpty(item.City)
                                     ? "Not specified"
-                                    : item.Location)
+                                    : item.City + ", " + item.Province)
                             </small>
                         </p>
 

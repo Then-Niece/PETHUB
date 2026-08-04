@@ -82,7 +82,7 @@
                         <p class="mb-0">
                             <span class="badge bg-@(item.Type == ListType.For_Adoption ? "primary" : "warning text-dark")">@item.Type</span>
                             <small class="text-muted"> | @item.DatePosted.ToString("MMM dd, yyyy")</small>
-                            <small class="text-muted"> | @(string.IsNullOrEmpty(item.Location) ? "No location" : item.Location)</small>
+                            <small class="text-muted"> | @(string.IsNullOrEmpty(item.City) ? "No location" : item.City + ", " + item.Province)</small>
                         </p>
                     </div>
                 </div>

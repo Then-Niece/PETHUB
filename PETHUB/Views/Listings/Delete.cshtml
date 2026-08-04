@@ -33,7 +33,22 @@
                 <p class="text-muted mb-1">Posted on @Model.DatePosted.ToString("MMMM dd, yyyy")</p>
                 <p class="mb-3">@Model.Description</p>
                 <p><strong>Price:</strong> ₱@Model.Price</p>
-                <p><strong>Location:</strong> @(string.IsNullOrEmpty(Model.Location) ? "Not specified" : Model.Location)</p>
+                <p>
+                    <strong>Location:</strong>
+                    @if (string.IsNullOrEmpty(Model.City))
+                    {
+                        <span>Not specified</span>
+                    }
+                    else
+                    {
+                        <br />
+                        @if (!string.IsNullOrEmpty(Model.StreetAddress))
+                        {
+                            <span>@Model.StreetAddress<br /></span>
+                        }
+                        <span>@Model.Barangay<br />@Model.City<br />@Model.Province</span>
+                    }
+                </p>
                 <p><strong>User:</strong> @(Model.MemberId ?? "—")</p>
             </div>
             <div class="card-footer d-flex justify-content-center gap-3">

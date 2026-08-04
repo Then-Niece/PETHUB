@@ -55,8 +55,19 @@ namespace PETHUB.Models
         public DateTime DatePosted { get; set; }
 
         // Late added property
-        [Required]
-        public string? Location { get; set; }
+        [Required(ErrorMessage = "Province is required.")]
+        public string Province { get; set; }
+
+        [Required(ErrorMessage = "City is required.")]
+        public string City { get; set; }
+
+        [Required(ErrorMessage = "Barangay is required.")]
+        public string Barangay { get; set; }
+
+        // Optional
+        [StringLength(200, ErrorMessage = "Street address cannot exceed 200 characters.")]
+        public string? StreetAddress { get; set; }
+
         [Required]
         public string? Breed { get; set; }
         // Optional user link

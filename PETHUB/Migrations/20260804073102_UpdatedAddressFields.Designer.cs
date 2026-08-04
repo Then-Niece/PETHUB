@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PETHUB.Data;
 
@@ -11,9 +12,11 @@ using PETHUB.Data;
 namespace PETHUB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260804073102_UpdatedAddressFields")]
+    partial class UpdatedAddressFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -375,6 +378,7 @@ namespace PETHUB.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Breed")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
@@ -382,6 +386,7 @@ namespace PETHUB.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClientContact")
+                        .IsRequired()
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
@@ -411,7 +416,7 @@ namespace PETHUB.Migrations
                     b.Property<int>("RStatus")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Sex")
+                    b.Property<int>("Sex")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")

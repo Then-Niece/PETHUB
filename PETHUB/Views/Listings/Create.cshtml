@@ -71,12 +71,8 @@
     <!-- Preview container -->
     <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2 mt-3"></div>
 
-    <!-- Location -->
-    <div class="form-group mb-3">
-        <label asp-for="Location" class="control-label"></label>
-        <input asp-for="Location" class="form-control" placeholder="Enter city or area" />
-        <span asp-validation-for="Location" class="text-danger"></span>
-    </div>
+    <!-- Address Fields -->
+    <partial name="Components/_AddressFields" />
 
     <!-- Submit + Back -->
     <div class="form-group d-flex gap-2">

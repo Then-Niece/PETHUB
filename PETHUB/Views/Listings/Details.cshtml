@@ -117,7 +117,12 @@
 
                     <p>
                         <strong>Location:</strong>
-                        @Model.Location
+                        <br />
+                        @if (!string.IsNullOrEmpty(Model.StreetAddress))
+                        {
+                            <span>@Model.StreetAddress<br /></span>
+                        }
+                        <span>@Model.Barangay<br />@Model.City<br />@Model.Province</span>
                     </p>
 
                     <hr/>
