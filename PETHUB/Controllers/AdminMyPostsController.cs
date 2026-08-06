@@ -29,14 +29,14 @@ namespace PETHUB.Controllers
 
         // Builds the reusable profile information displayed
         // on pages such as the profile card/sidebar.
-        private readonly IProfileService _profileService;
+        private readonly AdminIProfileService _profileService;
 
         // Receives the required services through Dependency Injection.
         // ASP.NET Core automatically supplies these services at runtime.
         public AdminMyPostsController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            IProfileService profileService)
+            AdminIProfileService profileService)
         {
             _context = context;
             _userManager = userManager;
@@ -71,7 +71,7 @@ namespace PETHUB.Controllers
 
             // Build the reusable profile information.
             // This keeps the profile card/sidebar consistent with other modules.
-            model.Profile = await _profileService.BuildProfileViewModelAsync(user);
+            model.Profile = await _profileService.BuildAdminProfileViewModelAsync(user);
 
             // Store the administrator's PetFeed posts.
             model.Posts = posts;

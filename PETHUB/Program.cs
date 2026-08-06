@@ -19,6 +19,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.S
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<AdminIProfileService, AdminProfileService>();
 
 // Register EmailSender here
 builder.Services.AddTransient<EmailSender>();

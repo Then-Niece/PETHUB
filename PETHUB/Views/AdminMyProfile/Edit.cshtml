@@ -1,11 +1,7 @@
-﻿@model PETHUB.ViewModels.EditProfileViewModel
+﻿@model PETHUB.ViewModels.AdminEditProfileViewModel
 
 @{
     ViewData["Title"] = "Edit My Profile";
-    ViewData["Province"] = Model.Province;
-    ViewData["City"] = Model.City;
-    ViewData["Barangay"] = Model.Barangay;
-    ViewData["StreetAddress"] = Model.StreetAddress;
 }
 
 <div class="container py-4">
@@ -323,92 +319,8 @@
 
                                     </div>
 
-                                    @* ------------------------------------------------- *@
-                                    @* PERSONAL DETAILS                                  *@
-                                    @* ------------------------------------------------- *@
-
-                                    <h6 class="fw-bold text-success border-bottom pb-2 mt-5 mb-4 text-start">
-                                        Personal Details
-                                    </h6>
-
-                                    <div class="row align-items-center mb-3">
-
-                                        <div class="col-md-4">
-
-                                            <label asp-for="Gender"
-                                                   class="fw-semibold">
-                                            </label>
-
-                                        </div>
-
-                                        <div class="col-md-8">
-
-                                            <select asp-for="Gender"
-                                                    class="form-select">
-
-                                                <option value="">
-                                                    Select Gender
-                                                </option>
-
-                                                <option>Male</option>
-
-                                                <option>Female</option>
-
-                                            </select>
-                                            <span asp-validation-for="Gender" class="text-danger"></span>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row align-items-center">
-
-                                        <div class="col-md-4">
-
-                                            <label asp-for="Birthdate"
-                                                   class="fw-semibold">
-                                            </label>
-
-                                        </div>
-
-                                        <div class="col-md-8">
-
-                                            <input asp-for="Birthdate"
-                                                   type="date"
-                                                   class="form-control" />
-                                            <span asp-validation-for="Birthdate" class="text-danger"></span>
-                                        </div>
-
-                                    </div>
                                 </div>
 
-                            </div>
-                            @* ========================================================= *@
-                            @* ADDRESS                                                   *@
-                            @* ========================================================= *@
-
-                            <div class="card shadow-sm mb-4 mt-4">
-
-                                <div class="card-body text-start">
-
-                                    <h4 class="mb-1">
-                                        Address
-                                    </h4>
-
-                                    <p class="text-muted mb-4">
-                                        Update your residential address below.
-                                    </p>
-
-                                    @* ------------------------------------------------- *@
-                                    @* LOCATION                                          *@
-                                    @* ------------------------------------------------- *@
-
-                                    <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
-                                        Location
-                                    </h6>
-
-                                    <partial name="Components/_EditProfileAddressFields" 
-                                             model="Model"/>
-                                </div>
                             </div>
 
                             @* ========================================================= *@
@@ -490,25 +402,6 @@
                                         </div>
 
                                     </div>
-
-                                    <div class="row align-items-center">
-
-                                        <div class="col-md-4">
-                                            <label class="fw-semibold">
-                                                Accepted Terms
-                                            </label>
-                                        </div>
-
-                                        <div class="col-md-8">
-
-                                            <input class="form-control"
-                                                   value="@(Model.AcceptedTermsDate?.ToString("MMMM dd, yyyy") ?? "Not Accepted Terms and Agreement")"
-                                                   readonly />
-
-                                        </div>
-
-                                    </div>
-
                                 </div>
                             </div>
                             @* ========================================================= *@
@@ -573,7 +466,6 @@
         @{
             await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
-        <script src="~/js/address-helper.js" asp-append-version="true"></script>
 
         <script>
 
