@@ -1,0 +1,83 @@
+﻿@model PETHUB.Models.PetFeed
+
+@{
+    ViewData["Title"] = "Post Details";
+}
+
+<h2>Post Details</h2>
+
+<!-- Displays the complete information of the selected PetFeed post. -->
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <h3>@Model.Title</h3>
+
+        <p class="text-muted">
+            @Model.Type
+        </p>
+
+        <p>
+            @Model.Content
+        </p>
+
+        <hr />
+
+        <p>
+            <strong>Date Posted:</strong>
+            @Model.DateCreated.ToString("MMMM dd, yyyy")
+        </p>
+
+        <p>
+            <strong>Paws:</strong>
+            @Model.Paws.Count()
+        </p>
+
+        <p>
+            <strong>Comments:</strong>
+            @Model.Comments.Count()
+        </p>
+
+    </div>
+
+</div>
+
+@if (Model.Images != null && Model.Images.Any())
+{
+    <div class="row mt-4">
+
+        @foreach (var image in Model.Images)
+        {
+            <div class="col-md-4 mb-3">
+
+                <!-- Displays every uploaded image attached to this PetFeed post. -->
+                <img src="@image.ImagePath"
+                     class="img-fluid rounded border" />
+
+            </div>
+        }
+
+    </div>
+}
+
+<div class="mt-4">
+
+    <!-- We'll connect these buttons during the next fragment.
+         For now they simply show the planned workflow. -->
+
+    <button class="btn btn-success" disabled>
+        Edit
+    </button>
+
+    <button class="btn btn-danger" disabled>
+        Delete
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+
+        Back
+
+    </a>
+
+</div>
