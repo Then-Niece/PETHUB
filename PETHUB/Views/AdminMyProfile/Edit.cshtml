@@ -90,7 +90,7 @@
                             @if (!string.IsNullOrWhiteSpace(Model.MiddleName))
                             {
                                 @Model.MiddleName
-                            }
+                            }   
 
                             @Model.LastName
 
@@ -431,7 +431,8 @@
                                         Location
                                     </h6>
 
-                                    <partial name="Components/_AddressFields" />
+                                    <partial name="Components/_EditProfileAddressFields" 
+                                             model="Model"/>
                                 </div>
                             </div>
 
