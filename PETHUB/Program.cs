@@ -20,6 +20,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.S
 
 builder.Services.AddScoped<IProfileService, ProfileService>();
 
+// Register EmailSender here
+builder.Services.AddTransient<EmailSender>();
+
 var app = builder.Build();
 
 //  Role seeding block
