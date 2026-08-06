@@ -1,0 +1,100 @@
+﻿@model PETHUB.ViewModels.AdminMyPostsViewModel
+
+@{
+    ViewData["Title"] = "My Posts";
+}
+<div>
+@* Profile Summary Card is displayed here *@
+    <a asp-controller="AdminMyProfile"
+       asp-action="View"
+       class="text-decoration-none text-reset d-block">
+
+        <partial name="_AdminProfileSummaryCard"
+                 model="Model.Profile" />
+    </a>
+    </div>
+
+
+<h2>My Posts</h2>
+
+@if (!Model.Posts.Any())
+{
+    <div class="alert alert-info">
+        You haven't created any PetFeed posts yet.
+    </div>
+}
+else
+{
+    <div class="row">
+
+        @foreach (var post in Model.Posts)
+        {
+            <div class="col-md-4 mb-4">
+
+                <!-- Each card represents one PetFeed post created by the logged-in admin. -->
+                <div class="card h-100 shadow-sm">
+
+                    <!-- Display the first uploaded image if one exists. -->
+                    @if (post.Images != null && post.Images.Any())
+                    {
+                        <img src="@post.Images.First().ImagePath"
+                             class="card-img-top"
+                             style="height:220px; object-fit:cover;" />
+                    }
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            @post.Title
+                        </h5>
+
+                        <p class="text-muted mb-2">
+                            @post.Type
+                        </p>
+
+                        <small class="text-muted">
+                            Posted:
+                            @post.DateCreated.ToString("MMMM dd, yyyy")
+                        </small>
+
+                        <hr />
+
+                        <!-- Display quick statistics so the admin
+                             can immediately see engagement. -->
+
+                        <div class="d-flex justify-content-between">
+
+                            <span>
+                                🐾 @post.Paws.Count()
+                            </span>
+
+                            <span>
+                                💬 @post.Comments.Count()
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white">
+
+                        <!-- Opens the owner-specific Details page.
+                             Ownership will be verified again inside the controller. -->
+                        <a asp-action="Details"
+                           asp-route-id="@post.PetFeedId"
+                           class="btn btn-success w-100">
+
+                            View Details
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+}
+</div>

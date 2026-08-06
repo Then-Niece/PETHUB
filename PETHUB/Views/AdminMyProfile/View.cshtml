@@ -1,0 +1,575 @@
+﻿@model PETHUB.ViewModels.EditProfileViewModel
+
+@{
+    ViewData["Title"] = "View my Profile";
+}
+
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-9">
+
+            <!-- ========================================================= -->
+            <!-- PAGE HEADER                                                -->
+            <!-- ========================================================= -->
+            @if (TempData["SuccessMessage"] != null) @* Shows Success Message After Saving Changes *@
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+
+                    @TempData["SuccessMessage"] @* Call from TempData in MyProfileController *@
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert">
+                    </button>
+
+                </div>
+            }
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+
+                    <h2 class="mb-1">View My Profile</h2>
+
+                    <p class="text-muted mb-0">
+                        View your personal information and account details.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- PROFILE CARD                                               -->
+            <!-- ========================================================= -->
+
+            <div class="card shadow-sm mb-4 mt-4">
+
+                <div class="card-body text-center">
+
+                    <!-- Profile Picture -->
+                    @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
+                    {
+                        <img id="profilePicturePreview"
+                             src="@Model.ProfilePicturePath"
+                             class="rounded-circle border mb-3"
+                             width="180"
+                             height="180"
+                             style="object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <img id="profilePicturePreview"
+                             src="~/images/default-profile.png"
+                             class="rounded-circle border mb-3"
+                             width="180"
+                             height="180"
+                             style="object-fit:cover;" />
+                    }
+                    <!-- Name -->
+
+                    <h3 class="mb-1">
+
+                        @Model.FirstName
+
+                        @if (!string.IsNullOrWhiteSpace(Model.MiddleName))
+                        {
+                            @Model.MiddleName
+                        }
+
+                        @Model.LastName
+
+                    </h3>
+
+                    <!-- User Type -->
+
+                    <p class="text-muted mb-2">
+
+                        Administrator
+
+                    </p>
+
+                    <!-- Joined Date -->
+
+                    <p class="text-secondary">
+
+                        <strong>Joined:</strong>
+
+                        @Model.CreatedAt.ToString("MMMM dd, yyyy")
+
+                    </p>
+
+
+                    <div class="border-top mt-4 pt-4">
+
+                            <!-- ========================================================= -->
+                            <!-- ADMIN ACTIVITY SUMMARY                                    -->
+                            <!-- ========================================================= -->
+
+                            <div class="row g-0 text-center">
+
+                                <div class="col">
+
+                                    <small class="text-muted d-block">
+                                        PetFeed Posts
+                                    </small>
+
+                                    <h3 class="fw-bold mt-2 mb-0">
+                                        @Model.PetFeedPostsCount
+                                    </h3>
+
+                                </div>
+
+                                <div class="col border-start">
+
+                                    <small class="text-muted d-block">
+                                        Announcements
+                                    </small>
+
+                                    <h3 class="fw-bold mt-2 mb-0">
+                                        @Model.AnnouncementsCount
+                                    </h3>
+
+                                </div>
+
+                                <div class="col border-start">
+
+                                    <small class="text-muted d-block">
+                                        Pet Tips
+                                    </small>
+
+                                    <h3 class="fw-bold mt-2 mb-0">
+                                        @Model.PetTipsCount
+                                    </h3>
+
+                                </div>
+
+                            </div>
+
+                    @* ========================================================= *@
+                    @* ABOUT ME                                                  *@
+                    @* ========================================================= *@
+
+                    <div class="card shadow-sm mb-4 mt-4">
+
+                        <div class="card-body text-start">
+
+                            <h4 class="mb-1">
+                                About Me
+                            </h4>
+
+                            <p class="text-muted mb-4">
+                                Share a short introduction about yourself with other administrators.
+                            </p>
+
+                            <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
+                                Biography
+                            </h6>
+
+                            <p class="form-control">
+                                @Model.Bio
+                            </p>
+                        </div>
+
+                    </div>
+
+                    @* ========================================================= *@
+                    @* PERSONAL INFORMATION                                      *@
+                    @* ========================================================= *@
+
+                    <div class="card shadow-sm mb-4 mt-4">
+
+                        <div class="card-body">
+
+                            <h4 class="mb-1 text-start">
+                                Personal Information
+                            </h4>
+
+                            <p class="text-muted mb-4 text-start">
+                                Below are your personal details.
+                            </p>
+
+                            @* ------------------------------------------------- *@
+                            @* NAME                                              *@
+                            @* ------------------------------------------------- *@
+
+                            <h6 class="fw-bold text-success border-bottom pb-2 mb-4 text-start">
+                                Name
+                            </h6>
+
+                            <div class="row align-items-center mb-3">
+
+                                <div class="col-md-4">
+                                    <label asp-for="FirstName" class="fw-semibold"></label>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <p class="form-control">
+                                        @Model.FirstName
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <div class="row align-items-center mb-3">
+
+                                <div class="col-md-4">
+                                    <label asp-for="MiddleName" class="fw-semibold"></label>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <p class="form-control">
+                                        @Model.MiddleName
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <div class="row align-items-center">
+
+                                <div class="col-md-4">
+                                    <label asp-for="LastName" class="fw-semibold"></label>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <p class="form-control">
+                                        @Model.LastName
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            @* ------------------------------------------------- *@
+                            @* CONTACT DETAILS                                   *@
+                            @* ------------------------------------------------- *@
+
+                            <h6 class="fw-bold text-success border-bottom pb-2 mt-5 mb-4 text-start">
+                                Contact Details
+                            </h6>
+
+                            <div class="row align-items-center mb-3">
+
+                                <div class="col-md-4">
+
+                                    <label class="fw-semibold">
+                                        Email Address
+                                    </label>
+
+                                </div>
+
+                                <div class="col-md-8">
+
+                                    <p class="form-control">
+                                        @Model.Email
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row align-items-center">
+
+                                <div class="col-md-4">
+
+                                    <label asp-for="ContactNumber"
+                                           class="fw-semibold">
+                                    </label>
+
+                                </div>
+
+                                <div class="col-md-8">
+
+                                    <p class="form-control">
+                                        @Model.ContactNumber
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            @* ------------------------------------------------- *@
+                            @* PERSONAL DETAILS                                  *@
+                            @* ------------------------------------------------- *@
+
+                            <h6 class="fw-bold text-success border-bottom pb-2 mt-5 mb-4 text-start">
+                                Personal Details
+                            </h6>
+
+                            <div class="row align-items-center mb-3">
+
+                                <div class="col-md-4">
+
+                                    <label asp-for="Gender"
+                                           class="fw-semibold">
+                                    </label>
+
+                                </div>
+
+                                <div class="col-md-8">
+
+                                    <p class="form-control">
+                                        @Model.Gender
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <div class="row align-items-center">
+
+                                <div class="col-md-4">
+
+                                    <label asp-for="Birthdate"
+                                           class="fw-semibold">
+                                    </label>
+
+                                </div>
+
+                                <div class="col-md-8">
+
+                                    <p class="form-control">
+                                        @Model.Birthdate?.ToString("MMMM dd, yyyy")
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    @* ========================================================= *@
+                    @* ADDRESS                                                   *@
+                    @* ========================================================= *@
+
+                    <div class="card shadow-sm mb-4 mt-4">
+
+                        <div class="card-body text-start">
+
+                            <h4 class="mb-1">
+                                Address
+                            </h4>
+
+                            <p class="text-muted mb-4">
+                                Below is your residential address.
+                            </p>
+
+                            @* ------------------------------------------------- *@
+                            @* LOCATION                                          *@
+                            @* ------------------------------------------------- *@
+
+                            <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
+                                Location
+                            </h6>
+
+                            <!-- Province -->
+                            <div class="row align-items-center mb-3">
+
+                                <div class="col-md-4">
+                                    <label asp-for="Province" class="fw-semibold"></label>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <p class="form-control">
+                                        @Model.Province
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <!-- City -->
+                            <div class="row align-items-center mb-3">
+
+                                <div class="col-md-4">
+                                    <label asp-for="City" class="fw-semibold">
+                                        City / Municipality
+                                    </label>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <p class="form-control">
+                                        @Model.City
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <!-- Barangay -->
+                            <div class="row align-items-center mb-3">
+
+                                <div class="col-md-4">
+                                    <label asp-for="Barangay" class="fw-semibold"></label>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <p class="form-control">
+                                        @Model.Barangay
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <!-- Street Address -->
+                            <div class="row align-items-center">
+
+                                <div class="col-md-4">
+                                    <label asp-for="StreetAddress" class="fw-semibold"></label>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <p class="form-control">
+                                        @Model.StreetAddress
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    @* ========================================================= *@
+                    @* ACCOUNT INFORMATION                                       *@
+                    @* ========================================================= *@
+
+                    <div class="card shadow-sm mb-4">
+
+                        <div class="card-body text-start">
+
+                            <h4 class="mb-1">
+                                Account Information
+                            </h4>
+
+                            <p class="text-muted mb-4">
+                                View your account information and administrator details.
+                            </p>
+
+                            @* ------------------------------------------------- *@
+                            @* ACCOUNT                                           *@
+                            @* ------------------------------------------------- *@
+
+                            <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
+                                Account
+                            </h6>
+
+                            <div class="row align-items-center mb-3">
+
+                                <div class="col-md-4">
+                                    <label class="fw-semibold">
+                                        Email Address
+                                    </label>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <p class="form-control">
+                                        @Model.Email
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <div class="row align-items-center">
+
+                                <div class="col-md-4">
+                                    <label class="fw-semibold">
+                                        Administrator Since
+                                    </label>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <p class="form-control">
+                                        @Model.CreatedAt.ToString("MMMM dd, yyyy")
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            @* ------------------------------------------------- *@
+                            @* ACCOUNT STATUS                                    *@
+                            @* ------------------------------------------------- *@
+
+                            <h6 class="fw-bold text-success border-bottom pb-2 mt-5 mb-4">
+                                Account Status
+                            </h6>
+
+                            <div class="row align-items-center mb-3">
+
+                                <div class="col-md-4">
+                                    <label class="fw-semibold">
+                                        Status
+                                    </label>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <p class="form-control">
+                                        @Model.Status
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <div class="row align-items-center">
+
+                                <div class="col-md-4">
+                                    <label class="fw-semibold">
+                                        Accepted Terms
+                                    </label>
+                                </div>
+
+                                <div class="col-md-8">
+
+                                    <p class="form-control">
+                                        @(Model.AcceptedTermsDate?.ToString("MMMM dd, yyyy") ?? "Not Accepted Terms and Agreement")
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    @* ========================================================= *@
+                    @* ACTIONS                                                   *@
+                    @* ========================================================= *@
+
+                    <div class="card shadow-sm mb-4">
+
+                        <div class="card-body">
+
+                            <h4 class="mb-1 text-start">
+                                Actions
+                            </h4>
+
+                            <div class="d-flex justify-content-end gap-2">
+
+                                <a asp-controller="AdminMyPosts"
+                                   asp-action="Index"
+                                   class="btn btn-outline-secondary">
+
+                                    Back
+
+                                </a>
+
+                                <a asp-action="Edit"
+                                   class="btn btn-outline-secondary">
+
+                                    Edit Profile
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

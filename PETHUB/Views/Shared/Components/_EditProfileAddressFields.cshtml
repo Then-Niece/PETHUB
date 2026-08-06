@@ -1,0 +1,91 @@
+﻿@model PETHUB.ViewModels.EditProfileViewModel
+
+@*
+    Reusable Address Fields
+    Used exclusively by the Edit Profile pages.
+    Uses ASP.NET MVC Tag Helpers to enable
+    built-in validation and model binding.
+*@
+
+<div class="mb-3">
+
+    <!-- Province -->
+    <label asp-for="Province" class="form-label"></label>
+
+    <select asp-for="Province"
+            id="Province"
+            class="form-select"
+            data-selected="@Model.Province">
+
+        <option value="">
+            Select Province
+        </option>
+
+    </select>
+
+    <!-- Displays validation error for Province -->
+    <span asp-validation-for="Province"
+          class="text-danger"></span>
+
+</div>
+
+<div class="mb-3">
+
+    <!-- City -->
+    <label asp-for="City" class="form-label"></label>
+
+    <select asp-for="City"
+            id="City"
+            class="form-select"
+            data-selected="@Model.City"
+            disabled>
+
+        <option value="">
+            Select City
+        </option>
+
+    </select>
+
+    <!-- Displays validation error for City -->
+    <span asp-validation-for="City"
+          class="text-danger"></span>
+
+</div>
+
+<div class="mb-3">
+
+    <!-- Barangay -->
+    <label asp-for="Barangay" class="form-label"></label>
+
+    <select asp-for="Barangay"
+            id="Barangay"
+            class="form-select"
+            data-selected="@Model.Barangay"
+            disabled>
+
+        <option value="">
+            Select Barangay
+        </option>
+
+    </select>
+
+    <!-- Displays validation error for Barangay -->
+    <span asp-validation-for="Barangay"
+          class="text-danger"></span>
+
+</div>
+
+<div class="mb-3">
+
+    <!-- Street Address -->
+    <label asp-for="StreetAddress"
+           class="form-label"></label>
+
+    <input asp-for="StreetAddress"
+           class="form-control" />
+
+    <!-- Displays validation error for Street Address -->
+    <span asp-validation-for="StreetAddress"
+          class="text-danger"></span>
+
+</div>
