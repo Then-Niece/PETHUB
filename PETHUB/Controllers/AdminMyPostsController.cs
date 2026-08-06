@@ -112,5 +112,46 @@ namespace PETHUB.Controllers
 
             return View(post);
         }
+
+        // Deletes a PetFeed post owned by the currently logged-in administrator.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            // Retrieve the currently logged-in administrator's ID.
+            var userId = _userManager.GetUserId(User);
+
+            // Retrieve the selected PetFeed together with its images.
+            var petfeed = await _context.PetFeeds
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.PetFeedId == id);
+
+            // Return a 404 page if the post does not exist.
+            if (petfeed == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure only the owner can delete this post.
+            if (petfeed.AdminId != userId)
+            {
+                return Forbid();
+            }
+
+            // Remove all related image records.
+            // (Image deletion can be improved later through ImageHelper.)
+            if (petfeed.Images != null && petfeed.Images.Any())
+            {
+                _context.PetFeedImages.RemoveRange(petfeed.Images);
+            }
+
+            // Remove the PetFeed record.
+            _context.PetFeeds.Remove(petfeed);
+
+            await _context.SaveChangesAsync();
+
+            // Return to the administrator's personal My Posts page.
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

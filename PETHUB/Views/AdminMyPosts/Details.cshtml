@@ -62,17 +62,39 @@
 
 <div class="mt-4">
 
-    <!-- We'll connect these buttons during the next fragment.
-         For now they simply show the planned workflow. -->
+<!-- Redirects to the existing PetFeeds Edit page.
+        The PetFeedsController performs another ownership check
+        before allowing any modifications. -->
+    <a asp-controller="PetFeeds"
+        asp-action="Edit"
+        asp-route-id="@Model.PetFeedId"
+        class="btn btn-success">
 
-    <button class="btn btn-success" disabled>
         Edit
-    </button>
 
-    <button class="btn btn-danger" disabled>
+    </a>
+
+<!-- Deletes the selected PetFeed and returns to My Posts.
+     Ownership is verified again inside the controller. -->
+    <form asp-action="Delete"
+        method="post"
+        class="d-inline">
+
+    @Html.AntiForgeryToken()
+
+    <input type="hidden"
+            name="id"
+            value="@Model.PetFeedId" />
+
+    <button type="submit"
+            class="btn btn-danger"
+            onclick="return confirm('Are you sure you want to delete this post?');">
+
         Delete
+
     </button>
 
+</form>
     <a asp-action="Index"
        class="btn btn-secondary">
 

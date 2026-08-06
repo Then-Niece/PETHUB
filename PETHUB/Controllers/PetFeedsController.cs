@@ -51,6 +51,7 @@ public class PetFeedsController : Controller
             .Include(p => p.Admin)
             .Include(p => p.Images)
             .FirstOrDefaultAsync(m => m.PetFeedId == id);
+
         if (petfeed == null)
         {
             return NotFound();
@@ -75,7 +76,9 @@ public class PetFeedsController : Controller
     public async Task<IActionResult> Create(PetFeedViewModel model)
     {
         if (!ModelState.IsValid)
+        {
             return View(model);
+        }
 
         var adminId = _userManager.GetUserId(User);
 
@@ -121,15 +124,29 @@ public class PetFeedsController : Controller
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
+        {
             return NotFound();
+        }
 
         var petfeed = await _context.PetFeeds
             .Include(p => p.Images)
             .FirstOrDefaultAsync(p => p.PetFeedId == id);
 
         if (petfeed == null)
+        {
             return NotFound();
+        }
 
+        // Retrieve the currently logged-in administrator's ID.
+        // This will be used to verify ownership of the selected post.
+        var userId = _userManager.GetUserId(User);
+
+        // Prevent administrators from editing another administrator's post
+        // by manually changing the URL.
+        if (petfeed.AdminId != userId)
+        {
+            return Forbid();
+        }
 
         var model = new PetFeedViewModel
         {
@@ -151,15 +168,28 @@ public class PetFeedsController : Controller
     public async Task<IActionResult> Edit(int id, PetFeedViewModel model)
     {
         if (!ModelState.IsValid)
+        {
             return View(model);
+        }
 
         var existingPetFeed = await _context.PetFeeds
             .Include(p => p.Images)
             .FirstOrDefaultAsync(p => p.PetFeedId == id);
 
         if (existingPetFeed == null)
+        {
             return NotFound();
+        }
 
+        // Retrieve the currently logged-in administrator's ID.
+        // This prevents direct POST requests from modifying another admin's post.
+        var userId = _userManager.GetUserId(User);
+
+        // Ensure only the owner of the PetFeed can save changes.
+        if (existingPetFeed.AdminId != userId)
+        {
+            return Forbid();
+        }
 
         existingPetFeed.Title = model.Title;
         existingPetFeed.Content = model.Content;
@@ -192,14 +222,30 @@ public class PetFeedsController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int? id)
     {
-        if (id == null) return NotFound();
+        if (id == null)
+        {
+            return NotFound();
+        }
 
         var petfeed = await _context.PetFeeds
             .Include(p => p.Admin)
             .Include(p => p.Images)
             .FirstOrDefaultAsync(m => m.PetFeedId == id);
 
-        if (petfeed == null) return NotFound();
+        if (petfeed == null)
+        {
+            return NotFound();
+        }
+
+        // Retrieve the currently logged-in administrator's ID.
+        var userId = _userManager.GetUserId(User);
+
+        // Prevent administrators from accessing another administrator's post
+        // by manually changing the URL.
+        if (petfeed.AdminId != userId)
+        {
+            return Forbid();
+        }
 
         return View(petfeed);
     }
@@ -210,32 +256,54 @@ public class PetFeedsController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
+        // Retrieve the selected PetFeed together with its images.
         var petfeed = await _context.PetFeeds
             .Include(p => p.Admin)
             .Include(p => p.Images)
             .FirstOrDefaultAsync(m => m.PetFeedId == id);
 
-        if (petfeed != null)
+        // Return a 404 page if the post does not exist.
+        if (petfeed == null)
         {
-            if (petfeed.Images != null && petfeed.Images.Any())
-            {
-                foreach (var image in petfeed.Images)
-                {
-                    var filepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image.ImagePath.TrimStart('/'));
-                    if (System.IO.File.Exists(filepath))
-                        System.IO.File.Delete(filepath);
-
-                    _context.PetFeedImages.Remove(image);
-                }
-            }
-
-            _context.PetFeeds.Remove(petfeed);
-            await _context.SaveChangesAsync();
+            return NotFound();
         }
+
+        // Retrieve the currently logged-in administrator's ID.
+        // This prevents direct POST requests from deleting another admin's post.
+        var userId = _userManager.GetUserId(User);
+
+        // Ensure only the owner of the PetFeed can permanently delete it.
+        if (petfeed.AdminId != userId)
+        {
+            return Forbid();
+        }
+
+        // Delete all uploaded image files from wwwroot.
+        if (petfeed.Images != null && petfeed.Images.Any())
+        {
+            foreach (var image in petfeed.Images)
+            {
+                var filepath = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    image.ImagePath.TrimStart('/'));
+
+                if (System.IO.File.Exists(filepath))
+                {
+                    System.IO.File.Delete(filepath);
+                }
+
+                _context.PetFeedImages.Remove(image);
+            }
+        }
+
+        // Remove the PetFeed record from the database.
+        _context.PetFeeds.Remove(petfeed);
+
+        await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(Index));
     }
-
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -248,11 +316,12 @@ public class PetFeedsController : Controller
             id,
             img => img.ImagePath,   // how to get file path
             img => img.PetFeedId    // how to get parent ID
-                                    // no ownership check needed for admins
         );
 
         if (petFeedId == null)
+        {
             return NotFound();
+        }
 
         return RedirectToAction("Edit", new { id = petFeedId });
     }
