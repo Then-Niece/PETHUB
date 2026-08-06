@@ -83,7 +83,7 @@ namespace PETHUB.ViewModels
         public IFormFile? ProfilePictureFile { get; set; }
 
         // =========================================================
-        // PROFILE STATISTICS
+        // MEMBER ONLY PROFILE STATISTICS
         // =========================================================
 
         // Total Marketplace Listings created by this member.
@@ -100,5 +100,18 @@ namespace PETHUB.ViewModels
 
         // Total resolved Lost & Found reports.
         public int ResolvedReportsCount { get; set; }
+
+        // =========================================================
+        // ADMIN ONLY PROFILE STATISTICS
+        // =========================================================
+
+        // Total PetFeed posts created by this administrator.
+        public int PetFeedPostsCount { get; set; }
+
+        // Total Announcement posts created by this administrator.
+        public int AnnouncementsCount { get; set; }
+
+        // Total Pet Tip posts created by this administrator.
+        public int PetTipsCount { get; set; }
     }
 }
