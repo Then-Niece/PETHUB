@@ -3,6 +3,17 @@
 @{
     ViewData["Title"] = "My Posts";
 }
+<div>
+@* Profile Summary Card is displayed here *@
+    <a asp-controller="AdminMyProfile"
+       asp-action="View"
+       class="text-decoration-none text-reset d-block">
+
+        <partial name="_AdminProfileSummaryCard"
+                 model="Model.Profile" />
+    </a>
+    </div>
+
 
 <h2>My Posts</h2>
 
@@ -50,6 +61,7 @@ else
 
                         <!-- Display quick statistics so the admin
                              can immediately see engagement. -->
+
                         <div class="d-flex justify-content-between">
 
                             <span>
@@ -85,3 +97,4 @@ else
 
     </div>
 }
+</div>

@@ -1,0 +1,118 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+            <!-- ========================================================= -->
+            <!-- PROFILE CARD                                               -->
+            <!-- ========================================================= -->
+
+            <div class="card shadow-sm mb-4 mt-4">
+
+                <div class="card-body text-center">
+
+                    <!-- Profile Picture -->
+                    @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
+                    {
+                        <img id="profilePicturePreview"
+                             src="@Model.ProfilePicturePath"
+                             class="rounded-circle border mb-3"
+                             width="180"
+                             height="180"
+                             style="object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <img id="profilePicturePreview"
+                             src="~/images/default-profile.png"
+                             class="rounded-circle border mb-3"
+                             width="180"
+                             height="180"
+                             style="object-fit:cover;" />
+                    }
+                    <!-- Name -->
+
+                    <h3 class="mb-1">
+
+                        @Model.FirstName
+
+                        @if (!string.IsNullOrWhiteSpace(Model.MiddleName))
+                        {
+                            @Model.MiddleName
+                        }
+
+                        @Model.LastName
+
+                    </h3>
+
+                    <!-- User Type -->
+
+                    <p class="text-muted mb-2">
+
+                        Administrator
+
+                    </p>
+
+                    <!-- Joined Date -->
+
+                    <p class="text-secondary">
+
+                        <strong>Joined:</strong>
+
+                        @Model.CreatedAt.ToString("MMMM dd, yyyy")
+
+                    </p>
+
+
+                    <div class="border-top mt-4 pt-4">
+
+                            <!-- ========================================================= -->
+                            <!-- ADMIN ACTIVITY SUMMARY                                    -->
+                            <!-- ========================================================= -->
+
+                            <div class="row g-0 text-center">
+
+                                <div class="col">
+
+                                    <small class="text-muted d-block">
+                                        PetFeed Posts
+                                    </small>
+
+                                    <h3 class="fw-bold mt-2 mb-0">
+                                        @Model.PetFeedPostsCount
+                                    </h3>
+
+                                </div>
+
+                                <div class="col border-start">
+
+                                    <small class="text-muted d-block">
+                                        Announcements
+                                    </small>
+
+                                    <h3 class="fw-bold mt-2 mb-0">
+                                        @Model.AnnouncementsCount
+                                    </h3>
+
+                                </div>
+
+                                <div class="col border-start">
+
+                                    <small class="text-muted d-block">
+                                        Pet Tips
+                                    </small>
+
+                                    <h3 class="fw-bold mt-2 mb-0">
+                                        @Model.PetTipsCount
+                                    </h3>
+
+                                </div>
+
+                            </div>
+
+                    </div>
+
+                </div>
+
+            </div>
