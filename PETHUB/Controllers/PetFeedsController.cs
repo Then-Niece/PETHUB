@@ -29,9 +29,16 @@ public class PetFeedsController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index()
     {
+        // Retrieve the currently logged-in administrator's ID.
+        // This allows us to exclude their own posts from the management page.
+        var userId = _userManager.GetUserId(User);
+
+        // Retrieve PetFeed posts created by other administrators.
+        // The logged-in admin manages their own posts through My Posts.
         var posts = await _context.PetFeeds
             .Include(p => p.Admin)
             .Include(p => p.Images)
+            .Where(p => p.AdminId != userId)
             .OrderByDescending(p => p.DateCreated)
             .ToListAsync();
 
@@ -215,7 +222,11 @@ public class PetFeedsController : Controller
 
         await _context.SaveChangesAsync();
 
-        return RedirectToAction(nameof(Index));
+        // Return the administrator to their personal My Posts page
+        // after successfully updating the selected PetFeed.
+        return RedirectToAction(
+            "Index",
+            "AdminMyPosts");
     }
 
     // GET: PETFEEDS/Delete/5

@@ -85,6 +85,41 @@
 
     <hr class="sidebar-divider" />
 
+    <!-- Admin Profile Management -->
+    <div class="sidebar-section">
+
+        <h6 class="sidebar-section-title">
+            Admin Profile Management
+        </h6>
+
+        <a asp-controller="AdminMyProfile"
+           asp-action="View"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AdminMyProfile" ? "active" : "")">
+
+            <i data-lucide="users"></i>
+
+            <span class="sidebar-text">
+                My Profile
+            </span>
+
+        </a>
+
+        <a asp-controller="AdminMyPosts"
+           asp-action="Index"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AdminMyPosts" ? "active" : "")">
+
+            <i data-lucide="user-cog"></i>
+
+            <span class="sidebar-text">
+                My Posts
+            </span>
+
+        </a>
+
+    </div>
+
+    <hr class="sidebar-divider" />
+
     <!-- Content Moderation -->
     <div class="sidebar-section">
 
