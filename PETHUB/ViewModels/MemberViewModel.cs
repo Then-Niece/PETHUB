@@ -21,7 +21,17 @@ namespace PETHUB.ViewModels
         public UserStatus Status { get; set; } = UserStatus.Active;
 
         // Member-only fields
-        public string Address { get; set; }
+        [Required(ErrorMessage = "Province is required.")]
+        public string Province { get; set; }
+
+        [Required(ErrorMessage = "City is required.")]
+        public string City { get; set; }
+
+        [Required(ErrorMessage = "Barangay is required.")]
+        public string Barangay { get; set; }
+
+        [StringLength(200)]
+        public string? StreetAddress { get; set; }
         public string Gender { get; set; }
 
         public DateTime Birthdate { get; set; }
