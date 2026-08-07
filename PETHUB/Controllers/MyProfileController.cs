@@ -310,8 +310,8 @@ namespace PETHUB.Controllers
             // Store a one-time success message.
             TempData["SuccessMessage"] = "Your profile has been updated successfully.";// Call from View, Less Manual Code
 
-            // Redirect back to the Edit page.
-            return RedirectToAction(nameof(Edit));
+            // Redirect back to the View page.
+            return RedirectToAction(nameof(View));
         }
 
     }
