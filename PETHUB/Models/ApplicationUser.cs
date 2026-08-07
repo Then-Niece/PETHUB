@@ -15,7 +15,6 @@ namespace PETHUB.Models
 
         // Store registration date for  admins and members
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public string? Address { get; set; }
         // Member-only fields (nullable for Admins)
         public string? Gender { get; set; }
         public DateTime? Birthdate { get; set; }

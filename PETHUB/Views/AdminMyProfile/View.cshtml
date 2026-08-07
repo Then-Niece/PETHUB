@@ -1,4 +1,4 @@
-﻿@model PETHUB.ViewModels.EditProfileViewModel
+﻿@model PETHUB.ViewModels.AdminEditProfileViewModel
 
 @{
     ViewData["Title"] = "View my Profile";
@@ -148,6 +148,9 @@
 
                             </div>
 
+                            @if(Model.Bio != null)
+                            {
+                                                    
                     @* ========================================================= *@
                     @* ABOUT ME                                                  *@
                     @* ========================================================= *@
@@ -160,10 +163,6 @@
                                 About Me
                             </h4>
 
-                            <p class="text-muted mb-4">
-                                Share a short introduction about yourself with other administrators.
-                            </p>
-
                             <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
                                 Biography
                             </h6>
@@ -174,7 +173,10 @@
                         </div>
 
                     </div>
+                    }
+                    else{
 
+                    }
                     @* ========================================================= *@
                     @* PERSONAL INFORMATION                                      *@
                     @* ========================================================= *@
@@ -213,19 +215,26 @@
 
                             </div>
 
-                            <div class="row align-items-center mb-3">
+                            @if(Model.MiddleName != null)
+                            {
+                                <div class="row align-items-center mb-3">
 
-                                <div class="col-md-4">
-                                    <label asp-for="MiddleName" class="fw-semibold"></label>
+                                    <div class="col-md-4">
+                                        <label asp-for="MiddleName" class="fw-semibold"></label>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <p class="form-control">
+                                            @Model.MiddleName
+                                        </p>
+                                    </div>
+
                                 </div>
 
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.MiddleName
-                                    </p>
-                                </div>
+                            }
+                            else{
 
-                            </div>
+                            }
 
                             <div class="row align-items-center">
 
@@ -285,140 +294,6 @@
                                         @Model.ContactNumber
                                     </p>
 
-                                </div>
-
-                            </div>
-
-                            @* ------------------------------------------------- *@
-                            @* PERSONAL DETAILS                                  *@
-                            @* ------------------------------------------------- *@
-
-                            <h6 class="fw-bold text-success border-bottom pb-2 mt-5 mb-4 text-start">
-                                Personal Details
-                            </h6>
-
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-
-                                    <label asp-for="Gender"
-                                           class="fw-semibold">
-                                    </label>
-
-                                </div>
-
-                                <div class="col-md-8">
-
-                                    <p class="form-control">
-                                        @Model.Gender
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <div class="row align-items-center">
-
-                                <div class="col-md-4">
-
-                                    <label asp-for="Birthdate"
-                                           class="fw-semibold">
-                                    </label>
-
-                                </div>
-
-                                <div class="col-md-8">
-
-                                    <p class="form-control">
-                                        @Model.Birthdate?.ToString("MMMM dd, yyyy")
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-                    @* ========================================================= *@
-                    @* ADDRESS                                                   *@
-                    @* ========================================================= *@
-
-                    <div class="card shadow-sm mb-4 mt-4">
-
-                        <div class="card-body text-start">
-
-                            <h4 class="mb-1">
-                                Address
-                            </h4>
-
-                            <p class="text-muted mb-4">
-                                Below is your residential address.
-                            </p>
-
-                            @* ------------------------------------------------- *@
-                            @* LOCATION                                          *@
-                            @* ------------------------------------------------- *@
-
-                            <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
-                                Location
-                            </h6>
-
-                            <!-- Province -->
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-                                    <label asp-for="Province" class="fw-semibold"></label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.Province
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <!-- City -->
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-                                    <label asp-for="City" class="fw-semibold">
-                                        City / Municipality
-                                    </label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.City
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <!-- Barangay -->
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-                                    <label asp-for="Barangay" class="fw-semibold"></label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.Barangay
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <!-- Street Address -->
-                            <div class="row align-items-center">
-
-                                <div class="col-md-4">
-                                    <label asp-for="StreetAddress" class="fw-semibold"></label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.StreetAddress
-                                    </p>
                                 </div>
 
                             </div>
@@ -508,21 +383,6 @@
 
                             </div>
 
-                            <div class="row align-items-center">
-
-                                <div class="col-md-4">
-                                    <label class="fw-semibold">
-                                        Accepted Terms
-                                    </label>
-                                </div>
-
-                                <div class="col-md-8">
-
-                                    <p class="form-control">
-                                        @(Model.AcceptedTermsDate?.ToString("MMMM dd, yyyy") ?? "Not Accepted Terms and Agreement")
-                                    </p>
-
-                                </div>
 
                             </div>
 

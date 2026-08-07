@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PETHUB.ViewModels
 {
-    public class EditProfileViewModel
+    public class AdminEditProfileViewModel
     {
         // ==========================
         // Editable Fields
@@ -29,25 +29,6 @@ namespace PETHUB.ViewModels
         [StringLength(20, ErrorMessage = "Contact number cannot exceed 20 characters.")]
         public string ContactNumber { get; set; }
 
-        // Member's selected gender.
-        public string? Gender { get; set; }
-
-        // Member's date of birth.
-        public DateTime? Birthdate { get; set; }
-
-        // Province where the member currently resides.
-        [Required(ErrorMessage = "Province is required.")]
-        public string Province { get; set; }
-
-        [Required(ErrorMessage = "City is required.")]
-        public string City { get; set; }
-
-        [Required(ErrorMessage = "Barangay is required.")]
-        public string Barangay { get; set; }
-
-        [StringLength(200)]
-        public string? StreetAddress { get; set; }
-
         // Short biography displayed on the user's profile.
         [StringLength(500, ErrorMessage = "Biography cannot exceed 500 characters.")]
         public string? Bio { get; set; }
@@ -65,9 +46,6 @@ namespace PETHUB.ViewModels
         // Current account status (Active or Inactive).
         public UserStatus Status { get; set; }
 
-        // Date when the user accepted the Terms and Conditions.
-        public DateTime? AcceptedTermsDate { get; set; }
-
         // Stores the relative path of the uploaded Valid ID image.
         public string? IdPhotoPath { get; set; }
 
@@ -83,23 +61,16 @@ namespace PETHUB.ViewModels
         public IFormFile? ProfilePictureFile { get; set; }
 
         // =========================================================
-        // MEMBER ONLY PROFILE STATISTICS
+        // ADMIN ONLY PROFILE STATISTICS
         // =========================================================
 
-        // Total Marketplace Listings created by this member.
-        public int MarketplaceListingsCount { get; set; }
+        // Total PetFeed posts created by this administrator.
+        public int PetFeedPostsCount { get; set; }
 
-        // Total Lost & Found reports created by this member.
-        public int LostFoundReportsCount { get; set; }
+        // Total Announcement posts created by this administrator.
+        public int AnnouncementsCount { get; set; }
 
-        // Total pets successfully sold.
-        public int PetsSoldCount { get; set; }
-
-        // Total pets successfully adopted.
-        public int PetsAdoptedCount { get; set; }
-
-        // Total resolved Lost & Found reports.
-        public int ResolvedReportsCount { get; set; }
-
+        // Total Pet Tip posts created by this administrator.
+        public int PetTipsCount { get; set; }
     }
 }

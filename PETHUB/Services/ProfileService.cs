@@ -74,27 +74,6 @@ namespace PETHUB.Services
                     r.UserId == user.Id &&
                     r.RStatus == ReportStatus.Resolved);
 
-            // ==========================================================
-            // ADMIN PROFILE STATISTICS
-            // ==========================================================
-
-            // Total PetFeed posts created by this administrator.
-            model.PetFeedPostsCount =
-                await _context.PetFeeds.CountAsync(p =>
-                    p.AdminId == user.Id);
-
-            // Total Announcement posts created by this administrator.
-            model.AnnouncementsCount =
-                await _context.PetFeeds.CountAsync(p =>
-                    p.AdminId == user.Id &&
-                    p.Type == PetFeedType.Announcement);
-
-            // Total Pet Tip posts created by this administrator.
-            model.PetTipsCount =
-                await _context.PetFeeds.CountAsync(p =>
-                    p.AdminId == user.Id &&
-                    p.Type == PetFeedType.PetTip);
-
             return model;
         }
 

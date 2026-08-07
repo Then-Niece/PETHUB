@@ -23,7 +23,7 @@ namespace PETHUB.Controllers
 
         // Provides access to the web hosting environment, useful for file uploads.
         private readonly IWebHostEnvironment _environment;
-        private readonly IProfileService _profileService;
+        private readonly AdminIProfileService _profileService;
 
         // Relative folder inside wwwroot where Member Valid IDs are stored.
         private const string ProfilePictureFolder = "uploads/profilepictures";
@@ -38,7 +38,7 @@ namespace PETHUB.Controllers
             UserManager<ApplicationUser> userManager,
             ApplicationDbContext context,
             IWebHostEnvironment environment,
-            IProfileService profileService)
+            AdminIProfileService profileService)
         {
             _userManager = userManager;
             _context = context;
@@ -57,7 +57,7 @@ namespace PETHUB.Controllers
                 return Unauthorized();
             }
 
-            return View(await _profileService.BuildProfileViewModelAsync(user));
+            return View(await _profileService.BuildAdminProfileViewModelAsync(user));
         }
 
         // Displays the Edit My Profile page for the currently logged-in user.
@@ -76,14 +76,14 @@ namespace PETHUB.Controllers
             }
 
             // Send the populated ViewModel to the view.
-            return View(await _profileService.BuildProfileViewModelAsync(user));
+            return View(await _profileService.BuildAdminProfileViewModelAsync(user));
         }
 
         // Handles the submission of the Edit My Profile form.
         // Receives the values entered by the user from the EditProfileViewModel.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EditProfileViewModel model)
+        public async Task<IActionResult> Edit(AdminEditProfileViewModel model)
         {
             // Check if the submitted model passed validation.
             // If validation fails, redisplay the page with the entered values.
@@ -185,14 +185,6 @@ namespace PETHUB.Controllers
             user.LastName = model.LastName;
 
             user.ContactNumber = model.ContactNumber;
-
-            user.Gender = model.Gender;
-            user.Birthdate = model.Birthdate;
-
-            user.Province = model.Province;
-            user.City = model.City;
-            user.Barangay = model.Barangay;
-            user.StreetAddress = model.StreetAddress;
 
             user.Bio = model.Bio;
 

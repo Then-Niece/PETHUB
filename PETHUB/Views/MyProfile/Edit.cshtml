@@ -138,20 +138,20 @@
 
                         <div class="border-top mt-4 pt-4">
 
-                        <!-- ========================================================= -->
-                        <!-- ADMIN ACTIVITY SUMMARY                                    -->
-                        <!-- ========================================================= -->
+                            <!-- ========================================================= -->
+                            <!-- ACTIVITY SUMMARY                                          -->
+                            <!-- ========================================================= -->
 
                         <div class="row g-0 text-center">
 
                             <div class="col">
 
                                 <small class="text-muted d-block">
-                                    PetFeed Posts
+                                    Marketplace Listings
                                 </small>
 
                                 <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.PetFeedPostsCount
+                                    @Model.MarketplaceListingsCount
                                 </h3>
 
                             </div>
@@ -159,11 +159,11 @@
                             <div class="col border-start">
 
                                 <small class="text-muted d-block">
-                                    Announcements
+                                    Lost &amp; Found Reports
                                 </small>
 
                                 <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.AnnouncementsCount
+                                    @Model.LostFoundReportsCount
                                 </h3>
 
                             </div>
@@ -171,16 +171,41 @@
                             <div class="col border-start">
 
                                 <small class="text-muted d-block">
-                                    Pet Tips
+                                    Pets Sold
                                 </small>
 
                                 <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.PetTipsCount
+                                    @Model.PetsSoldCount
+                                </h3>
+
+                            </div>
+
+                            <div class="col border-start">
+
+                                <small class="text-muted d-block">
+                                    Pets Adopted
+                                </small>
+
+                                <h3 class="fw-bold mt-2 mb-0">
+                                    @Model.PetsAdoptedCount
+                                </h3>
+
+                            </div>
+
+                            <div class="col border-start">
+
+                                <small class="text-muted d-block">
+                                    Resolved Reports
+                                </small>
+
+                                <h3 class="fw-bold mt-2 mb-0">
+                                    @Model.ResolvedReportsCount
                                 </h3>
 
                             </div>
 
                         </div>
+
 
                         @* ========================================================= *@
                         @* ABOUT ME                                                  *@

@@ -91,7 +91,10 @@ namespace PETHUB.Controllers
                     Status = UserStatus.Active,
 
                     // Member-only fields
-                    Address = model.Address,
+                    Province = model.Province,
+                    City = model.City,
+                    Barangay = model.Barangay,
+                    StreetAddress = model.StreetAddress,
                     Gender = model.Gender,
                     Birthdate = model.Birthdate
                 };
@@ -161,7 +164,10 @@ namespace PETHUB.Controllers
                 member.FirstName = model.FirstName;
                 member.LastName = model.LastName;
                 member.ContactNumber = model.ContactNumber;
-                member.Address = model.Address;
+                member.Province = model.Province;
+                member.City = model.City;
+                member.Barangay = model.Barangay;
+                member.StreetAddress = model.StreetAddress;
                 member.Gender = model.Gender;
                 member.Birthdate = model.Birthdate;
                 member.Status = model.Status;
