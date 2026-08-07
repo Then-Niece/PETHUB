@@ -4,17 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Helpers;
+using PETHUB.Services;
 using PETHUB.Models;
 
 public class LostFoundsController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly NotificationService _notificationService;
 
-    public LostFoundsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+    public LostFoundsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationService notificationService)
     {
         _context = context;
         _userManager = userManager;
+        _notificationService = notificationService;
     }
 
     // GET: LostFounds
@@ -63,6 +66,19 @@ public class LostFoundsController : Controller
 
         report.Status = ApprovalStatus.Approved;
         await _context.SaveChangesAsync();
+
+
+        // Send notification to the user about the approval
+        await _notificationService.CreateNotificationAsync(
+            userId: report.UserId,
+            type: NotificationType.LostFoundApproved,
+            title: "Lost & Found Approved",
+            message: "Your Lost & Found report has been approved.",
+            imagePath: report.Images.FirstOrDefault()?.ImagePath,
+            redirectUrl: "/LostFounds/Details/" + report.LostFoundId,
+            lostFoundId: report.LostFoundId
+);
+
         return RedirectToAction(nameof(Index));
     }
 

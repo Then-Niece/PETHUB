@@ -265,9 +265,26 @@
                         <i data-lucide="message-circle"></i>
                     </button>
 
-                    <button class="navbar-icon-btn ">
-                        <i data-lucide="bell"></i>
-                    </button>
+                    <!-- Notifications -->
+                    <div class="dropdown">
+
+                        <button class="navbar-icon-btn position-relative"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+
+                            <i data-lucide="bell"></i>
+
+                        </button>
+
+
+                        <div class="dropdown-menu dropdown-menu-end shadow">
+
+                            @await Component.InvokeAsync("Notification")
+
+                        </div>
+
+                    </div>
 
                     <!-- Profile -->
                     <div class="dropdown">

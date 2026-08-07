@@ -6,17 +6,20 @@ using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
+using PETHUB.Services;
 using PETHUB.ViewModels;
 
 public class PetFeedsController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly NotificationService _notificationService;
 
-    public PetFeedsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+    public PetFeedsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationService notificationService)
     {
         _context = context;
         _userManager = userManager;
+        _notificationService = notificationService;
     }
 
 
@@ -106,6 +109,8 @@ public class PetFeedsController : Controller
         _context.PetFeeds.Add(petFeed);
         await _context.SaveChangesAsync();
 
+        string? imagePath = null;
+
         if (model.Images != null && model.Images.Any(i => i.Length > 0))
         {
             var savedImages = await ImageHelper.SaveImagesAsync(
@@ -121,7 +126,43 @@ public class PetFeedsController : Controller
 
             _context.PetFeedImages.AddRange(savedImages);
             await _context.SaveChangesAsync();
+
+
+            imagePath = savedImages
+            .FirstOrDefault()
+            ?.ImagePath;
         }
+
+
+        // SEND NOTIFICATION HERE
+        var members = await _userManager.GetUsersInRoleAsync("Member");
+
+
+        foreach (var member in members)
+        {
+            await _notificationService.CreateNotificationAsync(
+                member.Id,
+
+                petFeed.Type == PetFeedType.Announcement
+                    ? NotificationType.NewAnnouncement
+                    : NotificationType.NewPetTip,
+
+                petFeed.Type == PetFeedType.Announcement
+                    ? "New Announcement"
+                    : "New Pet Tip",
+
+                petFeed.Type == PetFeedType.Announcement
+                    ? "A new announcement has been posted."
+                    : "A new pet care tip has been posted.",
+
+                imagePath,
+
+                $"/PetFeeds/Feed?postId={petFeed.PetFeedId}",
+
+                petFeedId: petFeed.PetFeedId
+            );
+        }
+
 
         return RedirectToAction(nameof(Index));
     }
@@ -351,7 +392,7 @@ public class PetFeedsController : Controller
 
     // MEMBER FEED
     [AllowAnonymous]
-    public async Task<IActionResult> Feed()
+    public async Task<IActionResult> Feed(int? postId)
     {
         var userId = _userManager.GetUserId(User);
 
@@ -390,10 +431,13 @@ public class PetFeedsController : Controller
 
             CommentCount = p.Comments.Count(),
 
-            Comments = p.Comments
+            Comments = p.Comments,
             //.OrderByDescending(c => c.DatePosted)
             //.Take(3)
             //.ToList()
+
+            // Highlight the post if its ID matches the provided postId parameter
+            IsHighlighted = postId == p.PetFeedId
 
         }).ToList();
 

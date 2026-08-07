@@ -23,6 +23,10 @@ namespace PETHUB.Data
         public DbSet<PetFeedPaw> PetFeedPaws { get; set; }
 
 
+        // This is for the Notification Feature
+        public DbSet<Notification> Notifications { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -73,6 +77,12 @@ namespace PETHUB.Data
                 .WithMany()
                 .HasForeignKey(p => p.MemberId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Notification>()
+                .HasOne(n => n.User)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(n => n.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

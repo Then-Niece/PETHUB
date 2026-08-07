@@ -29,5 +29,8 @@ namespace PETHUB.ViewModels
         public int PawCount { get; set; }
 
         public bool IsPawed { get; set; }
+
+        //this is for the highlight system, if the post is highlighted, it will be displayed in a different way
+        public bool IsHighlighted { get; set; }
     }
 }

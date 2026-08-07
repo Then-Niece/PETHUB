@@ -3,9 +3,9 @@
 
 <div class="feed-container">
 
-    @foreach (var post in Model)
-    {
-        <div class="card mb-4 shadow-sm">
+   @foreach (var post in Model)
+{
+        <div class="card mb-4 shadow-sm @(post.IsHighlighted ? "highlight-post" : "")" id="post-@post.PetFeedId">
 
             <div class="card-body">
 

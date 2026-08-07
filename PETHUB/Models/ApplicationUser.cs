@@ -41,6 +41,9 @@ namespace PETHUB.Models
         public string? Barangay { get; set; }
 
         public string? StreetAddress { get; set; }
+
+        // Navigation property for related notifications
+        public ICollection<Notification>? Notifications { get; set; }
     }
 
     public enum UserStatus

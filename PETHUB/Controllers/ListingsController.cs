@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
+using PETHUB.Services;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace PETHUB.Controllers
@@ -14,11 +16,13 @@ namespace PETHUB.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly NotificationService _notificationService;
 
-        public ListingsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ListingsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationService notificationService)
         {
             _context = context;
             _userManager = userManager;
+            _notificationService = notificationService;
         }
 
         // GET: Listings
@@ -397,6 +401,18 @@ namespace PETHUB.Controllers
 
             report.Status = ListApprovalStatus.Approved;
             await _context.SaveChangesAsync();
+
+            // Send notification to the user about the approval
+            await _notificationService.CreateNotificationAsync(
+                report.MemberId,
+                NotificationType.MarketplaceApproved,
+                "Marketplace Listing Approved",
+                "Your listing is now visible in the Marketplace.",
+                report.Images.FirstOrDefault()?.ImagePath,
+                "/Listings/Details/" + report.ListingId,
+                listingId: report.ListingId
+);
+
             return RedirectToAction(nameof(Index));
         }
 

@@ -23,6 +23,9 @@ builder.Services.AddScoped<IProfileService, ProfileService>();
 // Register EmailSender here
 builder.Services.AddTransient<EmailSender>();
 
+// Register NotificationService here
+builder.Services.AddScoped<NotificationService>();
+
 var app = builder.Build();
 
 //  Role seeding block

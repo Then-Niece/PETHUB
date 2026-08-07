@@ -1,0 +1,58 @@
+﻿@model IEnumerable<PETHUB.ViewModels.NotificationViewModel>
+
+
+@if (!Model.Any())
+{
+    <div class="p-3 text-center text-muted">
+        No notifications yet.
+    </div>
+}
+else
+{
+    foreach (var notification in Model)
+    {
+        <a href="@(notification.RedirectUrl ?? "#")"
+           class="dropdown-item notification-item">
+
+            <div class="d-flex gap-3">
+
+                @if (notification.ImagePath != null)
+                {
+                    <img src="@notification.ImagePath"
+                         class="rounded-circle"
+                         style="width:45px;height:45px;object-fit:cover;" />
+                }
+                else
+                {
+                    <div class="rounded-circle"
+                         style="
+                        width:45px;
+                        height:45px;
+                        background:#EAF8E6;">
+                    </div>
+                }
+
+
+                <div>
+
+                    <h6 class="mb-1 fw-bold">
+                        @notification.Title
+                    </h6>
+
+
+                    <p class="small text-muted mb-1">
+                        @notification.Message
+                    </p>
+
+
+                    <small class="text-muted">
+                        @notification.CreatedAt.ToString("MMM dd")
+                    </small>
+
+                </div>
+
+            </div>
+
+        </a>
+    }
+}
