@@ -23,8 +23,7 @@ namespace PETHUB.ViewModels
 
         // Count of comments so that we can display it in the view without having to load all comments
         public int CommentCount { get; set; }
-
-
+        
         // Paw system
         public int PawCount { get; set; }
 

@@ -297,8 +297,18 @@
 
                             <div class="profile-avatar">
 
-                                <img src="@Model.ProfilePicturePath"
-                                     alt="Profile" />
+                                @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
+                                {
+                                    <img src="@Model.ProfilePicturePath"
+                                            class="rounded-circle border mb-3"
+                                            style="object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/default_profile.jpg"
+                                            class="rounded-circle border mb-3"
+                                            style="object-fit:cover;" />
+                                }
 
                             </div>
 
@@ -315,8 +325,18 @@
 
                                     <div class="profile-avatar profile-avatar-large">
 
-                                        <img src="@Model.ProfilePicturePath"
-                                             alt="Profile" />
+                                        @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
+                                        {
+                                            <img src="@Model.ProfilePicturePath"
+                                                 class="rounded-circle border mb-3"
+                                                 style="object-fit:cover;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/default_profile.jpg"
+                                                 class="rounded-circle border mb-3"
+                                                 style="object-fit:cover;" />
+                                        }
 
                                     </div>
 

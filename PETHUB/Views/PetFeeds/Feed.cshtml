@@ -123,12 +123,24 @@
 
                                     <div class="d-flex align-items-center">
 
+
                                         <div class="rounded-circle bg-success text-white
                                             d-flex justify-content-center
                                             align-items-center"
                                              style="width:35px;height:35px;">
 
-                                            @(comment.Member?.FirstName?.Substring(0, 1) ?? "?")
+                                            
+
+                                            @if (!string.IsNullOrEmpty(comment.Member?.ProfilePicturePath))
+                                            {
+                                                <img src="@comment.Member.ProfilePicturePath"
+                                                     class="rounded-circle border"
+                                                     style="width:35px;height:35px;object-fit:cover;" />
+                                            }
+                                            else
+                                            {
+                                                @(comment.Member?.FirstName?.Substring(0, 1) ?? "?")
+                                            }
 
                                         </div>
 

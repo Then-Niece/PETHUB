@@ -436,6 +436,7 @@ public class PetFeedsController : Controller
             //.Take(3)
             //.ToList()
 
+
             // Highlight the post if its ID matches the provided postId parameter
             IsHighlighted = postId == p.PetFeedId
 
