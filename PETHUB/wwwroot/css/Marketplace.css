@@ -232,21 +232,24 @@
    PHOTO UPLOAD PANEL
 ========================================================== */
 
+/* ==========================================================
+   PHOTO CARD
+========================================================== */
+
 .photo-upload-card {
     background: #FAFAFA;
-    border: 1px solid #E5E7EB;
-    border-radius: 16px;
-    padding: 20px;
-    min-height: 523px;
+    border: 1px solid #E5E5E5;
+    border-radius: 12px;
+    padding: 18px;
+    height: 100%;
+    min-height: 700px;
     display: flex;
     flex-direction: column;
 }
 
     .photo-upload-card h5 {
-        font-size: 1rem;
         font-weight: 700;
-        color: #1F2937;
-        margin-bottom: 6px;
+        margin-bottom: 15px;
     }
 
     .photo-upload-card small {
@@ -450,8 +453,40 @@
 }
 
 /* ==========================================================
+   ADDRESS FIELDS
+========================================================== */
+
+#Province,
+#City,
+#Barangay,
+#StreetAddress {
+    font-size: .92rem;
+}
+
+        
+    #StreetAddress::placeholder {
+        color: #9CA3AF;
+        opacity: 1;
+    }
+
+    
+    #Province:has(option:checked[value=""]),
+    #City:has(option:checked[value=""]),
+    #Barangay:has(option:checked[value=""]) {
+        color: #9CA3AF;
+    }
+
+    
+    #Province option,
+    #City option,
+    #Barangay option {
+        color: #374151;
+    }
+
+/* ==========================================================
    RESPONSIVE - MOBILE
 ========================================================== */
+
 
 @media (max-width: 768px) {
 

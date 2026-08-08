@@ -3,55 +3,72 @@
     Renders Province, City, Barangay, and StreetAddress input fields
 *@
 
-<div class="mb-3">
-    <label for="Province" class="form-label">Province</label>
-    <select id="Province"
-            name="Province"
-            class="form-select"
-            data-selected="@ViewData["Province"]">
+<div class="row g-3">
 
-        <option value="">
-            Select Province
-        </option>
+    <!-- Province -->
+    <div class="col-md-6">
+        <label for="Province" class="form-label">Province</label>
 
-    </select>
+        <select id="Province"
+                name="Province"
+                class="form-select"
+                data-selected="@ViewData["Province"]">
+
+            <option value="">
+                Select Province
+            </option>
+
+        </select>
+    </div>
+
+
+    <!-- City -->
+    <div class="col-md-6">
+        <label for="City" class="form-label">City</label>
+
+        <select id="City"
+                name="City"
+                class="form-select"
+                data-selected="@ViewData["City"]"
+                disabled>
+
+            <option value="">
+                Select City
+            </option>
+
+        </select>
+    </div>
+
+
+    <!-- Barangay -->
+    <div class="col-md-6">
+        <label for="Barangay" class="form-label">Barangay</label>
+
+        <select id="Barangay"
+                name="Barangay"
+                class="form-select"
+                data-selected="@ViewData["Barangay"]"
+                disabled>
+
+            <option value="">
+                Select Barangay
+            </option>
+
+        </select>
+    </div>
+
+
+    <!-- Street Address -->
+    <div class="col-md-6">
+        <label for="StreetAddress" class="form-label">
+            Street Address
+        </label>
+<input type="text"
+       id="StreetAddress"
+       name="StreetAddress"
+       class="form-control"
+       value="@ViewData["StreetAddress"]"
+       placeholder="Enter street address" />
+    </div>
+
 </div>
-
-<div class="mb-3">
-    <label for="City" class="form-label">City</label>
-    <select id="City"
-            name="City"
-            class="form-select"
-            data-selected="@ViewData["City"]"
-            disabled>
-
-        <option value="">
-            Select City
-        </option>
-
-    </select>
-</div>
-
-<div class="mb-3">
-    <label for="Barangay" class="form-label">Barangay</label>
-    <select id="Barangay"
-            name="Barangay"
-            class="form-select"
-            data-selected="@ViewData["Barangay"]"
-            disabled>
-
-        <option value="">
-            Select Barangay
-        </option>
-
-    </select>
-</div>
-
-<div class="mb-3">
-    <label for="StreetAddress" class="form-label">Street Address</label>
-    <input type="text"
-           id="StreetAddress"
-           name="StreetAddress"
-           class="form-control"
-           value="@ViewData["StreetAddress"]" />
-   </div>
