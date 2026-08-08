@@ -1,0 +1,559 @@
+﻿/* ==========================================================
+   CREATE MARKETPLACE LISTING
+========================================================== */
+
+.create-listing-page {
+    max-width: 1150px;
+    margin: 32px auto;
+    padding: 0 12px;
+}
+
+/* ==========================================================
+   MAIN FORM CARD
+========================================================== */
+
+.listing-form-card {
+    background: #FFFFFF;
+    border: 1px solid #E8ECEF;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .05);
+}
+
+    /* ==========================================================
+   HEADINGS
+========================================================== */
+
+    .listing-form-card h2 {
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: #1F2937;
+        margin-bottom: 8px;
+    }
+
+    .listing-form-card p {
+        font-size: .95rem;
+        color: #6B7280;
+        margin-bottom: 0;
+    }
+
+/* ==========================================================
+   COMPACT CREATE MARKETPLACE SELECTION
+========================================================== */
+
+#listingSelection {
+    max-width: 760px;
+    margin: 50px auto;
+}
+
+    #listingSelection .listing-form-card {
+        padding: 28px 32px;
+        border-radius: 16px;
+    }
+
+    /* ==========================================================
+   SELECTION HEADER
+========================================================== */
+
+    #listingSelection .text-center {
+        margin-bottom: 26px !important;
+    }
+
+    #listingSelection h2 {
+        font-size: 1.45rem;
+        font-weight: 700;
+        color: #1F2937;
+        margin-bottom: 6px;
+    }
+
+    #listingSelection p {
+        font-size: .88rem;
+        color: #6B7280;
+        margin-bottom: 0;
+    }
+
+/* ==========================================================
+   LISTING TYPE CARDS
+========================================================== */
+
+.listing-type-card {
+    background: #FFFFFF;
+    border: 2px solid #E8ECEF;
+    border-radius: 18px;
+    padding: 32px 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .25s ease;
+    height: 100%;
+}
+
+    .listing-type-card:hover {
+        border-color: #8ACE79;
+        background: #F7FFF5;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(138, 206, 121, .12);
+    }
+
+    .listing-type-card i {
+        width: 60px;
+        height: 60px;
+        color: #8ACE79;
+    }
+
+    .listing-type-card h5 {
+        margin-top: 18px;
+        margin-bottom: 8px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #1F2937;
+    }
+
+    .listing-type-card small {
+        display: block;
+        font-size: .9rem;
+        color: #6B7280;
+        line-height: 1.6;
+    }
+
+/* ==========================================================
+   COMPACT SELECTION CARDS
+========================================================== */
+
+#listingSelection .listing-type-card {
+    min-height: 145px;
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+}
+
+    #listingSelection .listing-type-card:hover {
+        transform: translateY(-3px);
+    }
+
+    #listingSelection .listing-type-card i {
+        width: 38px;
+        height: 38px;
+    }
+
+    #listingSelection .listing-type-card h5 {
+        margin-top: 10px;
+        margin-bottom: 4px;
+        font-size: 1rem;
+    }
+
+    #listingSelection .listing-type-card small {
+        font-size: .8rem;
+        line-height: 1.4;
+    }
+
+/* ==========================================================
+   CREATE LISTING FORM
+========================================================== */
+
+#listingForm .form-label {
+    display: block;
+    font-size: .92rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+#listingForm .form-control,
+#listingForm .form-select {
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+    background: #FFFFFF;
+    font-size: .92rem;
+    color: #374151;
+    transition: all .2s ease;
+}
+
+#listingForm textarea.form-control {
+    min-height: 105px;
+    height: auto;
+    padding-top: 10px;
+    resize: vertical;
+}
+
+#listingForm .form-control::placeholder,
+#listingForm textarea::placeholder {
+    color: #9CA3AF;
+}
+
+#listingForm .form-control:focus,
+#listingForm .form-select:focus {
+    border-color: #8ACE79;
+    box-shadow: 0 0 0 .18rem rgba(138, 206, 121, .15);
+    outline: none;
+}
+
+/* ==========================================================
+   RADIO BUTTONS
+========================================================== */
+
+.form-check {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 26px;
+    margin-bottom: 8px;
+}
+
+.form-check-input {
+    width: 17px;
+    height: 17px;
+    margin-top: 0;
+    cursor: pointer;
+}
+
+.form-check-label {
+    margin-left: 6px;
+    font-size: .92rem;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #8ACE79;
+    border-color: #8ACE79;
+}
+
+.form-check-input:focus {
+    box-shadow: none;
+}
+
+/* ==========================================================
+   PHOTO UPLOAD PANEL
+========================================================== */
+
+.photo-upload-card {
+    background: #FAFAFA;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 20px;
+    min-height: 523px;
+    display: flex;
+    flex-direction: column;
+}
+
+    .photo-upload-card h5 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1F2937;
+        margin-bottom: 6px;
+    }
+
+    .photo-upload-card small {
+        display: block;
+        font-size: .85rem;
+        color: #6B7280;
+        margin-bottom: 15px;
+    }
+
+/* ==========================================================
+   FILE INPUT
+========================================================== */
+
+#imageInput {
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+    margin-bottom: 15px;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+    background: #FFFFFF;
+    font-size: .9rem;
+    color: #374151;
+}
+
+    #imageInput:focus {
+        border-color: #D1D5DB !important;
+        box-shadow: none !important;
+        outline: none;
+    }
+
+    /* Keep file input neutral - no green focus */
+
+    #imageInput::file-selector-button {
+        height: 42px;
+        margin-right: 15px;
+        padding: 0 18px;
+        border: none;
+        border-right: 1px solid #E5E7EB;
+        background: #F3F4F6;
+        color: #374151;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background .2s ease;
+    }
+
+        #imageInput::file-selector-button:hover {
+            background: #E5E7EB;
+        }
+
+/* ==========================================================
+   IMAGE PREVIEW GRID
+========================================================== */
+
+.image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+    min-height: 300px;
+    align-content: start;
+}
+
+    .image-preview-grid img {
+        width: 100%;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid #E5E7EB;
+    }
+
+    .image-preview-grid .preview-item {
+        position: relative;
+    }
+
+/* ==========================================================
+   MORE PHOTOS TILE
+========================================================== */
+
+.more-images {
+    width: 100%;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #000000;
+    color: #FFFFFF;
+    border-radius: 10px;
+    font-size: .95rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* ==========================================================
+   REMOVE IMAGE BUTTON
+========================================================== */
+
+.remove-image-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(50, 50, 50, .90);
+    color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all .2s ease;
+    z-index: 10;
+}
+
+    .remove-image-btn:hover {
+        background: #000000;
+        color: #FFFFFF;
+        transform: scale(1.08);
+    }
+
+/* ==========================================================
+   BUTTONS
+========================================================== */
+
+#listingForm .btn {
+    min-width: 120px;
+    height: 42px;
+    font-size: .9rem;
+    font-weight: 600;
+    transition: all .2s ease;
+}
+
+/* ==========================================================
+   POST LISTING BUTTON
+========================================================== */
+
+#listingForm .btn-success {
+    background-color: #8ACE79;
+    border-color: #8ACE79;
+    color: white;
+    border-radius: var(--bs-border-radius-pill) !important;
+}
+
+    #listingForm .btn-success:hover {
+        background-color: #8ACE79;
+        border-color: #8ACE79;
+        color: white;
+        box-shadow: 0 4px 12px rgba(138, 206, 121, .25);
+    }
+
+/* ==========================================================
+   CANCEL BUTTON
+========================================================== */
+
+#listingForm .btn-outline-secondary {
+    background-color: #FFFFFF;
+    border: 1px solid #D1D5DB;
+    color: #374151;
+    border-radius: var(--bs-border-radius-pill) !important;
+}
+
+    #listingForm .btn-outline-secondary:hover {
+        background-color: #F3F4F6;
+        border-color: #D1D5DB;
+        color: #374151;
+    }
+
+/* ==========================================================
+   VALIDATION
+========================================================== */
+
+.text-danger {
+    font-size: .82rem;
+    margin-top: 4px;
+}
+
+/* ==========================================================
+   RESPONSIVE - TABLET
+========================================================== */
+
+@media (max-width: 991px) {
+
+    .create-listing-page {
+        max-width: 95%;
+    }
+
+    .photo-upload-card {
+        margin-top: 20px;
+        min-height: auto;
+    }
+
+    #listingSelection {
+        max-width: 760px;
+    }
+}
+
+/* ==========================================================
+   RESPONSIVE - MOBILE
+========================================================== */
+
+@media (max-width: 768px) {
+
+    .create-listing-page {
+        margin: 20px auto;
+        padding: 0 10px;
+    }
+
+    .listing-form-card {
+        padding: 22px;
+    }
+
+    #listingSelection {
+        max-width: 95%;
+        margin: 25px auto;
+    }
+
+        #listingSelection .listing-form-card {
+            padding: 24px 20px;
+        }
+
+        #listingSelection .listing-type-card {
+            min-height: 145px;
+            padding: 20px 16px;
+        }
+
+    .image-preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-check-inline {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .form-check {
+        margin-right: 15px;
+    }
+
+    #listingForm .btn {
+        min-width: 105px;
+    }
+}
+
+/* ==========================================================
+   RESPONSIVE - SMALL MOBILE
+========================================================== */
+
+@media (max-width: 480px) {
+
+    .listing-form-card {
+        padding: 18px;
+    }
+
+    #listingSelection {
+        max-width: 95%;
+        margin: 20px auto;
+    }
+
+        #listingSelection .listing-form-card {
+            padding: 22px 16px;
+        }
+
+    .listing-form-card h2 {
+        font-size: 1.45rem;
+    }
+
+    #listingSelection h2 {
+        font-size: 1.35rem;
+    }
+
+    #listingSelection .listing-type-card {
+        min-height: 135px;
+    }
+
+        #listingSelection .listing-type-card i {
+            width: 36px;
+            height: 36px;
+        }
+
+        #listingSelection .listing-type-card h5 {
+            font-size: .95rem;
+        }
+
+        #listingSelection .listing-type-card small {
+            font-size: .78rem;
+        }
+
+    .image-preview-grid {
+        gap: 8px;
+    }
+
+        .image-preview-grid img,
+        .more-images {
+            height: 110px;
+        }
+
+    .remove-image-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 16px;
+        top: 6px;
+        right: 6px;
+    }
+}

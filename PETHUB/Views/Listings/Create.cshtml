@@ -4,117 +4,282 @@
     ViewData["Title"] = "Create Listing";
 }
 
-<h1>Create Listing</h1>
 
-<form asp-action="Create" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <!-- Title -->
-    <div class="form-group">
-        <label asp-for="Title" class="control-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+<div class="container py-5">
+
+    <!-- ==========================================
+         FORM 1 - CHOOSE LISTING TYPE
+    =========================================== -->
+    <div id="listingSelection">
+        <div class="listing-form-card">
+            <div class="text-center mb-5">
+                <h2>Create Marketplace Listing</h2>
+                <p class="text-muted">
+                    Choose the type of listing you want to create.
+                </p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-5 mb-3">
+                    <div class="listing-type-card" onclick="showAdoptionForm()">
+                        <i data-lucide="heart-handshake"></i>
+                        <h5 class="mt-3">For Adoption</h5>
+                        <small>Help your pet find a loving home.</small>
+                    </div>
+                </div>
+
+                <div class="col-md-5 mb-3">
+                    <div class="listing-type-card" onclick="showSaleForm()">
+                        <i data-lucide="badge-dollar-sign"></i>
+                        <h5 class="mt-3">For Sale</h5>
+                        <small>Sell your pet responsibly.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Description -->
-    <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
+    <!-- ==========================================
+         FORM 2 - CREATE LISTING
+    =========================================== -->
+    <div id="listingForm" style="display:none;">
+        <div class="listing-form-card">
+            <div class="mb-4">
+                <h2 id="formTitle"></h2>
+                <p id="formSubtitle" class="text-muted"></p>
+            </div>
+
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Hidden Listing Type Dropdown -->
+                <div class="d-none">
+                    <select asp-for="Type"
+                            id="typeSelect"
+                            asp-items="Html.GetEnumSelectList<PETHUB.Models.ListType>()">
+                    </select>
+                </div>
+
+                <div class="row">
+                    <!-- ======================================
+                         LEFT SIDE - INPUT FIELDS
+                    ====================================== -->
+                    <div class="col-lg-8">
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label"></label>
+                            <input asp-for="Title" class="form-control" placeholder="Enter listing title" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" rows="3" class="form-control" placeholder="Tell people about your pet..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Price (HTML Entity &#8369; used for Peso sign to fix encoding issues) -->
+                        <div class="mb-3" id="priceGroup">
+                            <label asp-for="Price" class="form-label"></label>
+                            <input asp-for="Price" class="form-control" placeholder="&#8369;0.00" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+
+                        <!-- Pet Type -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Pet Type</label>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input asp-for="PetType" class="form-check-input" type="radio" value="Dog" id="dog" />
+                                    <label class="form-check-label" for="dog">Dog</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="PetType" class="form-check-input" type="radio" value="Cat" id="cat" />
+                                    <label class="form-check-label" for="cat">Cat</label>
+                                </div>
+                            </div>
+                            <span asp-validation-for="PetType" class="text-danger"></span>
+                        </div>
+
+                        <!-- Pet Sex -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Pet Sex</label>
+                            <div class="d-flex gap-4 flex-wrap">
+                                <div class="form-check">
+                                    <input asp-for="PetSex" class="form-check-input" type="radio" value="Male" id="male" />
+                                    <label class="form-check-label" for="male">Male</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="PetSex" class="form-check-input" type="radio" value="Female" id="female" />
+                                    <label class="form-check-label" for="female">Female</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="PetSex" class="form-check-input" type="radio" value="Unknown" id="unknown" />
+                                    <label class="form-check-label" for="unknown">Unknown</label>
+                                </div>
+                            </div>
+                            <span asp-validation-for="PetSex" class="text-danger"></span>
+                        </div>
+
+                        <!-- Breed -->
+
+                        <div class="mb-3">
+
+                            <label asp-for="Breed" class="form-label"></label>
+
+                            <input asp-for="Breed"
+                                   class="form-control"
+                                   placeholder="Breed" />
+
+                            <span asp-validation-for="Breed"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <!-- Location -->
+
+                        <div class="mb-3">
+
+                            <label asp-for="Location" class="form-label"></label>
+
+                            <input asp-for="Location"
+                                   class="form-control"
+                                   placeholder="City / Municipality" />
+
+                            <span asp-validation-for="Location"
+                                  class="text-danger"></span>
+
+                        </div>
+                    </div>
+
+                    <!-- ======================================
+                         RIGHT SIDE - PHOTO UPLOAD
+                    ====================================== -->
+                    <div class="col-lg-4">
+                        <div class="photo-upload-card">
+                            <h5 class="mb-3">Photos</h5>
+                            <div class="mb-3">
+                                <input type="file" id="imageInput" name="ImageFiles" multiple class="form-control" accept="image/*" />
+                                <small class="text-muted">You can upload multiple images.</small>
+                            </div>
+                            <div id="imagePreviewContainer" class="image-preview-grid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <hr class="my-4" />
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-outline-secondary" onclick="cancelCreate()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        Post Listing
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <!-- Type Switch (Adoption vs Sale) -->
-    <div class="form-group">
-        <label asp-for="Type" class="control-label"></label>
-        <select asp-for="Type" class="form-select" id="typeSelect"
-                asp-items="Html.GetEnumSelectList<PETHUB.Models.ListType>()"></select>
-        <span asp-validation-for="Type" class="text-danger"></span>
-    </div>
+</div>
 
-    <!-- Price (hidden if For Adoption) -->
-    <div class="form-group" id="priceGroup">
-        <label asp-for="Price" class="control-label"></label>
-        <input asp-for="Price" class="form-control" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
 
-    <!-- Pet Type -->
-    <div class="form-group">
-        <label asp-for="PetType" class="control-label"></label>
-        <select asp-for="PetType" class="form-select"
-                asp-items="Html.GetEnumSelectList<PETHUB.Models.ListPetType>()"></select>
-        <span asp-validation-for="PetType" class="text-danger"></span>
-    </div>
 
-    <!-- Pet Sex -->
-    <div class="form-group">
-        <label asp-for="PetSex" class="control-label"></label>
-        <select asp-for="PetSex" class="form-select"
-                asp-items="Html.GetEnumSelectList<PETHUB.Models.ListPetSex>()"></select>
-        <span asp-validation-for="PetSex" class="text-danger"></span>
-    </div>
 
-    <!-- Breed -->
-    <div class="form-group">
-        <label asp-for="Breed" class="control-label"></label>
-        <input asp-for="Breed" class="form-control" />
-        <span asp-validation-for="Breed" class="text-danger"></span>
-    </div>
-
-    <!-- File upload for images -->
-    <div class="form-group">
-        <label>Upload Images</label>
-        <input type="file" id="imageInput" name="ImageFiles" multiple class="form-control" />
-        <small class="form-text text-muted">You can select multiple files.</small>
-    </div>
-
-    <!-- Preview container -->
-    <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2 mt-3"></div>
-
-    <!-- Location -->
-    <div class="form-group mb-3">
-        <label asp-for="Location" class="control-label"></label>
-        <input asp-for="Location" class="form-control" placeholder="Enter city or area" />
-        <span asp-validation-for="Location" class="text-danger"></span>
-    </div>
-
-    <!-- Submit + Back -->
-    <div class="form-group d-flex gap-2">
-        <button type="submit" class="btn btn-primary">Create Listing</button>
-        <a asp-controller="Listings" asp-action="Marketplace" class="btn btn-secondary">Back to Marketplace</a>
-    </div>
-</form>
 
 <script>
+
+    const ADOPTION = "0";
+    const SALE = "1";
+
+    function showAdoptionForm() {
+
+        document.getElementById("listingSelection").style.display = "none";
+        document.getElementById("listingForm").style.display = "block";
+
+        document.getElementById("formTitle").textContent =
+            "Create Adoption Listing";
+
+        document.getElementById("formSubtitle").textContent =
+            "Complete the information below to help your pet find a loving home.";
+
+        document.getElementById("typeSelect").value = ADOPTION;
+
+        togglePriceField();
+
+    }
+
+    function showSaleForm() {
+
+        document.getElementById("listingSelection").style.display = "none";
+        document.getElementById("listingForm").style.display = "block";
+
+        document.getElementById("formTitle").textContent =
+            "Create Sale Listing";
+
+        document.getElementById("formSubtitle").textContent =
+            "Complete the information below to list your pet responsibly for sale.";
+
+        document.getElementById("typeSelect").value = SALE;
+
+        togglePriceField();
+
+    }
+
     function togglePriceField() {
+
         const typeSelect = document.getElementById("typeSelect");
         const priceGroup = document.getElementById("priceGroup");
         const priceInput = document.getElementById("Price");
 
-        // Enum values: For_Adoption = 0, For_Sale = 1
-        if (typeSelect.value === "0") {
-            // For Adoption: hide Price, force submitted value to 0
+        if (typeSelect.value === ADOPTION) {
+
             priceGroup.style.display = "none";
             priceInput.value = 0;
 
-            // Disable validation temporarily
-            if (priceInput.hasAttribute("data-val-required") && !priceInput.dataset.origRequiredMsg) {
-                priceInput.dataset.origRequiredMsg = priceInput.getAttribute("data-val-required");
+            if (priceInput.hasAttribute("data-val-required") &&
+                !priceInput.dataset.originalRequired) {
+
+                priceInput.dataset.originalRequired =
+                    priceInput.getAttribute("data-val-required");
+
             }
+
             priceInput.removeAttribute("required");
             priceInput.removeAttribute("data-val-required");
-        } else {
-            // For Sale: show Price and restore validation
+
+        }
+        else {
+
             priceGroup.style.display = "block";
 
-            if (priceInput.dataset.origRequiredMsg) {
-                priceInput.setAttribute("data-val-required", priceInput.dataset.origRequiredMsg);
+            if (priceInput.dataset.originalRequired) {
+
+                priceInput.setAttribute(
+                    "data-val-required",
+                    priceInput.dataset.originalRequired
+                );
+
             }
+
         }
+
     }
 
-    document.getElementById("typeSelect").addEventListener("change", togglePriceField);
-    window.onload = togglePriceField;
+    function cancelCreate() {
+
+        document.querySelector("#listingForm form").reset();
+
+        document.getElementById("listingForm").style.display = "none";
+        document.getElementById("listingSelection").style.display = "block";
+
+        document.getElementById("imagePreviewContainer").innerHTML = "";
+        document.getElementById("imageInput").value = "";
+
+    }
+
 </script>
 
 @section Scripts {
