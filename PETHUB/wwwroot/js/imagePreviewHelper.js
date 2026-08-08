@@ -66,7 +66,7 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
 
         previewContainer.innerHTML = "";
 
-        selectedFiles.forEach((file, index) => {
+        selectedFiles.slice(0, 4).forEach((file, index) => {
 
             const reader = new FileReader();
 
@@ -83,13 +83,10 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
                 img.classList.add("w-100", "h-100", "object-fit-cover");
 
                 const removeBtn = document.createElement("button");
-                removeBtn.innerHTML = "×";
-                removeBtn.classList.add(
-                    "btn",
-                    "btn-sm",
-                    "btn-danger",
-                    "position-absolute"
-                );
+
+                removeBtn.innerHTML = "&times;";
+
+                removeBtn.classList.add("remove-image-btn");
 
                 removeBtn.style.top = "0";
                 removeBtn.style.right = "0";
@@ -143,5 +140,17 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
             reader.readAsDataURL(file);
 
         });
+
+          if (selectedFiles.length > 4) {
+
+        const more = document.createElement("div");
+
+        more.classList.add("more-images");
+
+        more.textContent = `+${selectedFiles.length - 4} more photos`;
+
+        previewContainer.appendChild(more);
+
+    }
     }
 }
