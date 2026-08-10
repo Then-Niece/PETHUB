@@ -4,26 +4,62 @@
 
 .app {
     display: flex;
-    min-height: calc(100vh - 56px);
+    min-height: calc(100vh - 72px);
+    margin-top: 72px;
 }
 
 #sidebar-wrapper {
     width: 250px;
     flex-shrink: 0;
     transition: width .3s ease;
-    overflow: hidden;
     border-right: 1px solid #E5E7EB;
     background: #fff;
+    /* Keeps the sidebar in place while main content scrolls. */
+    position: sticky;
+    top: 72px;
+    height: calc(100vh - 72px);
+    max-height: calc(100vh - 72px);
+    align-self: flex-start;
+    box-sizing: border-box;
 }
 
     #sidebar-wrapper.collapsed {
         width: 80px;
     }
 
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
 #sidebar {
     width: 100%;
-    min-height: calc(100vh - 56px);
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
 }
+
+
+    /* Sidebar scrollbar */
+    #sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    #sidebar::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: transparent;
+    }
+
+    #sidebar:hover::-webkit-scrollbar-thumb {
+        background: #D1D5DB;
+    }
 
 /* ==========================================
    SIDEBAR NAVIGATION
@@ -89,6 +125,7 @@
     border-top: 1px solid #E5E7EB;
 }
 
+
 /* ==========================================
    COLLAPSED SIDEBAR
 ========================================== */
@@ -111,6 +148,7 @@
     gap: 0;
 }
 
+
 /* ==========================================
    TOGGLE BUTTON
 ========================================== */
@@ -119,6 +157,7 @@
     outline: none;
     box-shadow: none;
 }
+
 
 /* ==========================================
    MAIN CONTENT
@@ -130,7 +169,11 @@
     padding: 20px;
 }
 
-/*adjustments*/
+
+/* ==========================================
+   ADJUSTMENTS
+========================================== */
+
 .bag-icon {
     position: relative;
     top: 1px;
@@ -145,6 +188,7 @@
     position: relative;
     top: 0;
 }
+
 
 /* ==========================================
    ACTIVE SIDEBAR LINK
@@ -161,3 +205,45 @@
     }
 
 
+/* ==========================================
+   RESPONSIVE SIDEBAR
+========================================== */
+
+@media (max-width: 768px) {
+
+    #sidebar-wrapper {
+        width: min(62vw, 250px);
+        top: 72px;
+        height: calc(100vh - 72px);
+        max-height: calc(100vh - 72px);
+    }
+
+    #sidebar {
+        width: 100%;
+    }
+
+    #mainContent {
+        min-width: 0;
+        overflow-x: hidden;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    #sidebar-wrapper {
+        width: 60vw;
+        min-width: 190px;
+        max-width: 230px;
+    }
+}
+
+
+@media (max-width: 360px) {
+
+    #sidebar-wrapper {
+        width: 58vw;
+        min-width: 170px;
+        max-width: 210px;
+    }
+}

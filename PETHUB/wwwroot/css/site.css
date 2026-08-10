@@ -281,7 +281,11 @@ a {
 /*SIDEBAR*/
 .app {
     display: flex;
-    min-height: calc(100vh - 56px);
+    /* Reserves the 72px occupied by the fixed navbar. */
+    min-height: calc(100vh - 72px);
+    /* Pushes the application below the navbar. */
+    margin-top: 72px;
+}
 }
 
 #sidebar-wrapper {
@@ -352,192 +356,465 @@ a {
 
 
 /* ==========================================================
-   NAVBAR 
+   NAVBAR
 ========================================================== */
 
 .navbar-custom {
     min-height: 72px;
     background: #fff;
+    /* Keeps the navbar fixed while the page scrolls. */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* Keeps the navbar above the sidebar and page content. */
+    z-index: 1030;
+    /* Prevents the navbar from exceeding the viewport width. */
+    width: 100%;
 }
 
-/* Navbar Right */
+/* ==========================================================
+   NAVBAR RIGHT
+========================================================== */
 
 .navbar-actions {
+    /* Keeps the navbar controls horizontally aligned. */
     display: flex;
+    /* Vertically centers the controls. */
     align-items: center;
+    /* Preserves the existing spacing between controls. */
     gap: 12px;
+    /* Preserves the existing right-side spacing. */
     margin-right: 12px;
 }
 
-/* Sidebar Toggle */
+
+/* ==========================================================
+   SIDEBAR TOGGLE
+========================================================== */
 
 #sidebarToggle {
+    /* Preserve the existing toggle size. */
     width: 42px;
     height: 42px;
+    /* Remove default button padding. */
     padding: 0;
+    /* Remove the default button border. */
     border: none;
+    /* Preserve the rounded shape. */
     border-radius: 10px;
+    /* Preserve the transparent default background. */
     background: transparent;
+    /* Center the toggle icon horizontally. */
     display: flex;
     align-items: center;
     justify-content: center;
+    /* Preserve the existing hover transition. */
     transition: .2s ease;
 }
 
+
     #sidebarToggle:hover {
+        /* Preserve the existing hover background. */
         background: #F3FAF1;
     }
 
+
     #sidebarToggle i {
+        /* Preserve the existing toggle icon size. */
         width: 22px;
         height: 22px;
     }
 
-/* Search */
+
+/* ==========================================================
+   SEARCH
+========================================================== */
 
 .navbar-search {
+    /* Preserve the existing desktop search width. */
     width: 420px;
+    /* Prevent the search component from becoming wider than
+       the available navbar space. */
+    max-width: 100%;
 }
+
 
     .navbar-search .input-group-text,
     .navbar-search .form-control {
+        /* Preserve the existing search background. */
         background: #F0F2F5;
+        /* Remove individual input borders. */
         border: none;
     }
 
+
     .navbar-search .input-group-text {
+        /* Round the left side of the search field. */
         border-radius: 50px 0 0 50px;
+        /* Preserve the existing left padding. */
         padding-left: 16px;
+        /* Preserve the existing search icon color. */
         color: #65676B;
     }
 
+
     .navbar-search .form-control {
+        /* Round the right side of the search field. */
         border-radius: 0 50px 50px 0;
+        /* Preserve the existing text spacing. */
         padding-left: .35rem;
+        /* Remove the default input focus shadow. */
         box-shadow: none;
     }
 
+
         .navbar-search .form-control::placeholder {
+            /* Preserve the existing placeholder color. */
             color: #65676B;
         }
 
+
         .navbar-search .form-control:focus {
+            /* Preserve the existing search background when focused. */
             background: #F0F2F5;
+            /* Remove the default focus shadow. */
             box-shadow: none;
         }
 
+
     .navbar-search .input-group {
+        /* Preserve the rounded search container. */
         border-radius: 50px;
+        /* Clip the input fields to the rounded shape. */
         overflow: hidden;
     }
 
-/* Message & Notification */
+
+/* ==========================================================
+   MESSAGE & NOTIFICATION
+========================================================== */
 
 .navbar-icon-btn {
+    /* Preserve the existing button dimensions. */
     width: 42px;
     height: 42px;
+    /* Remove the default button border. */
     border: none;
+    /* Preserve the circular shape. */
     border-radius: 50%;
+    /* Preserve the existing background. */
     background: #F2F3F5;
+    /* Center the icon. */
     display: flex;
     align-items: center;
     justify-content: center;
+    /* Preserve the existing icon color. */
     color: #6B7280;
+    /* Preserve the existing transition. */
     transition: all .2s ease;
 }
 
+
     .navbar-icon-btn i {
+        /* Preserve the existing icon dimensions. */
         width: 20px;
         height: 20px;
+        /* Preserve the existing icon stroke thickness. */
         stroke-width: 2.2;
     }
 
+
     .navbar-icon-btn:hover,
     .navbar-icon-btn.active {
+        /* Preserve the existing hover/active background. */
         background: #F3FAF1;
+        /* Preserve the PETHUB green color. */
         color: #8ACE79;
     }
 
+
         .navbar-icon-btn:hover i,
         .navbar-icon-btn.active i {
+            /* Make the icon green when hovered or active. */
             color: #8ACE79;
         }
 
-/* Profile */
+
+/* ==========================================================
+   PROFILE
+========================================================== */
 
 .profile-button {
+    /* Remove the default button border. */
     border: none;
+    /* Preserve the transparent background. */
     background: transparent;
+    /* Remove default button padding. */
     padding: 0;
+    /* Align the avatar and chevron. */
     display: flex;
     align-items: center;
+    /* Preserve the existing spacing. */
     gap: 6px;
 }
 
+
     .profile-button:hover {
+        /* Keep the profile button transparent when hovered. */
         background: transparent;
     }
 
+
 .profile-avatar {
+    /* Preserve the existing avatar dimensions. */
     width: 40px;
     height: 40px;
+    /* Prevent the image from extending outside the circle. */
     overflow: hidden;
+    /* Preserve the circular shape. */
     border-radius: 50%;
+    /* Prevent the avatar from shrinking. */
     flex-shrink: 0;
 }
 
+
     .profile-avatar img {
+        /* Make the image fill the avatar container. */
         width: 100%;
         height: 100%;
+        /* Crop the image while preserving its proportions. */
         object-fit: cover;
     }
 
+
 .profile-avatar-large {
+    /* Preserve the larger profile avatar size. */
     width: 55px;
     height: 55px;
 }
 
+
 .profile-chevron {
+    /* Preserve the existing chevron dimensions. */
     width: 16px !important;
     height: 16px !important;
+    /* Preserve the existing chevron color. */
     color: #6B7280;
 }
 
-/* Dropdown */
+
+/* ==========================================================
+   DROPDOWN
+========================================================== */
 
 .profile-dropdown {
+    /* Preserve the existing dropdown width. */
     min-width: 260px;
+    /* Remove the default dropdown border. */
     border: none;
+    /* Preserve the rounded dropdown shape. */
     border-radius: 16px;
+    /* Preserve the existing dropdown shadow. */
     box-shadow: 0 .5rem 1rem rgba(0,0,0,.08);
 }
 
-/* Dropdown Items */
+
+/* ==========================================================
+   DROPDOWN ITEMS
+========================================================== */
 
 .dropdown-item {
+    /* Keep dropdown icon and text aligned horizontally. */
     display: flex;
     align-items: center;
+    /* Preserve the existing spacing. */
     gap: .75rem;
+    /* Preserve the existing item padding. */
     padding: .75rem .9rem;
+    /* Preserve the rounded item appearance. */
     border-radius: 12px;
+    /* Preserve the existing text color. */
     color: #2D3748;
+    /* Preserve the existing font weight. */
     font-weight: 500;
+    /* Preserve the existing hover transition. */
     transition: all .2s ease;
 }
 
+
     .dropdown-item i {
+        /* Preserve the existing dropdown icon size. */
         width: 20px;
         height: 20px;
+        /* Preserve the existing icon color. */
         color: #6B7280;
+        /* Preserve the existing transition. */
         transition: all .2s ease;
     }
 
+
     .dropdown-item:hover {
+        /* Preserve the existing hover background. */
         background: #F3FAF1;
+        /* Preserve the PETHUB green hover color. */
         color: #8ACE79;
     }
 
+
         .dropdown-item:hover i {
+            /* Make the dropdown icon green when hovered. */
             color: #8ACE79;
         }
 
+
+/* ==========================================================
+   RESPONSIVE NAVBAR
+========================================================== */
+
+/* ----------------------------------------------------------
+   TABLET
+---------------------------------------------------------- */
+
+@media (max-width: 992px) {
+
+    .navbar-search {
+        /* Let the search field shrink based on the viewport
+           while keeping it large enough to remain usable. */
+        width: min(35vw, 350px);
+    }
+
+    .navbar-actions {
+        /* Slightly reduce spacing between controls on tablets. */
+        gap: 8px;
+        /* Reduce unnecessary right-side spacing. */
+        margin-right: 8px;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   MOBILE
+---------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+    .navbar-search {
+        /* Allow the search bar to dynamically resize with the
+           available mobile screen width. */
+        width: min(32vw, 260px);
+    }
+
+    .navbar-actions {
+        /* Keep controls closer together on mobile. */
+        gap: 6px;
+        /* Reduce right-side spacing. */
+        margin-right: 6px;
+    }
+
+    #sidebarToggle {
+        /* Slightly reduce the toggle button on smaller screens. */
+        width: 40px;
+        height: 40px;
+    }
+
+    .navbar-icon-btn {
+        /* Slightly reduce notification/message buttons. */
+        width: 40px;
+        height: 40px;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   SMALL PHONES
+---------------------------------------------------------- */
+
+@media (max-width: 576px) {
+
+    .navbar-search {
+        /* Make the search field smaller so the toggle,
+           notifications, and profile can still fit. */
+        width: 28vw;
+    }
+
+    .navbar-actions {
+        /* Reduce the spacing even further on narrow screens. */
+        gap: 4px;
+        /* Remove unnecessary right-side space. */
+        margin-right: 4px;
+    }
+
+    #sidebarToggle {
+        /* Compact toggle button for small phones. */
+        width: 36px;
+        height: 36px;
+    }
+
+        #sidebarToggle i {
+            /* Scale the toggle icon proportionally. */
+            width: 20px;
+            height: 20px;
+        }
+
+    .navbar-icon-btn {
+        /* Compact notification/message buttons. */
+        width: 36px;
+        height: 36px;
+    }
+
+        .navbar-icon-btn i {
+            /* Scale the icons proportionally. */
+            width: 18px;
+            height: 18px;
+        }
+
+    .profile-avatar {
+        /* Compact profile avatar. */
+        width: 36px;
+        height: 36px;
+    }
+
+    .profile-chevron {
+        /* Slightly reduce the profile chevron. */
+        width: 14px !important;
+        height: 14px !important;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   VERY SMALL PHONES
+---------------------------------------------------------- */
+
+@media (max-width: 400px) {
+
+    .navbar-search {
+        /* Give the other navbar controls more room on very
+           narrow screens. */
+        width: 24vw;
+    }
+
+    .navbar-actions {
+        /* Keep the controls tightly grouped. */
+        gap: 3px;
+    }
+
+    #sidebarToggle {
+        /* Further reduce the toggle button. */
+        width: 34px;
+        height: 34px;
+    }
+
+    .navbar-icon-btn {
+        /* Further reduce notification/message buttons. */
+        width: 34px;
+        height: 34px;
+    }
+
+    .profile-avatar {
+        /* Keep the profile avatar compact. */
+        width: 34px;
+        height: 34px;
+    }
+}

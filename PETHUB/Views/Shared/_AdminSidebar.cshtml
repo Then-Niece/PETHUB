@@ -20,6 +20,32 @@
 
         </a>
 
+        <a asp-controller="PetFeeds"
+           asp-action="Index"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PetFeed" &&
+                                                              ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+
+            <i data-lucide="shopping-bag"></i>
+
+            <span class="sidebar-text">
+                Pet Feed
+            </span>
+
+        </a>
+
+        <a asp-controller="AdminDashboard"
+           asp-action="Index"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AdminDashboard" &&
+                                                              ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+
+            <i data-lucide="shopping-bag"></i>
+
+            <span class="sidebar-text">
+                Dashboard
+            </span>
+
+        </a>
+
         <a asp-controller="Listings"
            asp-action="Marketplace"
            class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Listings" &&
@@ -77,41 +103,6 @@
 
             <span class="sidebar-text">
                 Admins
-            </span>
-
-        </a>
-
-    </div>
-
-    <hr class="sidebar-divider" />
-
-    <!-- Admin Profile Management -->
-    <div class="sidebar-section">
-
-        <h6 class="sidebar-section-title">
-            Admin Profile Management
-        </h6>
-
-        <a asp-controller="AdminMyProfile"
-           asp-action="View"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AdminMyProfile" ? "active" : "")">
-
-            <i data-lucide="users"></i>
-
-            <span class="sidebar-text">
-                My Profile
-            </span>
-
-        </a>
-
-        <a asp-controller="AdminMyPosts"
-           asp-action="Index"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AdminMyPosts" ? "active" : "")">
-
-            <i data-lucide="user-cog"></i>
-
-            <span class="sidebar-text">
-                My Posts
             </span>
 
         </a>

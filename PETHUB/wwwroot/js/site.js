@@ -1,22 +1,37 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿// ==========================================
+// PETHUB SIDEBAR
+// ==========================================
 
-// Write your JavaScript code.
 document.addEventListener("DOMContentLoaded", function () {
 
-    const toggle = document.getElementById("sidebarToggle");
-    const sidebar = document.getElementById("sidebar-wrapper");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+    const sidebarWrapper = document.getElementById("sidebar-wrapper");
 
-    if (toggle && sidebar) {
+    if (sidebarToggle && sidebarWrapper) {
 
-        toggle.addEventListener("click", function () {
+        const storageKey = "pethubSidebarCollapsed";
+        const savedState = localStorage.getItem(storageKey);
 
-            sidebar.classList.toggle("collapsed");
+        // Sidebar starts open when no previous preference exists.
+        if (savedState === "true") {
+            sidebarWrapper.classList.add("collapsed");
+        } else {
+            sidebarWrapper.classList.remove("collapsed");
+        }
 
+        // Toggle and remember the user's selected state.
+        sidebarToggle.addEventListener("click", function () {
+
+            sidebarWrapper.classList.toggle("collapsed");
+
+            const isCollapsed =
+                sidebarWrapper.classList.contains("collapsed");
+
+            localStorage.setItem(storageKey, isCollapsed);
         });
-
     }
 
+    // Initialize Lucide icons.
     if (window.lucide) {
         lucide.createIcons();
     }
