@@ -408,7 +408,7 @@ namespace PETHUB.Controllers
                 NotificationType.MarketplaceApproved,
                 "Marketplace Listing Approved",
                 "Your listing is now visible in the Marketplace.",
-                report.Images.FirstOrDefault()?.ImagePath,
+                report.Images?.FirstOrDefault()?.ImagePath,
                 "/Listings/Details/" + report.ListingId,
                 listingId: report.ListingId
 );

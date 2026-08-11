@@ -1,258 +1,755 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-@model PETHUB.Models.Listing
+﻿@model PETHUB.Models.Listing
 
 @{
     ViewData["Title"] = "Listing Details";
+
+    // Used to determine whether the dropdown and needs a divider before Delete.
+    bool hasOtherActions =
+        Model.Status == ListApprovalStatus.Pending ||
+        Model.Status == ListApprovalStatus.Rejected ||
+        (
+            Model.Status == ListApprovalStatus.Approved &&
+            Model.ListStatus == ListingStatus.Pending
+        );
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <!-- Left side: image gallery -->
-        <div class="col-md-6">
-            @if (Model.Images != null && Model.Images.Any())
-            {
-                <div id="listingCarousel" class="carousel slide shadow-sm" data-bs-ride="carousel">
-                    <div class="carousel-inner rounded">
-                        @for (int i = 0; i < Model.Images.Count; i++)
-                        {
-                            var img = Model.Images.ElementAt(i);
-                            <div class="carousel-item @(i == 0 ? "active" : "")">
-                                <img src="@img.ImagePath" class="d-block w-100" alt="Listing image" style="height:400px;object-fit:cover;">
-                            </div>
-                        }
+
+<div class="marketplace-details-page">
+
+    <!-- =====================================================
+         MAIN DETAILS LAYOUT
+    ====================================================== -->
+
+    <div class="listing-details-layout">
+
+
+        <!-- =================================================
+             LEFT SIDE
+             IMAGE GALLERY
+        ================================================== -->
+
+        <div class="listing-gallery">
+
+            <div class="listing-main-image">
+
+                @if (Model.Images != null && Model.Images.Any())
+                {
+                    <div id="listingCarousel"
+                         class="carousel slide"
+                         data-bs-ride="carousel">
+
+                        <div class="carousel-inner">
+
+                            @for (int i = 0; i < Model.Images.Count; i++)
+                            {
+                                var img = Model.Images.ElementAt(i);
+
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+
+                                    <img src="@img.ImagePath"
+                                         alt="Listing Image" />
+
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <!-- Previous -->
+
+                        <button class="carousel-control-prev"
+                                type="button"
+                                data-bs-target="#listingCarousel"
+                                data-bs-slide="prev">
+
+                            <span class="carousel-control-prev-icon"></span>
+
+                            <span class="visually-hidden">
+                                Previous
+                            </span>
+
+                        </button>
+
+
+                        <!-- Next -->
+
+                        <button class="carousel-control-next"
+                                type="button"
+                                data-bs-target="#listingCarousel"
+                                data-bs-slide="next">
+
+                            <span class="carousel-control-next-icon"></span>
+
+                            <span class="visually-hidden">
+                                Next
+                            </span>
+
+                        </button>
+
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#listingCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#listingCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            }
-            else
-            {
-                <div class="bg-light text-center py-5 rounded shadow-sm">
-                    <p class="text-muted">No images uploaded for this listing.</p>
-                </div>
-            }
+                }
+                else
+                {
+                    <div class="listing-no-image">
+
+                        <span>
+                            No images uploaded.
+                        </span>
+
+                    </div>
+                }
+
+            </div>
+
         </div>
 
-        <!-- Right side: listing info -->
-        <div class="col-md-5">
-            <div class="card border-0 shadow-sm">
 
-                <div class="card-body">
 
-                    <h2 class="fw-bold">
-                        @Model.Title
-                    </h2>
+        <!-- =================================================
+             RIGHT SIDE
+             OWNER / LISTING DETAILS
+        ================================================== -->
 
-                    <p class="text-muted">
-                        Posted on @Model.DatePosted.ToString("MMMM dd, yyyy")
-                    </p>
+        <div class="listing-info-panel">
 
-                    <hr />
 
-                    <h5>Description</h5>
+            <!-- ======================================================
+                 PROFILE
+            ====================================================== -->
 
-                    <p>
-                        @(string.IsNullOrWhiteSpace(Model.Description)
-                            ? "No description provided."
-                            : Model.Description)
-                    </p>
+            <div class="listing-profile">
 
-                    <hr />
+                <div class="listing-profile-main">
 
-                    <h5>Listing Information</h5>
 
-                    <p>
-                        <strong>Listing Type:</strong>
-                        @(Model.Type == PETHUB.Models.ListType.For_Adoption
-                            ? "For Adoption"
-                            : "For Sale")
-                    </p>
+                    <!-- Avatar -->
 
-                    @if (Model.Type == ListType.For_Adoption)
-                    {
-                        <p>
-                            <strong>Price:</strong>
-                            <span class="text-success fw-bold">
-                                Free for Adoption
+                    <div class="listing-profile-avatar">
+
+                        @(Model.Member?.FirstName?.Substring(0, 1).ToUpper() ?? "U")
+
+                    </div>
+
+
+                    <!-- User Information -->
+
+                    <div class="listing-profile-details">
+
+                        <p class="listing-profile-name">
+
+                            @Model.Member?.FirstName
+                            @Model.Member?.LastName
+
+                        </p>
+
+
+                        <div class="listing-profile-meta">
+
+                            <span>
+                                @Model.DatePosted.ToString("MMMM dd, yyyy")
                             </span>
-                        </p>
-                    }
-                    else
-                    {
-                        <p>
-                            <strong>Price:</strong>
-                            ₱@Model.Price.ToString("N0")
-                        </p>
-                    }
 
-                    <p>
-                        <strong>Pet Type:</strong>
-                        @Model.PetType
-                    </p>
+                            <span>·</span>
 
-                    <p>
-                        <strong>Breed:</strong>
-                        @Model.Breed
-                    </p>
+                            <span>
 
-                    <p>
-                        <strong>Pet Sex:</strong>
-                        @Model.PetSex
-                    </p>
+                                @(Model.Type == ListType.For_Adoption
+                                    ? "For Adoption"
+                                    : "For Sale")
 
-                    <hr />
+                            </span>
 
-                    <h5>Location</h5>
+                        </div>
 
-                    @if (!string.IsNullOrWhiteSpace(Model.StreetAddress))
-                    {
-                        <p>
-                            <strong>Street Address:</strong><br />
-                            @Model.StreetAddress
-                        </p>
-                    }
-
-                    <p>
-                        <strong>Barangay:</strong><br />
-                        @Model.Barangay
-                    </p>
-
-                    <p>
-                        <strong>City:</strong><br />
-                        @Model.City
-                    </p>
-
-                    <p>
-                        <strong>Province:</strong><br />
-                        @Model.Province
-                    </p>
-
-                    <hr />
-                </div>
-
-                <div class="card-body">
-
-                    <h5 class="fw-bold mb-3">
-                        Member Information
-                    </h5>
-
-                    <p>
-                        <strong>Posted by:</strong><br />
-                        @Model.Member?.FirstName
-                        @Model.Member?.LastName
-                    </p>
-
-                    <p>
-                        <strong>Contact Number:</strong><br />
-                        @(string.IsNullOrWhiteSpace(Model.Member?.ContactNumber)
-                            ? "Not Available"
-                            : Model.Member.ContactNumber)
-                    </p>
+                    </div>
 
                 </div>
-                <div class="card-footer d-flex justify-content-center gap-3">
 
-                    @* 
-                        Only show the Edit button if the listing
-                        is still Pending only.
 
-                        Approved listings are locked and can no
-                        longer be modified by members.
-                    *@
 
-                    @if (Model.Status == ListApprovalStatus.Pending)                    {
-                        <a asp-controller="Listings"
-                           asp-action="Edit"
-                           asp-route-id="@Model.ListingId"
-                           class="btn btn-warning">
-                            Edit
-                        </a>
-                    }
+                <!-- ==================================================
+                     THREE DOT MENU
+                ================================================== -->
 
-                    @* Approved listings can be marked as Sold or Adopted. *@
-                    @if (Model.Status == ListApprovalStatus.Approved)
-                    {
-                        @if (Model.ListStatus == ListingStatus.Pending)
+                <div class="listing-more-menu">
+
+
+                    <!-- Three Dot Button -->
+
+                    <button type="button"
+                            class="listing-more-btn"
+                            onclick="this.parentElement.classList.toggle('show')"
+                            aria-label="More options">
+
+                        <i data-lucide="more-horizontal"></i>
+
+                    </button>
+
+
+
+                    <!-- ==================================================
+                         DROPDOWN
+                    ================================================== -->
+
+                    <div class="listing-more-dropdown">
+
+
+                        <!-- ==================================================
+                             EDIT
+                        ================================================== -->
+                        @if (Model.Status == ListApprovalStatus.Pending ||
+                                                     Model.Status == ListApprovalStatus.Rejected)
                         {
-                            if (Model.Type == ListType.For_Sale)
-                            {
-                                <form asp-action="MarkAsSold"
-                                      asp-controller="MyPosts"
-                                      asp-route-id="@Model.ListingId"
-                                      method="post"
-                                      style="display:inline;">
+                            <a asp-controller="Listings"
+                               asp-action="Edit"
+                               asp-route-id="@Model.ListingId">
 
-                                    @Html.AntiForgeryToken()
+                                <i data-lucide="pencil"></i>
 
-                                    <button type="submit" class="btn btn-success">
-                                        Mark as Sold
-                                    </button>
-                                </form>
-                            }
-                            else if (Model.Type == ListType.For_Adoption)
-                            {
-                                <form asp-action="MarkAsAdopted"
-                                      asp-controller="MyPosts"
-                                      asp-route-id="@Model.ListingId"
-                                      method="post"
-                                      style="display:inline;">
+                                <span>
+                                    Edit
+                                </span>
 
-                                    @Html.AntiForgeryToken()
-
-                                    <button type="submit" class="btn btn-success">
-                                        Mark as Adopted
-                                    </button>
-                                </form>
-                            }
+                            </a>
                         }
-                        else if (Model.ListStatus == ListingStatus.Sold)
+
+
+
+                        <!-- ==================================================
+                             MARK AS SOLD
+                        ================================================== -->
+                        @if (Model.Status == ListApprovalStatus.Approved &&
+                                                     Model.ListStatus == ListingStatus.Pending &&
+                                                     Model.Type == ListType.For_Sale)
                         {
-                            <span class="badge bg-success align-self-center">
+                            <form asp-action="MarkAsSold"
+                                  asp-controller="MyPosts"
+                                  asp-route-id="@Model.ListingId"
+                                  method="post">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit">
+
+                                    <i data-lucide="circle-check"></i>
+
+                                    <span>
+                                        Mark as Sold
+                                    </span>
+
+                                </button>
+
+                            </form>
+                        }
+
+
+
+                        <!-- ==================================================
+                             MARK AS ADOPTED
+                        ================================================== -->
+                        @if (Model.Status == ListApprovalStatus.Approved &&
+                                                     Model.ListStatus == ListingStatus.Pending &&
+                                                     Model.Type == ListType.For_Adoption)
+                        {
+                            <form asp-action="MarkAsAdopted"
+                                  asp-controller="MyPosts"
+                                  asp-route-id="@Model.ListingId"
+                                  method="post">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit">
+
+                                    <i data-lucide="heart-handshake"></i>
+
+                                    <span>
+                                        Mark as Adopted
+                                    </span>
+
+                                </button>
+
+                            </form>
+                        }
+
+
+
+                        <!-- ==================================================
+                             DIVIDER - ONLY SHOW IF THERE ARE OTHER ACTIONS
+                        ================================================== -->
+                        @if (hasOtherActions)
+                        {
+                            <div class="menu-divider"></div>
+                        }
+
+
+
+                        <!-- ==================================================
+                             DELETE
+                        ================================================== -->
+
+                        <form asp-action="DeleteMarketplace"
+                              asp-controller="MyPosts"
+                              asp-route-id="@Model.ListingId"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="danger-action">
+
+                                <i data-lucide="trash-2"></i>
+
+                                <span>
+                                    Delete
+                                </span>
+
+                            </button>
+
+                        </form>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ==================================================
+                 PROFILE DIVIDER
+            ================================================== -->
+
+            <div class="listing-profile-divider"></div>
+
+
+
+            <!-- =================================================
+                 TITLE
+            ================================================== -->
+
+            <div class="listing-title-section">
+
+                <h1>
+                    @Model.Title
+                </h1>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ABOUT THIS PET
+            ================================================== -->
+
+            <section class="listing-info-section">
+
+                <h3>
+                    About This Pet
+                </h3>
+
+
+                <p class="listing-description">
+
+                    @(string.IsNullOrWhiteSpace(Model.Description)
+                        ? "No description provided."
+                        : Model.Description)
+
+                </p>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 PET INFORMATION
+            ================================================== -->
+
+            <section class="listing-info-section">
+
+                <h3>
+                    Pet Information
+                </h3>
+
+
+                <div class="pet-information-list">
+
+
+                    <!-- Pet Type -->
+
+                    <div class="pet-information-item">
+
+                        <span class="pet-information-label">
+
+                            <i data-lucide="paw-print"></i>
+
+                        </span>
+
+                        <span class="pet-information-value">
+
+                            @Model.PetType
+
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- Breed -->
+
+                    <div class="pet-information-item">
+
+                        <span class="pet-information-label">
+
+                            <i data-lucide="tag"></i>
+
+                        </span>
+
+                        <span class="pet-information-value">
+
+                            @(string.IsNullOrWhiteSpace(Model.Breed)
+                                ? "Not specified"
+                                : Model.Breed)
+
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- Sex -->
+
+                    <div class="pet-information-item">
+
+                        <span class="pet-information-label">
+
+                            <i data-lucide="venus-and-mars"></i>
+
+                        </span>
+
+                        <span class="pet-information-value">
+
+                            @Model.PetSex
+
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 LOCATION
+            ================================================== -->
+
+            <section class="listing-info-section">
+
+                <h3>
+
+                    <i data-lucide="map-pin"></i>
+
+                    Where to Find
+
+                </h3>
+
+
+                <div class="listing-location-grid">
+
+
+                    <!-- Street Address -->
+
+                    <div class="listing-location-item">
+
+                        <span class="listing-location-label">
+                            Street Address
+                        </span>
+
+                        <span class="listing-location-value">
+
+                            @(string.IsNullOrWhiteSpace(Model.StreetAddress)
+                                ? "Not specified"
+                                : Model.StreetAddress)
+
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- Barangay -->
+
+                    <div class="listing-location-item">
+
+                        <span class="listing-location-label">
+                            Barangay
+                        </span>
+
+                        <span class="listing-location-value">
+
+                            @(string.IsNullOrWhiteSpace(Model.Barangay)
+                                ? "Not specified"
+                                : Model.Barangay)
+
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- City -->
+
+                    <div class="listing-location-item">
+
+                        <span class="listing-location-label">
+                            City
+                        </span>
+
+                        <span class="listing-location-value">
+
+                            @(string.IsNullOrWhiteSpace(Model.City)
+                                ? "Not specified"
+                                : Model.City)
+
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- Province -->
+
+                    <div class="listing-location-item">
+
+                        <span class="listing-location-label">
+                            Province
+                        </span>
+
+                        <span class="listing-location-value">
+
+                            @(string.IsNullOrWhiteSpace(Model.Province)
+                                ? "Not specified"
+                                : Model.Province)
+
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 CONTACT NUMBER
+            ================================================== -->
+
+            <section class="listing-info-section listing-contact-section">
+
+                <h3>
+
+                    <i data-lucide="phone"></i>
+
+                    Contact Number
+
+                </h3>
+
+
+                <p class="listing-contact-number">
+
+                  
+
+                    @(string.IsNullOrWhiteSpace(Model.Member?.ContactNumber)
+                        ? "Not Available"
+                        : Model.Member.ContactNumber)
+
+                </p>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 LISTING STATUS
+            ================================================== -->
+
+            <section class="listing-info-section">
+
+                <h3>
+
+                    <i data-lucide="circle-check"></i>
+
+                    Listing Status
+
+                </h3>
+
+
+                <div class="my-post-status">
+
+
+                    @if (Model.Status == ListApprovalStatus.Pending)
+                    {
+                        <span class="my-post-status-badge pending">
+
+                            Pending Approval
+
+                        </span>
+                    }
+                    else if (Model.Status == ListApprovalStatus.Rejected)
+                    {
+                        <span class="my-post-status-badge rejected">
+
+                            Rejected
+
+                        </span>
+                    }
+                    else if (Model.Status == ListApprovalStatus.Approved)
+                    {
+                        @if (Model.ListStatus == ListingStatus.Sold)
+                        {
+                            <span class="my-post-status-badge completed">
+
                                 Sold
+
                             </span>
                         }
                         else if (Model.ListStatus == ListingStatus.Adopted)
                         {
-                            <span class="badge bg-success align-self-center">
+                            <span class="my-post-status-badge completed">
+
                                 Adopted
+
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="my-post-status-badge approved">
+
+                                Approved
+
                             </span>
                         }
                     }
 
-                    @* Allow the owner to delete the listing regardless of approval status. *@
-                    <form asp-action="DeleteMarketplace"
-                          asp-controller="MyPosts"
-                          asp-route-id="@Model.ListingId"
-                          method="post">
-                        
- 
-                        @Html.AntiForgeryToken()
 
-                        <button type="submit" class="btn btn-danger px-4">
-                            Delete
-                        </button>
-                    </form>
+                </div>
 
-                    @* Return to the owner's My Posts page. *@
-                    <a asp-action="Index"
-                       asp-controller="MyPosts"
-                       class="btn btn-secondary px-4">
-                        ← Back to My Posts
-                    </a>
+            </section>
 
-                </div>            
+
+
+            <!-- ======================================================
+                 BACK TO MY POSTS
+
+WIDE + CENTERED INSIDE RIGHT PANEL
+            ====================================================== -->
+
+            <div class="my-post-back-container">
+
+                <a asp-action="Index"
+                   asp-controller="MyPosts"
+                   class="my-post-back-btn">
+
+                    <i data-lucide="arrow-left"></i>
+
+                    <span>
+                        Back to My Posts
+                    </span>
+
+                </a>
+
             </div>
+
+
         </div>
+
     </div>
+
 </div>
+
+
+
+<!-- ==========================================================
+     LUCIDE ICON INITIALIZATION
+========================================================== -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        if (typeof lucide !== "undefined") {
+
+            lucide.createIcons();
+
+        }
+
+    });
+
+</script>
+
+
+
+<!-- ==========================================================
+     CLOSE DROPDOWN WHEN RIGHT PANEL IS SCROLLED
+========================================================== -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const detailsPanel =
+            document.querySelector(".listing-info-panel");
+
+        if (detailsPanel) {
+
+            detailsPanel.addEventListener("scroll", function() {
+
+                const menu =
+                    document.querySelector(".listing-more-menu");
+
+                if (menu) {
+
+                    menu.classList.remove("show");
+
+                }
+
+            });
+
+        }
+
+    });
+
+</script>
+
+
+
+<!-- ==========================================================
+     CLOSE DROPDOWN WHEN CLICKING OUTSIDE
+========================================================== -->
+
+<script>
+
+    document.addEventListener("click", function(event) {
+
+        const menu =
+            document.querySelector(".listing-more-menu");
+
+        if (!menu) {
+            return;
+        }
+
+
+        if (!event.target.closest(".listing-more-menu")) {
+
+            menu.classList.remove("show");
+
+        }
+
+    });
+
+</script>
