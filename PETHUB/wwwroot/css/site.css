@@ -344,7 +344,6 @@ a {
     height: calc(100% - 45px);
     margin-left: 5px;
     color: #8ACE79;
-    border-right: 2px solid #8ACE79;
 }
 
 #mainContent {
