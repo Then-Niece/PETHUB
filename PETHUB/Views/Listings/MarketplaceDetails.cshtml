@@ -4,19 +4,46 @@
     ViewData["Title"] = "Listing Details";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
+<div class="marketplace-details-page">
 
-        <!-- Left Side: Image Gallery -->
-        <div class="col-md-6">
+    <!-- ==========================================================
+         BACK TO MARKETPLACE
+    =========================================================== -->
+
+    <div class="mb-3">
+        <a asp-action="Marketplace"
+           class="text-decoration-none">
+            ← Back to Marketplace
+        </a>
+    </div>
+
+
+    <!-- ==========================================================
+         MAIN LISTING LAYOUT
+         LEFT  = IMAGE GALLERY
+         RIGHT = LISTING INFORMATION
+    =========================================================== -->
+
+    <div class="listing-details-layout">
+
+
+        <!-- ======================================================
+             LEFT SIDE - IMAGE GALLERY
+        ======================================================= -->
+
+        <div class="listing-gallery">
 
             @if (Model.Images != null && Model.Images.Any())
             {
+                <!-- ==================================================
+                     MAIN IMAGE CAROUSEL
+                =================================================== -->
+
                 <div id="listingCarousel"
-                     class="carousel slide shadow-sm"
+                     class="carousel slide listing-main-image"
                      data-bs-ride="carousel">
 
-                    <div class="carousel-inner rounded">
+                    <div class="carousel-inner">
 
                         @for (int i = 0; i < Model.Images.Count; i++)
                         {
@@ -26,13 +53,15 @@
 
                                 <img src="@img.ImagePath"
                                      class="d-block w-100"
-                                     alt="Listing Image"
-                                     style="height:400px; object-fit:cover;" />
+                                     alt="Listing Image @(i + 1)" />
 
                             </div>
                         }
 
                     </div>
+
+
+                    <!-- Previous Button -->
 
                     <button class="carousel-control-prev"
                             type="button"
@@ -40,9 +69,15 @@
                             data-bs-slide="prev">
 
                         <span class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
+
+                        <span class="visually-hidden">
+                            Previous
+                        </span>
 
                     </button>
+
+
+                    <!-- Next Button -->
 
                     <button class="carousel-control-next"
                             type="button"
@@ -50,161 +85,473 @@
                             data-bs-slide="next">
 
                         <span class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
+
+                        <span class="visually-hidden">
+                            Next
+                        </span>
 
                     </button>
+
+                </div>
+
+
+                <!-- ==================================================
+                     IMAGE THUMBNAILS
+                =================================================== -->
+
+                <div class="listing-thumbnail-grid">
+
+                    @for (int i = 0; i < Model.Images.Count; i++)
+                    {
+                        var img = Model.Images.ElementAt(i);
+
+                        <button type="button"
+                                class="listing-thumbnail @(i == 0 ? "active" : "")"
+                                data-bs-target="#listingCarousel"
+                                data-bs-slide-to="@i"
+                                aria-label="View image @(i + 1)">
+
+                            <img src="@img.ImagePath"
+                                 alt="Listing Image @(i + 1)" />
+
+                        </button>
+                    }
 
                 </div>
             }
             else
             {
-                <div class="bg-light rounded shadow-sm d-flex justify-content-center align-items-center"
-                     style="height:400px;">
+                <!-- ==================================================
+                     NO IMAGE
+                =================================================== -->
 
-                    <p class="text-muted mb-0">
+                <div class="listing-no-image">
+
+                    <span>
                         No images uploaded.
-                    </p>
+                    </span>
 
                 </div>
             }
 
         </div>
 
-        <!-- Right Side: Listing Details -->
-        <div class="col-md-5">
 
-            <div class="card border-0 shadow-sm">
+        <!-- ======================================================
+             RIGHT SIDE - LISTING INFORMATION
+        ======================================================= -->
 
-                <div class="card-body">
+        <div class="listing-info-panel">
 
-                    <h2 class="fw-bold">
-                        @Model.Title
-                    </h2>
 
-                    <p class="text-muted">
-                        Posted on @Model.DatePosted.ToString("MMMM dd, yyyy")
-                    </p>
+            <!-- ==================================================
+                 PROFILE
+            =================================================== -->
 
-                    <hr />
+            <div class="listing-profile">
 
-                    <h5>Description</h5>
+                <div class="listing-profile-main">
 
-                    <p>
-                        @(string.IsNullOrWhiteSpace(Model.Description)
-                            ? "No description provided."
-                            : Model.Description)
-                    </p>
+                    <div class="listing-profile-avatar">
 
-                    <hr />
+                        @if (!string.IsNullOrWhiteSpace(Model.Member?.FirstName))
+                        {
+                            @Model.Member.FirstName.Substring(0, 1).ToUpper()
+                        }
+                        else
+                        {
+                            <span>U</span>
+                        }
 
-                    <h5>Listing Information</h5>
+                    </div>
 
-                    <p>
-                        <strong>Listing Type:</strong>
-                        @(Model.Type == PETHUB.Models.ListType.For_Adoption
-                            ? "For Adoption"
-                            : "For Sale")
-                    </p>
+                    <div class="listing-profile-details">
 
-                    @if (Model.Type == PETHUB.Models.ListType.For_Adoption)
-                    {
-                        <p>
-                            <strong>Price:</strong>
-                            <span class="text-success fw-bold">
-                                Free for Adoption
+                        <div class="listing-profile-name">
+                            @Model.Member?.FirstName
+                            @Model.Member?.LastName
+                        </div>
+
+                        <div class="listing-profile-meta">
+
+                            <span>
+                                @Model.DatePosted.ToString("MMMM dd, yyyy")
                             </span>
-                        </p>
-                    }
-                    else
-                    {
-                        <p>
-                            <strong>Price:</strong>
-                            ₱@Model.Price.ToString("N0")
-                        </p>
-                    }
 
-                    <p>
-                        <strong>Pet Type:</strong>
-                        @Model.PetType
-                    </p>
+                            <span>·</span>
 
-                    <p>
-                        <strong>Breed:</strong>
-                        @Model.Breed
-                    </p>
+                            <span>
+                                @(Model.Type == ListType.For_Adoption
+                                    ? "For Adoption"
+                                    : "For Sale")
+                            </span>
 
-                    <p>
-                        <strong>Pet Sex:</strong>
-                        @Model.PetSex
-                    </p>
+                        </div>
 
-                    <hr />
-
-                    <h5>Location</h5>
-
-                    @if (!string.IsNullOrWhiteSpace(Model.StreetAddress))
-                    {
-                        <p>
-                            <strong>Street Address:</strong><br />
-                            @Model.StreetAddress
-                        </p>
-                    }
-
-                    <p>
-                        <strong>Barangay:</strong><br />
-                        @Model.Barangay
-                    </p>
-
-                    <p>
-                        <strong>City:</strong><br />
-                        @Model.City
-                    </p>
-
-                    <p>
-                        <strong>Province:</strong><br />
-                        @Model.Province
-                    </p>
-
-                    <hr />
+                    </div>
 
                 </div>
 
-                <!-- Member Information -->
-                <div class="card-body">
 
-                    <h5 class="fw-bold mb-3">
-                        Member Information
-                    </h5>
+                <!-- THREE DOTS -->
 
-                    <p>
-                        <strong>Posted by:</strong><br />
-                        @Model.Member?.FirstName
-                        @Model.Member?.LastName
-                    </p>
+                <div class="listing-more-menu">
 
-                    <p>
-                        <strong>Contact Number:</strong><br />
-                        @(string.IsNullOrWhiteSpace(Model.Member?.ContactNumber)
-                            ? "Not Available"
-                            : Model.Member.ContactNumber)
-                    </p>
+                    <button type="button"
+                            class="listing-more-btn"
+                            aria-label="More options"
+                            onclick="this.parentElement.classList.toggle('show')">
+
+                        <i data-lucide="more-horizontal"></i>
+
+                    </button>
+
+
+                    <div class="listing-more-dropdown">
+
+                        <button type="button">
+                            <i data-lucide="link"></i>
+                            <span>Copy Link</span>
+                        </button>
+
+                        <button type="button">
+                            <i data-lucide="share-2"></i>
+                            <span>Share Listing</span>
+                        </button>
+
+                        <div class="menu-divider"></div>
+
+                        <button type="button"
+                                class="danger-action">
+
+                            <i data-lucide="flag"></i>
+
+                            <span>Report Listing</span>
+
+                        </button>
+
+                    </div>
 
                 </div>
 
-                <div class="card-footer d-flex justify-content-center">
+            </div>
 
-                    <a asp-action="Marketplace"
-                       class="btn btn-secondary px-4">
 
-                        ← Back to Marketplace
+            <!-- ==================================================
+                 PROFILE DIVIDER
+            =================================================== -->
 
-                    </a>
+            <div class="listing-profile-divider"></div>
+
+
+            <!-- ==================================================
+                 TITLE
+            =================================================== -->
+
+            <div class="listing-title-section">
+
+                <h1>
+                    @Model.Title
+                </h1>
+
+            </div>
+
+
+            <!-- ==================================================
+                 ABOUT THIS PET
+            =================================================== -->
+
+            <section class="listing-info-section">
+
+                <h3>
+                    About This Pet
+                </h3>
+
+                <p class="listing-description">
+                    @(string.IsNullOrWhiteSpace(Model.Description)
+                        ? "No description provided."
+                        : Model.Description)
+                </p>
+
+            </section>
+
+
+            <!-- ==================================================
+                 PET INFORMATION
+            =================================================== -->
+
+            <section class="listing-info-section">
+
+                <h3>
+                    Pet Information
+                </h3>
+
+
+                <div class="pet-information-list">
+
+
+                    <!-- Pet Type -->
+
+                    <div class="pet-information-item">
+
+                        <span class="pet-information-label">
+
+                            <i data-lucide="paw-print"></i>
+
+                            Pet Type
+
+                        </span>
+
+                        <span class="pet-information-value">
+                            @Model.PetType
+                        </span>
+
+                    </div>
+
+
+                    <!-- Breed -->
+
+                    <div class="pet-information-item">
+
+                        <span class="pet-information-label">
+
+                            <i data-lucide="tag"></i>
+
+                            Breed
+
+                        </span>
+
+                        <span class="pet-information-value">
+                            @Model.Breed
+                        </span>
+
+                    </div>
+
+
+                    <!-- Sex -->
+
+                    <div class="pet-information-item">
+
+                        <span class="pet-information-label">
+
+                            <i data-lucide="venus-and-mars"></i>
+
+                            Sex
+
+                        </span>
+
+                        <span class="pet-information-value">
+                            @Model.PetSex
+                        </span>
+
+                    </div>
 
                 </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 LOCATION
+            =================================================== -->
+
+            <section class="listing-info-section">
+
+                <h3>
+
+                    <i data-lucide="map-pin"></i>
+
+                    WHERE TO FIND
+
+                </h3>
+
+
+                <div class="listing-location-grid">
+
+
+                    <!-- Street Address -->
+
+                    <div class="listing-location-item">
+
+                        <span class="listing-location-label">
+                            Street Address
+                        </span>
+
+                        <span class="listing-location-value">
+                            @(string.IsNullOrWhiteSpace(Model.StreetAddress)
+                                ? "Not specified"
+                                : Model.StreetAddress)
+                        </span>
+
+                    </div>
+
+
+                    <!-- Barangay -->
+
+                    <div class="listing-location-item">
+
+                        <span class="listing-location-label">
+                            Barangay
+                        </span>
+
+                        <span class="listing-location-value">
+                            @(string.IsNullOrWhiteSpace(Model.Barangay)
+                                ? "Not specified"
+                                : Model.Barangay)
+                        </span>
+
+                    </div>
+
+
+                    <!-- City -->
+
+                    <div class="listing-location-item">
+
+                        <span class="listing-location-label">
+                            City
+                        </span>
+
+                        <span class="listing-location-value">
+                            @(string.IsNullOrWhiteSpace(Model.City)
+                                ? "Not specified"
+                                : Model.City)
+                        </span>
+
+                    </div>
+
+
+                    <!-- Province -->
+
+                    <div class="listing-location-item">
+
+                        <span class="listing-location-label">
+                            Province
+                        </span>
+
+                        <span class="listing-location-value">
+                            @(string.IsNullOrWhiteSpace(Model.Province)
+                                ? "Not specified"
+                                : Model.Province)
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 CONTACT NUMBER
+            =================================================== -->
+
+            <section class="listing-info-section listing-contact-section">
+
+                <h3>
+
+                    <i data-lucide="phone"></i>
+
+                    Contact Number
+
+                </h3>
+
+                <p class="listing-contact-number">
+
+                  
+
+                    @(string.IsNullOrWhiteSpace(Model.Member?.ContactNumber)
+                        ? "Not Available"
+                        : Model.Member.ContactNumber)
+
+                </p>
+
+            </section>
+
+
+            <!-- ==================================================
+                 ACTION BUTTONS
+            =================================================== -->
+
+            <div class="listing-actions">
+
+
+                <!-- Message -->
+
+                <button type="button"
+                        class="btn listing-message-btn">
+
+                    <i data-lucide="message-circle"></i>
+
+                    <span>
+                        Message Me
+                    </span>
+
+                </button>
+
+
+                <!-- Favorite -->
+
+                <button type="button"
+                        class="btn listing-favorite-btn"
+                        aria-label="Add to favorites">
+
+                    <i data-lucide="heart"></i>
+
+                </button>
 
             </div>
 
         </div>
 
     </div>
+
 </div>
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const moreMenu =
+            document.querySelector(".listing-more-menu");
+
+        const infoPanel =
+            document.querySelector(".listing-info-panel");
+
+
+        /* ==================================================
+           CLOSE WHEN CLICKING OUTSIDE
+        ================================================== */
+
+        document.addEventListener("click", function(event) {
+
+            if (!moreMenu) {
+                return;
+            }
+
+            if (!event.target.closest(".listing-more-menu")) {
+
+                moreMenu.classList.remove("show");
+
+            }
+
+        });
+
+
+        /* ==================================================
+           CLOSE WHEN RIGHT PANEL IS SCROLLED
+        ================================================== */
+
+        if (infoPanel && moreMenu) {
+
+            infoPanel.addEventListener("scroll", function() {
+
+                moreMenu.classList.remove("show");
+
+            });
+
+        }
+
+    });
+
+</script>
