@@ -11,16 +11,16 @@
 #sidebar-wrapper {
     width: 250px;
     flex-shrink: 0;
-    transition: width .3s ease;
     border-right: 1px solid #E5E7EB;
     background: #fff;
-    /* Keeps the sidebar in place while main content scrolls. */
     position: sticky;
     top: 72px;
     height: calc(100vh - 72px);
     max-height: calc(100vh - 72px);
     align-self: flex-start;
     box-sizing: border-box;
+    /* Sidebar animation */
+    transition: width .3s ease;
 }
 
     #sidebar-wrapper.collapsed {
