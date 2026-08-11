@@ -1,36 +1,13 @@
 @model IEnumerable<PETHUB.Models.LostFound>
+@using PETHUB.Helpers
 
 @{
     ViewData["Title"] = "Lost & Found Reports";
 }
 
+<h1>Lost & Found Approval</h1>
 
-<div class="mb-3">
-
-    <a asp-action="Index"
-       class="btn btn-secondary">
-        All
-    </a>
-
-    <a asp-action="Index"
-       asp-route-status="Pending"
-       class="btn btn-warning">
-        Pending
-    </a>
-
-    <a asp-action="Index"
-       asp-route-status="Approved"
-       class="btn btn-success">
-        Approved
-    </a>
-
-    <a asp-action="Index"
-       asp-route-status="Rejected"
-       class="btn btn-danger">
-        Rejected
-    </a>
-
-</div>
+<partial name="Components/_FilterBar" model="FilterBarHelper.Status()"/>
 
 <div class="container">
     @foreach (var item in Model)

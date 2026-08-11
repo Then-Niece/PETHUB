@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.WebUtilities
+@model PETHUB.ViewModels.FilterBarViewModel
+
+@{
+    // Read the current controller from the page route.
+    // This allows the same partial to work on different controllers without
+    // hard-coding a controller name into the reusable component.
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+
+    // Read the current action from the page route.
+    // This normally resolves to "Index" on the approval pages.
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+
+    // Copy the current query-string values so other filters can be preserved.
+    // This becomes useful later when a page has more than one filter.
+    var queryParameters = Context.Request.Query
+        .ToDictionary(
+            item => item.Key,
+            item => item.Value.ToString()
+        );
+
+    // Remove the current filter's old value before adding the newly selected value.
+    // This prevents the URL from containing multiple values for the same filter.
+    queryParameters.Remove(Model.ParameterName);
+}
+
+<div class="mb-3">
+    @foreach (var option in Model.Options)
+    {
+        // Start with the current page route, such as /Listings/Index.
+        var url = Url.Action(action, controller) ?? "#";
+
+        // "All" uses an empty value, so the parameter remains removed.
+        // Other options add their selected value to the query string.
+        if (!string.IsNullOrWhiteSpace(option.Value))
+        {
+            queryParameters[Model.ParameterName] = option.Value;
+        }
+
+        // Build the final URL while preserving any other active query parameters.
+        var filterUrl = QueryHelpers.AddQueryString(url, queryParameters);
+
+        <a href="@filterUrl" class="btn @option.CssClass">
+            @option.Label
+        </a>
+
+        // Remove the value again before the next option is generated.
+        // Otherwise every following button would inherit the previous option's value.
+        queryParameters.Remove(Model.ParameterName);
+    }
+</div>
