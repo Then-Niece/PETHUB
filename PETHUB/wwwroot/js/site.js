@@ -50,7 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
         requestAnimationFrame(function () {
 
             document.documentElement.classList.remove(
-                "sidebar-loading"
+                "sidebar-loading",
+                "sidebar-collapsed"
             );
 
         });
