@@ -13,6 +13,7 @@
         public string? RedirectUrl { get; set; }
 
         public bool IsRead { get; set; }
+        public bool IsSeen { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

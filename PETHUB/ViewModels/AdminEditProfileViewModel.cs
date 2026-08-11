@@ -72,5 +72,7 @@ namespace PETHUB.ViewModels
 
         // Total Pet Tip posts created by this administrator.
         public int PetTipsCount { get; set; }
+
+        public bool RemoveProfilePicture { get; set; }
     }
 }

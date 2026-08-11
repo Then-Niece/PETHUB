@@ -259,33 +259,42 @@
                 <!-- Right Side -->
                 <div class="navbar-actions">
 
-                    <button class="navbar-icon-btn ">
+                    <!-- Messages -->
+                    <button class="navbar-icon-btn">
                         <i data-lucide="message-circle"></i>
                     </button>
 
+
+                    <!-- Notifications -->
                     <div class="dropdown">
 
-                    <button class="navbar-icon-btn position-relative"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                        <button class="navbar-icon-btn position-relative"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
 
-                        <i data-lucide="bell"></i>
+                            <i data-lucide="bell"></i>
 
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            3
-                        </span>
+                            <!-- Unread notification count -->
+                            <span id="notificationBadge"
+                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                  style="display: none;">
+                                0
+                            </span>
 
-                    </button>
+                        </button>
 
 
-                    <div class="dropdown-menu dropdown-menu-end notification-dropdown shadow">
+                        <!-- Notification Dropdown -->
+                        <div class="dropdown-menu dropdown-menu-end notification-dropdown shadow">
 
-                        @await Component.InvokeAsync("Notification")
+                            @await Component.InvokeAsync("Notification")
+
+                        </div>
 
                     </div>
 
-                </div>
+            
 
                     <!-- Profile -->
                     <div class="dropdown">

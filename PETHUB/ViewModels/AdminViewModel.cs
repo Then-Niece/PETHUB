@@ -20,6 +20,8 @@ namespace PETHUB.ViewModels
         public string ContactNumber { get; set; }
         public UserStatus Status { get; set; } = UserStatus.Active;
 
+        
+
     }
 
 

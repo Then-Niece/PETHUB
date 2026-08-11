@@ -21,11 +21,12 @@ public class NotificationsController : Controller
         _userManager = userManager;
     }
 
-
+    
     public async Task<IActionResult> GetNotifications()
     {
         var userId = _userManager.GetUserId(User);
 
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
         var notifications = await _context.Notifications
             .Where(n => n.UserId == userId)
@@ -39,14 +40,114 @@ public class NotificationsController : Controller
                 ImagePath = n.ImagePath,
                 RedirectUrl = n.RedirectUrl,
                 IsRead = n.IsRead,
+                IsSeen = n.IsSeen,
                 CreatedAt = n.CreatedAt
             })
             .ToListAsync();
 
+        //  Mark notification as seen when they are loaded
+        var unseenNotifications = await _context.Notifications
+            .Where(n => n.UserId == userId && !n.IsSeen)
+            .ToListAsync();
 
-        return PartialView(
-            "_NotificationDropdown",
-            notifications
-        );
+        foreach (var notification in unseenNotifications)
+        {
+            notification.IsSeen = true;
+        }
+
+        if (unseenNotifications.Count > 0)
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        return PartialView("_NotificationDropdown", notifications);
+    }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> MarkNotificationSeen(int id)
+    {
+        var userId = _userManager.GetUserId(User);
+
+        var notification = await _context.Notifications
+            .FirstOrDefaultAsync(n =>
+                n.NotificationId == id &&
+                n.UserId == userId);
+
+        if (notification == null)
+            return NotFound();
+
+        notification.IsSeen = true;
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> MarkNotificationRead(int id)
+    {
+        var userId = _userManager.GetUserId(User);
+
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var notification = await _context.Notifications
+            .FirstOrDefaultAsync(n =>
+                n.NotificationId == id &&
+                n.UserId == userId);
+
+        if (notification == null)
+            return NotFound();
+
+        notification.IsRead = true;
+        notification.IsSeen = true;
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteNotification(int id)
+    {
+        var userId = _userManager.GetUserId(User);
+
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var notification = await _context.Notifications
+            .FirstOrDefaultAsync(n =>
+                n.NotificationId == id &&
+                n.UserId == userId);
+
+        if (notification == null)
+            return NotFound();
+
+        _context.Notifications.Remove(notification);
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> GetUnreadNotificationCount()
+    {
+        var userId = _userManager.GetUserId(User);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var count = await _context.Notifications
+            .CountAsync(n =>
+                n.UserId == userId &&
+                !n.IsRead);
+
+        return Json(count);
     }
 }

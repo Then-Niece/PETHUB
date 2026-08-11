@@ -145,6 +145,13 @@ namespace PETHUB.Controllers
                 _context.PetFeedImages.RemoveRange(petfeed.Images);
             }
 
+            // Delete all notifications related to the PetFeed being deleted.
+            var notifications = await _context.Notifications
+                .Where(n => n.PetFeedId == petfeed.PetFeedId)
+                .ToListAsync();
+
+            _context.Notifications.RemoveRange(notifications);
+
             // Remove the PetFeed record.
             _context.PetFeeds.Remove(petfeed);
 

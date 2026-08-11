@@ -19,6 +19,13 @@
                 "uploads",
                 "memberids");
 
+            // Create the folder if it doesn't exist.
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+
             // Full physical path
             var fullPath = Path.Combine(folder, fileName);
 

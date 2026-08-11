@@ -537,8 +537,10 @@
             <div class="col-lg-4 col-md-6">
 
                 <a asp-controller="PetFeeds"
-                   asp-action="Feed"
-                   class="text-decoration-none text-dark">
+                    asp-action="Feed"
+                    asp-route-postId="@item.PetFeedId"
+                    asp-fragment="post-@item.PetFeedId"
+                    class="text-decoration-none text-dark">
 
                     <div class="card marketplace-card h-100 border-0 shadow-sm">
 

@@ -61,6 +61,9 @@ namespace PETHUB.Models
         // Read status
         public bool IsRead { get; set; } = false;
 
+        // Seen status
+        public bool IsSeen { get; set; } = false;
+
         // Created date
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
