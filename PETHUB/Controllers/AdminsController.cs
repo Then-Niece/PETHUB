@@ -82,10 +82,6 @@ namespace PETHUB.Controllers
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    Province = model.Province,
-                    City = model.City,
-                    Barangay = model.Barangay,
-                    StreetAddress = model.StreetAddress,
                     ContactNumber = model.ContactNumber,
                     Status = UserStatus.Active
                 };

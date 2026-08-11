@@ -541,3 +541,101 @@ a {
             color: #8ACE79;
         }
 
+
+
+
+
+
+
+/* Notification bell */
+.notification-bell {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: #eef9e9;
+    color: #7acb63;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+/* Red notification number */
+.notification-badge {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    min-width: 20px;
+    height: 20px;
+    padding: 2px 5px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
+    /* Hide badge when count is 0 */
+    .notification-badge:empty {
+        display: none;
+    }
+
+
+/* Notification dropdown */
+.notification-dropdown {
+    width: 600px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 0;
+    border-radius: 8px;
+}
+
+
+/* Individual notification */
+.notification-item {
+    position: relative;
+    padding: 18px;
+    border-bottom: 1px solid #eee;
+}
+
+
+/* Delete button */
+.delete-notification {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important;
+    background: transparent;
+    color: #dc3545 !important;
+    font-size: 16px;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+    .delete-notification:hover {
+        opacity: 1;
+        background: #ffeaea !important;
+        border-radius: 50%;
+    }
+
+
+/* Unread notification */
+.notification-item.unread {
+    background-color: #f5fbf3;
+}
+
+
+/* Notification link */
+.notification-link {
+    display: block;
+}

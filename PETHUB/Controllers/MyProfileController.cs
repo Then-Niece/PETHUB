@@ -1,105 +1,112 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PETHUB.Data;
+using PETHUB.Helpers;
 using PETHUB.Models;
 using PETHUB.Services;
 using PETHUB.ViewModels;
 
 namespace PETHUB.Controllers
 {
-
     // Only authenticated users can access this controller.
     [Authorize]
     public class MyProfileController : Controller
     {
+        // ==========================================================
+        // DEPENDENCIES
+        // ==========================================================
 
         // Provides access to the currently logged-in Identity user.
         private readonly UserManager<ApplicationUser> _userManager;
 
-        // Provides access to the application's database.
-        private readonly ApplicationDbContext _context;
-
-        // Provides access to the web hosting environment, useful for file uploads.
+        // Provides access to the web hosting environment.
+        // This is needed by ProfilePictureHelper when managing files.
         private readonly IWebHostEnvironment _environment;
+
+        // Provides Member profile-building logic.
         private readonly IProfileService _profileService;
 
-        // Relative folder inside wwwroot where Member Valid IDs are stored.
-        private const string ProfilePictureFolder = "uploads/profilepictures";
 
-        // URL prefix used to access uploaded Member Valid IDs.
-        private const string ProfilePictureUrlPrefix = "/uploads/profilepictures/";
+        // ==========================================================
+        // CONSTRUCTOR
+        // ==========================================================
 
-        // Relative folder inside wwwroot where Member Valid IDs are stored.
-        private const string MemberIdFolder = "uploads/memberids";
-
-        // URL prefix used to access uploaded Member Valid IDs.
-        private const string MemberIdUrlPrefix = "/uploads/memberids/";
-
-
-        // Receives required services through Dependency Injection.
-        // ASP.NET Core automatically provides these services at runtime.
-        public MyProfileController(
-            UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context,
-            IWebHostEnvironment environment,
-            IProfileService profileService)
+        public MyProfileController(UserManager<ApplicationUser> userManager, IWebHostEnvironment environment, IProfileService profileService)
         {
             _userManager = userManager;
-            _context = context;
             _environment = environment;
             _profileService = profileService;
         }
 
-        //Get and Display the currently logged-in user's profile information(read-only).
+        // ==========================================================
+        // VIEW PROFILE
+        // ==========================================================
+
+        // Displays the currently logged-in Member's profile.
         [HttpGet]
         public async Task<IActionResult> View()
         {
+            // Retrieve the currently logged-in user.
             var user = await _userManager.GetUserAsync(User);
 
+            // Make sure the user exists.
             if (user == null)
             {
                 return Unauthorized();
             }
 
+            // Build and display the profile ViewModel.
             return View(await _profileService.BuildProfileViewModelAsync(user));
         }
 
-        // Displays the Edit My Profile page for the currently logged-in user.
-        // This action retrieves the user's information from the database
-        // and maps it into the EditProfileViewModel.
+
+        // ==========================================================
+        // EDIT PROFILE - GET
+        // ==========================================================
+
+        // Displays the Edit Profile page.
         [HttpGet]
         public async Task<IActionResult> Edit()
         {
-            // Retrieves the currently authenticated user.
-            // If no user is found, return Unauthorized.
+            // Retrieve the currently logged-in user.
             var user = await _userManager.GetUserAsync(User);
 
+            // Make sure the user exists.
             if (user == null)
             {
                 return Unauthorized();
             }
 
-            // Send the populated ViewModel to the view.
+            // Build the Edit Profile ViewModel.
             return View(await _profileService.BuildProfileViewModelAsync(user));
         }
 
-        // Handles the submission of the Edit My Profile form.
-        // Receives the values entered by the user from the EditProfileViewModel.
+
+        // ==========================================================
+        // EDIT PROFILE - POST
+        // ==========================================================
+
+        // Handles the submitted Edit Profile form.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditProfileViewModel model)
         {
-            // Check if the submitted model passed validation.
-            // If validation fails, redisplay the page with the entered values.
+            // ======================================================
+            // MODEL VALIDATION
+            // ======================================================
+
+            // Check whether the submitted model passed validation.
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            // Retrieve the currently logged-in user.
-            // This ensures users can only edit their own profile.
+
+            // ======================================================
+            // GET CURRENT USER
+            // ======================================================
+
+            // Retrieve the currently logged-in Member.
             var user = await _userManager.GetUserAsync(User);
 
             if (user == null)
@@ -108,90 +115,105 @@ namespace PETHUB.Controllers
             }
 
 
-            // ==========================================================
-            // PROFILE PICTURE UPLOAD
-            // ==========================================================
+            // ======================================================
+            // CURRENT FILE PATHS
+            // ======================================================
 
-            // Stores the current profile picture path.
+            // Start by keeping the current profile picture.
+            //
+            // If the user does nothing with the profile picture,
+            // this value will remain unchanged.
             string? newProfilePicturePath = user.ProfilePicturePath;
 
-            // Stores the current Valid ID path.
-            // If the user does not upload a new ID, we'll keep this existing value.
+
+            // Start by keeping the current Valid ID.
+            //
+            // If the user does not upload a new Valid ID,
+            // this value will remain unchanged.
             string? newIdPhotoPath = user.IdPhotoPath;
-            // Check whether the user selected a new profile picture.
-            if (model.ProfilePictureFile != null)
+
+
+            // ======================================================
+            // PROFILE PICTURE
+            // ======================================================
+
+
+            // ------------------------------------------------------
+            // CASE 1:
+            // User clicked "Remove Profile Picture"
+            // ------------------------------------------------------
+
+            if (model.RemoveProfilePicture)
             {
-                // Allowed image extensions.
-                string[] allowedExtensions =
-                {
-                    ".jpg",
-                    ".jpeg",
-                    ".png",
-                    ".webp"
-                };
+                // Delete the existing physical profile picture.
+                ProfilePictureHelper.DeleteProfilePicture(
+                    user.ProfilePicturePath,
+                    _environment.WebRootPath
+                );
 
-                // Gets the uploaded file extension.
-                string extension = Path.GetExtension(model.ProfilePictureFile.FileName)
-                                       .ToLowerInvariant();
-
-                // Reject unsupported image types.
-                if (!allowedExtensions.Contains(extension))
-                {
-                    ModelState.AddModelError(
-                        nameof(model.ProfilePictureFile),
-                        "Only JPG, JPEG, PNG, and WEBP files are allowed.");
-
-                    return View(model);
-                }
-
-                // Maximum upload size (5 MB).
-                const long maxFileSize = 5 * 1024 * 1024;
-
-                // Reject files larger than the limit.
-                if (model.ProfilePictureFile.Length > maxFileSize)
-                {
-                    ModelState.AddModelError(
-                        nameof(model.ProfilePictureFile),
-                        "Profile picture cannot exceed 5 MB.");
-
-                    return View(model);
-                }
-
-                string uploadsFolderPath = Path.Combine(
-                    _environment.WebRootPath,
-                    ProfilePictureFolder);
-
-                string uniqueFileName = $"{Guid.NewGuid()}{extension}";
-                string physicalFilePath = Path.Combine(uploadsFolderPath, uniqueFileName);
-
-                using (var fileStream = new FileStream(physicalFilePath, FileMode.Create))
-                {
-                    await model.ProfilePictureFile.CopyToAsync(fileStream);
-                }
-
-                if (!string.IsNullOrEmpty(user.ProfilePicturePath) &&
-                    user.ProfilePicturePath.StartsWith(ProfilePictureUrlPrefix, StringComparison.OrdinalIgnoreCase))
-                {
-                    string oldFileName = Path.GetFileName(user.ProfilePicturePath);
-                    string oldPhysicalPath = Path.Combine(uploadsFolderPath, oldFileName);
-
-                    if (System.IO.File.Exists(oldPhysicalPath))
-                    {
-                        System.IO.File.Delete(oldPhysicalPath);
-                    }
-                }
-
-                newProfilePicturePath = ProfilePictureUrlPrefix + uniqueFileName;
+                // Remove the profile picture path from the database.
+                newProfilePicturePath = null;
             }
 
-            // ==========================================================
-            // MEMBER VALID ID UPLOAD
-            // ==========================================================
 
-            // Only process if the user selected a new Valid ID.
+            // ------------------------------------------------------
+            // CASE 2:
+            // User selected a NEW profile picture
+            // ------------------------------------------------------
+
+            else if (model.ProfilePictureFile != null)
+            {
+                // Validate the selected profile picture.
+                string? validationError =
+                    ProfilePictureHelper.ValidateProfilePicture(
+                        model.ProfilePictureFile
+                    );
+
+
+                // Stop if validation failed.
+                if (validationError != null)
+                {
+                    ModelState.AddModelError(
+                        nameof(model.ProfilePictureFile),
+                        validationError
+                    );
+
+                    return View(model);
+                }
+
+
+                // Save the NEW profile picture first.
+                //
+                // This is safer because we don't want to delete
+                // the old picture before knowing that the new
+                // picture was successfully saved.
+                newProfilePicturePath =
+                    await ProfilePictureHelper.SaveProfilePictureAsync(
+                        model.ProfilePictureFile,
+                        _environment.WebRootPath
+                    );
+
+
+                // Delete the OLD profile picture after the
+                // new picture has been successfully saved.
+                ProfilePictureHelper.DeleteProfilePicture(
+                    user.ProfilePicturePath,
+                    _environment.WebRootPath
+                );
+            }
+
+
+            // ======================================================
+            // MEMBER VALID ID
+            // ======================================================
+
+            // Only process the Valid ID if the user selected one.
             if (model.IdPhotoFile != null)
             {
-                // Allowed image extensions.
+                // --------------------------------------------------
+                // Validate file extension
+                // --------------------------------------------------
+
                 string[] allowedExtensions =
                 {
                     ".jpg",
@@ -200,119 +222,171 @@ namespace PETHUB.Controllers
                     ".webp"
                 };
 
-                // Get the uploaded file's extension.
-                string extension = Path.GetExtension(model.IdPhotoFile.FileName)
-                                       .ToLowerInvariant();
+
+                // Get the extension of the uploaded file.
+                string extension =
+                    Path.GetExtension(
+                        model.IdPhotoFile.FileName
+                    ).ToLowerInvariant();
+
 
                 // Reject unsupported file types.
                 if (!allowedExtensions.Contains(extension))
                 {
                     ModelState.AddModelError(
                         nameof(model.IdPhotoFile),
-                        "Only JPG, JPEG, PNG, and WEBP files are allowed.");
+                        "Only JPG, JPEG, PNG, and WEBP files are allowed."
+                    );
 
                     return View(model);
                 }
 
-                // Maximum upload size (5 MB).
-                const long maxFileSize = 5 * 1024 * 1024;
 
-                // Reject oversized uploads.
+                // --------------------------------------------------
+                // Validate file size
+                // --------------------------------------------------
+
+                // Maximum Valid ID size: 5 MB.
+                const long maxFileSize =
+                    5 * 1024 * 1024;
+
+
+                // Reject files larger than 5 MB.
                 if (model.IdPhotoFile.Length > maxFileSize)
                 {
                     ModelState.AddModelError(
                         nameof(model.IdPhotoFile),
-                        "Valid ID cannot exceed 5 MB.");
+                        "Valid ID cannot exceed 5 MB."
+                    );
 
                     return View(model);
                 }
 
-                // Build the physical folder path.
-                string uploadsFolderPath = Path.Combine(
-                    _environment.WebRootPath,
-                    MemberIdFolder);
 
-                // Generate a unique filename.
-                string uniqueFileName = $"{Guid.NewGuid()}{extension}";
+                // --------------------------------------------------
+                // Save the NEW Valid ID
+                // --------------------------------------------------
 
-                // Build the physical path where the file will be saved.
-                string physicalFilePath = Path.Combine(
-                    uploadsFolderPath,
-                    uniqueFileName);
+                // Save the new ID using the helper.
+                string? savedIdPhotoPath =
+                    await IdPhotoUploadHelper.SaveIdPhotoAsync(
+                        model.IdPhotoFile
+                    );
 
-                // Save the uploaded file.
-                using (var fileStream = new FileStream(
-                    physicalFilePath,
-                    FileMode.Create))
+
+                // Make sure the helper actually returned a path.
+                if (string.IsNullOrEmpty(savedIdPhotoPath))
                 {
-                    await model.IdPhotoFile.CopyToAsync(fileStream);
+                    ModelState.AddModelError(
+                        nameof(model.IdPhotoFile),
+                        "The Valid ID could not be uploaded."
+                    );
+
+                    return View(model);
                 }
 
-                // Delete the previous uploaded Valid ID if it belongs to this folder.
+                // Store the new path.
+                newIdPhotoPath = savedIdPhotoPath;
+
+                // --------------------------------------------------
+                // Delete the OLD Valid ID
+                // --------------------------------------------------
+
                 if (!string.IsNullOrEmpty(user.IdPhotoPath) &&
                     user.IdPhotoPath.StartsWith(
-                        MemberIdUrlPrefix,
+                        "/uploads/memberids/",
                         StringComparison.OrdinalIgnoreCase))
                 {
-                    string oldFileName = Path.GetFileName(user.IdPhotoPath);
+                    // Extract only the filename.
+                    string oldFileName =
+                        Path.GetFileName(
+                            user.IdPhotoPath
+                        );
 
-                    string oldPhysicalPath = Path.Combine(
-                        uploadsFolderPath,
-                        oldFileName);
 
+                    // Build the old physical file path.
+                    string oldPhysicalPath =
+                        Path.Combine(
+                            _environment.WebRootPath,
+                            "uploads",
+                            "memberids",
+                            oldFileName
+                        );
+
+
+                    // Delete the old file if it exists.
                     if (System.IO.File.Exists(oldPhysicalPath))
                     {
                         System.IO.File.Delete(oldPhysicalPath);
                     }
                 }
-
-                // Store the new URL so it can be saved later.
-                newIdPhotoPath = MemberIdUrlPrefix + uniqueFileName;
             }
 
-            // ==========================
-            // Update editable fields
-            // ==========================
+
+            // ======================================================
+            // UPDATE MEMBER INFORMATION
+            // ======================================================
 
             user.FirstName = model.FirstName;
             user.MiddleName = model.MiddleName;
             user.LastName = model.LastName;
-
             user.ContactNumber = model.ContactNumber;
 
-            user.Gender = model.Gender;
+            // Member-specific information.
+            user.Gender =model.Gender;
             user.Birthdate = model.Birthdate;
 
+            // Member address.
             user.Province = model.Province;
-            user.City = model.City;
             user.Barangay = model.Barangay;
             user.StreetAddress = model.StreetAddress;
 
+            // Member biography.
             user.Bio = model.Bio;
 
-            // Update the profile picture or Valid ID paths.
+            // ======================================================
+            // UPDATE FILE PATHS
+            // ======================================================
+
+            // Save the profile picture path.
             user.ProfilePicturePath = newProfilePicturePath;
+
+            // Save the Valid ID path.
             user.IdPhotoPath = newIdPhotoPath;
 
-            // Save the updated user through ASP.NET Identity.
+            // ======================================================
+            // SAVE THROUGH ASP.NET IDENTITY
+            // ======================================================
+
             var result = await _userManager.UpdateAsync(user);
-            // If saving failed, display the Identity errors.
+
+
+            // Check whether Identity successfully saved the user.
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    ModelState.AddModelError(
+                        string.Empty,
+                        error.Description
+                    );
                 }
 
                 return View(model);
             }
 
+
+            // ======================================================
+            // SUCCESS
+            // ======================================================
+
             // Store a one-time success message.
-            TempData["SuccessMessage"] = "Your profile has been updated successfully.";// Call from View, Less Manual Code
+            TempData["SuccessMessage"] ="Your profile has been updated successfully.";
 
-            // Redirect back to the View page.
-            return RedirectToAction(nameof(View));
+            // Redirect back to the profile page.
+            return RedirectToAction(
+                nameof(View)
+            );
         }
-
     }
 }

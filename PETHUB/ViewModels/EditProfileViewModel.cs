@@ -100,6 +100,8 @@ namespace PETHUB.ViewModels
 
         // Total resolved Lost & Found reports.
         public int ResolvedReportsCount { get; set; }
+        
+        public bool RemoveProfilePicture { get; set; }
 
     }
 }

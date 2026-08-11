@@ -109,6 +109,8 @@ public class PetFeedsController : Controller
         _context.PetFeeds.Add(petFeed);
         await _context.SaveChangesAsync();
 
+
+        // Save images if any were uploaded
         string? imagePath = null;
 
         if (model.Images != null && model.Images.Any(i => i.Length > 0))
@@ -127,7 +129,7 @@ public class PetFeedsController : Controller
             _context.PetFeedImages.AddRange(savedImages);
             await _context.SaveChangesAsync();
 
-
+            // Get the path of the first saved image for notification purposes
             imagePath = savedImages
             .FirstOrDefault()
             ?.ImagePath;
@@ -157,7 +159,7 @@ public class PetFeedsController : Controller
 
                 imagePath,
 
-                $"/PetFeeds/Feed?postId={petFeed.PetFeedId}",
+                $"/PetFeeds/Feed?postId={petFeed.PetFeedId}#post-{petFeed.PetFeedId}",
 
                 petFeedId: petFeed.PetFeedId
             );
@@ -349,6 +351,13 @@ public class PetFeedsController : Controller
             }
         }
 
+        // Delete all notifications related to the PetFeed being deleted.
+        var notifications = await _context.Notifications
+            .Where(n => n.PetFeedId == petfeed.PetFeedId)
+            .ToListAsync();
+
+        _context.Notifications.RemoveRange(notifications);
+
         // Remove the PetFeed record from the database.
         _context.PetFeeds.Remove(petfeed);
 
@@ -402,15 +411,14 @@ public class PetFeedsController : Controller
             .Include(p => p.Comments)
                 .ThenInclude(c => c.Member)
             .AsSplitQuery()
-            .OrderByDescending(p => p.Type == PetFeedType.Announcement)
+            .OrderByDescending(p => p.DateCreated)
             .ThenByDescending(p => p.DateCreated);
 
         // If user is not authenticated OR is a client role → limit to 10
         if (!User.Identity.IsAuthenticated)
         {
             query = query.Take(10)
-                         .OrderByDescending(p => p.Type == PetFeedType.PetTip)
-                         .ThenByDescending(p => p.DateCreated);
+                         .OrderByDescending(p => p.DateCreated);
         }
 
         var posts = await query.ToListAsync();

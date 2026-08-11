@@ -61,23 +61,48 @@ public class LostFoundsController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Approve(int id)
     {
-        var report = await _context.LostFounds.FindAsync(id);
+        var report = await _context.LostFounds
+            .Include(r => r.Images)
+            .FirstOrDefaultAsync(r => r.LostFoundId == id);
+
         if (report == null) return NotFound();
 
+        //Approve report
         report.Status = ApprovalStatus.Approved;
+
         await _context.SaveChangesAsync();
 
+        // Notify the report owner
+        if (!string.IsNullOrEmpty(report.UserId))
+        {
+            string notificationTitle;
+            string notificationMessage;
 
-        // Send notification to the user about the approval
-        await _notificationService.CreateNotificationAsync(
-            userId: report.UserId,
-            type: NotificationType.LostFoundApproved,
-            title: "Lost & Found Approved",
-            message: "Your Lost & Found report has been approved.",
-            imagePath: report.Images.FirstOrDefault()?.ImagePath,
-            redirectUrl: "/LostFounds/Details/" + report.LostFoundId,
-            lostFoundId: report.LostFoundId
-);
+            if (report.Type == LostFoundType.Lost)
+            {
+                notificationTitle = "Lost Report Approved";
+                notificationMessage = "Your Lost Report has been approved and is now visible in Lost & Found.";
+            }
+            else
+            {
+                notificationTitle = "Found Report Approved";
+                notificationMessage = "Your Found Report has been approved and is now visible in Lost & Found.";
+            }
+
+            await _notificationService.CreateNotificationAsync(
+                report.UserId,
+                NotificationType.LostFoundApproved,
+                notificationTitle,
+                notificationMessage,
+                report.Images.FirstOrDefault()?.ImagePath,
+                "/LostFounds/BrowseDetails/" + report.LostFoundId,
+                lostFoundId: report.LostFoundId
+            );
+        }
+
+        // Notify members in the same city
+        await _notificationService.NotifyNearbyMembersAsync(report);
+
 
         return RedirectToAction(nameof(Index));
     }
@@ -87,11 +112,43 @@ public class LostFoundsController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Reject(int id)
     {
-        var report = await _context.LostFounds.FindAsync(id);
+        //retrieve the report with its images to ensure we have all necessary data for notifications
+        var report = await _context.LostFounds
+            .Include(r => r.Images)
+            .FirstOrDefaultAsync(r => r.LostFoundId == id);
+
+        // If the report doesn't exist, return a 404 Not Found response
         if (report == null) return NotFound();
 
         report.Status = ApprovalStatus.Rejected;
         await _context.SaveChangesAsync();
+
+
+        string notificationTitle;
+        string notificationMessage;
+
+        if(report.Type == LostFoundType.Lost)
+        {
+            notificationTitle = "Lost Report Rejected";
+            notificationMessage = "Your Lost Report has been rejected because it does not meet our community standards.";
+        }
+        else
+        {
+            notificationTitle = "Found Report Rejected";
+            notificationMessage = "Your Found Report has been rejected because it does not meet our community standards.";
+        }
+
+        await _notificationService.CreateNotificationAsync(
+            report.UserId,
+            NotificationType.LostFoundRejected,
+            notificationTitle,
+            notificationMessage,
+            report.Images.FirstOrDefault()?.ImagePath,
+            "/LostFounds/BrowseDetails/" + report.LostFoundId,
+            lostFoundId: report.LostFoundId
+        );
+
+
         return RedirectToAction(nameof(Index));
     }
 
@@ -357,6 +414,8 @@ public class LostFoundsController : Controller
         _context.Add(lostFound);
         await _context.SaveChangesAsync();
 
+        string? imagePath = null;
+
         if (Images != null && Images.Count > 0)
         {
             try
@@ -370,12 +429,50 @@ public class LostFoundsController : Controller
 
                 _context.AddRange(savedImages);
                 await _context.SaveChangesAsync();
+
+                // Get the path of the first saved image for notification purposes
+                imagePath = savedImages
+                .FirstOrDefault()
+                ?.ImagePath;
+
             }
             catch (Exception)
             {
                 ModelState.AddModelError("", "Some images could not be uploaded.");
                 return View(lostFound);
             }
+        }
+
+        //gets all of the admins
+        var admins = await _userManager.GetUsersInRoleAsync("Admin");
+
+        // Determine notification content based on listing type
+        string notificationTitle;
+        string notificationMessage;
+
+        if (lostFound.Type == LostFoundType.Lost)
+        {
+            notificationTitle = "Lost Report Approval";
+            notificationMessage = "A new Lost Report is waiting for Approval.";
+        }
+        else
+        {
+            notificationTitle = "Found Report Approval";
+            notificationMessage = "A new Found Report is waiting for Approval.";
+        }
+
+        // Send notification to all admins
+        foreach (var admin in admins)
+        {
+            await _notificationService.CreateNotificationAsync(
+                admin.Id,
+                NotificationType.NewLostFoundSubmission,
+                notificationTitle,
+                notificationMessage,
+                imagePath,
+                "/LostFounds/Details/" + lostFound.LostFoundId,
+                lostFoundId: lostFound.LostFoundId
+            );
         }
 
         return RedirectToAction(nameof(SubmissionPending));

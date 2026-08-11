@@ -122,12 +122,25 @@
                                accept=".jpg,.jpeg,.png,.webp"
                                class="d-none" />
 
+                        <!-- Hidden input to mark profile picture for removal -->
+                        <input asp-for="RemoveProfilePicture"
+                               type="hidden"
+                               id="RemoveProfilePicture" />
+
                         <!-- Opens the hidden file picker -->
                         <button type="button"
                                 id="changeProfilePictureBtn"
                                 class="btn btn-outline-success mb-4">
 
                             Change Profile Picture
+
+                        </button>
+
+                        <button type="button"
+                                id="removeProfilePictureBtn"
+                                class="btn btn-outline-danger mb-4">
+
+                            Remove Photo
 
                         </button>
 
@@ -699,131 +712,23 @@
 
 </div>
 
-@section Scripts
-{
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    <script src="~/js/address-helper.js" asp-append-version="true"></script>
+    @section Scripts
+    {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
 
-    <script>
+        <script src="~/js/profilePictureHelper.js"></script>
 
-        // Wait until the page has fully loaded.
-        document.addEventListener("DOMContentLoaded", function () {
+        <script src="~/js/address-helper.js" asp-append-version="true"></script>
 
-            // Get the hidden file input.
-            const fileInput = document.getElementById("profilePictureInput");
+        <script>
 
-            // Get the visible button.
-            const button = document.getElementById("changeProfilePictureBtn");
+            document.addEventListener("DOMContentLoaded", function () {
 
-            // Clicking the button opens the hidden file selector.
-            button.addEventListener("click", function () {
-
-                fileInput.click();
+            setupProfilePicture();
 
             });
 
-        });
-
-    </script>
-
-    <script>
-
-    // ============================================================
-    // Profile Picture Live Preview
-    // ============================================================
-
-    document.addEventListener("DOMContentLoaded", function () {
-
-        const profilePictureInput = document.getElementById("profilePictureInput");
-        const profilePicturePreview = document.getElementById("profilePicturePreview");
-
-        // Exit safely if the controls are missing.
-        if (!profilePictureInput || !profilePicturePreview)
-            return;
-
-        profilePictureInput.addEventListener("change", function () {
-
-            if (this.files && this.files[0]) {
-
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-
-                    profilePicturePreview.src = e.target.result;
-
-                };
-
-                reader.readAsDataURL(this.files[0]);
-
-            }
-
-        });
-
-    });
-
-</script>
-
-<script>
-
-// ============================================================
-// Valid ID Upload & Live Preview
-// ============================================================
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    // Get the hidden file input.
-    const validIdInput = document.getElementById("validIdInput");
-
-    // Get the Change Valid ID button.
-    const changeValidIdBtn = document.getElementById("changeValidIdBtn");
-
-    // Get the preview image.
-    const validIdPreview = document.getElementById("validIdPreview");
-
-    // Placeholder shown when there is no uploaded ID.
-    const validIdPlaceholder = document.getElementById("validIdPlaceholder");
-
-    // Stop if this user is not a Member.
-    if (!validIdInput || !changeValidIdBtn || !validIdPreview)
-        return;
-
-    // Open the hidden file picker.
-    changeValidIdBtn.addEventListener("click", function () {
-
-        validIdInput.click();
-
-    });
-
-    // Display a live preview after selecting a file.
-    validIdInput.addEventListener("change", function () {
-
-        if (this.files && this.files[0]) {
-
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-
-                validIdPreview.src = e.target.result;
-
-                // Show preview.
-                validIdPreview.classList.remove("d-none");
-
-                // Hide placeholder if it exists.
-                if (validIdPlaceholder) {
-                    validIdPlaceholder.classList.add("d-none");
-                }
-
-            };
-
-            reader.readAsDataURL(this.files[0]);
-
-        }
-
-    });
-
-});
-
-</script>
-}
+        </script>
+    }

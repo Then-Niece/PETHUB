@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
 using PETHUB.Services;
+using System.Composition;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -129,6 +131,8 @@ namespace PETHUB.Controllers
             _context.Add(listing);
             await _context.SaveChangesAsync();
 
+            string? imagePath = null;
+
             if (ImageFiles != null && ImageFiles.Count > 0)
             {
                 try
@@ -142,12 +146,53 @@ namespace PETHUB.Controllers
 
                     _context.AddRange(savedImages);
                     await _context.SaveChangesAsync();
+
+
+                    // Get the path of the first saved image for notification purposes
+                    imagePath = savedImages
+                    .FirstOrDefault()
+                    ?.ImagePath;
                 }
+
                 catch (Exception)
                 {
                     ModelState.AddModelError("", "Some images could not be uploaded.");
                     return View(listing);
                 }
+
+            }
+
+            //Get all admins
+            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+
+
+            // Determine notification content based on listing type
+            string notificationTitle;
+            string notificationMessage;
+
+            if (listing.Type == ListType.For_Adoption)
+            {
+                notificationTitle = "Adoption Request";
+                notificationMessage = "A new Adoption Request is waiting for Approval.";
+            }
+            else
+            {
+                notificationTitle = "Marketplace Listing Request";
+                notificationMessage = "A new Marketplace Listing Request is waiting for Approval.";
+            }
+
+            // Send notification to all admins
+            foreach (var admin in admins)
+            {
+                await _notificationService.CreateNotificationAsync(
+                    admin.Id,
+                    NotificationType.NewMarketplaceSubmission,
+                    notificationTitle,
+                    notificationMessage,
+                    imagePath,
+                    "/Listings/Details/" + listing.ListingId,
+                    listingId: listing.ListingId
+                );
             }
 
             return RedirectToAction(nameof(Marketplace));
@@ -390,42 +435,95 @@ namespace PETHUB.Controllers
         }
 
 
-
-        // GET: Listings/Approve
+        // POST: Listings/Approve
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Approve(int id)
         {
-            var report = await _context.Listings.FindAsync(id);
-            if (report == null) return NotFound();
 
-            report.Status = ListApprovalStatus.Approved;
+            // Retrieve the listing along with its images
+            var listing = await _context.Listings
+                .Include(l => l.Images)
+                .FirstOrDefaultAsync(l => l.ListingId == id);
+
+            if (listing == null)
+                return NotFound();
+
+            listing.Status = ListApprovalStatus.Approved;
+            // Save changes to the database
             await _context.SaveChangesAsync();
 
-            // Send notification to the user about the approval
+            // Determine notification content based on listing type
+            string notificationTitle;
+            string notificationMessage;
+            
+            if (listing.Type == ListType.For_Adoption)
+            {
+                notificationTitle = "Adoption Request Approved";
+                notificationMessage = "Your adoption listing is now visible in the Marketplace.";
+            }
+            else
+            {
+                notificationTitle = "Marketplace Listing Approved";
+                notificationMessage = "Your listing is now visible in the Marketplace.";
+            }
+
+            // Send notification to the member
             await _notificationService.CreateNotificationAsync(
-                report.MemberId,
+                listing.MemberId,
                 NotificationType.MarketplaceApproved,
-                "Marketplace Listing Approved",
-                "Your listing is now visible in the Marketplace.",
-                report.Images.FirstOrDefault()?.ImagePath,
-                "/Listings/Details/" + report.ListingId,
-                listingId: report.ListingId
-);
+                notificationTitle,
+                notificationMessage,
+                listing.Images.FirstOrDefault()?.ImagePath,
+                "/Listings/MarketplaceDetails/" + listing.ListingId,
+                listingId: listing.ListingId
+            );
 
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Listings/Reject
+
+        // POST: Listings/Reject
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Reject(int id)
         {
-            var report = await _context.Listings.FindAsync(id);
-            if (report == null) return NotFound();
+            var listing = await _context.Listings
+                .Include(l => l.Images)
+                .FirstOrDefaultAsync(l => l.ListingId == id);
 
-            report.Status = ListApprovalStatus.Rejected;
+            if (listing == null) return NotFound();
+
+            listing.Status = ListApprovalStatus.Rejected;
+
             await _context.SaveChangesAsync();
+
+            // Determine notification content based on listing type
+            string notificationTitle;
+            string notificationMessage;
+
+            if (listing.Type == ListType.For_Adoption)
+            {
+                notificationTitle = "Adoption Request Rejected";
+                notificationMessage = "Your adoption listing was rejected because it does not meet our community standards.";
+            }
+            else
+            {
+                notificationTitle = "Marketplace Listing Request Rejected";
+                notificationMessage = "Your Marketplace listing was rejected because it does not meet our community standards.";
+            }
+
+            await _notificationService.CreateNotificationAsync(
+                listing.MemberId,
+                NotificationType.MarketplaceRejected,
+                notificationTitle,
+                notificationMessage,
+                listing.Images.FirstOrDefault()?.ImagePath,
+                "/Listings/MarketplaceDetails/" + listing.ListingId,
+                listingId: listing.ListingId
+            );
+
+            
             return RedirectToAction(nameof(Index));
         }
         private bool ListingExists(int id)

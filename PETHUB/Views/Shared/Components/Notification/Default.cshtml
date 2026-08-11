@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<PETHUB.ViewModels.NotificationViewModel>
 
+@Html.AntiForgeryToken()
 
 @if (!Model.Any())
 {
@@ -11,48 +12,307 @@ else
 {
     foreach (var notification in Model)
     {
-        <a href="@(notification.RedirectUrl ?? "#")"
-           class="dropdown-item notification-item">
+        <div class="notification-item @(notification.IsRead ? "" : "bg-light")"
+             data-notification-id="@notification.NotificationId">
 
-            <div class="d-flex gap-3">
+            <div class="d-flex gap-3 align-items-start">
 
-                @if (notification.ImagePath != null)
+                @* IMAGE *@
+                @if (!string.IsNullOrEmpty(notification.ImagePath))
                 {
                     <img src="@notification.ImagePath"
-                         class="rounded-circle"
-                         style="width:45px;height:45px;object-fit:cover;" />
+                         class="rounded-circle flex-shrink-0"
+                         style="width:50px;
+                    height:50px;
+                    object-fit:cover;" />
                 }
                 else
                 {
-                    <div class="rounded-circle"
-                         style="
-                        width:45px;
-                        height:45px;
+                    <div class="rounded-circle
+                        d-flex
+                        align-items-center
+                        justify-content-center
+                        flex-shrink-0"
+                         style="width:50px;
+                        height:50px;
                         background:#EAF8E6;">
+
+                        <i data-lucide="bell"></i>
+
                     </div>
                 }
 
 
-                <div>
+                @* CONTENT *@
+                <div class="flex-grow-1">
 
-                    <h6 class="mb-1 fw-bold">
-                        @notification.Title
-                    </h6>
+                    <a href="@(notification.RedirectUrl ?? "#")"
+                       class="notification-link text-decoration-none text-dark"
+                       data-notification-id="@notification.NotificationId">
 
+                        <div class="d-flex align-items-center gap-2">
 
-                    <p class="small text-muted mb-1">
-                        @notification.Message
-                    </p>
+                            <h6 class="mb-1 fw-bold">
+                                @notification.Title
+                            </h6>
 
+                            @if (!notification.IsRead)
+                            {
+                                <span class="bg-primary rounded-circle"
+                                      style="
+                                    width:8px;
+                                    height:8px;
+                                    display:inline-block;"
+                                      title="Unread">
+                                </span>
+                            }
 
-                    <small class="text-muted">
-                        @notification.CreatedAt.ToString("MMM dd")
-                    </small>
+                        </div>
+
+                        <p class="small text-muted mb-1">
+                            @notification.Message
+                        </p>
+
+                        <small class="text-muted">
+                            @notification.CreatedAt.ToString("MMM dd")
+                        </small>
+
+                    </a>
 
                 </div>
 
+
+                @* DELETE BUTTON *@
+                <button type="button"
+                        class="delete-notification"
+                        data-notification-id="@notification.NotificationId"
+                        title="Delete notification">
+
+                    <i data-lucide="trash-2"></i>
+
+                </button>
+
             </div>
 
-        </a>
+        </div>
     }
 }
+
+
+<script>
+
+    /*
+     * Get Anti-Forgery Token
+     */
+    
+    function getAntiForgeryToken() {
+
+        const token = document.querySelector('input[name="__RequestVerificationToken"]');
+
+        return token ? token.value : "";
+    }
+
+
+    /*
+     * UPDATE NOTIFICATION BADGE
+     */
+    async function updateNotificationBadge() {
+
+        try {
+
+            const response = await fetch('/Notifications/GetUnreadNotificationCount');
+
+            if (!response.ok) {
+                return;
+            }
+
+            const count = await response.json();
+
+            const badge = document.getElementById("notificationBadge");
+
+            if (!badge) {
+                return;
+            }
+
+
+            if (count > 0) {
+
+                badge.textContent = count > 99 ? "99+" : count;
+
+                badge.style.display = "inline-block";
+
+            }
+            else {
+
+                badge.textContent = "";
+
+                badge.style.display = "none";
+
+            }
+
+        }
+        catch (error) {
+
+            console.error(
+                "Could not update notification badge:",
+                error
+            );
+
+        }
+    }
+
+
+    /*
+     * SETUP NOTIFICATION BUTTONS
+     */
+    function setupNotificationEvents() {
+
+
+        /*
+         * MARK NOTIFICATION AS READ
+         */
+        document.querySelectorAll(".notification-link")
+            .forEach(function (link) {
+
+                link.addEventListener("click", async function () {
+
+                    const notificationId = this.dataset.notificationId;
+
+                    const token = getAntiForgeryToken();
+
+
+                    try {
+
+                        await fetch(`/Notifications/MarkNotificationRead?id=${notificationId}`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "RequestVerificationToken": token
+                                }
+                            }
+                        );
+
+
+                        // Update badge immediately
+                        updateNotificationBadge();
+
+                    }
+                    catch (error) {
+
+                        console.error(
+                            "Could not mark notification as read:",
+                            error
+                        );
+
+                    }
+
+                });
+
+            });
+
+
+        /*
+         * DELETE NOTIFICATION
+         */
+        document.querySelectorAll(".delete-notification")
+            .forEach(function (button) {
+
+                button.addEventListener(
+                    "click",
+                    async function (event) {
+
+                        /*
+                         * Prevent the notification link
+                         * or dropdown from being triggered
+                         */
+                        event.preventDefault();
+                        event.stopPropagation();
+
+
+                        const notificationId =
+                            this.dataset.notificationId;
+
+                        const token =
+                            getAntiForgeryToken();
+
+
+                        try {
+
+                            const response = await fetch(
+                                `/Notifications/DeleteNotification?id=${notificationId}`,
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "RequestVerificationToken": token
+                                    }
+                                }
+                            );
+
+
+                            if (response.ok) {
+
+                                /*
+                                 * Remove notification
+                                 * from the screen
+                                 */
+                                const notification =
+                                    this.closest(
+                                        ".notification-item"
+                                    );
+
+                                if (notification) {
+                                    notification.remove();
+                                }
+
+
+                                /*
+                                 * Update unread count
+                                 */
+                                updateNotificationBadge();
+
+                            }
+                            else {
+
+                                console.error(
+                                    "Could not delete notification."
+                                );
+
+                            }
+
+                        }
+                        catch (error) {
+
+                            console.error(
+                                "Error deleting notification:",
+                                error
+                            );
+
+                        }
+
+                    }
+                );
+
+            });
+
+    }
+
+
+    /*
+     * PAGE LOAD
+     */
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            // Load unread count
+            updateNotificationBadge();
+
+            // Setup notification buttons
+            setupNotificationEvents();
+
+        }
+    );
+
+</script>
