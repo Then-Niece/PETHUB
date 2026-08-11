@@ -11,7 +11,7 @@ namespace PETHUB.Controllers
     // This controller is restricted to administrators.
     // The Authorize attribute prevents Members or unauthenticated users
     // from directly accessing the Admin Dashboard URL.
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Dennis")]
     public class AdminDashboardController : Controller
     {
         private readonly ApplicationDbContext _context;

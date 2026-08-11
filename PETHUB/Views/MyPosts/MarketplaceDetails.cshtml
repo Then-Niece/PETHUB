@@ -121,15 +121,24 @@
 
                 <div class="listing-profile-main">
 
-
-                    <!-- Avatar -->
-
                     <div class="listing-profile-avatar">
 
-                        @(Model.Member?.FirstName?.Substring(0, 1).ToUpper() ?? "U")
+                        <!-- Avatar -->
+                        @if (!string.IsNullOrWhiteSpace(Model.Member?.ProfilePicturePath))
+                        {
+                            <img src="@Model.Member.ProfilePicturePath"
+                                 class="rounded-circle border"
+                                 style="width:44px;height:44px;object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <img src="~/images/default_profile.jpg"
+                                 class="rounded-circle border"
+                                 style="width:44px;height:44px;object-fit:cover;" />
+                        }
+
 
                     </div>
-
 
                     <!-- User Information -->
 
