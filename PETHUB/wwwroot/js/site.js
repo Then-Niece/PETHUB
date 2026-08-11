@@ -4,37 +4,32 @@
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const sidebarToggle = document.getElementById("sidebarToggle");
-    const sidebarWrapper = document.getElementById("sidebar-wrapper");
+    const sidebarToggle =
+        document.getElementById("sidebarToggle");
+
+    const sidebarWrapper =
+        document.getElementById("sidebar-wrapper");
+
+    const storageKey =
+        "pethubSidebarCollapsed";
+
 
     if (sidebarToggle && sidebarWrapper) {
 
-        const storageKey = "pethubSidebarCollapsed";
-        const savedState = localStorage.getItem(storageKey);
-
-
-        // ==========================================
-        // ADDED:
-        // Disable the sidebar transition temporarily
-        // while restoring the saved state.
-        //
-        // This prevents the sidebar from animating
-        // every time a new page is loaded.
-        // ==========================================
-
-        sidebarWrapper.style.transition = "none";
+        const savedState =
+            localStorage.getItem(storageKey);
 
 
         // ==========================================
         // RESTORE SIDEBAR STATE
         // ==========================================
 
-        // Sidebar starts open when no previous preference exists.
         if (savedState === "true") {
 
             sidebarWrapper.classList.add("collapsed");
 
-        } else {
+        }
+        else {
 
             sidebarWrapper.classList.remove("collapsed");
 
@@ -42,32 +37,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         // ==========================================
-        // ADDED:
-        // Force the browser to apply the restored
-        // sidebar width before turning the animation
-        // back on.
+        // REMOVE INITIAL-LOAD STATE
         // ==========================================
-
-        sidebarWrapper.offsetHeight;
-
-
-        // ==========================================
-        // ADDED:
-        // Re-enable the normal CSS transition.
         //
-        // From this point onward, the sidebar will
-        // animate normally when the USER clicks
-        // the toggle button.
+        // The sidebar has now received its correct
+        // collapsed/expanded state.
+        //
+        // We can allow the normal CSS transition
+        // again.
         // ==========================================
 
-        sidebarWrapper.style.transition = "";
+        requestAnimationFrame(function () {
+
+            document.documentElement.classList.remove(
+                "sidebar-loading"
+            );
+
+        });
 
 
         // ==========================================
         // TOGGLE SIDEBAR
         // ==========================================
 
-        // Toggle and remember the user's selected state.
         sidebarToggle.addEventListener("click", function () {
 
             sidebarWrapper.classList.toggle("collapsed");
@@ -75,8 +67,15 @@ document.addEventListener("DOMContentLoaded", function () {
             const isCollapsed =
                 sidebarWrapper.classList.contains("collapsed");
 
-            localStorage.setItem(storageKey, isCollapsed);
+
+            // Save the user's preference
+            localStorage.setItem(
+                storageKey,
+                isCollapsed
+            );
+
         });
+
     }
 
 

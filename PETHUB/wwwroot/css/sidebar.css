@@ -29,6 +29,27 @@
 
 
 /* ==========================================
+   SIDEBAR INITIAL STATE
+========================================== */
+
+/*
+ * If the user previously collapsed the sidebar,
+ * start it at 80px before the page is painted.
+ */
+html.sidebar-collapsed #sidebar-wrapper {
+    width: 80px;
+}
+
+
+/*
+ * Disable the width animation while the sidebar
+ * is being restored during page load.
+ */
+html.sidebar-loading #sidebar-wrapper {
+    transition: none !important;
+}
+
+/* ==========================================
    SIDEBAR
 ========================================== */
 

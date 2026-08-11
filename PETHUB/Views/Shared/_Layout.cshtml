@@ -13,6 +13,33 @@
     <link rel="stylesheet" href="~/css/admin-dashboard.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Marketplace.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PETHUB.styles.css" asp-append-version="true" />
+
+    <!-- ==========================================
+     PETHUB SIDEBAR - RESTORE STATE
+     Runs before the page is displayed so the
+     sidebar does not animate on page navigation.
+     ========================================== -->
+    <script>
+        (function () {
+
+        const storageKey = "pethubSidebarCollapsed";
+        const savedState = localStorage.getItem(storageKey);
+
+        // Tell CSS that we are restoring the sidebar.
+        document.documentElement.classList.add("sidebar-loading");
+
+        // If the user previously collapsed the sidebar,
+        // tell CSS to start it at the collapsed width.
+        if (savedState === "true") {
+
+        document.documentElement.classList.add(
+        "sidebar-collapsed"
+        );
+        }
+
+        })();
+    </script>
+
     
 </head>
 <body>
@@ -50,15 +77,12 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard.js"></script>
 
     <!-- Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <script>
-        lucide.createIcons();
-    </script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 
