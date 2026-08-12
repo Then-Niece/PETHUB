@@ -492,10 +492,13 @@ public class LostFoundsController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Browse()
     {
+        var userid = _userManager.GetUserId(User);
+
         var lostfounds = await _context.LostFounds
             .Where(l => l.Status == ApprovalStatus.Approved && l.RStatus == ReportStatus.Active)
             .Include(l => l.User)
             .Include(l => l.Images)
+            .Where(l => l.UserId != userid)
             .ToListAsync();
 
         return View(lostfounds);

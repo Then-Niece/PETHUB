@@ -33,7 +33,7 @@ namespace PETHUB.Controllers
         {
             var listings = _context.Listings
                 .Include(l => l.Member)
-                .Include(l => l.Images) // load related images
+                .Include(l => l.Images)// load related images
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(status))
@@ -52,10 +52,14 @@ namespace PETHUB.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Marketplace()
         {
+            //gets the current user ID
+            var memberid = _userManager.GetUserId(User);
+
             var listings = await _context.Listings
                .Include(l => l.Member)
                .Where(l => l.Status == ListApprovalStatus.Approved && l.ListStatus == ListingStatus.Pending)
-               .Include(l => l.Images) // load related images
+               .Include(l => l.Images)
+               .Where(l => l.MemberId != memberid) // dili makita sa members ilang own post
                .ToListAsync();
 
             return View(listings);
