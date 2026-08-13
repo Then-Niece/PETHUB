@@ -65,22 +65,6 @@
 
             </a>
 
-
-            <!-- Pet Feed -->
-            <a asp-controller="PetFeeds"
-               asp-action="Index"
-               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PetFeed" &&
-                                                                          ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
-
-                <i data-lucide="shopping-bag"></i>
-
-                <span class="sidebar-text">
-                    Pet Feed
-                </span>
-
-            </a>
-
-
             <!-- Marketplace -->
             <a asp-controller="Listings"
                asp-action="Marketplace"
@@ -146,6 +130,21 @@
                 </span>
 
             </a>
+
+            <!-- Pet Feed -->
+            <a asp-controller="PetFeeds"
+               asp-action="Index"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PetFeed" &&
+                                                                          ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+
+                <i data-lucide="paw-print"></i>
+
+                <span class="sidebar-text">
+                    Pet Feed
+                </span>
+
+            </a>
+
 
         </div>
 
