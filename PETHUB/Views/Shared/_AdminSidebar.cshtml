@@ -1,12 +1,45 @@
 ﻿<nav class="sidebar-nav">
 
     <!-- ==========================================
-         MEMBER NAVIGATION
+     ADMIN / MEMBER VIEW TOGGLE
 
-         These links are already available to the
-         Admin account so the Admin can later switch
-         to "Member View".
-         ========================================== -->
+     This switch will allow an Admin to change
+     the sidebar between:
+
+     - Admin View
+     - Member View
+     
+     ========================================== -->
+
+    <div class="sidebar-view-toggle">
+
+        <div class="sidebar-view-toggle-content">
+
+            <div class="sidebar-view-toggle-label">
+
+                <i data-lucide="eye"></i>
+
+                <span class="sidebar-text">
+                    Member View
+                </span>
+
+            </div>
+
+            <div class="form-check form-switch m-0">
+
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="memberViewToggle"
+                       role="switch"
+                       aria-label="Toggle Member View">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr class="sidebar-divider" />
 
     <div id="memberNavigation">
 

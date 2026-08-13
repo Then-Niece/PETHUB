@@ -268,3 +268,72 @@ html.sidebar-loading #sidebar-wrapper {
         max-width: 210px;
     }
 }
+
+
+/* ==========================================
+   ADMIN / MEMBER VIEW TOGGLE
+   ========================================== */
+
+.sidebar-view-toggle {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 0 4px 0;
+}
+
+.sidebar-view-toggle-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 40px;
+}
+
+.sidebar-view-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #4B5563;
+    font-size: .9rem;
+    font-weight: 600;
+}
+
+    .sidebar-view-toggle-label svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+
+/* Bootstrap switch customization */
+.sidebar-view-toggle .form-check-input {
+    width: 2.4em;
+    height: 1.3em;
+    margin: 0;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+    .sidebar-view-toggle .form-check-input:checked {
+        background-color: #8ACE79;
+        border-color: #8ACE79;
+    }
+
+    .sidebar-view-toggle .form-check-input:focus {
+        box-shadow: 0 0 0 .15rem rgba(138, 206, 121, .25);
+    }
+
+
+/* ==========================================
+   COLLAPSED SIDEBAR
+   ========================================== */
+
+/*
+ * When the sidebar is collapsed, the text and
+ * switch should not remain visible.
+ *
+ * We will later improve this behavior when the
+ * Member View functionality is implemented.
+ */
+
+#sidebar-wrapper.collapsed .sidebar-view-toggle {
+    display: none;
+}
