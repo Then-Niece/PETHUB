@@ -3,13 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Pqc.Crypto.Lms;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
 using PETHUB.Services;
-using System.Composition;
-using System.Reflection;
 using System.Security.Claims;
 
 namespace PETHUB.Controllers
@@ -48,23 +45,50 @@ namespace PETHUB.Controllers
             return View(await listings.ToListAsync());
         }
 
-        // GET: Marketplace Listing for Client and Member
+        // GET: Marketplace Listing for Client and Member.
+        // listingType filters Adoption/Sale while petType filters Dog/Cat.
         [AllowAnonymous]
-        public async Task<IActionResult> Marketplace()
+        public async Task<IActionResult> Marketplace(
+            string? listingType,
+            string? petType)
         {
-            //gets the current user ID
+            // Get the current user's ID so members do not see their own listings.
+            // For guests, GetUserId returns null and all public listings remain available.
             var memberid = _userManager.GetUserId(User);
 
-            var listings = await _context.Listings
-               .Include(l => l.Member)
-               .Where(l => l.Status == ListApprovalStatus.Approved && l.ListStatus == ListingStatus.Pending)
-               .Include(l => l.Images)
-               .Where(l => l.MemberId != memberid) // dili makita sa members ilang own post
-               .ToListAsync();
+            // Start with the existing public Marketplace rules.
+            // Only approved and currently pending/available listings are shown.
+            var listings = _context.Listings
+                .Include(l => l.Member)
+                .Include(l => l.Images)
+                .Where(l =>
+                    l.Status == ListApprovalStatus.Approved &&
+                    l.ListStatus == ListingStatus.Pending &&
+                    l.MemberId != memberid)
+                .AsQueryable();
 
-            return View(listings);
+            // Apply the Listing Type filter when a specific type was selected.
+            // Enum.TryParse converts "For_Adoption" or "For_Sale" from the URL
+            // into the corresponding ListType enum value.
+            if (!string.IsNullOrWhiteSpace(listingType) &&
+                Enum.TryParse<ListType>(listingType, out var selectedListingType))
+            {
+                // EF Core translates this comparison into a database WHERE condition.
+                listings = listings.Where(l => l.Type == selectedListingType);
+            }
+
+            // Apply the Pet Type filter when Dog or Cat was selected.
+            // The Marketplace Listing model uses the ListPetType enum.
+            if (!string.IsNullOrWhiteSpace(petType) &&
+                Enum.TryParse<ListPetType>(petType, out var selectedPetType))
+            {
+                // Only listings matching the selected Dog/Cat type are returned.
+                listings = listings.Where(l => l.PetType == selectedPetType);
+            }
+
+            // Execute the final query after all selected filters have been applied.
+            return View(await listings.ToListAsync());
         }
-
 
         // GET: Listings/Details/AdminView
         [Authorize(Roles = "Admin")]
@@ -127,7 +151,9 @@ namespace PETHUB.Controllers
         public async Task<IActionResult> Create(Listing listing, List<IFormFile> ImageFiles)
         {
             if (!ModelState.IsValid)
+            {
                 return View(listing);
+            }
 
             listing.DatePosted = DateTime.Now;
             listing.MemberId = _userManager.GetUserId(User);
@@ -425,7 +451,9 @@ namespace PETHUB.Controllers
                 .FirstOrDefaultAsync(i => i.ListingImageId == id);
 
             if (image == null || image.Listing.MemberId != _userManager.GetUserId(User))
+            {
                 return NotFound();
+            }
 
             var listingId = await ImageHelper.RemoveImageAsync(
                 _context,
@@ -451,7 +479,9 @@ namespace PETHUB.Controllers
                 .FirstOrDefaultAsync(l => l.ListingId == id);
 
             if (listing == null)
+            {
                 return NotFound();
+            }
 
             listing.Status = ListApprovalStatus.Approved;
             // Save changes to the database
@@ -460,7 +490,7 @@ namespace PETHUB.Controllers
             // Determine notification content based on listing type
             string notificationTitle;
             string notificationMessage;
-            
+
             if (listing.Type == ListType.For_Adoption)
             {
                 notificationTitle = "Adoption Request Approved";
@@ -496,7 +526,10 @@ namespace PETHUB.Controllers
                 .Include(l => l.Images)
                 .FirstOrDefaultAsync(l => l.ListingId == id);
 
-            if (listing == null) return NotFound();
+            if (listing == null)
+            {
+                return NotFound();
+            }
 
             listing.Status = ListApprovalStatus.Rejected;
 
@@ -527,7 +560,7 @@ namespace PETHUB.Controllers
                 listingId: listing.ListingId
             );
 
-            
+
             return RedirectToAction(nameof(Index));
         }
         private bool ListingExists(int id)

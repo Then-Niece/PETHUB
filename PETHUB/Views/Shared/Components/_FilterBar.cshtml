@@ -1,51 +1,71 @@
-﻿@using Microsoft.AspNetCore.WebUtilities
-@model PETHUB.ViewModels.FilterBarViewModel
+﻿@model PETHUB.ViewModels.FilterBarViewModel
 
-@{
-    // Read the current controller from the page route.
-    // This allows the same partial to work on different controllers without
-    // hard-coding a controller name into the reusable component.
-    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+<div class="d-flex gap-3 mt-4 mb-4 align-items-end">
 
-    // Read the current action from the page route.
-    // This normally resolves to "Index" on the approval pages.
-    var action = ViewContext.RouteData.Values["action"]?.ToString();
-
-    // Copy the current query-string values so other filters can be preserved.
-    // This becomes useful later when a page has more than one filter.
-    var queryParameters = Context.Request.Query
-        .ToDictionary(
-            item => item.Key,
-            item => item.Value.ToString()
-        );
-
-    // Remove the current filter's old value before adding the newly selected value.
-    // This prevents the URL from containing multiple values for the same filter.
-    queryParameters.Remove(Model.ParameterName);
-}
-
-<div class="mb-3">
-    @foreach (var option in Model.Options)
+    @foreach (var filter in Model.Filters)
     {
-        // Start with the current page route, such as /Listings/Index.
-        var url = Url.Action(action, controller) ?? "#";
+        // Use the current selected value when available.
+        // Otherwise, use the default configured by the helper.
+        var selectedValue = filter.SelectedValue ?? filter.DefaultValue;
 
-        // "All" uses an empty value, so the parameter remains removed.
-        // Other options add their selected value to the query string.
-        if (!string.IsNullOrWhiteSpace(option.Value))
-        {
-            queryParameters[Model.ParameterName] = option.Value;
-        }
+        <div style="width: 200px;">
 
-        // Build the final URL while preserving any other active query parameters.
-        var filterUrl = QueryHelpers.AddQueryString(url, queryParameters);
+            @* Display the label belonging to this individual filter. *@
+            <label class="form-label">
+                @filter.Label
+            </label>
 
-        <a href="@filterUrl" class="btn @option.CssClass">
-            @option.Label
-        </a>
+            <select class="form-select"
+                    onchange="window.location.href = this.value;">
 
-        // Remove the value again before the next option is generated.
-        // Otherwise every following button would inherit the previous option's value.
-        queryParameters.Remove(Model.ParameterName);
+                @foreach (var option in filter.Options)
+                {
+                    // Copy the existing query parameters so changing this
+                    // filter does not reset another active filter.
+                    var query = Context.Request.Query
+                        .ToDictionary(
+                            item => item.Key,
+                            item => item.Value.ToString()
+                        );
+
+                    // Replace only the current filter's query parameter.
+                    if (string.IsNullOrEmpty(option.Value))
+                    {
+                        query.Remove(filter.ParameterName);
+                    }
+                    else
+                    {
+                        query[filter.ParameterName] = option.Value;
+                    }
+
+                    // Build the query string for the selected option.
+                    var queryString = string.Join(
+                        "&",
+                        query.Select(
+                            item => $"{item.Key}={Uri.EscapeDataString(item.Value)}"
+                        )
+                    );
+
+                    // Get the current page URL.
+                    var baseUrl = Context.Request.Path.ToString();
+
+                    // Add the query string only when one exists.
+                    var optionUrl = string.IsNullOrEmpty(queryString)
+                        ? baseUrl
+                        : $"{baseUrl}?{queryString}";
+
+                    // Keep the current option selected after the page reloads.
+                    var isSelected = option.Value == selectedValue;
+
+                    <option value="@optionUrl"
+                            selected="@isSelected">
+                        @option.Label
+                    </option>
+                }
+
+            </select>
+
+        </div>
     }
+
 </div>

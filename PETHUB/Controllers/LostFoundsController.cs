@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Helpers;
-using PETHUB.Services;
 using PETHUB.Models;
+using PETHUB.Services;
 
 public class LostFoundsController : Controller
 {
@@ -44,14 +44,20 @@ public class LostFoundsController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Details(int? id)
     {
-        if (id == null) return NotFound();
+        if (id == null)
+        {
+            return NotFound();
+        }
 
         var lostfound = await _context.LostFounds
             .Include(l => l.User)
             .Include(l => l.Images)
             .FirstOrDefaultAsync(m => m.LostFoundId == id);
 
-        if (lostfound == null) return NotFound();
+        if (lostfound == null)
+        {
+            return NotFound();
+        }
 
         return View(lostfound);
     }
@@ -65,7 +71,10 @@ public class LostFoundsController : Controller
             .Include(r => r.Images)
             .FirstOrDefaultAsync(r => r.LostFoundId == id);
 
-        if (report == null) return NotFound();
+        if (report == null)
+        {
+            return NotFound();
+        }
 
         //Approve report
         report.Status = ApprovalStatus.Approved;
@@ -118,7 +127,10 @@ public class LostFoundsController : Controller
             .FirstOrDefaultAsync(r => r.LostFoundId == id);
 
         // If the report doesn't exist, return a 404 Not Found response
-        if (report == null) return NotFound();
+        if (report == null)
+        {
+            return NotFound();
+        }
 
         report.Status = ApprovalStatus.Rejected;
         await _context.SaveChangesAsync();
@@ -127,7 +139,7 @@ public class LostFoundsController : Controller
         string notificationTitle;
         string notificationMessage;
 
-        if(report.Type == LostFoundType.Lost)
+        if (report.Type == LostFoundType.Lost)
         {
             notificationTitle = "Lost Report Rejected";
             notificationMessage = "Your Lost Report has been rejected because it does not meet our community standards.";
@@ -153,12 +165,14 @@ public class LostFoundsController : Controller
     }
 
     // GET: LostFounds/Edit/5
-    
+
     [Authorize(Roles = "Member")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
+        {
             return NotFound();
+        }
 
         var userId = _userManager.GetUserId(User);
 
@@ -169,7 +183,9 @@ public class LostFoundsController : Controller
                 l.UserId == userId);
 
         if (lostfound == null)
+        {
             return NotFound();
+        }
 
         // Only the owner can edit.
         // Admins (if they ever use this action) bypass this check.
@@ -186,8 +202,9 @@ public class LostFoundsController : Controller
         }
 
         if (lostfound == null)
+        {
             return NotFound();
-
+        }
 
         return View(lostfound);
     }
@@ -199,12 +216,14 @@ public class LostFoundsController : Controller
     public async Task<IActionResult> Edit(int id, LostFound lostFound, List<IFormFile> Images)
     {
         if (id != lostFound.LostFoundId)
+        {
             return NotFound();
-
+        }
 
         if (!ModelState.IsValid)
+        {
             return View(lostFound);
-
+        }
 
         var userId = _userManager.GetUserId(User);
 
@@ -213,7 +232,9 @@ public class LostFoundsController : Controller
             .Include(l => l.Images)
             .FirstOrDefaultAsync(l => l.LostFoundId == id && l.UserId == userId);
         if (existing == null)
+        {
             return NotFound();
+        }
 
         // Only the owner can save changes. Admins bypass this check.
         if (!User.IsInRole("Admin") && existing.UserId != userId)
@@ -227,20 +248,20 @@ public class LostFoundsController : Controller
             return Forbid();
         }
 
-            existing.Title = lostFound.Title;
-            existing.Description = lostFound.Description;
-            existing.Type = lostFound.Type;
-            existing.Breed = lostFound.Breed;
-            existing.PetType = lostFound.PetType;
-            existing.Sex = lostFound.Sex;
-            existing.LostDate = lostFound.LostDate;
-            existing.ClientName = lostFound.ClientName;
-            existing.ClientContact = lostFound.ClientContact;
-            existing.Province = lostFound.Province;
-            existing.City = lostFound.City;
-            existing.Barangay = lostFound.Barangay;
-            existing.StreetAddress = lostFound.StreetAddress;
-            existing.DateReported = DateTime.Now;
+        existing.Title = lostFound.Title;
+        existing.Description = lostFound.Description;
+        existing.Type = lostFound.Type;
+        existing.Breed = lostFound.Breed;
+        existing.PetType = lostFound.PetType;
+        existing.Sex = lostFound.Sex;
+        existing.LostDate = lostFound.LostDate;
+        existing.ClientName = lostFound.ClientName;
+        existing.ClientContact = lostFound.ClientContact;
+        existing.Province = lostFound.Province;
+        existing.City = lostFound.City;
+        existing.Barangay = lostFound.Barangay;
+        existing.StreetAddress = lostFound.StreetAddress;
+        existing.DateReported = DateTime.Now;
 
 
         if (Images != null && Images.Any(i => i.Length > 0))
@@ -266,7 +287,10 @@ public class LostFoundsController : Controller
     [Authorize(Roles = "Member")]
     public async Task<IActionResult> Delete(int? id)
     {
-        if (id == null) return NotFound();
+        if (id == null)
+        {
+            return NotFound();
+        }
 
         var userId = _userManager.GetUserId(User);
 
@@ -278,7 +302,9 @@ public class LostFoundsController : Controller
                 l.UserId == userId);
 
         if (lostfound == null)
+        {
             return NotFound();
+        }
 
         return View(lostfound);
     }
@@ -297,7 +323,9 @@ public class LostFoundsController : Controller
                 l.UserId == userId);
 
         if (lostFound == null)
+        {
             return NotFound();
+        }
 
         if (!User.IsInRole("Admin") && lostFound.UserId != userId)
         {
@@ -345,7 +373,9 @@ public class LostFoundsController : Controller
             .FirstOrDefaultAsync(i => i.LostFoundImageId == id);
 
         if (image == null || image.LostFound.UserId != userId)
+        {
             return NotFound();
+        }
 
         var lostFoundId = await ImageHelper.RemoveImageAsync(
             _context,
@@ -356,7 +386,11 @@ public class LostFoundsController : Controller
         // no need to pass ownership check here, already done above
         );
 
-        if (lostFoundId == null) return NotFound();
+        if (lostFoundId == null)
+        {
+            return NotFound();
+        }
+
         return RedirectToAction("Edit", new { id = lostFoundId });
     }
 
@@ -400,8 +434,9 @@ public class LostFoundsController : Controller
         }
 
         if (!ModelState.IsValid)
+        {
             return View(lostFound);
-        
+        }
 
         lostFound.DateReported = DateTime.Now;
         lostFound.Status = ApprovalStatus.Pending;
@@ -488,20 +523,49 @@ public class LostFoundsController : Controller
     }
 
 
-    // GET: LOSTFOUNDS
+    // GET: LostFounds/Browse.
+    // lostFoundType filters Lost/Found while petType filters Dog/Cat.
     [AllowAnonymous]
-    public async Task<IActionResult> Browse()
+    public async Task<IActionResult> Browse(
+        string? lostFoundType,
+        string? petType)
     {
+        // Get the current user's ID so members do not see their own reports.
         var userid = _userManager.GetUserId(User);
 
-        var lostfounds = await _context.LostFounds
-            .Where(l => l.Status == ApprovalStatus.Approved && l.RStatus == ReportStatus.Active)
+        // Start with the existing public Lost & Found rules.
+        // Only approved and active reports are displayed.
+        var lostfounds = _context.LostFounds
+            .Where(l =>
+                l.Status == ApprovalStatus.Approved &&
+                l.RStatus == ReportStatus.Active &&
+                l.UserId != userid)
             .Include(l => l.User)
             .Include(l => l.Images)
-            .Where(l => l.UserId != userid)
-            .ToListAsync();
+            .AsQueryable();
 
-        return View(lostfounds);
+        // Apply the Lost/Found filter when a specific report type was selected.
+        // Enum.TryParse converts "Lost" or "Found" into LostFoundType.
+        if (!string.IsNullOrWhiteSpace(lostFoundType) &&
+            Enum.TryParse<LostFoundType>(
+                lostFoundType,
+                out var selectedReportType))
+        {
+            // EF Core filters the query to the selected Lost/Found type.
+            lostfounds = lostfounds.Where(l => l.Type == selectedReportType);
+        }
+
+        // Apply the Dog/Cat filter when a specific pet type was selected.
+        // LostFound uses its own PetType enum, separate from Marketplace's ListPetType.
+        if (!string.IsNullOrWhiteSpace(petType) &&
+            Enum.TryParse<PetType>(petType, out var selectedPetType))
+        {
+            // Only reports matching the selected pet type are returned.
+            lostfounds = lostfounds.Where(l => l.PetType == selectedPetType);
+        }
+
+        // Execute the final query after all selected filters have been applied.
+        return View(await lostfounds.ToListAsync());
     }
 
     // GET: LOSTFOUNDS/Details/5

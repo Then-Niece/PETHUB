@@ -2,12 +2,24 @@
 
 @{
     ViewData["Title"] = "Lost & Found Reports";
+    // Create a filter bar containing the Lost/Found report-type filter.
+    // Request.Query preserves the currently selected value after reload.
+    var lostFoundFilters = PETHUB.Helpers.FilterBarHelper.Create(
+        PETHUB.Helpers.FilterBarHelper.LostFoundType(
+            Context.Request.Query["lostFoundType"].ToString()
+        ),
+        PETHUB.Helpers.FilterBarHelper.PetType(
+               Context.Request.Query["petType"].ToString()
+           )
+        );
 }
 
-
+@* Render the reusable Lost/Found filter. *@
+<partial name="Components/_FilterBar"
+         model="lostFoundFilters" />
 
 <!-- Add Report Button -->
-<!-- Ony the member and client can add lost and found reports -->
+<!-- Only the member and client can add lost and found reports -->
 @if (User.IsInRole("Member"))
 {
     <a asp-controller="LostFounds"
@@ -30,6 +42,7 @@ else
         Add Report
     </button>
 }
+
 
 <div class="row mt-4">
     @foreach (var item in Model)

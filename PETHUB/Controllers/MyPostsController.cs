@@ -73,45 +73,98 @@ namespace PETHUB.Controllers
         }
 
 
-        // Displays all posts created by the logged-in member.
-        public async Task<IActionResult> Index()
+        // Displays the logged-in member's posts and applies optional status/type filters.
+        public async Task<IActionResult> Index(string? status, string? type)
         {
-            // Get the current user's ID.
+            // Get the current logged-in member's ID.
+            // This ensures MyPosts only ever retrieves posts owned by this member.
             var userId = _userManager.GetUserId(User);
 
-            // Load the member's marketplace listings.
-            var listings = await _context.Listings
+            // Store the current filter values in the ViewModel.
+            // The Razor view uses these values to keep the dropdown selection
+            // after the controller reloads the page.
+            var model = new MyPostsViewModel
+            {
+                StatusFilter = status,
+                TypeFilter = type
+            };
+            // Start with the logged-in member's Marketplace listings.
+            // Include Images because the MyPosts view displays the first image.
+            var listingsQuery = _context.Listings
                 .Include(l => l.Images)
                 .Where(l => l.MemberId == userId)
-                .ToListAsync();
+                .AsQueryable();
 
-            // Load the member's lost and found reports.
-            var reports = await _context.LostFounds
+            // Apply the status filter only when the user selected one.
+            // Enum.TryParse converts the query-string text into ListApprovalStatus.
+            // If the value is invalid, no status filter is applied.
+            if (!string.IsNullOrWhiteSpace(status) &&
+                Enum.TryParse<ListApprovalStatus>(status, out var listingStatus))
+            {
+                listingsQuery = listingsQuery
+                    .Where(l => l.Status == listingStatus);
+            }
+
+            // Apply the post-source filter.
+            // Marketplace means that only Marketplace listings should be included.
+            if (string.Equals(type, "LostFound", StringComparison.OrdinalIgnoreCase))
+            {
+                // The user selected Lost & Found, so no Marketplace listings are needed.
+                listingsQuery = listingsQuery.Where(l => false);
+            }
+
+            // Execute the Marketplace query after all applicable filters are applied.
+            var listings = await listingsQuery.ToListAsync();
+
+            // Start with the logged-in member's Lost & Found reports.
+            // Include Images because the MyPosts view displays the first image.
+            var reportsQuery = _context.LostFounds
                 .Include(r => r.Images)
                 .Where(r => r.UserId == userId)
-                .ToListAsync();
+                .AsQueryable();
 
-            var model = new MyPostsViewModel();
+            // Apply the status filter using Lost & Found's own ApprovalStatus enum.
+            // Marketplace and Lost & Found use different enum types, so each query
+            // keeps its own entity-specific status logic.
+            if (!string.IsNullOrWhiteSpace(status) &&
+                Enum.TryParse<ApprovalStatus>(status, out var reportStatus))
+            {
+                reportsQuery = reportsQuery
+                    .Where(r => r.Status == reportStatus);
+            }
 
-            // Retrieve the logged-in user.
+            // Apply the post-source filter.
+            // Marketplace means that only Marketplace listings should be displayed,
+            // so Lost & Found reports are excluded.
+            if (string.Equals(type, "Marketplace", StringComparison.OrdinalIgnoreCase))
+            {
+                reportsQuery = reportsQuery.Where(r => false);
+            }
+
+            // Execute the Lost & Found query after all applicable filters are applied.
+            var reports = await reportsQuery.ToListAsync();
+
+            // Retrieve the logged-in user for the existing profile information.
             var user = await _userManager.GetUserAsync(User);
 
-            // Build the reusable profile information.
+            // Build the reusable profile information displayed at the top of MyPosts.
             model.Profile = await _profileService.BuildProfileViewModelAsync(user);
 
-            // Add marketplace listings.
+            // Add the filtered Marketplace listings to the combined Posts collection.
             foreach (var listing in listings)
             {
                 model.Posts.Add((listing, null));
             }
 
-            // Add lost and found reports.
+            // Add the filtered Lost & Found reports to the combined Posts collection.
             foreach (var report in reports)
             {
                 model.Posts.Add((null, report));
             }
 
-            // Sort posts by newest first.
+            // Keep the existing MyPosts behavior of displaying the newest post first.
+            // The conditional expression uses the correct date property depending
+            // on whether the tuple contains a Marketplace listing or Lost & Found report.
             model.Posts = model.Posts
                 .OrderByDescending(post =>
                     post.Listing != null
@@ -119,6 +172,7 @@ namespace PETHUB.Controllers
                         : post.Report!.DateReported)
                 .ToList();
 
+            // Return the filtered combined posts to the existing MyPosts view.
             return View(model);
         }
 
