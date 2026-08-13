@@ -226,6 +226,53 @@ namespace PETHUB.Helpers
                 }
             };
         }
+
+        // Creates the reusable PetFeed type filter.
+        // This separates Announcements from Pet Tips on pages that display PetFeed posts.
+        public static FilterDefinition PetFeedType(string? selectedValue = null)
+        {
+            return new FilterDefinition
+            {
+                // This becomes the "petFeedType" query-string parameter.
+                ParameterName = "petFeedType",
+
+                // Label displayed above the dropdown.
+                Label = "Feed Type",
+
+                // Empty value means both Announcements and Pet Tips.
+                DefaultValue = "",
+
+                // Preserve the currently selected value after the page reloads.
+                SelectedValue = selectedValue,
+
+                Options =
+                {
+                    // Displays both PetFeed types.
+                    new FilterOption
+                    {
+                        Label = "All",
+                        Value = ""
+                    },
+
+                    // Displays Announcement posts only.
+                    // This matches PetFeedType.Announcement.
+                    new FilterOption
+                    {
+                        Label = "Announcements",
+                        Value = "Announcement"
+                    },
+
+                    // Displays Pet Tip posts only.
+                    // This matches PetFeedType.PetTip.
+                    new FilterOption
+                    {
+                        Label = "Pet Tips",
+                        Value = "PetTip"
+                    }
+                }
+            };
+        }
+
         // Combines one or more reusable filter definitions into one filter bar.
         // params allows the caller to provide one, two, or many filters.
         public static FilterBarViewModel Create(

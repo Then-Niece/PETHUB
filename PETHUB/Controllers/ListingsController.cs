@@ -25,23 +25,48 @@ namespace PETHUB.Controllers
         }
 
         // GET: Listings
+        // Supports approval status, Marketplace listing type, and pet type filters.
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(string status)
+        public async Task<IActionResult> Index(
+            string? status,
+            string? listingType,
+            string? petType)
         {
+            // Start with all Marketplace listings and load the related
+            // member and image data required by the existing approval view.
             var listings = _context.Listings
                 .Include(l => l.Member)
-                .Include(l => l.Images)// load related images
+                .Include(l => l.Images)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(status))
+            // Apply the existing approval-status filter.
+            // ListApprovalStatus is the enum used by Marketplace listings.
+            if (!string.IsNullOrWhiteSpace(status) &&
+                Enum.TryParse<ListApprovalStatus>(status, out var selectedStatus))
             {
-                if (Enum.TryParse<ListApprovalStatus>(status, out var selectedStatus))
-                {
-                    listings = listings.Where(l => l.Status == selectedStatus);
-                }
-
-
+                // EF Core translates this comparison into a database WHERE condition.
+                listings = listings.Where(l => l.Status == selectedStatus);
             }
+
+            // Apply the Marketplace listing-type filter.
+            // This separates For Adoption from For Sale listings.
+            if (!string.IsNullOrWhiteSpace(listingType) &&
+                Enum.TryParse<ListType>(listingType, out var selectedListingType))
+            {
+                // Filter the query using the Listing.Type property.
+                listings = listings.Where(l => l.Type == selectedListingType);
+            }
+
+            // Apply the Dog/Cat filter.
+            // Marketplace Listing uses the ListPetType enum.
+            if (!string.IsNullOrWhiteSpace(petType) &&
+                Enum.TryParse<ListPetType>(petType, out var selectedPetType))
+            {
+                // Filter the query using the Listing.PetType property.
+                listings = listings.Where(l => l.PetType == selectedPetType);
+            }
+
+            // Execute the query after all selected filters have been applied.
             return View(await listings.ToListAsync());
         }
 

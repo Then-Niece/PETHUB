@@ -1,7 +1,20 @@
 ﻿@using System.Linq
 @model IEnumerable<PETHUB.ViewModels.PetFeedFeedViewModel>
 
+@{
+    ViewData["Title"] = "Pet Feed";
+    var petFeedFilters = PETHUB.Helpers.FilterBarHelper.Create(
+       PETHUB.Helpers.FilterBarHelper.PetFeedType(
+           Context.Request.Query["petFeedType"].ToString()
+       )
+   );
+}
+
 <div class="feed-container">
+
+    @* Render the reusable PetFeed type filter. *@
+    <partial name="Components/_FilterBar"
+             model="petFeedFilters" />
 
    @foreach (var post in Model)
    {

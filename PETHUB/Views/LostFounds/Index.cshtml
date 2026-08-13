@@ -3,11 +3,24 @@
 
 @{
     ViewData["Title"] = "Lost & Found Reports";
+    // Combine the existing Status filter with Lost & Found-specific
+    // Report Type and Pet Type filters.
+    var lostFoundApprovalFilters = PETHUB.Helpers.FilterBarHelper.Create(
+        PETHUB.Helpers.FilterBarHelper.Status(
+            Context.Request.Query["status"].ToString()
+        ),
+        PETHUB.Helpers.FilterBarHelper.LostFoundType(
+            Context.Request.Query["lostFoundType"].ToString()
+        ),
+        PETHUB.Helpers.FilterBarHelper.PetType(
+            Context.Request.Query["petType"].ToString()
+        )
+    );
 }
 
 <h1>Lost & Found Approval</h1>
 
-<partial name="Components/_FilterBar" model="FilterBarHelper.Status()"/>
+<partial name="Components/_FilterBar" model="lostFoundApprovalFilters" />
 
 <div class="container">
     @foreach (var item in Model)
@@ -68,20 +81,6 @@
                 </div>
 
 
-                <div class="card-footer text-end">
-                    @if (item.Status == ApprovalStatus.Pending)
-                    {
-                        <span class="badge bg-warning">Pending</span>
-                    }
-                    else if (item.Status == ApprovalStatus.Approved)
-                    {
-                        <span class="badge bg-success">Approved</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">Rejected</span>
-                    }
-                </div>
             </div>
         </div>
     }

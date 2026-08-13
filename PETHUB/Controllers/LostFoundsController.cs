@@ -21,22 +21,52 @@ public class LostFoundsController : Controller
     }
 
     // GET: LostFounds
+    // Supports approval status, Lost/Found report type, and pet type filters.
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Index(string status)
+    public async Task<IActionResult> Index(
+        string? status,
+        string? lostFoundType,
+        string? petType)
     {
+        // Start with all Lost & Found reports and load the related
+        // user and image data required by the existing approval view.
         var lostfounds = _context.LostFounds
             .Include(l => l.User)
             .Include(l => l.Images)
             .AsQueryable();
 
-        if (!string.IsNullOrEmpty(status))
+        // Apply the existing approval-status filter.
+        // Lost & Found uses its own ApprovalStatus enum.
+        if (!string.IsNullOrWhiteSpace(status) &&
+            Enum.TryParse<ApprovalStatus>(status, out var selectedStatus))
         {
-            if (Enum.TryParse<ApprovalStatus>(status, out var selectedStatus))
-            {
-                lostfounds = lostfounds.Where(l => l.Status == selectedStatus);
-            }
+            // EF Core translates this comparison into a database WHERE condition.
+            lostfounds = lostfounds.Where(l => l.Status == selectedStatus);
         }
 
+        // Apply the Lost/Found report-type filter.
+        // LostFoundType separates Lost reports from Found reports.
+        if (!string.IsNullOrWhiteSpace(lostFoundType) &&
+            Enum.TryParse<LostFoundType>(
+                lostFoundType,
+                out var selectedReportType))
+        {
+            // Filter the query using the LostFound.Type property.
+            lostfounds = lostfounds.Where(l => l.Type == selectedReportType);
+        }
+
+        // Apply the Dog/Cat filter.
+        // Lost & Found uses its own PetType enum.
+        if (!string.IsNullOrWhiteSpace(petType) &&
+            Enum.TryParse<PetType>(
+                petType,
+                out var selectedPetType))
+        {
+            // Filter the query using the LostFound.PetType property.
+            lostfounds = lostfounds.Where(l => l.PetType == selectedPetType);
+        }
+
+        // Execute the query after all selected filters have been applied.
         return View(await lostfounds.ToListAsync());
     }
 
