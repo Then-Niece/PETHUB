@@ -1,148 +1,204 @@
 ﻿<nav class="sidebar-nav">
 
-    <!-- Explore -->
-    <div class="sidebar-section">
+    <!-- ==========================================
+         MEMBER NAVIGATION
 
-        <h6 class="sidebar-section-title">
-            Explore
-        </h6>
+         These links are already available to the
+         Admin account so the Admin can later switch
+         to "Member View".
+         ========================================== -->
 
-        <a asp-controller="PetFeeds"
-           asp-action="Feed"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PetFeeds" &&
-                                                   ViewContext.RouteData.Values["Action"]?.ToString() == "Feed" ? "active" : "")">
+    <div id="memberNavigation">
 
-            <i data-lucide="house"></i>
+        <!-- Explore -->
+        <div class="sidebar-section">
 
-            <span class="sidebar-text">
-                Home
-            </span>
+            <h6 class="sidebar-section-title">
+                Explore
+            </h6>
 
-        </a>
 
-        <a asp-controller="PetFeeds"
-           asp-action="Index"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PetFeed" &&
-                                                              ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+            <!-- Home -->
+            <a asp-controller="PetFeeds"
+               asp-action="Feed"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PetFeeds" &&
+                                                                      ViewContext.RouteData.Values["Action"]?.ToString() == "Feed" ? "active" : "")">
 
-            <i data-lucide="shopping-bag"></i>
+                <i data-lucide="house"></i>
 
-            <span class="sidebar-text">
-                Pet Feed
-            </span>
+                <span class="sidebar-text">
+                    Home
+                </span>
 
-        </a>
+            </a>
 
-        <a asp-controller="AdminDashboard"
-           asp-action="Index"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AdminDashboard" &&
-                                                              ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
 
-            <i data-lucide="shopping-bag"></i>
+            <!-- Pet Feed -->
+            <a asp-controller="PetFeeds"
+               asp-action="Index"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PetFeed" &&
+                                                                          ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
 
-            <span class="sidebar-text">
-                Dashboard
-            </span>
+                <i data-lucide="shopping-bag"></i>
 
-        </a>
+                <span class="sidebar-text">
+                    Pet Feed
+                </span>
 
-        <a asp-controller="Listings"
-           asp-action="Marketplace"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Listings" &&
-                                                   ViewContext.RouteData.Values["Action"]?.ToString() == "Marketplace" ? "active" : "")">
+            </a>
 
-            <i data-lucide="shopping-bag"></i>
 
-            <span class="sidebar-text">
-                Marketplace
-            </span>
+            <!-- Marketplace -->
+            <a asp-controller="Listings"
+               asp-action="Marketplace"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Listings" &&
+                                                                      ViewContext.RouteData.Values["Action"]?.ToString() == "Marketplace" ? "active" : "")">
 
-        </a>
+                <i data-lucide="shopping-bag"></i>
 
-        <a asp-controller="LostFounds"
-           asp-action="Browse"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "LostFounds" &&
-                                                   ViewContext.RouteData.Values["Action"]?.ToString() == "Browse" ? "active" : "")">
+                <span class="sidebar-text">
+                    Marketplace
+                </span>
 
-            <i data-lucide="search"></i>
+            </a>
 
-            <span class="sidebar-text">
-                Lost &amp; Found
-            </span>
 
-        </a>
+            <!-- Lost & Found -->
+            <a asp-controller="LostFounds"
+               asp-action="Browse"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "LostFounds" &&
+                                                                      ViewContext.RouteData.Values["Action"]?.ToString() == "Browse" ? "active" : "")">
 
+                <i data-lucide="search"></i>
+
+                <span class="sidebar-text">
+                    Lost &amp; Found
+                </span>
+
+            </a>
+
+        </div>
     </div>
 
-    <hr class="sidebar-divider" />
 
-    <!-- User Management -->
-    <div class="sidebar-section">
+    <!-- ==========================================
+         ADMIN NAVIGATION
 
-        <h6 class="sidebar-section-title">
-            User Management
-        </h6>
+         These links are specific to the Admin.
 
-        <a asp-controller="Members"
-           asp-action="Index"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Members" ? "active" : "")">
+         Later, the View toggle will hide/show this
+         entire section.
+         ========================================== -->
 
-            <i data-lucide="users"></i>
+    <div id="adminNavigation">
 
-            <span class="sidebar-text">
-                Members
-            </span>
+        <!-- Administration -->
+        <div class="sidebar-section">
 
-        </a>
+            <h6 class="sidebar-section-title">
+                Administration
+            </h6>
 
-        <a asp-controller="Admins"
-           asp-action="Index"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admins" ? "active" : "")">
 
-            <i data-lucide="user-cog"></i>
+            <!-- Dashboard -->
+            <a asp-controller="AdminDashboard"
+               asp-action="Index"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "AdminDashboard" &&
+                                                                          ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
 
-            <span class="sidebar-text">
-                Admins
-            </span>
+                <i data-lucide="layout-dashboard"></i>
 
-        </a>
+                <span class="sidebar-text">
+                    Dashboard
+                </span>
 
-    </div>
+            </a>
 
-    <hr class="sidebar-divider" />
+        </div>
 
-    <!-- Content Moderation -->
-    <div class="sidebar-section">
 
-        <h6 class="sidebar-section-title">
-            Content Moderation
-        </h6>
+        <hr class="sidebar-divider" />
 
-        <a asp-controller="Listings"
-           asp-action="Index"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Listings" &&
-                                            ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
 
-            <i data-lucide="badge-check"></i>
+        <!-- User Management -->
+        <div class="sidebar-section">
 
-            <span class="sidebar-text">
-                Marketplace Approval
-            </span>
+            <h6 class="sidebar-section-title">
+                User Management
+            </h6>
 
-        </a>
 
-        <a asp-controller="LostFounds"
-           asp-action="Index"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "LostFounds" &&
-                                            ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+            <!-- Members -->
+            <a asp-controller="Members"
+               asp-action="Index"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Members" ? "active" : "")">
 
-            <i data-lucide="shield-check"></i>
+                <i data-lucide="users"></i>
 
-            <span class="sidebar-text">
-                Lost &amp; Found Approval
-            </span>
+                <span class="sidebar-text">
+                    Members
+                </span>
 
-        </a>
+            </a>
+
+
+            <!-- Admins -->
+            <a asp-controller="Admins"
+               asp-action="Index"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admins" ? "active" : "")">
+
+                <i data-lucide="user-cog"></i>
+
+                <span class="sidebar-text">
+                    Admins
+                </span>
+
+            </a>
+
+        </div>
+
+
+        <hr class="sidebar-divider" />
+
+
+        <!-- Content Moderation -->
+        <div class="sidebar-section">
+
+            <h6 class="sidebar-section-title">
+                Content Moderation
+            </h6>
+
+
+            <!-- Marketplace Approval -->
+            <a asp-controller="Listings"
+               asp-action="Index"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Listings" &&
+                                                                       ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+
+                <i data-lucide="badge-check"></i>
+
+                <span class="sidebar-text">
+                    Marketplace Approval
+                </span>
+
+            </a>
+
+
+            <!-- Lost & Found Approval -->
+            <a asp-controller="LostFounds"
+               asp-action="Index"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "LostFounds" &&
+                                                                       ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+
+                <i data-lucide="shield-check"></i>
+
+                <span class="sidebar-text">
+                    Lost &amp; Found Approval
+                </span>
+
+            </a>
+
+        </div>
 
     </div>
 
