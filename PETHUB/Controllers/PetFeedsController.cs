@@ -45,7 +45,6 @@ public class PetFeedsController : Controller
         var query = _context.PetFeeds
             .Include(p => p.Admin)
             .Include(p => p.Images)
-            .Where(p => p.AdminId != userId)
             .AsQueryable();
 
         // Apply the PetFeed type filter only when the administrator
