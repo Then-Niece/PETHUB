@@ -1,26 +1,44 @@
 ﻿namespace PETHUB.ViewModels
 {
-    // Stores the configuration for one reusable filter bar.
-    // The actual filter options are supplied by FilterBarHelper.
+    // Represents the complete reusable filter bar.
+    // It supports one filter or multiple filters on the same page.
     public class FilterBarViewModel
     {
-        // Name of the query-string parameter, such as "status" or "type".
+        // Contains all filter definitions that should be displayed.
+        // One definition creates one dropdown; multiple definitions create multiple dropdowns.
+        public List<FilterDefinition> Filters { get; set; } = new();
+    }
+
+    // Represents one individual filter inside the filter bar.
+    public class FilterDefinition
+    {
+        // Query-string parameter used by this filter.
+        // Examples: "status" and "type".
         public string ParameterName { get; set; } = string.Empty;
 
-        // Options that the shared Razor partial will render.
+        // Text displayed above the dropdown.
+        // Examples: "Status" and "Post Type".
+        public string Label { get; set; } = string.Empty;
+
+        // Value used when no selection has been supplied.
+        // For MyPosts, Status defaults to Pending while Post Type defaults to All.
+        public string DefaultValue { get; set; } = string.Empty;
+
+        // Current value selected by the user.
+        // This value is supplied by the controller/ViewModel after a GET request.
+        public string? SelectedValue { get; set; }
+
+        // Available options for this individual filter.
         public List<FilterOption> Options { get; set; } = new();
     }
 
-    // Represents one button that can be displayed by the filter bar.
+    // Represents one selectable option inside a filter.
     public class FilterOption
     {
         // Text displayed to the user.
         public string Label { get; set; } = string.Empty;
 
-        // Value placed into the query string when selected.
+        // Value sent through the query string.
         public string Value { get; set; } = string.Empty;
-
-        // CSS class controlling the button's appearance.
-        public string CssClass { get; set; } = "btn-secondary";
     }
 }

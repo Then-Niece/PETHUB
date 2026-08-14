@@ -3,12 +3,25 @@
 
 @{
     ViewData["Title"] = "Marketplace Approval";
+    // Combine the existing Status filter with Marketplace-specific
+    // Listing Type and Pet Type filters.
+    var marketplaceApprovalFilters = PETHUB.Helpers.FilterBarHelper.Create(
+        PETHUB.Helpers.FilterBarHelper.Status(
+            Context.Request.Query["status"].ToString()
+        ),
+        PETHUB.Helpers.FilterBarHelper.ListingType(
+            Context.Request.Query["listingType"].ToString()
+        ),
+        PETHUB.Helpers.FilterBarHelper.PetType(
+            Context.Request.Query["petType"].ToString()
+        )
+    );
 }
 
 <h1>Marketplace Approval</h1>
 
 <partial name="Components/_FilterBar"
-         model="FilterBarHelper.Status()" />
+         model="marketplaceApprovalFilters" />
 
 <div class="container">
         @foreach (var item in Model)
@@ -69,21 +82,6 @@
                     <a asp-action="Details" asp-route-id="@item.ListingId" class="btn btn-sm btn-outline-primary">View</a>
                 </div>
 
-                <!-- Footer -->
-                <div class="card-footer text-end">
-                    @if (item.Status == ListApprovalStatus.Pending)
-                    {
-                        <span class="badge bg-warning">Pending</span>
-                    }
-                    else if (item.Status == ListApprovalStatus.Approved)
-                    {
-                        <span class="badge bg-success">Approved</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">Rejected</span>
-                    }
-                </div>
             </div>
         </div>
     }

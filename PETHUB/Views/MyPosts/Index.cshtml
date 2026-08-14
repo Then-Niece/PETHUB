@@ -2,6 +2,12 @@
 
 @{
     ViewData["Title"] = "My Posts";
+    // Create the individual filter definitions required by MyPosts
+    // and combine them into the FilterBarViewModel expected by _FilterBar.
+    var myPostsFilters = PETHUB.Helpers.FilterBarHelper.Create(
+        PETHUB.Helpers.FilterBarHelper.Status(Model.StatusFilter),
+        PETHUB.Helpers.FilterBarHelper.PostType(Model.TypeFilter)
+    );
 }
 
 @* Header and Edit Profile Button*@
@@ -22,6 +28,11 @@
         My Posts
     </h2>
 
+<div class="d-flex gap-3 mb-3 align-items-center">
+    @* Render the complete filter bar containing the Status and Post Type filters. *@
+    <partial name="Components/_FilterBar"
+             model="myPostsFilters" />
+</div>
 
     @foreach (var post in Model.Posts)
     {

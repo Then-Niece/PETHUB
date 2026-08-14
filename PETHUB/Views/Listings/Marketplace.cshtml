@@ -2,8 +2,22 @@
 
 @{
     ViewData["Title"] = "Marketplace Client";
+    // Create a filter bar containing the Marketplace listing-type filter.
+    // Request.Query reads the current URL so the selected option remains
+    // selected after the page reloads.
+    var marketplaceFilters = PETHUB.Helpers.FilterBarHelper.Create(
+        PETHUB.Helpers.FilterBarHelper.ListingType(
+            Context.Request.Query["listingType"].ToString()
+        ),
+        PETHUB.Helpers.FilterBarHelper.PetType(
+               Context.Request.Query["petType"].ToString()
+           )
+        );
 }
 
+@* Render the reusable Marketplace filter. *@
+<partial name="Components/_FilterBar"
+         model="marketplaceFilters" />
 
 <!-- Add Listing Button -->
 @if (User.IsInRole("Member"))

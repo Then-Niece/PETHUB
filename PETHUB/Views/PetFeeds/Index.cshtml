@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "PetFeed Management";
+    var petFeedFilters = PETHUB.Helpers.FilterBarHelper.Create(
+       PETHUB.Helpers.FilterBarHelper.PetFeedType(
+           Context.Request.Query["petFeedType"].ToString()
+       )
+   );
 }
 
 <h1 class="mb-3">View Other Admins PetFeed Posts</h1>
@@ -9,6 +14,10 @@
 <div class="mb-3">
     <a asp-action="Create" class="btn btn-primary">+ Create Post</a>
 </div>
+
+@* Render the reusable Announcement/Pet Tip filter. *@
+<partial name="Components/_FilterBar"
+         model="petFeedFilters" />
 
 <div class="container">
     @foreach (var item in Model)

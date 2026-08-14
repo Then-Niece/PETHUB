@@ -29,21 +29,43 @@ public class PetFeedsController : Controller
 
 
     // GET: PETFEEDS
+    // petFeedType optionally filters the admin PetFeed management page
+    // between Announcements and Pet Tips.
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? petFeedType)
     {
-        // Retrieve the currently logged-in administrator's ID.
-        // This allows us to exclude their own posts from the management page.
+        // Get the currently logged-in administrator's ID.
+        // This keeps the existing behavior where an admin does not
+        // manage their own posts through this page.
         var userId = _userManager.GetUserId(User);
 
-        // Retrieve PetFeed posts created by other administrators.
-        // The logged-in admin manages their own posts through My Posts.
-        var posts = await _context.PetFeeds
+        // Start with PetFeed posts created by other administrators.
+        // AsQueryable allows the optional type filter to be added
+        // before the database query is executed.
+        var query = _context.PetFeeds
             .Include(p => p.Admin)
             .Include(p => p.Images)
             .Where(p => p.AdminId != userId)
-            .OrderByDescending(p => p.DateCreated)
-            .ToListAsync();
+            .AsQueryable();
+
+        // Apply the PetFeed type filter only when the administrator
+        // selects a specific type.
+        // Enum.TryParse converts "Announcement" or "PetTip" from the URL
+        // into the PetFeedType enum used by the PetFeed model.
+        if (!string.IsNullOrWhiteSpace(petFeedType) &&
+            Enum.TryParse<PetFeedType>(
+                petFeedType,
+                out var selectedFeedType))
+        {
+            // EF Core translates this into a database WHERE condition.
+            query = query.Where(p => p.Type == selectedFeedType);
+        }
+
+        // Keep the existing newest-first ordering.
+        query = query.OrderByDescending(p => p.DateCreated);
+
+        // Execute the final filtered query.
+        var posts = await query.ToListAsync();
 
         return View(posts);
     }
@@ -400,29 +422,55 @@ public class PetFeedsController : Controller
     //==========================================================
 
     // MEMBER FEED
+    // petFeedType optionally filters the feed between Announcements and Pet Tips.
     [AllowAnonymous]
-    public async Task<IActionResult> Feed(int? postId)
+    public async Task<IActionResult> Feed(
+        int? postId,
+        string? petFeedType)
     {
+        // Get the current user's ID so the view can determine
+        // whether each member has already pawed a post.
         var userId = _userManager.GetUserId(User);
 
+        // Start with all PetFeed posts and their related data.
+        // AsQueryable allows the optional feed-type filter to be applied
+        // before the database query is executed.
         var query = _context.PetFeeds
             .Include(p => p.Images)
             .Include(p => p.Paws)
             .Include(p => p.Comments)
                 .ThenInclude(c => c.Member)
             .AsSplitQuery()
-            .OrderByDescending(p => p.DateCreated)
-            .ThenByDescending(p => p.DateCreated);
+            .AsQueryable();
 
-        // If user is not authenticated OR is a client role → limit to 10
-        if (!User.Identity.IsAuthenticated)
+        // Apply the PetFeed type filter only when the user selected
+        // a specific feed type.
+        // Enum.TryParse converts "Announcement" or "PetTip" from the URL
+        // into the PetFeedType enum used by the database model.
+        if (!string.IsNullOrWhiteSpace(petFeedType) &&
+            Enum.TryParse<PetFeedType>(
+                petFeedType,
+                out var selectedFeedType))
         {
-            query = query.Take(10)
-                         .OrderByDescending(p => p.DateCreated);
+            // EF Core translates this comparison into a database WHERE condition.
+            query = query.Where(p => p.Type == selectedFeedType);
         }
 
+        // Apply the existing newest-first ordering.
+        query = query
+            .OrderByDescending(p => p.DateCreated);
+
+        // If the visitor is not authenticated, keep the existing
+        // limit of 10 posts for the public feed.
+        if (!User.Identity.IsAuthenticated)
+        {
+            query = query.Take(10);
+        }
+
+        // Execute the final filtered query.
         var posts = await query.ToListAsync();
 
+        // Convert database entities into the Feed ViewModels used by the view.
         var model = posts.Select(p => new PetFeedFeedViewModel
         {
             PetFeedId = p.PetFeedId,
@@ -433,27 +481,26 @@ public class PetFeedsController : Controller
 
             Images = p.Images,
 
+            // Count the number of paws for this post.
             PawCount = p.Paws.Count(),
 
-            IsPawed = userId != null && p.Paws.Any(x => x.MemberId == userId),
+            // Check whether the current member has pawed this post.
+            IsPawed = userId != null &&
+                      p.Paws.Any(x => x.MemberId == userId),
 
+            // Count comments without changing the existing comment behavior.
             CommentCount = p.Comments.Count(),
 
             Comments = p.Comments,
-            //.OrderByDescending(c => c.DatePosted)
-            //.Take(3)
-            //.ToList()
 
-
-            // Highlight the post if its ID matches the provided postId parameter
+            // Highlight the requested post when postId is supplied.
             IsHighlighted = postId == p.PetFeedId
 
         }).ToList();
 
-
+        // Send the filtered PetFeed posts to the existing Feed view.
         return View(model);
     }
-
 
     [HttpPost]
     [Authorize(Roles = "Member")]
