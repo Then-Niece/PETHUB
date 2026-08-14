@@ -74,13 +74,45 @@
 
         <div class="mb-3">
             <label asp-for="Password" class="form-label"></label>
-            <input asp-for="Password" type="password" class="form-control" />
+            <div class="input-group">
+
+                <input asp-for="Password"
+                       type="password"
+                       class="form-control"
+                       id="registerPassword" />
+
+                <button type="button"
+                        class="password-toggle"
+                        data-password-target="registerPassword"
+                        aria-label="Show password">
+
+                    <i data-lucide="eye"></i>
+
+                </button>
+
+            </div>
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="ConfirmPassword" class="form-label"></label>
-            <input asp-for="ConfirmPassword" type="password" class="form-control" />
+            <div class="input-group">
+
+                <input asp-for="ConfirmPassword"
+                       type="password"
+                       class="form-control"
+                       id="confirmPassword" />
+
+                <button type="button"
+                        class="password-toggle"
+                        data-password-target="confirmPassword"
+                        aria-label="Show password">
+
+                    <i data-lucide="eye"></i>
+
+                </button>
+
+            </div>
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
 

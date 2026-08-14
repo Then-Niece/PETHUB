@@ -13,10 +13,28 @@
             <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
         </div>
 
+        <!-- password field with the see and unsee password -->
         <div class="mb-3">
             <label asp-for="Password" class="form-label"></label>
-            <input asp-for="Password" type="password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
+            <div class="input-group">
+
+                <input asp-for="Password"
+                       type="password"
+                       class="form-control"
+                       id="loginPassword" />
+
+                <button type="button"
+                        class="password-toggle"
+                        data-password-target="loginPassword"
+                        aria-label="Show password">
+
+                    <i data-lucide="eye"></i>
+
+                </button>
+
+            </div>
+            <span asp-validation-for="Password"
+                  class="text-danger"></span>
         </div>
 
         <div class="mb-3 d-flex justify-content-between align-items-center">

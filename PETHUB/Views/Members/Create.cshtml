@@ -194,16 +194,25 @@
                             <!-- Password -->
                             <div class="form-group full-width">
 
-                                <label asp-for="Password">
-                                    Password
-                                </label>
+                                <label asp-for="Password" class="form-label"></label>
+                                <div class="input-group">
 
-                                <input asp-for="Password"
-                                       type="password"
-                                       class="form-control custom-input" />
+                                    <input asp-for="Password"
+                                           type="password"
+                                           class="form-control custom-input" 
+                                           id="memberPassword"/>
 
-                                <span asp-validation-for="Password"
-                                      class="text-danger"></span>
+                                    <button type="button"
+                                            class="password-toggle"
+                                            data-password-target="memberPassword"
+                                            aria-label="Show password">
+
+                                            <i data-lucide="eye"></i>
+
+                                    </button>
+
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger"></span>
 
                             </div>
 

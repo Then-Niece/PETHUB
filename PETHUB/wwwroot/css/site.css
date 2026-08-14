@@ -896,6 +896,7 @@ a {
     font-size: 16px;
     opacity: 0.7;
     cursor: pointer;
+
 }
 
     .delete-notification:hover {
@@ -915,3 +916,66 @@ a {
 .notification-link {
     display: block;
 }
+
+
+
+
+/* ==========================================
+   PASSWORD TOGGLE
+   ========================================== */
+
+.password-toggle {
+    background-color: #FFFFFF;
+    border: 1px solid #DEE2E6;
+    color: #8ACE79;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+
+    /* ==========================================
+   HOVER
+   ========================================== */
+
+    .password-toggle:hover {
+        background-color: #8ACE79;
+        border-color: #8ACE79;
+        color: #FFFFFF;
+    }
+
+
+    /* ==========================================
+   FOCUS
+   ========================================== */
+
+    .password-toggle:focus {
+        background-color: #8ACE79;
+        border-color: #8ACE79;
+        color: #FFFFFF;
+        box-shadow: 0 0 0 0.15rem rgba(138, 206, 121, 0.25);
+    }
+
+
+    /* ==========================================
+   CLICKED / ACTIVE
+   ========================================== */
+
+    .password-toggle:active {
+        background-color: #8ACE79;
+        border-color: #8ACE79;
+        color: #FFFFFF;
+    }
+
+
+    /* ==========================================
+   LUCIDE ICON
+   ========================================== */
+
+    .password-toggle svg {
+        width: 18px;
+        height: 18px;
+    }
