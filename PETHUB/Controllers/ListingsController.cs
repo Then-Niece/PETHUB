@@ -254,7 +254,7 @@ namespace PETHUB.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Member")]
-        public async Task<IActionResult> Edit(int id, Listing listing, List<IFormFile> ImageFiles)
+        public async Task<IActionResult> Edit(int id, Listing listing, List<IFormFile> ImageFiles, List<int> DeletedImageIds)
         {
             if (id != listing.ListingId)
             {
@@ -308,6 +308,44 @@ namespace PETHUB.Controllers
             existingListing.PetType = listing.PetType;
             existingListing.PetSex = listing.PetSex;
             existingListing.Type = listing.Type;
+
+
+
+            // DELETE MARKED EXISTING IMAGES
+            
+
+            if (DeletedImageIds != null && DeletedImageIds.Any())
+            {
+                foreach (var imageId in DeletedImageIds)
+                {
+                    var image = existingListing.Images
+                        .FirstOrDefault(i =>
+                            i.ListingImageId == imageId);
+
+                    if (image == null)
+                    {
+                        continue;
+                    }
+
+
+                    // Delete physical image file.
+                    var filePath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot",
+                        image.ImagePath.TrimStart('/')
+                    );
+
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+
+
+                    // Delete image from database.
+                    _context.ListingImages.Remove(image);
+                }
+            }
 
             // Handle new images
             if (ImageFiles != null && ImageFiles.Count > 0)
