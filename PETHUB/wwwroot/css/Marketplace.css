@@ -3816,3 +3816,124 @@
         height: 44px;
     }
 }
+
+
+/* EDIT MARKETPLACE */
+
+.edit-listing-page .listing-type-card,
+.edit-listing-page .listing-type-card:hover,
+.edit-listing-page .listing-type-card:focus,
+.edit-listing-page .listing-type-card:active {
+    transform: none !important;
+    transition: none !important;
+    cursor: default !important;
+}
+
+    /* NORMAL CARD */
+
+    .edit-listing-page .listing-type-card:not(.active),
+    .edit-listing-page .listing-type-card:not(.active):hover,
+    .edit-listing-page .listing-type-card:not(.active):focus,
+    .edit-listing-page .listing-type-card:not(.active):active {
+        background: #fff !important;
+        border-color: #e1e7ec !important;
+        box-shadow: none !important;
+    }
+
+    /* ACTIVE CARD */
+
+    .edit-listing-page .listing-type-card.active,
+    .edit-listing-page .listing-type-card.active:hover,
+    .edit-listing-page .listing-type-card.active:focus,
+    .edit-listing-page .listing-type-card.active:active {
+        background: #f7fff5 !important;
+        border-color: #8ACE79 !important;
+        box-shadow: none !important;
+    }
+
+/*  FORM ACTIONS */
+
+
+#editListingForm .btn {
+    min-width: 120px;
+    height: 42px;
+    font-size: .9rem;
+    font-weight: 600;
+    transition: all .2s ease;
+}
+
+
+/* ==========================================================
+   UPDATE LISTING BUTTON
+========================================================== */
+
+#editListingForm .btn-success {
+    background-color: #8ACE79;
+    border-color: #8ACE79;
+    color: white;
+    border-radius: var(--bs-border-radius-pill) !important;
+}
+
+    #editListingForm .btn-success:hover {
+        background-color: #8ACE79;
+        border-color: #8ACE79;
+        color: white;
+        box-shadow: 0 4px 12px rgba(138, 206, 121, .25);
+    }
+
+
+/* ==========================================================
+   CANCEL BUTTON
+========================================================== */
+
+#editListingForm .btn-outline-secondary {
+    background-color: #FFFFFF;
+    border: 1px solid #D1D5DB;
+    color: #374151;
+    border-radius: var(--bs-border-radius-pill) !important;
+    line-height: 2;
+}
+
+    #editListingForm .btn-outline-secondary:hover {
+        background-color: #F3F4F6;
+        border-color: #D1D5DB;
+        color: #374151;
+        
+    }
+
+/* ==========================================================
+ EXISTING PHOTO REMOVE BUTTON
+========================================================== */
+
+.edit-photo-item {
+    position: relative;
+}
+
+.edit-photo-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+    z-index: 2;
+}
+
+    .edit-photo-remove:hover {
+        background-color: #333;
+        color: white;
+    }
+
+    .edit-photo-remove svg {
+        width: 16px;
+        height: 16px;
+    }
+  

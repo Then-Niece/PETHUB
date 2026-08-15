@@ -12,16 +12,21 @@
 
 function setupImagePreview(inputId, previewContainerId, options = {}) {
 
-    // NEW:
+   
     // Each uploader gets its own file storage.
     // Prevents the pet images and ID image from mixing together.
     let selectedFiles = [];
 
-    // NEW:
+  
     // Default settings.
     // Existing pages automatically use multiple = true, so no changes are needed.
     const settings = {
         multiple: true,
+
+      
+        // Number of existing database photos on Edit pages.
+        existingCount: 0,
+
         ...options
     };
 
@@ -32,7 +37,7 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
 
     imageInput.addEventListener("change", function () {
 
-        // NEW:
+      
         // If this input only accepts one image,
         // replace the previous image instead of adding another one.
         if (settings.multiple) {
@@ -42,7 +47,7 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
 
         } else {
 
-            // NEW:
+         
             // For single image uploads (ID Photo),
             // keep only the newly selected file.
             selectedFiles = Array.from(this.files);
@@ -66,7 +71,29 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
 
         previewContainer.innerHTML = "";
 
-        selectedFiles.slice(0, 4).forEach((file, index) => {
+      
+        // Existing photos already use some of the 4 visible spaces.
+        const visibleSlots =
+            Math.max(0, 4 - settings.existingCount);
+
+       
+        // Count all photos that are hidden from the preview.
+        const hiddenCount =
+            Math.max(
+                0,
+                settings.existingCount +
+                selectedFiles.length -
+                4
+            );
+
+        const visibleFiles =
+            selectedFiles.slice(0, visibleSlots);
+
+  
+        // Keep track of loaded previews so +more appears last.
+        let loadedImages = 0;
+
+        visibleFiles.forEach((file, index) => {
 
             const reader = new FileReader();
 
@@ -83,6 +110,10 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
                 img.classList.add("w-100", "h-100", "object-fit-cover");
 
                 const removeBtn = document.createElement("button");
+
+             
+                // Prevent the remove button from submitting the form.
+                removeBtn.type = "button";
 
                 removeBtn.innerHTML = "&times;";
 
@@ -104,7 +135,7 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
 
                     renderPreviews();
 
-                    // NEW:
+                
                     // Show placeholder again if all images are removed.
                     if (selectedFiles.length === 0 && settings.placeholderId) {
 
@@ -122,7 +153,7 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
                 previewDiv.appendChild(removeBtn);
                 previewContainer.appendChild(previewDiv);
 
-                // NEW:
+             
                 // Hide placeholder when an image is selected.
                 // If a page does not have a placeholder, nothing happens.
                 if (settings.placeholderId) {
@@ -135,22 +166,48 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
 
                 }
 
+               
+                // Wait until all visible images are rendered.
+                loadedImages++;
+
+                if (loadedImages === visibleFiles.length) {
+
+             
+                    // Put +more after the visible photos.
+                    if (hiddenCount > 0) {
+
+                        const more = document.createElement("div");
+
+                        more.classList.add("more-images");
+
+                        more.textContent = `+${hiddenCount} more photos`;
+
+                        previewContainer.appendChild(more);
+
+                    }
+
+                }
+
             };
 
             reader.readAsDataURL(file);
 
         });
 
-          if (selectedFiles.length > 4) {
+      
+        // Handles cases where there are no new photos to preview.
+        if (visibleFiles.length === 0 && hiddenCount > 0) {
 
-        const more = document.createElement("div");
+            const more = document.createElement("div");
 
-        more.classList.add("more-images");
+            more.classList.add("more-images");
 
-        more.textContent = `+${selectedFiles.length - 4} more photos`;
+            more.textContent = `+${hiddenCount} more photos`;
 
-        previewContainer.appendChild(more);
+            previewContainer.appendChild(more);
+
+        }
 
     }
-    }
+
 }

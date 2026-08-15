@@ -2,244 +2,611 @@
 
 @{
     ViewData["Title"] = "Edit Listing";
+
     ViewData["Province"] = Model.Province;
     ViewData["City"] = Model.City;
     ViewData["Barangay"] = Model.Barangay;
     ViewData["StreetAddress"] = Model.StreetAddress;
+
+    bool isAdoption =
+        Model.Type == PETHUB.Models.ListType.For_Adoption;
 }
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
 
-            <h1 class="text-center mb-4">Edit Listing</h1>
+<div class="edit-listing-page">
 
-            <div class="row">
 
-                <!-- LEFT SIDE -->
-                <div class="col-md-5">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">Current Images</h5>
-                        </div>
+    @if (Model.Images != null && Model.Images.Any())
+    {
+        @foreach (var img in Model.Images)
+        {
+            <form asp-action="RemoveImage"
+                  method="post"
+                  id="removeImageForm_@img.ListingImageId"
+                  style="display:none;">
 
-                        <div class="card-body">
+                @Html.AntiForgeryToken()
 
-                            @if (Model.Images != null && Model.Images.Any())
-                            {
-                                <div class="row">
+                <input type="hidden"
+                       name="id"
+                       value="@img.ListingImageId" />
 
-                                    @foreach (var img in Model.Images)
-                                    {
-                                        <div class="col-12 mb-3 text-center">
+            </form>
+        }
+    }
 
-                                            <img src="@img.ImagePath"
-                                                 class="img-fluid rounded shadow-sm"
-                                                 style="height:150px;object-fit:cover;" />
 
-                                            <form asp-action="RemoveImage"
-                                                  method="post"
-                                                  class="mt-2">
 
-                                                @Html.AntiForgeryToken()
+    <!-- =====================================================
+         MAIN EDIT FORM
+    ====================================================== -->
 
-                                                <input type="hidden"
-                                                       name="id"
-                                                       value="@img.ListingImageId" />
+    <div class="listing-form-card">
 
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-danger">
-                                                    Remove
-                                                </button>
+        <form asp-action="Edit"
+              method="post"
+              enctype="multipart/form-data"
+              id="editListingForm">
 
-                                            </form>
 
-                                        </div>
-                                    }
+            @Html.AntiForgeryToken()
 
-                                </div>
-                            }
-                            else
-                            {
-                                <p class="text-muted text-center">
-                                    No images yet — upload one!
-                                </p>
-                            }
 
-                        </div>
-                    </div>
-                </div>
 
-                <!-- RIGHT SIDE -->
-                <div class="col-md-7">
 
-                    <div class="card shadow-sm">
+            <div class="mb-4">
 
-                        <div class="card-body">
+                <h2>
+                    Edit Marketplace Listing
+                </h2>
 
-                            <form asp-action="Edit"
-                                  method="post"
-                                  enctype="multipart/form-data">
-
-                                @Html.AntiForgeryToken()
-
-                                <input type="hidden" asp-for="ListingId" />
-                                <input type="hidden" asp-for="Status" />
-                                <input type="hidden" asp-for="ListStatus" />
-                                <input type="hidden" asp-for="MemberId" />
-                                <input type="hidden" asp-for="DatePosted" />
-
-                                <div asp-validation-summary="ModelOnly"
-                                     class="text-danger"></div>
-
-                                <!-- TITLE -->
-
-                                <div class="form-group mb-3">
-                                    <label asp-for="Title"></label>
-                                    <input asp-for="Title" class="form-control" />
-                                    <span asp-validation-for="Title" class="text-danger"></span>
-                                </div>
-
-                                <!-- DESCRIPTION -->
-
-                                <div class="form-group mb-3">
-                                    <label asp-for="Description"></label>
-                                    <textarea asp-for="Description"
-                                              class="form-control"></textarea>
-                                    <span asp-validation-for="Description"
-                                          class="text-danger"></span>
-                                </div>
-
-                                <!-- TYPE -->
-
-                                <div class="form-group mb-3">
-                                    <label asp-for="Type"></label>
-
-                                    <select asp-for="Type"
-                                            id="typeSelect"
-                                            class="form-select"
-                                            asp-items="Html.GetEnumSelectList<PETHUB.Models.ListType>()">
-                                    </select>
-
-                                    <span asp-validation-for="Type"
-                                          class="text-danger"></span>
-                                </div>
-
-                                <!-- PRICE -->
-
-                                <div class="form-group mb-3" id="priceGroup">
-                                    <label asp-for="Price"></label>
-                                    <input asp-for="Price"
-                                           class="form-control" />
-                                    <span asp-validation-for="Price"
-                                          class="text-danger"></span>
-                                </div>
-
-                                <!-- PET TYPE -->
-
-                                <div class="form-group mb-3">
-                                    <label asp-for="PetType"></label>
-
-                                    <select asp-for="PetType"
-                                            class="form-select"
-                                            asp-items="Html.GetEnumSelectList<PETHUB.Models.ListPetType>()">
-                                    </select>
-
-                                    <span asp-validation-for="PetType"
-                                          class="text-danger"></span>
-                                </div>
-
-                                <!-- PET SEX -->
-
-                                <div class="form-group mb-3">
-                                    <label asp-for="PetSex"></label>
-
-                                    <select asp-for="PetSex"
-                                            class="form-select"
-                                            asp-items="Html.GetEnumSelectList<PETHUB.Models.ListPetSex>()">
-                                    </select>
-
-                                    <span asp-validation-for="PetSex"
-                                          class="text-danger"></span>
-                                </div>
-
-                                <!-- BREED -->
-
-                                <div class="form-group mb-3">
-                                    <label asp-for="Breed"></label>
-                                    <input asp-for="Breed"
-                                           class="form-control" />
-                                    <span asp-validation-for="Breed"
-                                          class="text-danger"></span>
-                                </div>
-
-                                <!-- LOCATION -->
-
-                                <!-- Address Fields -->
-                                <partial name="Components/_AddressFields" />
-
-                                <!-- IMAGES -->
-
-                                <div class="form-group mb-3">
-                                    <label>Add More Images</label>
-
-                                    <input type="file"
-                                           id="imageInput"
-                                           name="ImageFiles"
-                                           multiple
-                                           class="form-control" />
-
-                                    <small class="form-text text-muted">
-                                        You can select multiple files.
-                                    </small>
-                                </div>
-
-                                <div id="imagePreviewContainer"
-                                     class="d-flex flex-wrap gap-2 mt-3"></div>
-
-                                <div class="d-flex justify-content-between mt-4">
-
-                                    <button type="submit"
-                                            class="btn btn-primary">
-                                        Save Changes
-                                    </button>
-
-                                @* 
-                                    Show a different Back button depending on the user's role.
-                                    - Admins return to the Listings page.
-                                    - Members return to their own Marketplace Details page.
-                                *@
-
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <a asp-action="Index"
-                                        class="btn btn-secondary">
-                                        Back to Listings
-                                    </a>
-                                }
-                                else
-                                {
-                                    <a asp-controller="MyPosts"
-                                        asp-action="MarketplaceDetails"
-                                        asp-route-id="@Model.ListingId"
-                                        class="btn btn-secondary">
-                                        Back
-                                    </a>
-}                                </div>
-
-                            </form>
-
-                        </div>
-
-                    </div>
-
-                </div>
+                <p class="text-muted">
+                    Update the information below to keep your listing
+                    accurate and up to date.
+                </p>
 
             </div>
 
-        </div>
+
+
+            <!-- =================================================
+                 HIDDEN VALUES
+            ================================================== -->
+
+            <input type="hidden"
+                   asp-for="ListingId" />
+
+            <input type="hidden"
+                   asp-for="Status" />
+
+            <input type="hidden"
+                   asp-for="ListStatus" />
+
+            <input type="hidden"
+                   asp-for="MemberId" />
+
+            <input type="hidden"
+                   asp-for="DatePosted" />
+
+
+
+            <!-- =================================================
+                 VALIDATION
+            ================================================== -->
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+
+
+            <div class="row g-4">
+
+
+                <!-- =================================================
+                     LEFT SIDE
+                ================================================== -->
+
+                <div class="col-lg-8">
+
+
+                    <!-- =================================================
+                         LISTING TYPE
+                    ================================================== -->
+
+                    <div class="mb-4">
+
+                        <h5 class="mb-1">
+                            Listing Type
+                        </h5>
+
+                        <p class="text-muted mb-3">
+                            This listing is currently marked as:
+                        </p>
+
+
+                        <div class="row g-3">
+
+
+                            <!-- FOR ADOPTION -->
+
+                            <div class="col-md-6">
+
+                                <div class="listing-type-card @(isAdoption ? "active" : "")">
+
+                                    <div class="listing-type-icon">
+
+                                        <i data-lucide="heart"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <h5>
+                                            For Adoption
+                                        </h5>
+
+                                        <small>
+                                            Looking for a loving home
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- FOR SALE -->
+
+                            <div class="col-md-6">
+
+                                <div class="listing-type-card @(!isAdoption ? "active" : "")">
+
+                                    <div class="listing-type-icon">
+
+                                        <i data-lucide="shopping-bag"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <h5>
+                                            For Sale
+                                        </h5>
+
+                                        <small>
+                                            Available for purchase
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <input type="hidden"
+                               asp-for="Type"
+                               id="typeSelect" />
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         TITLE
+                    ================================================== -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Title"
+                               class="form-label">
+
+                            Title
+
+                        </label>
+
+                        <input asp-for="Title"
+                               class="form-control"
+                               placeholder="Enter listing title" />
+
+                        <span asp-validation-for="Title"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         DESCRIPTION
+                    ================================================== -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Description"
+                               class="form-label">
+
+                            Description
+
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  rows="3"
+                                  class="form-control"
+                                  placeholder="Tell people about your pet..."></textarea>
+
+                        <span asp-validation-for="Description"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         PRICE
+                         
+                         ONLY FOR SALE
+                    ================================================== -->
+
+                    @if (!isAdoption)
+                    {
+                        <div class="mb-3"
+                             id="priceGroup">
+
+                            <label asp-for="Price"
+                                   class="form-label">
+
+                                Price
+
+                            </label>
+
+                            <input asp-for="Price"
+                                   class="form-control"
+                                   type="number"
+                                   min="0"
+                                   step="0.01"
+                                   placeholder="₱0.00" />
+
+                            <span asp-validation-for="Price"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+                    }
+
+
+
+                    <!-- =================================================
+                         PET TYPE
+                    ================================================== -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Pet Type
+                        </label>
+
+
+                        <div>
+
+                            <div class="form-check form-check-inline">
+
+                                <input asp-for="PetType"
+                                       class="form-check-input"
+                                       type="radio"
+                                       value="Dog"
+                                       id="editDog" />
+
+                                <label class="form-check-label"
+                                       for="editDog">
+
+                                    Dog
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="form-check form-check-inline">
+
+                                <input asp-for="PetType"
+                                       class="form-check-input"
+                                       type="radio"
+                                       value="Cat"
+                                       id="editCat" />
+
+                                <label class="form-check-label"
+                                       for="editCat">
+
+                                    Cat
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <span asp-validation-for="PetType"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         PET SEX
+                    ================================================== -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Pet Sex
+                        </label>
+
+
+                        <div>
+
+                            <div class="form-check form-check-inline">
+
+                                <input asp-for="PetSex"
+                                       class="form-check-input"
+                                       type="radio"
+                                       value="Male"
+                                       id="editMale" />
+
+                                <label class="form-check-label"
+                                       for="editMale">
+
+                                    Male
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="form-check form-check-inline">
+
+                                <input asp-for="PetSex"
+                                       class="form-check-input"
+                                       type="radio"
+                                       value="Female"
+                                       id="editFemale" />
+
+                                <label class="form-check-label"
+                                       for="editFemale">
+
+                                    Female
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="form-check form-check-inline">
+
+                                <input asp-for="PetSex"
+                                       class="form-check-input"
+                                       type="radio"
+                                       value="Unknown"
+                                       id="editUnknown" />
+
+                                <label class="form-check-label"
+                                       for="editUnknown">
+
+                                    Unknown
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <span asp-validation-for="PetSex"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         BREED
+                    ================================================== -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Breed"
+                               class="form-label">
+
+                            Breed
+
+                        </label>
+
+                        <input asp-for="Breed"
+                               class="form-control"
+                               placeholder="Breed" />
+
+                        <span asp-validation-for="Breed"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         LOCATION
+                    ================================================== -->
+
+                    <div class="mb-3">
+
+                        <h5>
+                            Location
+                        </h5>
+
+                        <p class="text-muted">
+                            Where can interested people find this pet?
+                        </p>
+
+                    </div>
+
+                    <partial name="Components/_AddressFields" />
+
+                </div>
+
+
+
+                    <!-- =================================================
+                         RIGHT SIDE
+                         PHOTOS
+                    ================================================== -->
+
+                    <div class="col-lg-4">
+
+                        <div class="photo-upload-card">
+
+                            <h5 class="mb-3">
+                                Photos
+                            </h5>
+
+                       
+
+
+                            <!-- FILE INPUT -->
+
+                            <div class="mb-3">
+
+                                <input type="file"
+                                       id="imageInput"
+                                       name="ImageFiles"
+                                       multiple
+                                       accept="image/*"
+                                       class="form-control" />
+
+                                     <p class="text-muted">
+                                You can upload multiple images.
+                            </p>
+
+                            </div>
+
+
+                       
+
+
+
+                            <!-- =================================================
+                                 PHOTO GRID
+                            ================================================== -->
+
+                            <div class="image-preview-grid">
+
+
+                                <!-- EXISTING DATABASE PHOTOS -->
+
+                                @if (Model.Images != null && Model.Images.Any())
+                                {
+                                    @foreach (var img in Model.Images)
+                                    {
+                                        <div class="edit-photo-item existing-photo">
+
+                                            <img src="@img.ImagePath"
+                                                 alt="Listing image"
+                                                 class="edit-photo-image" />
+
+
+                                            <button type="button"
+                                                    class="edit-photo-remove"
+                                                    aria-label="Remove image"
+                                                    data-image-id="@img.ListingImageId">
+
+                                                <i data-lucide="x"></i>
+
+                                            </button>
+
+                                        </div>
+                                    }
+                                }
+
+
+
+                                <!-- NEW PHOTO PREVIEWS -->
+
+                                <div id="imagePreviewContainer"
+                                     style="display: contents;">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+            <!-- =================================================
+                 BOTTOM ACTIONS
+            ================================================== -->
+
+            <hr class="my-4" />
+
+
+            <div class="d-flex justify-content-end gap-2">
+
+
+                <!-- CANCEL -->
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+
+                        Cancel
+
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="MyPosts"
+                       asp-action="MarketplaceDetails"
+                       asp-route-id="@Model.ListingId"
+                       class="btn btn-outline-secondary">
+
+                        Cancel
+
+                    </a>
+                }
+
+
+
+                <!-- UPDATE -->
+
+                <button type="submit"
+                        class="btn btn-success">
+
+                    Update Listing
+
+                </button>
+
+            </div>
+
+        </form>
+
     </div>
+
 </div>
+
+
 
 @section Scripts
 {
@@ -247,52 +614,494 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
+
+    <!-- =========================================================
+         IMAGE PREVIEW HELPER
+    ========================================================== -->
+
     <script src="~/js/imagePreviewHelper.js"></script>
 
+
     <script>
-        setupImagePreview("imageInput", "imagePreviewContainer");
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+
+            // =========================================================
+            // IMAGE PREVIEW
+            // =========================================================
+
+            setupImagePreview(
+                "imageInput",
+                "imagePreviewContainer"
+            );
+
+
+            // =========================================================
+            // PHOTO ELEMENTS
+            // =========================================================
+
+            const imageInput =
+                document.getElementById("imageInput");
+
+            const photoGrid =
+                document.querySelector(".image-preview-grid");
+
+            const previewContainer =
+                document.getElementById(
+                    "imagePreviewContainer"
+                );
+
+
+            // =========================================================
+            // UPDATE PHOTO DISPLAY
+            // =========================================================
+
+            // NEW: Count existing + new photos for the Edit page.
+            function updatePhotoDisplay() {
+
+                if (
+                    !imageInput ||
+                    !photoGrid ||
+                    !previewContainer
+                ) {
+                    return;
+                }
+
+
+                // Count existing photos that are not marked for deletion.
+                const existingPhotos =
+                    Array.from(
+                        photoGrid.querySelectorAll(
+                            ".existing-photo:not(.marked-for-removal)"
+                        )
+                    );
+
+
+                // Get new photo previews created by the helper.
+                const newPhotos =
+                    Array.from(
+                        previewContainer.children
+                    ).filter(function (element) {
+
+                        return !element.classList.contains(
+                            "more-images"
+                        );
+
+                    });
+
+
+                //Count the actual selected files.
+                const existingCount =
+                    existingPhotos.length;
+
+                const newCount =
+                    imageInput.files.length;
+
+
+                //  Existing + new = total listing photos.
+                const totalPhotos =
+                    existingCount + newCount;
+
+
+                // Maximum visible photos.
+                const maxVisible = 4;
+
+
+                // =====================================================
+                // EXISTING PHOTOS
+                // =====================================================
+
+                existingPhotos.forEach(
+                    function (photo, index) {
+
+                        if (
+                            index < maxVisible
+                        ) {
+
+                            photo.style.display =
+                                "";
+
+                        }
+                        else {
+
+                            photo.style.display =
+                                "none";
+
+                        }
+
+                    }
+                );
+
+
+                // =====================================================
+                // NEW PHOTO PREVIEWS
+                // =====================================================
+
+                // Existing photos use the first slots.
+                const availableSlots =
+                    Math.max(
+                        0,
+                        maxVisible -
+                        Math.min(
+                            existingCount,
+                            maxVisible
+                        )
+                    );
+
+
+                newPhotos.forEach(
+                    function (photo, index) {
+
+                        if (
+                            index < availableSlots
+                        ) {
+
+                            photo.style.display =
+                                "";
+
+                        }
+                        else {
+
+                            photo.style.display =
+                                "none";
+
+                        }
+
+                    }
+                );
+
+
+                // =====================================================
+                // MORE PHOTOS
+                // =====================================================
+
+                // Remove any +more created by the helper.
+                const oldMore =
+                    previewContainer.querySelector(
+                        ".more-images"
+                    );
+
+
+                if (oldMore) {
+                    oldMore.remove();
+                }
+
+
+                //  Calculate all photos that are not visible.
+                const moreCount =
+                    Math.max(
+                        0,
+                        totalPhotos - maxVisible
+                    );
+
+
+                // Show +more whenever total photos exceed four.
+                if (
+                    moreCount > 0
+                ) {
+
+                    const more =
+                        document.createElement("div");
+
+                    more.classList.add(
+                        "more-images"
+                    );
+
+                    more.textContent =
+                        `+${moreCount} more photos`;
+
+                    previewContainer.appendChild(
+                        more
+                    );
+
+                }
+
+            }
+
+
+            // =========================================================
+            // NEW PHOTO SELECTION
+            // =========================================================
+
+            if (imageInput) {
+
+                imageInput.addEventListener(
+                    "change",
+                    function () {
+
+                        // Give the helper time to create its preview images.
+                        setTimeout(
+                            updatePhotoDisplay,
+                            300
+                        );
+
+                    }
+                );
+
+            }
+
+
+            // =========================================================
+            // EXISTING PHOTO REMOVE
+            // =========================================================
+
+            const existingRemoveButtons =
+                document.querySelectorAll(
+                    ".existing-photo .edit-photo-remove"
+                );
+
+
+            existingRemoveButtons.forEach(
+                function (button) {
+
+                    button.addEventListener(
+                        "click",
+                        function (event) {
+
+                            // Prevent the old remove form from submitting.
+                            event.preventDefault();
+                            event.stopPropagation();
+
+
+                            const photo =
+                                button.closest(
+                                    ".existing-photo"
+                                );
+
+
+                            if (!photo) {
+                                return;
+                            }
+
+
+                            // Get the database image ID.
+                            const imageId =
+                                button.dataset.imageId;
+
+
+                            if (!imageId) {
+                                return;
+                            }
+
+
+                            // Prevent duplicate removal.
+                            if (
+                                photo.classList.contains(
+                                    "marked-for-removal"
+                                )
+                            ) {
+                                return;
+                            }
+
+
+                            // Find the main Edit form.
+                            const editForm =
+                                document.getElementById(
+                                    "editListingForm"
+                                );
+
+
+                            if (editForm) {
+
+                                //  Send the deleted image ID to the Edit POST.
+                                const hiddenInput =
+                                    document.createElement(
+                                        "input"
+                                    );
+
+                                hiddenInput.type =
+                                    "hidden";
+
+                                hiddenInput.name =
+                                    "DeletedImageIds";
+
+                                hiddenInput.value =
+                                    imageId;
+
+
+                                editForm.appendChild(
+                                    hiddenInput
+                                );
+
+                            }
+
+
+                            // Hide the photo.
+                            photo.style.display =
+                                "none";
+
+
+                            // Remember that it is deleted.
+                            photo.classList.add(
+                                "marked-for-removal"
+                            );
+
+
+                            //  Recalculate total photos.
+                            updatePhotoDisplay();
+
+                        }
+                    );
+
+                }
+            );
+
+
+            // =========================================================
+            // INITIAL PHOTO DISPLAY
+            // =========================================================
+
+            updatePhotoDisplay();
+
+
+            // =========================================================
+            // PREVENT ENTER FROM SUBMITTING FORM
+            // =========================================================
+
+            const editForm =
+                document.getElementById(
+                    "editListingForm"
+                );
+
+
+            if (editForm) {
+
+                editForm.addEventListener(
+                    "keydown",
+                    function (event) {
+
+                        // Allow Enter inside textarea.
+
+                        if (
+                            event.target.tagName ===
+                            "TEXTAREA"
+                        ) {
+                            return;
+                        }
+
+
+                        // Prevent Enter from submitting.
+
+                        if (
+                            event.key === "Enter"
+                        ) {
+
+                            event.preventDefault();
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            // =========================================================
+            // LUCIDE ICONS
+            // =========================================================
+
+            if (
+                typeof lucide !== "undefined"
+            ) {
+
+                lucide.createIcons();
+
+            }
+
+        });
+
+
+        // =============================================================
+        // PRICE FIELD
+        // =============================================================
 
         function togglePriceField() {
 
-            const typeSelect = document.getElementById("typeSelect");
-            const priceGroup = document.getElementById("priceGroup");
-            const priceInput = document.getElementById("Price");
+            const typeSelect =
+                document.getElementById(
+                    "typeSelect"
+                );
 
-            if (typeSelect.value === "0") {
+            const priceGroup =
+                document.getElementById(
+                    "priceGroup"
+                );
 
-                priceGroup.style.display = "none";
+            const priceInput =
+                document.getElementById(
+                    "Price"
+                );
+
+
+            if (
+                !typeSelect ||
+                !priceGroup ||
+                !priceInput
+            ) {
+
+                return;
+
+            }
+
+
+
+            if (
+                typeSelect.value === "0"
+            ) {
+
+                priceGroup.style.display =
+                    "none";
+
                 priceInput.value = 0;
 
-                if (priceInput.hasAttribute("data-val-required") &&
-                    !priceInput.dataset.origRequiredMsg) {
-
-                    priceInput.dataset.origRequiredMsg =
-                        priceInput.getAttribute("data-val-required");
-                }
-
-                priceInput.removeAttribute("required");
-                priceInput.removeAttribute("data-val-required");
             }
             else {
 
-                priceGroup.style.display = "block";
+                priceGroup.style.display =
+                    "block";
 
-                if (priceInput.dataset.origRequiredMsg) {
-
-                    priceInput.setAttribute(
-                        "data-val-required",
-                        priceInput.dataset.origRequiredMsg
-                    );
-                }
             }
+
         }
 
-        document
-            .getElementById("typeSelect")
-            .addEventListener("change", togglePriceField);
 
-        window.onload = togglePriceField;
+        // =============================================================
+        // INITIALIZE PRICE
+        // =============================================================
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const typeSelect =
+                    document.getElementById(
+                        "typeSelect"
+                    );
+
+
+                if (typeSelect) {
+
+                    typeSelect.addEventListener(
+                        "change",
+                        togglePriceField
+                    );
+
+                }
+
+
+                togglePriceField();
+
+            }
+        );
+
     </script>
-    <script src="~/js/address-helper.js" asp-append-version="true"></script>
 
+
+    <!-- =========================================================
+         ADDRESS HELPER
+    ========================================================== -->
+
+    <script src="~/js/address-helper.js"
+            asp-append-version="true"></script>
 }
