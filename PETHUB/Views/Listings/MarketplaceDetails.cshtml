@@ -259,7 +259,17 @@
                     @Model.Title
                 </h1>
 
+                @if (Model.Type == PETHUB.Models.ListType.For_Sale)
+                {
+                    <div class="listing-price">
+                        ₱@Model.Price.ToString("N2")
+                    </div>
+                }
+
             </div>
+
+         
+
 
 
             <!-- ==================================================
@@ -268,8 +278,10 @@
 
             <section class="listing-info-section">
 
+               
+
                 <h3>
-                    About This Pet
+                    About This Pet 
                 </h3>
 
                 <p class="listing-description">

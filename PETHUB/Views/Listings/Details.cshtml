@@ -4,211 +4,628 @@
     ViewData["Title"] = "Listing Details";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
+<div class="admin-review-page">
 
-        <!-- Left Side: Image Gallery -->
-        <div class="col-md-6">
-            @if (Model.Images != null && Model.Images.Any())
-            {
-                <div id="listingCarousel" class="carousel slide shadow-sm" data-bs-ride="carousel">
-                    <div class="carousel-inner rounded">
-                        @for (int i = 0; i < Model.Images.Count; i++)
-                        {
-                            var img = Model.Images.ElementAt(i);
+    <!-- ==========================================================
+         MAIN REVIEW CONTAINER
+         The PAGE is NOT a form.
+         This is only the visual container for the review page.
+    ========================================================== -->
 
-                            <div class="carousel-item @(i == 0 ? "active" : "")">
-                                <img src="@img.ImagePath"
-                                     class="d-block w-100"
-                                     alt="Listing Image"
-                                     style="height:400px; object-fit:cover;">
-                            </div>
-                        }
-                    </div>
+    <div class="admin-review-card">
 
-                    <button class="carousel-control-prev"
-                            type="button"
-                            data-bs-target="#listingCarousel"
-                            data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
+        <!-- ======================================================
+             HEADER
+        ======================================================= -->
 
-                    <button class="carousel-control-next"
-                            type="button"
-                            data-bs-target="#listingCarousel"
-                            data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            }
-            else
-            {
-                <div class="bg-light rounded shadow-sm d-flex justify-content-center align-items-center"
-                     style="height:400px;">
-                    <p class="text-muted mb-0">No images uploaded.</p>
-                </div>
-            }
+        <div class="admin-review-header">
+
+            <div class="admin-review-header-content">
+
+                <h1>
+                    Review Listing
+                </h1>
+
+                <p>
+                    Approve or reject a submitted marketplace listing
+                </p>
+
+            </div>
+
+
+            <!-- ==================================================
+                 STATUS
+            =================================================== -->
+
+            <div class="admin-review-status">
+
+                @if (Model.Status == ListApprovalStatus.Pending)
+                {
+                    <span class="admin-status-badge pending">
+                        <span class="status-dot"></span>
+                        Pending
+                    </span>
+                }
+                else if (Model.Status == ListApprovalStatus.Approved)
+                {
+                    <span class="admin-status-badge approved">
+                        <span class="status-dot"></span>
+                        Approved
+                    </span>
+                }
+                else if (Model.Status == ListApprovalStatus.Rejected)
+                {
+                    <span class="admin-status-badge rejected">
+                        <span class="status-dot"></span>
+                        Rejected
+                    </span>
+                }
+
+            </div>
+
         </div>
 
-        <!-- Right Side: Listing Details -->
-        <div class="col-md-5">
-            <div class="card border-0 shadow-sm">
 
-                <div class="card-body">
+        <!-- ======================================================
+             MAIN TWO-COLUMN CONTENT
+        ======================================================= -->
 
-                    <h2 class="fw-bold">@Model.Title</h2>
+        <div class="admin-review-layout">
 
-                    <p class="text-muted">
-                        Posted on @Model.DatePosted.ToString("MMMM dd, yyyy")
-                    </p>
 
-                    <hr />
+            <!-- ==================================================
+                 LEFT SIDE
+                 PHOTOS + MEMBER INFORMATION + VALID ID
+            =================================================== -->
 
-                    <h5>Description</h5>
+            <div class="admin-review-left">
 
-                    <p>
-                        @(string.IsNullOrWhiteSpace(Model.Description)
-                            ? "No description provided."
-                            : Model.Description)
-                    </p>
 
-                    <hr />
+                <!-- ==================================================
+                     PHOTOS
+                =================================================== -->
 
-                    <h5>Listing Information</h5>
+                <section class="admin-review-section">
 
-                    <p>
-                        <strong>Listing Type:</strong>
-                        @(Model.Type == PETHUB.Models.ListType.For_Adoption
-                            ? "For Adoption"
-                            : "For Sale")
-                    </p>
+                    <h3>
+                        Photos
+                    </h3>
 
-                    @if (Model.Type == PETHUB.Models.ListType.For_Adoption)
+
+                    @if (Model.Images != null && Model.Images.Any())
                     {
-                        <p>
-                            <strong>Price:</strong>
-                            <span class="text-success fw-bold">Free for Adoption</span>
-                        </p>
+                        <div id="listingCarousel"
+                             class="carousel slide admin-listing-carousel"
+                             data-bs-ride="carousel">
+
+                            <div class="carousel-inner">
+
+                                @for (int i = 0; i < Model.Images.Count; i++)
+                                {
+                                    var img = Model.Images.ElementAt(i);
+
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+
+                                        <img src="@img.ImagePath"
+                                             class="d-block w-100"
+                                             alt="Listing Image">
+
+                                    </div>
+                                }
+
+                            </div>
+
+
+                            @if (Model.Images.Count > 1)
+                            {
+                                <button class="carousel-control-prev"
+                                        type="button"
+                                        data-bs-target="#listingCarousel"
+                                        data-bs-slide="prev">
+
+                                    <span class="carousel-control-prev-icon"></span>
+
+                                    <span class="visually-hidden">
+                                        Previous
+                                    </span>
+
+                                </button>
+
+
+                                <button class="carousel-control-next"
+                                        type="button"
+                                        data-bs-target="#listingCarousel"
+                                        data-bs-slide="next">
+
+                                    <span class="carousel-control-next-icon"></span>
+
+                                    <span class="visually-hidden">
+                                        Next
+                                    </span>
+
+                                </button>
+                            }
+
+                        </div>
                     }
                     else
                     {
-                        <p>
-                            <strong>Price:</strong>
-                            ₱@Model.Price.ToString("N0")
-                        </p>
+                        <div class="admin-no-image">
+
+                            <p>
+                                No images uploaded.
+                            </p>
+
+                        </div>
                     }
 
-                    <p>
-                        <strong>Pet Type:</strong>
-                        @Model.PetType
-                    </p>
+                </section>
 
-                    <p>
-                        <strong>Pet Sex:</strong>
-                        @Model.PetSex
-                    </p>
 
-                    <p>
-                        <strong>Breed:</strong>
-                        @Model.Breed
-                    </p>
 
-                    <hr />
+                <!-- ==================================================
+                     MEMBER INFORMATION
+                =================================================== -->
 
-                    <h5>Location</h5>
+                <section class="admin-review-section">
 
-                    @if (!string.IsNullOrWhiteSpace(Model.StreetAddress))
+                    <h3>
+                        Member Information
+                    </h3>
+
+
+                    <div class="admin-member-card">
+
+
+                        <!-- MEMBER PROFILE -->
+
+                        <div class="listing-profile">
+
+                            <div class="listing-profile-main">
+
+
+                                <!-- Avatar -->
+
+                                <div class="listing-profile-avatar">
+
+                                    @if (!string.IsNullOrWhiteSpace(Model.Member?.ProfilePicturePath))
+                                    {
+                                        <img src="@Model.Member.ProfilePicturePath"
+                                             class="rounded-circle border"
+                                             style="width:44px;height:44px;object-fit:cover;"
+                                             alt="Member profile picture" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/default_profile.jpg"
+                                             class="rounded-circle border"
+                                             style="width:44px;height:44px;object-fit:cover;"
+                                             alt="Default profile picture" />
+                                    }
+
+                                </div>
+
+
+                                <!-- Member Name -->
+
+                                <div class="listing-profile-details">
+
+                                    <div class="listing-profile-name">
+
+                                        @Model.Member?.FirstName
+                                        @Model.Member?.LastName
+
+                                    </div>
+
+                                    <div class="listing-profile-meta">
+                                        <span>
+                                            Member
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CONTACT NUMBER -->
+
+                        <div class="admin-member-contact">
+
+                            <strong>
+                                Contact Number
+                            </strong>
+
+                            <span>
+
+                                @(string.IsNullOrWhiteSpace(Model.Member?.ContactNumber)
+                                    ? "Not Available"
+                                    : Model.Member.ContactNumber)
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- ==================================================
+                     MEMBER VALID ID
+                =================================================== -->
+
+                <section class="admin-review-section">
+
+                    <h3>
+                        Member Valid ID
+                    </h3>
+
+
+                    @if (!string.IsNullOrEmpty(Model.Member?.IdPhotoPath))
                     {
-                        <p>
-                            <strong>Street Address:</strong><br />
-                            @Model.StreetAddress
-                        </p>
+                        <div class="admin-valid-id-container">
+
+                            <img src="@Model.Member.IdPhotoPath"
+                                 alt="Member ID Photo"
+                                 class="admin-valid-id-image" />
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="admin-no-id">
+
+                            <strong>
+                                No ID photo uploaded
+                            </strong>
+
+                            <span>
+                                Verification document not provided by member
+                            </span>
+
+                        </div>
                     }
 
-                    <p>
-                        <strong>Barangay:</strong><br />
-                        @Model.Barangay
-                    </p>
+                </section>
 
-                    <p>
-                        <strong>City:</strong><br />
-                        @Model.City
-                    </p>
+            </div>
 
-                    <p>
-                        <strong>Province:</strong><br />
-                        @Model.Province
-                    </p>
 
-                    <hr/>
 
-                </div>
-                
-                <!-- This part is for the member's valid ID photo and the name of the member will be shown in the card details aswell -->
-                <div class="card-body">
+            <!-- ==================================================
+                 RIGHT SIDE
+                 LISTING DETAILS
+            =================================================== -->
 
-                    <h5 class="fw-bold mb-3">Member Information</h5>
+            <div class="admin-review-right">
 
-                    <p>
-                        <strong>Posted by:</strong><br />
-                        @Model.Member?.FirstName @Model.Member?.LastName
-                    </p>
 
-                    <p>
-                        <strong>Contact Number:</strong><br />
-                        @(string.IsNullOrWhiteSpace(Model.Member?.ContactNumber)
-                            ? "Not Available"
-                            : Model.Member.ContactNumber)
-                    </p>
+                <!-- ==================================================
+                     LISTING TITLE
+                =================================================== -->
 
-                    <div class="mt-4">
-                        <h6 class="fw-bold mb-2">Member Valid ID Photo</h6>
+                <h2 class="admin-listing-title">
+                    @Model.Title
+                </h2>
 
-                        @if (!string.IsNullOrEmpty(Model.Member?.IdPhotoPath))
+
+                <!-- DATE -->
+
+                <p class="admin-listing-date">
+
+                    Posted on
+                    @Model.DatePosted.ToString("MMMM dd, yyyy")
+
+                </p>
+
+
+
+                <!-- ==================================================
+                     DESCRIPTION
+                =================================================== -->
+
+                <section class="admin-review-section">
+
+                    <h3>
+                        Description
+                    </h3>
+
+                    <div class="admin-description-box">
+
+                        <p class="admin-description">
+
+                            @(string.IsNullOrWhiteSpace(Model.Description)
+                                ? "No description provided."
+                                : Model.Description)
+
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- ==================================================
+                     LISTING INFORMATION
+                =================================================== -->
+
+                <section class="admin-review-section">
+
+                    <h3>
+                        Listing Information
+                    </h3>
+
+
+                    <div class="admin-information-card">
+
+
+                        <!-- LISTING TYPE -->
+
+                        <div class="admin-information-row">
+
+                            <strong>
+                                Listing Type
+                            </strong>
+
+                            <span class="admin-type-pill">
+
+                                @(Model.Type == PETHUB.Models.ListType.For_Adoption
+                                    ? "For Adoption"
+                                    : "For Sale")
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- PRICE -->
+                        @if (Model.Type == PETHUB.Models.ListType.For_Adoption)
                         {
-                            <div class="d-flex justify-content-center">
-                                <img src="@Model.Member.IdPhotoPath"
-                                     alt="Member ID Photo"
-                                     class="border rounded shadow-sm"
-                                     style="max-width:250px; height:auto;" />
+                            <div class="admin-information-row">
+
+                                <strong>
+                                    Price
+                                </strong>
+
+                                <span class="admin-free-price">
+                                    Free for Adoption
+                                </span>
+
                             </div>
                         }
                         else
                         {
-                            <p class="text-muted">No ID photo uploaded.</p>
+                            <div class="admin-information-row">
+
+                                <strong>
+                                    Price
+                                </strong>
+
+                                <span class="admin-price">
+                                    ₱@Model.Price.ToString("N0")
+                                </span>
+
+                            </div>
                         }
+
+
+                        <!-- PET TYPE -->
+
+                        <div class="admin-information-row">
+
+                            <strong>
+                                Pet Type
+                            </strong>
+
+                            <span>
+                                @Model.PetType
+                            </span>
+
+                        </div>
+
+
+                        <!-- PET SEX -->
+
+                        <div class="admin-information-row">
+
+                            <strong>
+                                Pet Sex
+                            </strong>
+
+                            <span>
+                                @Model.PetSex
+                            </span>
+
+                        </div>
+
+
+                        <!-- BREED -->
+
+                        <div class="admin-information-row">
+
+                            <strong>
+                                Breed
+                            </strong>
+
+                            <span>
+                                @Model.Breed
+                            </span>
+
+                        </div>
+
                     </div>
 
+                </section>
+
+
+
+                <!-- ==================================================
+                     LOCATION
+                =================================================== -->
+
+                <section class="admin-review-section">
+
+                    <h3>
+                        Location
+                    </h3>
+
+
+                    <div class="admin-information-card">
+
+
+                        <!-- STREET ADDRESS -->
+                        @if (!string.IsNullOrWhiteSpace(Model.StreetAddress))
+                        {
+                            <div class="admin-information-row">
+
+                                <strong>
+                                    Street Address
+                                </strong>
+
+                                <span>
+                                    @Model.StreetAddress
+                                </span>
+
+                            </div>
+                        }
+
+
+                        <!-- BARANGAY -->
+
+                        <div class="admin-information-row">
+
+                            <strong>
+                                Barangay
+                            </strong>
+
+                            <span>
+                                @Model.Barangay
+                            </span>
+
+                        </div>
+
+
+                        <!-- CITY -->
+
+                        <div class="admin-information-row">
+
+                            <strong>
+                                City
+                            </strong>
+
+                            <span>
+                                @Model.City
+                            </span>
+
+                        </div>
+
+
+                        <!-- PROVINCE -->
+
+                        <div class="admin-information-row">
+
+                            <strong>
+                                Province
+                            </strong>
+
+                            <span>
+                                @Model.Province
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ======================================================
+             ADMIN DECISION
+
+IMPORTANT:
+             Only THIS section is inside the form.
+             The entire page is NOT a form.
+        ======================================================= -->
+
+        <form asp-action="Approve"
+              method="post"
+              class="admin-decision-form">
+
+            <input type="hidden"
+                   name="id"
+                   value="@Model.ListingId" />
+
+
+            <section class="admin-decision-section">
+
+                <div class="admin-decision-content">
+
+                  
+
+                    <p>
+                        Review the listing information before making a decision.
+                    </p>
+
                 </div>
-                <div class="card-footer d-flex justify-content-center gap-3">
+
+
+                <!-- ACTION BUTTONS -->
+
+                <div class="admin-decision-actions">
+
+
+                    <!-- BACK -->
+
+                    <a asp-action="Index"
+                       class="admin-back-btn">
+
+                       Back
+
+                    </a>
+
 
                     @if (Model.Status == ListApprovalStatus.Pending)
                     {
-                        <form asp-action="Approve" method="post" style="display:inline;">
-                            <input type="hidden" name="id" value="@Model.ListingId" />
 
-                            <button type="submit" class="btn btn-success">
-                                Approve
-                            </button>
-                        </form>
+                        <!-- REJECT -->
 
-                        <form asp-action="Reject" method="post" style="display:inline;">
-                            <input type="hidden" name="id" value="@Model.ListingId" />
+                        <button type="submit"
+                                formaction="@Url.Action("Reject")"
+                                class="admin-reject-btn">
 
-                            <button type="submit" class="btn btn-danger">
-                                Reject
-                            </button>
-                        </form>
+                            Reject
+
+                        </button>
+
+
+                        <!-- APPROVE -->
+
+                        <button type="submit"
+                                formaction="@Url.Action("Approve")"
+                                class="admin-approve-btn">
+
+                            Approve
+
+                        </button>
+
                     }
 
-                    <a asp-action="Index" class="btn btn-secondary px-4">
-                        ← Back to Listings
-                    </a>
-
                 </div>
-            </div>
-        </div>
+
+            </section>
+
+        </form>
+
     </div>
+
 </div>
