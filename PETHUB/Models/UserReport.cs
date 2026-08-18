@@ -32,7 +32,6 @@ namespace PETHUB.Models
     public enum UserReportStatus
     {
         Pending,
-        Reviewed,
         Resolved,
         Dismissed
     }
