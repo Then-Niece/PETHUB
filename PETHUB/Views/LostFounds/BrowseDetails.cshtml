@@ -122,7 +122,31 @@
                     }
                 </div>
                 <div class="card-footer d-flex justify-content-center gap-3">
-                    <a asp-action="Browse" class="btn btn-secondary px-4">← Back to Reports</a>
+
+                    @if (User.IsInRole("Member") &&
+                         !string.IsNullOrEmpty(Model.UserId) &&
+                         Model.UserId != User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                    {
+                        <!-- Only registered-member Lost & Found posts can be reported.
+                             The owner cannot report their own post. -->
+                        <button type="button"
+                                class="btn btn-outline-danger px-4"
+                                data-bs-toggle="modal"
+                                data-bs-target="#reportModal"
+                                data-report-type="LostFound"
+                                data-report-id="@Model.LostFoundId"
+                                data-report-title="@Model.Title">
+
+                            <i data-lucide="flag"></i>
+                            Report
+
+                        </button>
+                    }
+
+                    <a asp-action="Browse"
+                       class="btn btn-secondary px-4">
+                        ← Back to Reports
+                    </a>
                 </div>
             </div>
         </div>

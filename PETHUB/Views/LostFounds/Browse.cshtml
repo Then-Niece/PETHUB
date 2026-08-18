@@ -48,8 +48,18 @@ else
     @foreach (var item in Model)
     {
         <div class="col-md-3 mb-4">
-            <a asp-action="BrowseDetails" asp-route-id="@item.LostFoundId">
-                <div class="card h-100 shadow-sm">
+
+            <!-- The card contains both the navigation link and the Report button.
+                 Keeping the button outside the link prevents the two interactive
+                 elements from interfering with each other. -->
+            <div class="card h-100 shadow-sm position-relative">
+
+                <!-- Makes the normal card area navigate to BrowseDetails.
+                     Bootstrap's stretched-link allows the card to behave like
+                     a clickable card while keeping the Report button independent. -->
+                <a asp-action="BrowseDetails"
+                   asp-route-id="@item.LostFoundId"
+                   class="stretched-link text-decoration-none text-dark">
 
                     @if (item.Images != null && item.Images.Any())
                     {
@@ -67,7 +77,10 @@ else
                     }
 
                     <div class="card-body">
-                        <h5 class="card-title">@item.Title</h5>
+
+                        <h5 class="card-title">
+                            @item.Title
+                        </h5>
 
                         <p class="card-text text-muted">
                             @item.Description
@@ -94,8 +107,33 @@ else
 
                     </div>
 
-                </div>
-            </a>
+                </a>
+
+                @if (User.IsInRole("Member") &&
+                     !string.IsNullOrEmpty(item.UserId) &&
+                     item.UserId != User.FindFirst(
+                         System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                {
+                    <!-- Only registered-member Lost & Found posts can be reported.
+                         The owner cannot report their own post, and posts created
+                         by unregistered clients have no UserId. -->
+                    <button type="button"
+                            class="btn btn-sm btn-light shadow-sm report-card-button position-absolute top-0 end-0 m-2"
+                            style="z-index:2;"
+                            data-bs-toggle="modal"
+                            data-bs-target="#reportModal"
+                            data-report-type="LostFound"
+                            data-report-id="@item.LostFoundId"
+                            data-report-title="@item.Title"
+                            aria-label="Report @item.Title">
+
+                        <i data-lucide="flag"></i>
+
+                    </button>
+                }
+
+            </div>
+
         </div>
     }
 </div>

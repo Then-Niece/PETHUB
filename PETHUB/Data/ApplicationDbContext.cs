@@ -13,7 +13,12 @@ namespace PETHUB.Data
         public DbSet<ListingImage> ListingImages { get; set; }
 
         public DbSet<LostFound> LostFounds { get; set; }
+
         public DbSet<LostFoundImage> LostFoundImages { get; set; }
+
+        // This DbSet stores reports submitted by members against
+        // Marketplace listings and Lost & Found reports.
+        public DbSet<UserReport> UserReports { get; set; }
 
         //This is for the PETFEED Feature
         public DbSet<PetFeed> PetFeeds { get; set; }
@@ -83,6 +88,24 @@ namespace PETHUB.Data
                 .WithMany(u => u.Notifications)
                 .HasForeignKey(n => n.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<UserReport>()
+                .HasOne(r => r.Reporter)
+                .WithMany()
+                .HasForeignKey(r => r.ReporterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<UserReport>()
+                .HasOne(r => r.Listing)
+                .WithMany()
+                .HasForeignKey(r => r.ListingId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<UserReport>()
+                .HasOne(r => r.LostFound)
+                .WithMany()
+                .HasForeignKey(r => r.LostFoundId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

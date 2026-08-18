@@ -75,16 +75,20 @@
 
     </div>
 
+    <!-- Shared report modal used by Marketplace and Lost & Found pages.
+     The modal is rendered after the page content so report buttons from
+     the rendered views can open this single reusable modal. -->
+    <partial name="_ReportModal" />
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="~/js/report-modal.js" asp-append-version="true"></script>
     <!-- Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/sidebar.js" asp-append-version="true"></script>
     <script src="~/js/user-crud.js"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

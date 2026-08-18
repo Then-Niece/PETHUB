@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PETHUB.Models.Listing>
+﻿    @model IEnumerable<PETHUB.Models.Listing>
 
 @{
     ViewData["Title"] = "Marketplace Client";
@@ -48,8 +48,12 @@ else{
     @foreach (var item in Model)
     {
         <div class="col-md-3 mb-4">
-            <a asp-action="MarketplaceDetails" asp-route-id="@item.ListingId" class="text-decoration-none text-dark">
-                <div class="card h-100 shadow-sm">
+
+            <div class="card h-100 shadow-sm position-relative">
+
+                <a asp-action="MarketplaceDetails"
+                   asp-route-id="@item.ListingId"
+                   class="stretched-link text-decoration-none text-dark">
 
                     @if (item.Images != null && item.Images.Any())
                     {
@@ -93,8 +97,28 @@ else{
                         </p>
                     </div>
 
-                </div>
-            </a>
+                </a>
+
+                @if (User.IsInRole("Member") &&
+                     item.MemberId != User.FindFirst(
+                         System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                {
+                    <button type="button"
+                            class="btn btn-sm btn-light shadow-sm report-card-button position-absolute top-0 end-0 m-2"
+                            style="z-index:2;"
+                            data-bs-toggle="modal"
+                            data-bs-target="#reportModal"
+                            data-report-type="Listing"
+                            data-report-id="@item.ListingId"
+                            data-report-title="@item.Title"
+                            aria-label="Report @item.Title">
+
+                        <i data-lucide="flag"></i>
+
+                    </button>
+                }
+
+            </div>
         </div>
     }
 </div>

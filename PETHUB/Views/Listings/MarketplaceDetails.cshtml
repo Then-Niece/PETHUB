@@ -226,15 +226,26 @@
 
                         <div class="menu-divider"></div>
 
-                        <button type="button"
-                                class="danger-action">
+                        @if (User.IsInRole("Member") &&
+                             Model.MemberId != User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                        {
+                            <!-- Opens the shared Report modal for this Marketplace listing.
+                                 The server-side controller still verifies ownership before accepting
+                                 the submitted report. -->
+                            <button type="button"
+                                    class="danger-action"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#reportModal"
+                                    data-report-type="Listing"
+                                    data-report-id="@Model.ListingId"
+                                    data-report-title="@Model.Title">
 
-                            <i data-lucide="flag"></i>
+                                <i data-lucide="flag"></i>
 
-                            <span>Report Listing</span>
+                                <span>Report Listing</span>
 
-                        </button>
-
+                            </button>
+                        }
                     </div>
 
                 </div>
