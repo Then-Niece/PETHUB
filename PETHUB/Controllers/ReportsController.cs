@@ -8,9 +8,7 @@ using PETHUB.ViewModels;
 
 namespace PETHUB.Controllers
 {
-    // Restricts the entire controller to authenticated Members.
-    // Administrators and unauthenticated users cannot directly submit reports.
-    [Authorize(Roles = "Member")]
+    [Authorize]
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -28,12 +26,11 @@ namespace PETHUB.Controllers
         }
 
         // POST: Reports/Create
-        // Receives a report submitted by a member.
-        // The CreateReportViewModel contains the reported content type,
-        // content ID, selected reason, optional custom reason, and description.
-        // Model validation is performed before the controller processes the report.
-        // [HttpPost]
+        // Allows only Members to submit a new report. Admins can access the controller
+        // but cannot use the member report-submission action.
+        [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> Create(CreateReportViewModel model)
         {
             // Get the ID of the currently authenticated member through ASP.NET Identity.
@@ -174,6 +171,275 @@ namespace PETHUB.Controllers
             // Phase 2 UI will later determine the appropriate return destination.
             // For now, redirect the member to the Home page after a successful submission.
             return RedirectToAction("Index", "Home");
+        }
+
+        // GET: Reports
+        // Displays the dedicated Administrator Reports page.
+        // Only Admin accounts can review submitted UserReports.
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Index(
+            string? reportStatus,
+            string? reportType)
+        {
+            // Start with all submitted reports.
+            // IQueryable allows the filters to be applied before the database
+            // query is executed.
+            var reports = _context.UserReports
+                .Include(r => r.Reporter)
+                .AsQueryable();
+
+            // Filter by the report's moderation status when the Admin
+            // selects Pending, Dismissed, or Resolved.
+            if (!string.IsNullOrWhiteSpace(reportStatus) &&
+                Enum.TryParse<UserReportStatus>(
+                    reportStatus,
+                    true,
+                    out var selectedStatus))
+            {
+                // EF Core converts this into a SQL WHERE condition.
+                reports = reports.Where(r => r.Status == selectedStatus);
+            }
+
+            // Filter by the type of content that was reported.
+            if (!string.IsNullOrWhiteSpace(reportType) &&
+                Enum.TryParse<ReportedContentType>(
+                    reportType,
+                    true,
+                    out var selectedType))
+            {
+                // Only reports targeting the selected content type are returned.
+                reports = reports.Where(r => r.ContentType == selectedType);
+            }
+
+            // Display newest reports first so the newest submissions
+            // appear at the top of the Administrator's review queue.
+            reports = reports.OrderByDescending(r => r.DateCreated);
+
+            // Create the reusable local filter bar.
+            // The selected values come directly from the Index action parameters.
+            // This avoids using Razor's Context object inside the controller.
+            var filters = PETHUB.Helpers.FilterBarHelper.Create(
+                PETHUB.Helpers.FilterBarHelper.ReportStatus(
+                    reportStatus
+                ),
+                PETHUB.Helpers.FilterBarHelper.ReportPostType(
+                    reportType
+                )
+            );
+
+            // Pass the filtered reports and filter configuration to the view.
+            ViewData["ReportFilters"] = filters;
+
+            // Render the dedicated Admin Reports page.
+            return View(
+                "~/Views/AdminReports/Index.cshtml",
+                await reports.ToListAsync()
+            );
+        }
+
+        // GET: Reports/Details/5
+        // Displays the complete report and the content being reported.
+        // Only Admin accounts can access the report-review page.
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Details(int? id)
+        {
+            // A report ID is required to locate the specific UserReport.
+            // If no ID was supplied, return a standard 404 response.
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Load the report together with its reporter and both possible
+            // reported-content relationships.
+            // Only one of Listing or LostFound should contain a value for a valid report.
+            var report = await _context.UserReports
+                .Include(r => r.Reporter)
+                .Include(r => r.Listing)
+                    .ThenInclude(l => l!.Images)
+                .Include(r => r.LostFound)
+                    .ThenInclude(l => l!.Images)
+                .FirstOrDefaultAsync(r => r.UserReportId == id);
+
+            // If the report no longer exists, there is nothing for the Admin to review.
+            if (report == null)
+            {
+                return NotFound();
+            }
+
+            // Render the dedicated Admin Reports Details view.
+            // The view is intentionally stored under Views/AdminReports.
+            return View(
+                "~/Views/AdminReports/Details.cshtml",
+                report
+            );
+        }
+
+        // POST: Reports/Dismiss
+        // Marks a pending UserReport as Dismissed without deleting the reported post.
+        // Only Admin accounts are allowed to perform this moderation action.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Dismiss(int id)
+        {
+            // Find the specific report selected by the Administrator.
+            // FirstOrDefaultAsync returns the matching UserReport or null if it
+            // no longer exists in the database.
+            var report = await _context.UserReports
+                .FirstOrDefaultAsync(r => r.UserReportId == id);
+
+            // Stop if the requested report does not exist.
+            if (report == null)
+            {
+                return NotFound();
+            }
+
+            // A report should only be dismissed while it is still waiting for review.
+            // This prevents an already resolved or dismissed report from being changed
+            // accidentally by submitting an old form again.
+            if (report.Status != UserReportStatus.Pending)
+            {
+                return BadRequest("Only pending reports can be dismissed.");
+            }
+
+            // Change only the report's moderation status.
+            // The reported Marketplace or Lost & Found post remains untouched.
+            report.Status = UserReportStatus.Dismissed;
+
+            // Save the updated moderation status to SQL Server.
+            await _context.SaveChangesAsync();
+
+            // Return the Administrator to the Reports page after the action succeeds.
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Reports/ConfirmViolation
+        // Confirms that the reported content violates PETHUB rules.
+        // The reported post and its associated images are deleted, but the
+        // UserReport itself is preserved as a moderation record.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ConfirmViolation(int id)
+        {
+            // Load the report together with the reported Marketplace listing,
+            // Lost & Found post, and their image collections.
+            // Only one of Listing or LostFound should be populated for a valid report.
+            var report = await _context.UserReports
+                .Include(r => r.Listing)
+                    .ThenInclude(l => l!.Images)
+                .Include(r => r.LostFound)
+                    .ThenInclude(l => l!.Images)
+                .FirstOrDefaultAsync(r => r.UserReportId == id);
+
+            // Stop if the requested report does not exist.
+            if (report == null)
+            {
+                return NotFound();
+            }
+
+            // Only Pending reports can be confirmed.
+            // This prevents an already dismissed or resolved report from being
+            // processed again through an old or duplicated request.
+            if (report.Status != UserReportStatus.Pending)
+            {
+                return BadRequest("Only pending reports can be confirmed.");
+            }
+
+            // Handle a reported Marketplace listing.
+            if (report.ContentType == ReportedContentType.Listing)
+            {
+                // The listing may already have been deleted outside the report system.
+                // In that case, the report can still be resolved without attempting
+                // to delete a nonexistent listing.
+                if (report.Listing != null)
+                {
+                    // Delete each physical image file associated with the listing.
+                    // File.Delete removes the file from the server's file system.
+                    if (report.Listing.Images != null)
+                    {
+                        foreach (var image in report.Listing.Images)
+                        {
+                            // Convert the stored web path into the application's
+                            // physical wwwroot path before deleting the file.
+                            var imagePath = Path.Combine(
+                                Directory.GetCurrentDirectory(),
+                                "wwwroot",
+                                image.ImagePath.TrimStart('/', '\\')
+                            );
+
+                            // Only attempt deletion when the physical file exists.
+                            if (System.IO.File.Exists(imagePath))
+                            {
+                                System.IO.File.Delete(imagePath);
+                            }
+                        }
+
+                        // Remove the ListingImages records from the database.
+                        _context.ListingImages.RemoveRange(report.Listing.Images);
+                    }
+
+                    // Remove the reported Marketplace listing itself.
+                    _context.Listings.Remove(report.Listing);
+                }
+            }
+            // Handle a reported Lost & Found post.
+            else if (report.ContentType == ReportedContentType.LostFound)
+            {
+                // The Lost & Found post may already have been deleted elsewhere.
+                if (report.LostFound != null)
+                {
+                    // Delete each physical Lost & Found image file first.
+                    if (report.LostFound.Images != null)
+                    {
+                        foreach (var image in report.LostFound.Images)
+                        {
+                            // Convert the stored web path into the application's
+                            // physical wwwroot path before deleting the file.
+                            var imagePath = Path.Combine(
+                                Directory.GetCurrentDirectory(),
+                                "wwwroot",
+                                image.ImagePath.TrimStart('/', '\\')
+                            );
+
+                            // File.Exists prevents an exception when an image file
+                            // is already missing from the server.
+                            if (System.IO.File.Exists(imagePath))
+                            {
+                                System.IO.File.Delete(imagePath);
+                            }
+                        }
+
+                        // Remove the LostFoundImages records from the database.
+                        _context.LostFoundImages.RemoveRange(report.LostFound.Images);
+                    }
+
+                    // Remove the reported Lost & Found post itself.
+                    _context.LostFounds.Remove(report.LostFound);
+                }
+            }
+            else
+            {
+                // Reject an invalid ContentType instead of resolving an incomplete
+                // or unsupported report.
+                return BadRequest("Invalid report content type.");
+            }
+
+            // Preserve the UserReport as a moderation history record.
+            // The related ListingId/LostFoundId will become NULL through the
+            // SetNull relationship configured in the database migration.
+            report.Status = UserReportStatus.Resolved;
+
+            // Save the post deletion and report status change together.
+            // Entity Framework sends the tracked changes to SQL Server.
+            await _context.SaveChangesAsync();
+
+            // Return the Administrator to the Reports index after the violation
+            // has been successfully processed.
+            return RedirectToAction(nameof(Index));
         }
     }
 }

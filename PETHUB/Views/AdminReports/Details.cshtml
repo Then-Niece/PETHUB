@@ -1,0 +1,508 @@
+﻿@model PETHUB.Models.UserReport
+
+@{
+    ViewData["Title"] = "Review Report";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- Page header for the individual report review screen.
+         This page is dedicated to reviewing one UserReport and its reported content. -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Review Report
+            </h2>
+
+            <p class="text-muted mb-0">
+                Review the report and the content submitted for moderation.
+            </p>
+        </div>
+
+        <!-- Returns the Administrator to the dedicated Reports index page. -->
+        <a asp-controller="Reports"
+           asp-action="Index"
+           class="btn btn-outline-secondary rounded-pill px-4">
+
+            ← Back to Reports
+
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- =========================================================
+             REPORT INFORMATION
+             ========================================================= -->
+        <div class="col-12">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">
+                        Report Information
+                    </h4>
+
+                    <div class="row g-4">
+
+                        <!-- Report type -->
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block mb-1">
+                                Report Type
+                            </small>
+
+                            @if (Model.ContentType ==
+                                 PETHUB.Models.ReportedContentType.Listing)
+                            {
+                                <span class="badge rounded-pill px-3 py-2"
+                                      style="background:#EAF8E6;color:#4F8D42;">
+
+                                    Marketplace Listing
+
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge rounded-pill px-3 py-2"
+                                      style="background:#EAF8E6;color:#4F8D42;">
+
+                                    Lost &amp; Found
+
+                                </span>
+                            }
+
+                        </div>
+
+
+                        <!-- Report status -->
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block mb-1">
+                                Status
+                            </small>
+
+                            @if (Model.Status ==
+                                 PETHUB.Models.UserReportStatus.Pending)
+                            {
+                                <span class="badge rounded-pill bg-warning text-dark px-3 py-2">
+                                    Pending
+                                </span>
+                            }
+                            else if (Model.Status ==
+                                     PETHUB.Models.UserReportStatus.Reviewed)
+                            {
+                                <span class="badge rounded-pill bg-info text-dark px-3 py-2">
+                                    Reviewed
+                                </span>
+                            }
+                            else if (Model.Status ==
+                                     PETHUB.Models.UserReportStatus.Dismissed)
+                            {
+                                <span class="badge rounded-pill bg-secondary px-3 py-2">
+                                    Dismissed
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge rounded-pill bg-success px-3 py-2">
+                                    Resolved
+                                </span>
+                            }
+
+                        </div>
+
+
+                        <!-- Report reason -->
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block mb-1">
+                                Reason
+                            </small>
+
+                            @if (Model.Reason ==
+                                 PETHUB.Models.UserReportReason.Other &&
+                                 !string.IsNullOrWhiteSpace(Model.OtherReason))
+                            {
+                                <span>
+                                    @Model.OtherReason
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    @Model.Reason
+                                </span>
+                            }
+
+                        </div>
+
+
+                        <!-- Date -->
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block mb-1">
+                                Date Reported
+                            </small>
+
+                            <span>
+                                @Model.DateCreated.ToLocalTime()
+                            </span>
+
+                        </div>
+
+
+                        <!-- Reporter -->
+                        <div class="col-12">
+
+                            <small class="text-muted d-block mb-1">
+                                Reported By
+                            </small>
+
+                            <span>
+                                @Model.ReporterId
+                            </span>
+
+                        </div>
+
+
+                        <!-- Description -->
+                        <div class="col-12">
+
+                            <small class="text-muted d-block mb-1">
+                                Report Description
+                            </small>
+
+                            @if (string.IsNullOrWhiteSpace(Model.Description))
+                            {
+                                <p class="text-muted mb-0">
+                                    No additional description was provided.
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="mb-0">
+                                    @Model.Description
+                                </p>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================================
+             REPORTED CONTENT
+             ========================================================= -->
+        <div class="col-12">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">
+                        Reported Content
+                    </h4>
+
+
+                    @if (Model.ContentType ==
+                         PETHUB.Models.ReportedContentType.Listing)
+                    {
+                        @if (Model.Listing == null)
+                        {
+                            <!-- A listing may be null if it was already deleted.
+                                 The report itself remains available for moderation history. -->
+                            <div class="alert alert-warning mb-0">
+                                The reported Marketplace listing is no longer available.
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row g-4">
+
+                                <!-- Listing image -->
+                                <div class="col-lg-4">
+
+                                    @if (Model.Listing.Images != null &&
+                                         Model.Listing.Images.Any())
+                                    {
+                                        <img src="@Model.Listing.Images.First().ImagePath"
+                                             class="img-fluid rounded-4 w-100"
+                                             alt="Reported listing image"
+                                             style="max-height:350px;object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
+                                             style="height:250px;">
+
+                                            <span class="text-muted">
+                                                No image available
+                                            </span>
+
+                                        </div>
+                                    }
+
+                                </div>
+
+
+                                <!-- Listing information -->
+                                <div class="col-lg-8">
+
+                                    <h3 class="fw-bold mb-3">
+                                        @Model.Listing.Title
+                                    </h3>
+
+                                    <p class="text-muted">
+                                        @Model.Listing.Description
+                                    </p>
+
+                                    <div class="row g-3">
+
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">
+                                                Listing Type
+                                            </small>
+
+                                            <strong>
+                                                @Model.Listing.Type
+                                            </strong>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">
+                                                Pet Type
+                                            </small>
+
+                                            <strong>
+                                                @Model.Listing.PetType
+                                            </strong>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">
+                                                Price
+                                            </small>
+
+                                            <strong>
+                                                ₱@Model.Listing.Price
+                                            </strong>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">
+                                                Location
+                                            </small>
+
+                                            <strong>
+                                                @Model.Listing.City,
+                                                @Model.Listing.Province
+                                            </strong>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        @if (Model.LostFound == null)
+                        {
+                            <!-- A Lost & Found post may already have been deleted.
+                                 Keep the report visible so the Admin retains the history. -->
+                            <div class="alert alert-warning mb-0">
+                                The reported Lost &amp; Found post is no longer available.
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row g-4">
+
+                                <!-- Lost & Found image -->
+                                <div class="col-lg-4">
+
+                                    @if (Model.LostFound.Images != null &&
+                                         Model.LostFound.Images.Any())
+                                    {
+                                        <img src="@Model.LostFound.Images.First().ImagePath"
+                                             class="img-fluid rounded-4 w-100"
+                                             alt="Reported Lost & Found image"
+                                             style="max-height:350px;object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
+                                             style="height:250px;">
+
+                                            <span class="text-muted">
+                                                No image available
+                                            </span>
+
+                                        </div>
+                                    }
+
+                                </div>
+
+
+                                <!-- Lost & Found information -->
+                                <div class="col-lg-8">
+
+                                    <h3 class="fw-bold mb-3">
+                                        @Model.LostFound.Title
+                                    </h3>
+
+                                    <p class="text-muted">
+                                        @Model.LostFound.Description
+                                    </p>
+
+                                    <div class="row g-3">
+
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">
+                                                Report Type
+                                            </small>
+
+                                            <strong>
+                                                @Model.LostFound.Type
+                                            </strong>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">
+                                                Pet Type
+                                            </small>
+
+                                            <strong>
+                                                @Model.LostFound.PetType
+                                            </strong>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">
+                                                Location
+                                            </small>
+
+                                            <strong>
+                                                @Model.LostFound.City,
+                                                @Model.LostFound.Province
+                                            </strong>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">
+                                                Date Reported
+                                            </small>
+
+                                            <strong>
+                                                @Model.LostFound.DateReported.ToString("MMM dd, yyyy")
+                                            </strong>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================================
+             ADMIN ACTIONS
+             ========================================================= -->
+        @if (Model.Status == PETHUB.Models.UserReportStatus.Pending)
+        {
+            <div class="col-12">
+
+                <div class="card border-0 shadow-sm rounded-4">
+
+                    <div class="card-body p-4">
+
+                        <h4 class="fw-bold mb-2">
+                            Review Actions
+                        </h4>
+
+                        <p class="text-muted">
+                            Review the report and the reported content before
+                            deciding whether the report should be dismissed or
+                            the reported content should be removed.
+                        </p>
+
+                        <!-- Moderation actions will be implemented in the next
+                             phase. They are intentionally not functional yet. -->
+                        <div class="d-flex flex-wrap gap-3 mt-4">
+
+                            <form asp-controller="Reports"
+                                  asp-action="Dismiss"
+                                  method="post"
+                                  class="d-inline">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@Model.UserReportId" 
+                                       onsubmit="return confirm('Are you sure you want to dismiss this report?');">
+                                />
+
+                                <button type="submit"
+                                        class="btn btn-outline-secondary rounded-pill px-4">
+
+                                    Dismiss Report
+
+                                </button>
+
+                            </form>
+
+                            <form asp-controller="Reports"
+                                  asp-action="ConfirmViolation"
+                                  method="post"
+                                  class="d-inline"
+                                  onsubmit="return confirm('Are you sure you want to confirm this violation? The reported post and its images will be permanently deleted.');">
+
+                                @Html.AntiForgeryToken()
+
+                                <!-- Identifies the exact UserReport being reviewed. -->
+                                <input type="hidden"
+                                       name="id"
+                                       value="@Model.UserReportId" />
+
+                                <button type="submit"
+                                        class="btn btn-danger rounded-pill px-4">
+
+                                    Confirm Violation
+
+                                </button>
+
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>

@@ -53,6 +53,58 @@ namespace PETHUB.Helpers
             };
         }
 
+        // Creates the reusable report-status filter for the Admin Reports page.
+        // This is separate from the existing approval-status filter because
+        // UserReportStatus uses Pending, Dismissed, and Resolved.
+        public static FilterDefinition ReportStatus(string? selectedValue = null)
+        {
+            return new FilterDefinition
+            {
+                // This becomes the "reportStatus" query-string parameter.
+                ParameterName = "reportStatus",
+
+                // Label displayed above the dropdown.
+                Label = "Report Status",
+
+                // All reports are displayed when no status is selected.
+                DefaultValue = "",
+
+                // Preserve the selected value after the page reloads.
+                SelectedValue = selectedValue,
+
+                Options =
+                {
+                    // Displays all submitted reports.
+                    new FilterOption
+                    {
+                        Label = "All",
+                        Value = ""
+                    },
+
+                    // Displays reports waiting for Administrator review.
+                    new FilterOption
+                    {
+                        Label = "Pending",
+                        Value = "Pending"
+                    },
+
+                    // Displays reports that an Administrator dismissed.
+                    new FilterOption
+                    {
+                        Label = "Dismissed",
+                        Value = "Dismissed"
+                    },
+
+                    // Displays reports where the Administrator confirmed a violation.
+                    new FilterOption
+                    {
+                        Label = "Resolved",
+                        Value = "Resolved"
+                    }
+                }
+            };
+        }
+
         // Creates the reusable Marketplace/Lost & Found post-source filter.
         public static FilterDefinition PostType(string? selectedValue = null)
         {
@@ -84,6 +136,50 @@ namespace PETHUB.Helpers
                     },
 
                     // Displays Lost & Found reports only.
+                    new FilterOption
+                    {
+                        Label = "Lost & Found",
+                        Value = "LostFound"
+                    }
+                }
+            };
+        }
+
+        // Creates the reusable content-type filter for the Admin Reports page.
+        // Reports can target either Marketplace listings or Lost & Found posts.
+        public static FilterDefinition ReportPostType(string? selectedValue = null)
+        {
+            return new FilterDefinition
+            {
+                // This becomes the "reportType" query-string parameter.
+                ParameterName = "reportType",
+
+                // Label displayed above the dropdown.
+                Label = "Post Type",
+
+                // All report types are displayed when no type is selected.
+                DefaultValue = "",
+
+                // Preserve the selected value after the page reloads.
+                SelectedValue = selectedValue,
+
+                Options =
+                {
+                    // Displays both Marketplace and Lost & Found reports.
+                    new FilterOption
+                    {
+                        Label = "All",
+                        Value = ""
+                    },
+
+                    // Displays reports targeting Marketplace listings.
+                    new FilterOption
+                    {
+                        Label = "Marketplace",
+                        Value = "Listing"
+                    },
+
+                    // Displays reports targeting Lost & Found posts.
                     new FilterOption
                     {
                         Label = "Lost & Found",

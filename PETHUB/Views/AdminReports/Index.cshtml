@@ -1,0 +1,229 @@
+﻿@model IEnumerable<PETHUB.Models.UserReport>
+
+@{
+    ViewData["Title"] = "Reports";
+
+    // Read the current status from the URL so the selected filter can
+    // remain active after the page reloads.
+    var currentStatus = Context.Request.Query["status"].ToString();
+    // Retrieve the reusable filter bar configuration created by
+    // ReportsController.Index().
+    var reportFilters =
+        ViewData["ReportFilters"]
+        as PETHUB.ViewModels.FilterBarViewModel;
+}
+
+<div class="container-fluid py-4">
+
+    <!-- Page header for the dedicated Administrator Reports module.
+         This page is separate from Marketplace and Lost & Found approval pages
+         because UserReportStatus represents a different moderation workflow. -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Reports
+            </h2>
+
+            <p class="text-muted mb-0">
+                Review reports submitted by PETHUB members.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- Report status filter.
+         The buttons use the status query-string parameter so the controller
+         can filter UserReports before retrieving the final database results. -->
+    @if (reportFilters != null)
+    {
+        <!-- Render the same reusable local filter component used throughout
+         PETHUB. It preserves other active query parameters when one filter
+         is changed. -->
+        <partial name="Components/_FilterBar"
+                 model="reportFilters" />
+    }
+
+    @if (!Model.Any())
+    {
+        <!-- Display a clear empty state when the selected status has no reports. -->
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body text-center py-5">
+
+                <i data-lucide="flag"
+                   style="width:48px;height:48px;"
+                   class="text-muted mb-3">
+                </i>
+
+                <h5 class="fw-bold">
+                    No Reports Found
+                </h5>
+
+                <p class="text-muted mb-0">
+                    There are no reports matching the selected status.
+                </p>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var report in Model)
+            {
+                <div class="col-12">
+
+                    <!-- Each report is presented as an independent moderation
+                         card. The actual reported post will be inspected from
+                         the dedicated Details page in the next phase. -->
+                    <div class="card border-0 shadow-sm rounded-4">
+
+                        <div class="card-body p-4">
+
+                            <div class="row align-items-center">
+
+                                <!-- Report type and basic information -->
+                                <div class="col-lg-8">
+
+                                    <div class="d-flex align-items-center gap-3 mb-3">
+
+                                        @if (report.ContentType ==
+                                             PETHUB.Models.ReportedContentType.Listing)
+                                        {
+                                            <span class="badge rounded-pill px-3 py-2"
+                                                  style="background:#EAF8E6;color:#4F8D42;">
+
+                                                Marketplace Listing
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge rounded-pill px-3 py-2"
+                                                  style="background:#EAF8E6;color:#4F8D42;">
+
+                                                Lost &amp; Found
+
+                                            </span>
+                                        }
+
+
+                                        @if (report.Status ==
+                                             PETHUB.Models.UserReportStatus.Pending)
+                                        {
+                                            <span class="badge rounded-pill bg-warning text-dark px-3 py-2">
+                                                Pending
+                                            </span>
+                                        }
+                                        else if (report.Status ==
+                                                 PETHUB.Models.UserReportStatus.Dismissed)
+                                        {
+                                            <span class="badge rounded-pill bg-secondary px-3 py-2">
+                                                Dismissed
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge rounded-pill bg-success px-3 py-2">
+                                                Resolved
+                                            </span>
+                                        }
+
+                                    </div>
+
+
+                                    <h5 class="fw-bold mb-2">
+                                        @if (report.ContentType ==
+                                             PETHUB.Models.ReportedContentType.Listing)
+                                        {
+                                            <span>
+                                                Marketplace Listing #@report.ListingId
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span>
+                                                Lost &amp; Found #@report.LostFoundId
+                                            </span>
+                                        }
+                                    </h5>
+
+
+                                    <p class="mb-2">
+
+                                        <strong>Reason:</strong>
+
+                                        @if (report.Reason ==
+                                             PETHUB.Models.UserReportReason.Other &&
+                                             !string.IsNullOrWhiteSpace(report.OtherReason))
+                                        {
+                                            @report.OtherReason
+                                        }
+                                        else
+                                        {
+                                            @report.Reason
+                                        }
+
+                                    </p>
+
+
+                                    @if (!string.IsNullOrWhiteSpace(report.Description))
+                                    {
+                                        <p class="text-muted mb-2">
+                                            @report.Description
+                                        </p>
+                                    }
+
+
+                                    <small class="text-muted">
+
+                                        Reported:
+                                        @report.DateCreated.ToLocalTime()
+                                        &nbsp;|&nbsp;
+                                        Reporter ID:
+                                        @report.ReporterId
+
+                                    </small>
+
+                                </div>
+
+
+                                <!-- Review action -->
+                                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+
+                                    <!-- Sends the Administrator to the dedicated
+                                         Report Details page. The Details page will
+                                         contain the complete reported-content review
+                                         and moderation actions in the next phase. -->
+                                    <a asp-controller="Reports"
+                                       asp-action="Details"
+                                       asp-route-id="@report.UserReportId"
+                                       class="btn rounded-pill px-4 text-white"
+                                       style="background-color:#8ACE79;">
+
+                                        <i data-lucide="flag"
+                                           style="width:16px;height:16px;"
+                                           class="me-1">
+                                        </i>
+
+                                        Review Report
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>

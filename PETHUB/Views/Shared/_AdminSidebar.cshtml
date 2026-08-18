@@ -230,6 +230,20 @@
 
             </a>
 
+            <!-- Reports -->
+            <a asp-controller="Reports"
+               asp-action="Index"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Reports" &&
+                                                                                      ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+
+                <i data-lucide="badge-check"></i>
+
+                <span class="sidebar-text">
+                    Reports
+                </span>
+
+            </a>
+
         </div>
 
     </div>
