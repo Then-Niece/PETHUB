@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Check Your Email";
+    ViewData["HideSidebar"] = true;
+}
+
+<div class="text-center">
+    <h2>Check Your Email</h2>
+
+    <p>
+        Your PETHUB account has been created successfully.
+    </p>
+
+    <p>
+        We've sent a verification link to your email address.
+    </p>
+
+    <p>
+        Please verify your email within <strong>24 hours</strong>.
+    </p>
+
+    <a asp-controller="UserAccount"
+       asp-action="Login">
+        Go to Login
+    </a>
+</div>
