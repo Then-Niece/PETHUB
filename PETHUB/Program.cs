@@ -14,9 +14,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    // Require users to confirm their email before logging in
+    options.SignIn.RequireConfirmedEmail = true;
+
+    // Uses the custom 10-minute provider for password resets
+    options.Tokens.PasswordResetTokenProvider = "PETHubPasswordReset";
+})
+// Configure token provider for password reset
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders()
+.AddTokenProvider<PasswordResetTokenProvider<ApplicationUser>>(
+    "PETHubPasswordReset");
 
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<AdminIProfileService, AdminProfileService>();

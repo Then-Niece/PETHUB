@@ -40,12 +40,16 @@ namespace PETHUB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) 
+                return View(model);
 
             // Ensure Terms are accepted
             if (!model.AcceptTerms)
             {
-                ModelState.AddModelError("AcceptTerms", "You must accept the Terms and Conditions.");
+                ModelState.AddModelError(
+                    "AcceptTerms",
+                    "You must accept the Terms and Conditions.");
+
                 return View(model);
             }
 
@@ -70,11 +74,38 @@ namespace PETHUB.Controllers
 
 
             var result = await _userManager.CreateAsync(user, model.Password);
+
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "Member"); // assign role
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+
+                // Generate the built-in ASP.NET Identity email confirmation token
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                // Create the confirmation link
+                var confirmationLink = Url.Action(
+                    "ConfirmEmail",
+                    "UserAccount",
+                    new
+                    {
+                        userId = user.Id,
+                        token = token
+                    },
+                    Request.Scheme);
+
+                // Build email
+                var body = EmailTemplateHelper.EmailVerification(
+                    user.FirstName,
+                    confirmationLink);
+
+                // Send email
+                await _emailSender.SendEmailAsync(
+                    user.Email,
+                    "Verify Your PETHUB Account",
+                    body);
+
+                // Don't automatically log the user in
+                return RedirectToAction("EmailConfirmationSent");
             }
 
             foreach (var error in result.Errors)
@@ -88,6 +119,62 @@ namespace PETHUB.Controllers
         {
             return View();
         }
+
+        // ======================================================
+        // EMAIL CONFIRMATION
+        // ======================================================
+
+
+        // GET for Email Confirmation Sent
+        [AllowAnonymous]
+        public IActionResult EmailConfirmationSent()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Validate the built-in Identity email confirmation token
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("EmailConfirmed");
+            }
+
+            // Token is invalid or expired
+            return RedirectToAction("EmailConfirmationExpired");
+        }
+
+
+        // GET for Email Confirmed
+        [AllowAnonymous]
+        public IActionResult EmailConfirmed()
+        {
+            return View();
+        }
+
+        // GET for Email Confirmation Expired
+        [AllowAnonymous]
+        public IActionResult EmailConfirmationExpired()
+        {
+            return View();
+        }
+
 
 
         [HttpGet]
@@ -130,9 +217,17 @@ namespace PETHUB.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-
-
             }
+            // Check if the user is not allowed to sign in (e.g., email not confirmed)
+            if (result.IsNotAllowed)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Please verify your email address before logging in.");
+
+                return View(model);
+            }
+
 
             ModelState.AddModelError("", "Invalid login attempt.");
             return View(model);
@@ -145,6 +240,12 @@ namespace PETHUB.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+
+
+        // ======================================================
+        // FORGOT PASSWORD AND RESET PASSWORD
+        // ======================================================
+
         //GET for Forgot The Password
         [AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -152,7 +253,7 @@ namespace PETHUB.Controllers
             return View();
         }
 
-
+        // POST for Forgot The Password
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -172,6 +273,7 @@ namespace PETHUB.Controllers
             // Generate password reset token
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
+            // Generate the reset password link
             var resetLink = Url.Action(
                "ResetPassword",
                 "UserAccount",
@@ -182,12 +284,12 @@ namespace PETHUB.Controllers
                 },
                 Request.Scheme);
 
-
-
+            // Build email
             var body = EmailTemplateHelper.PasswordReset(
                 user.FirstName,
                 resetLink);
 
+            // Send email
             await _emailSender.SendEmailAsync(
                 user.Email,
                 "Reset Password",
@@ -203,13 +305,43 @@ namespace PETHUB.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public IActionResult ResetPasswordExpired()
+        {
+            return View();
+        }
+
         //GET for Reset Password
         [AllowAnonymous]
-        public IActionResult ResetPassword(string token, string email)
+        public async Task<IActionResult> ResetPassword(string token, string email)
         {
-            if (token == null || email == null)
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
             {
                 return RedirectToAction("Login");
+            }
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Get the password reset token provider configured in Identity
+            var provider = _userManager.Options.Tokens.PasswordResetTokenProvider;
+
+            // Check if the token is still valid
+            var isValidToken = await _userManager.VerifyUserTokenAsync(
+                user,
+                provider,
+                "ResetPassword",
+                token
+            );
+
+            // If the token is invalid or expired, redirect to the ResetPasswordExpired view
+            if (!isValidToken)
+            {
+                return RedirectToAction("ResetPasswordExpired");
             }
 
             return View(new ResetPasswordViewModel
@@ -249,6 +381,13 @@ namespace PETHUB.Controllers
                 return RedirectToAction("Login");
             }
 
+            // Token expired or invalid
+            if (result.Errors.Any(e =>
+                e.Code == "InvalidToken" ||
+                e.Description.Contains("invalid", StringComparison.OrdinalIgnoreCase)))
+            {
+                return RedirectToAction("ResetPasswordExpired");
+            }
 
             foreach (var error in result.Errors)
             {

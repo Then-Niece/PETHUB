@@ -11,8 +11,10 @@
                 title: "Reset Your Password",
                 heading: "Password Reset Request",
                 message:
+                    $"Hello {firstName},<br><br>" +
                     $"We received a request to reset the password for your PETHUB account.<br><br>" +
-                    $"Click the button below to create a new password.",
+                    $"Click the button below to create a new password.<br><br>" +
+                    $"<strong>This password reset link will expire in 10 minutes.</strong>",
                 buttonText: "Reset Password",
                 buttonLink: resetLink,
                 footer:
@@ -30,7 +32,9 @@
                 heading: $"Welcome to PETHUB, {firstName}!",
                 message:
                     "Thank you for creating an account.<br><br>" +
-                    "Before you can start using PETHUB, please verify your email address first.",
+                    "Before you can start using PETHUB, " +
+                    "please verify your email address.<br><br>" +
+                    "<strong>This verification link will expire in 24 hours.</strong>",
                 buttonText: "Verify Email",
                 buttonLink: verificationLink,
                 footer:

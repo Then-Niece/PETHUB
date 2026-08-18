@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Verification Link Expired";
+    ViewData["HideSidebar"] = true;
+}
+
+<div class="text-center">
+    <h2>Verification Link Expired</h2>
+
+    <p>
+        Your email verification link is invalid or has expired.
+    </p>
+
+    <p>
+        Please request a new verification email.
+    </p>
+
+    <a asp-controller="UserAccount"
+       asp-action="Login">
+        Go to Login
+    </a>
+</div>

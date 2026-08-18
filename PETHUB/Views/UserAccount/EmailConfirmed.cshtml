@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Email Confirmed";
+    ViewData["HideSidebar"] = true;
+}
+
+<div class="text-center">
+    <h2>Email Verified Successfully!</h2>
+
+    <p>
+        Your PETHUB email address has been successfully verified.
+    </p>
+
+    <p>
+        You can now log in to your account.
+    </p>
+
+    <a asp-controller="UserAccount"
+       asp-action="Login">
+        Go to Login
+    </a>
+</div>
