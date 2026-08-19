@@ -181,9 +181,32 @@
 
                                         Reported:
                                         @report.DateCreated.ToLocalTime()
+
                                         &nbsp;|&nbsp;
-                                        Reporter ID:
-                                        @report.ReporterId
+
+                                        Reported By:
+                                        @(
+                                            report.Reporter == null
+                                                ? "Unknown"
+                                                : $"{report.Reporter.FirstName} {report.Reporter.LastName}"
+                                        )
+
+                                        &nbsp;|&nbsp;
+
+                                        Owner:
+                                        @(
+                                            report.ContentType == PETHUB.Models.ReportedContentType.Listing
+                                                ? (
+                                                    report.Listing?.Member == null
+                                                        ? "Unknown"
+                                                        : $"{report.Listing.Member.FirstName} {report.Listing.Member.LastName}"
+                                                  )
+                                                : (
+                                                    report.LostFound?.User == null
+                                                        ? "Unknown"
+                                                        : $"{report.LostFound.User.FirstName} {report.LostFound.User.LastName}"
+                                                  )
+                                        )
 
                                     </small>
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Models;
+using PETHUB.Services;
 using PETHUB.ViewModels;
 
 namespace PETHUB.Controllers
@@ -13,19 +14,25 @@ namespace PETHUB.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly NotificationService _notificationService;
 
         // Dependency Injection provides the database context and Identity UserManager.
         // ApplicationDbContext handles UserReport, Listing, and LostFound database operations.
         // UserManager retrieves the currently authenticated member's Identity information.
         public ReportsController(
             ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            NotificationService notificationService)
         {
+            // Provides database access for reports and reported content.
             _context = context;
-            _userManager = userManager;
-        }
 
-        // POST: Reports/Create
+            // Provides the authenticated user's ID and access to Admin accounts.
+            _userManager = userManager;
+
+            // Provides the existing PETHUB notification functionality.
+            _notificationService = notificationService;
+        }        // POST: Reports/Create
         // Allows only Members to submit a new report. Admins can access the controller
         // but cannot use the member report-submission action.
         [HttpPost]
@@ -162,14 +169,24 @@ namespace PETHUB.Controllers
                 report.LostFoundId = model.ContentId;
             }
 
-            // Add the completed UserReport entity to Entity Framework's change tracker.
+            // Add the completed UserReport to EF Core's change tracker.
             _context.UserReports.Add(report);
 
-            // Save the new report to SQL Server.
+            // Save the report first so the new Pending report exists in the database
+            // before the Admin notification count is calculated.
             await _context.SaveChangesAsync();
 
-            // Phase 2 UI will later determine the appropriate return destination.
-            // For now, redirect the member to the Home page after a successful submission.
+            // Retrieve all Admin accounts using the same existing PETHUB pattern
+            // already used by ListingsController and LostFoundsController.
+            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+
+            // Update each Admin's single aggregate report notification.
+            // If this is the first Pending report, the notification is created.
+            // If the notification already exists, its message is updated instead of
+            // creating another notification.
+            await _notificationService.UpdateAdminReportNotificationAsync(admins);
+
+            // Return the Member to the existing Home page after successful submission.
             return RedirectToAction("Index", "Home");
         }
 
@@ -182,11 +199,15 @@ namespace PETHUB.Controllers
             string? reportStatus,
             string? reportType)
         {
-            // Start with all submitted reports.
-            // IQueryable allows the filters to be applied before the database
-            // query is executed.
+            // Load the Reporter and the owner of the reported content.
+            // Listing.Member is the Marketplace post owner, while LostFound.User
+            // is the registered Lost & Found post owner.
             var reports = _context.UserReports
                 .Include(r => r.Reporter)
+                .Include(r => r.Listing)
+                    .ThenInclude(l => l!.Member)
+                .Include(r => r.LostFound)
+                    .ThenInclude(l => l!.User)
                 .AsQueryable();
 
             // Filter by the report's moderation status when the Admin
@@ -252,13 +273,17 @@ namespace PETHUB.Controllers
                 return NotFound();
             }
 
-            // Load the report together with its reporter and both possible
-            // reported-content relationships.
-            // Only one of Listing or LostFound should contain a value for a valid report.
+            // Load the Reporter, reported content owner, and images.
+            // Listing.Member identifies the Marketplace listing owner.
+            // LostFound.User identifies the registered Lost & Found post owner.
             var report = await _context.UserReports
                 .Include(r => r.Reporter)
                 .Include(r => r.Listing)
+                    .ThenInclude(l => l!.Member)
+                .Include(r => r.Listing)
                     .ThenInclude(l => l!.Images)
+                .Include(r => r.LostFound)
+                    .ThenInclude(l => l!.User)
                 .Include(r => r.LostFound)
                     .ThenInclude(l => l!.Images)
                 .FirstOrDefaultAsync(r => r.UserReportId == id);
@@ -305,14 +330,31 @@ namespace PETHUB.Controllers
                 return BadRequest("Only pending reports can be dismissed.");
             }
 
-            // Change only the report's moderation status.
-            // The reported Marketplace or Lost & Found post remains untouched.
+            // Mark the report as dismissed.
+            // The reported post remains available because no violation was confirmed.
             report.Status = UserReportStatus.Dismissed;
 
-            // Save the updated moderation status to SQL Server.
+            // Save the report status before creating the outcome notification
+            // and recalculating the Admin's Pending report count.
             await _context.SaveChangesAsync();
 
-            // Return the Administrator to the Reports page after the action succeeds.
+            // Notify the Member who originally submitted the report.
+            // Only the Reporter receives an outcome notification when a report is dismissed.
+            await _notificationService.CreateNotificationAsync(
+                report.ReporterId,
+                NotificationType.UserReportRejected,
+                "Report Rejected",
+                "Your report was reviewed by an administrator and no violation was confirmed."
+            );
+
+            // Retrieve all Admin accounts using the existing PETHUB Identity pattern.
+            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+
+            // Update the single aggregate Admin report notification.
+            // The count decreases after this report leaves the Pending state.
+            await _notificationService.UpdateAdminReportNotificationAsync(admins);
+
+            // Return to the Admin Reports page after the moderation action succeeds.
             return RedirectToAction(nameof(Index));
         }
 
@@ -349,6 +391,8 @@ namespace PETHUB.Controllers
                 return BadRequest("Only pending reports can be confirmed.");
             }
 
+            string? reportedUserId = null;
+
             // Handle a reported Marketplace listing.
             if (report.ContentType == ReportedContentType.Listing)
             {
@@ -381,6 +425,10 @@ namespace PETHUB.Controllers
                         // Remove the ListingImages records from the database.
                         _context.ListingImages.RemoveRange(report.Listing.Images);
                     }
+
+                    // Capture the Marketplace listing owner's ID before deleting the listing.
+                    // This ID is needed to notify the user that their post was removed.
+                    reportedUserId = report.Listing.MemberId;
 
                     // Remove the reported Marketplace listing itself.
                     _context.Listings.Remove(report.Listing);
@@ -417,6 +465,10 @@ namespace PETHUB.Controllers
                         _context.LostFoundImages.RemoveRange(report.LostFound.Images);
                     }
 
+                    // Capture the Lost & Found post owner's ID before deleting the post.
+                    // This ID is needed to notify the user that their post was removed.
+                    reportedUserId = report.LostFound.UserId;
+
                     // Remove the reported Lost & Found post itself.
                     _context.LostFounds.Remove(report.LostFound);
                 }
@@ -428,17 +480,48 @@ namespace PETHUB.Controllers
                 return BadRequest("Invalid report content type.");
             }
 
-            // Preserve the UserReport as a moderation history record.
-            // The related ListingId/LostFoundId will become NULL through the
-            // SetNull relationship configured in the database migration.
+
+            // Mark the report as resolved because the reported content was confirmed
+            // to violate PETHUB rules and has been removed.
             report.Status = UserReportStatus.Resolved;
 
-            // Save the post deletion and report status change together.
-            // Entity Framework sends the tracked changes to SQL Server.
+            // Save the post deletion and the resolved report status first.
+            // The UserReport itself remains in the database as moderation history.
             await _context.SaveChangesAsync();
 
-            // Return the Administrator to the Reports index after the violation
-            // has been successfully processed.
+            // Notify the Member who submitted the report.
+            // The report was accepted because the Administrator confirmed a violation
+            // and removed the reported content.
+            await _notificationService.CreateNotificationAsync(
+                report.ReporterId,
+                NotificationType.UserReportAccepted,
+                "Report Accepted",
+                "Your report was reviewed by an administrator and the reported post was removed."
+            );
+
+            // Notify the owner of the removed post.
+            // This notification is only sent when a violation is confirmed.
+            if (!string.IsNullOrEmpty(reportedUserId))
+            {
+                // Create a notification for the user whose post was removed.
+                // The notification explains that the post was removed after administrative review.
+                await _notificationService.CreateNotificationAsync(
+                    reportedUserId,
+                    NotificationType.ReportedPostRemoved,
+                    "Your Post Was Removed",
+                    "Your post was reviewed by an administrator and was removed because it was found to violate PETHUB rules."
+                );
+            }
+
+            // Retrieve all Admin accounts using the existing PETHUB notification pattern.
+            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+
+            // Recalculate the single aggregate Admin report notification.
+            // The count decreases because this report is no longer Pending.
+            // If this was the final Pending report, the notification is deleted.
+            await _notificationService.UpdateAdminReportNotificationAsync(admins);
+
+            // Return to the Admin Reports page after successful moderation.
             return RedirectToAction(nameof(Index));
         }
     }

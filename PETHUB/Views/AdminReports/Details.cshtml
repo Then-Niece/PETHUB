@@ -94,13 +94,6 @@
                                 </span>
                             }
                             else if (Model.Status ==
-                                     PETHUB.Models.UserReportStatus.Reviewed)
-                            {
-                                <span class="badge rounded-pill bg-info text-dark px-3 py-2">
-                                    Reviewed
-                                </span>
-                            }
-                            else if (Model.Status ==
                                      PETHUB.Models.UserReportStatus.Dismissed)
                             {
                                 <span class="badge rounded-pill bg-secondary px-3 py-2">
@@ -157,18 +150,58 @@
 
 
                         <!-- Reporter -->
-                        <div class="col-12">
+                        <div class="col-md-6">
 
                             <small class="text-muted d-block mb-1">
                                 Reported By
                             </small>
 
                             <span>
-                                @Model.ReporterId
+                                @if (Model.Reporter != null)
+                                {
+                                    @($"{Model.Reporter.FirstName} {Model.Reporter.LastName}")
+                                }
+                                else
+                                {
+                                    @:Unknown
+                                }
                             </span>
 
                         </div>
 
+                        <!-- Post Owner -->
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block mb-1">
+                                Post Owner
+                            </small>
+
+                            <span>
+                                @if (Model.ContentType == PETHUB.Models.ReportedContentType.Listing)
+                                {
+                                    if (Model.Listing?.Member != null)
+                                    {
+                                        @($"{Model.Listing.Member.FirstName} {Model.Listing.Member.LastName}")
+                                    }
+                                    else
+                                    {
+                                        @:Unknown
+                                    }
+                                }
+                                else
+                                {
+                                    if (Model.LostFound?.User != null)
+                                    {
+                                        @($"{Model.LostFound.User.FirstName} {Model.LostFound.User.LastName}")
+                                    }
+                                    else
+                                    {
+                                        @:Unknown
+                                    }
+                                }
+                            </span>
+
+                        </div>
 
                         <!-- Description -->
                         <div class="col-12">
@@ -462,7 +495,7 @@
                                        name="id"
                                        value="@Model.UserReportId" 
                                        onsubmit="return confirm('Are you sure you want to dismiss this report?');">
-                                />
+                                
 
                                 <button type="submit"
                                         class="btn btn-outline-secondary rounded-pill px-4">
