@@ -32,8 +32,8 @@ namespace PETHUB.Models
         public ICollection<PetFeedPaw>? Paws { get; set; }
 
         // Admin who posted
-        public string AdminId { get; set; }
-        public ApplicationUser Admin { get; set; }
+        public string? AdminId { get; set; }
+        public ApplicationUser? Admin { get; set; }
 
     }
 }

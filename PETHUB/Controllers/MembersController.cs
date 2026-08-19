@@ -207,20 +207,91 @@ namespace PETHUB.Controllers
             return View(applicationUser);
         }
 
+
         // POST: Members/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var applicationUser = await _context.Users.FindAsync(id);
-            if (applicationUser != null)
+            var applicationUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (applicationUser == null)
             {
-                _context.Users.Remove(applicationUser);
+                return NotFound();
             }
 
+            // Get IDs of the member's listings
+            var listingIds = await _context.Listings
+                .Where(l => l.MemberId == id)
+                .Select(l => l.ListingId)
+                .ToListAsync();
+
+            // Get IDs of the member's Lost & Found posts
+            var lostFoundIds = await _context.LostFounds
+                .Where(l => l.UserId == id)
+                .Select(l => l.LostFoundId)
+                .ToListAsync();
+
+
+            // ==========================================
+            // DELETE REPORTS
+            // ==========================================
+            // Delete:
+            // 1. Reports submitted by the member
+            // 2. Reports targeting the member's Listings
+            // 3. Reports targeting the member's Lost & Found posts
+
+            var reports = await _context.UserReports
+                .Where(r =>
+                    r.ReporterId == id ||
+                    (r.ListingId.HasValue &&
+                     listingIds.Contains(r.ListingId.Value)) ||
+                    (r.LostFoundId.HasValue &&
+                     lostFoundIds.Contains(r.LostFoundId.Value)))
+                .ToListAsync();
+
+            _context.UserReports.RemoveRange(reports);
+
+
+            // ==========================================
+            // DELETE NOTIFICATIONS
+            // ==========================================
+            // Delete:
+            // 1. Notifications belonging to the member
+            // 2. Notifications related to the member's Listings
+            // 3. Notifications related to the member's Lost & Found posts
+
+            var notifications = await _context.Notifications
+                .Where(n =>
+                    n.UserId == id ||
+                    (n.ListingId.HasValue &&
+                     listingIds.Contains(n.ListingId.Value)) ||
+                    (n.LostFoundId.HasValue &&
+                     lostFoundIds.Contains(n.LostFoundId.Value)))
+                .ToListAsync();
+
+            _context.Notifications.RemoveRange(notifications);
+
+
+
+
+            // ==========================================
+            // DELETE THE MEMBER
+            // ==========================================
+
+            _context.Users.Remove(applicationUser);
+
+
+            // ==========================================
+            // SAVE EVERYTHING  
+            // ==========================================
+
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool ApplicationUserExists(string id)
         {

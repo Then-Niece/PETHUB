@@ -195,15 +195,55 @@ namespace PETHUB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var applicationUser = await _context.Users.FindAsync(id);
-            if (applicationUser != null)
+            var applicationUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (applicationUser == null)
             {
-                _context.Users.Remove(applicationUser);
+                return NotFound();
             }
 
+            // ==========================================
+            // DELETE NOTIFICATIONS BELONGING TO USER
+            // ==========================================
+
+            var notifications = await _context.Notifications
+                .Where(n => n.UserId == id)
+                .ToListAsync();
+
+            _context.Notifications.RemoveRange(notifications);
+
+
+            // ==========================================
+            // DELETE REPORTS SUBMITTED BY USER
+            // ==========================================
+
+            var reports = await _context.UserReports
+                .Where(r => r.ReporterId == id)
+                .ToListAsync();
+
+            _context.UserReports.RemoveRange(reports);
+
+
+            // ==========================================
+            // DELETE USER
+            // ==========================================
+
+            _context.Users.Remove(applicationUser);
+
+
+            // ==========================================
+            // SAVE
+            // ==========================================
+
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
+
+
+
+
 
         private bool ApplicationUserExists(string id)
         {
