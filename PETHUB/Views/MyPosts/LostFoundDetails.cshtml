@@ -1,200 +1,816 @@
 ﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+    For more information on enabling MVC for empty projects, visit
+    https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
 
 @model PETHUB.Models.LostFound
 
 @{
     ViewData["Title"] = "Lost & Found Details";
+
+    /*
+     * Used to determine whether the dropdown
+     * needs a divider before Delete.
+     */
+    bool hasOtherActions =
+        Model.Status == ApprovalStatus.Pending ||
+        (
+            Model.Status == ApprovalStatus.Approved &&
+            Model.RStatus == ReportStatus.Active
+        );
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <!-- Left side: image gallery -->
-        <div class="col-md-6">
+
+<div class="lostfound-details-page">
+
+    <!-- =====================================================
+         MAIN DETAILS LAYOUT
+    ====================================================== -->
+
+    <div class="lostfound-details-layout">
+
+
+        <!-- =================================================
+             LEFT SIDE
+             IMAGE GALLERY
+        ================================================== -->
+
+        <div class="lostfound-gallery">
+
+            <div class="lostfound-main-image">
+
+                @if (Model.Images != null && Model.Images.Any())
+                {
+                    <div id="lostFoundCarousel"
+                         class="carousel slide"
+                         data-bs-ride="carousel">
+
+                        <div class="carousel-inner">
+
+                            @for (int i = 0; i < Model.Images.Count; i++)
+                            {
+                                var img = Model.Images.ElementAt(i);
+
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+
+                                    <img src="@img.ImagePath"
+                                         alt="Lost & Found Image" />
+
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <!-- =================================================
+                             PREVIOUS / NEXT
+                             ONLY SHOW WHEN THERE ARE 2+ IMAGES
+                        ================================================== -->
+                        @if (Model.Images.Count > 1)
+                        {
+                            <!-- Previous -->
+
+                            <button class="carousel-control-prev lostfound-carousel-control"
+                                    type="button"
+                                    data-bs-target="#lostFoundCarousel"
+                                    data-bs-slide="prev">
+
+                                <i data-lucide="chevron-left"></i>
+
+                                <span class="visually-hidden">
+                                    Previous
+                                </span>
+
+                            </button>
+
+
+                            <!-- Next -->
+
+                            <button class="carousel-control-next lostfound-carousel-control"
+                                    type="button"
+                                    data-bs-target="#lostFoundCarousel"
+                                    data-bs-slide="next">
+
+                                <i data-lucide="chevron-right"></i>
+
+                                <span class="visually-hidden">
+                                    Next
+                                </span>
+
+                            </button>
+                        }
+
+                    </div>
+                }
+                else
+                {
+                    <div class="lostfound-no-image">
+
+                        <span>
+                            No images uploaded.
+                        </span>
+
+                    </div>
+                }
+
+            </div>
+
+
+            <!-- =================================================
+                 IMAGE THUMBNAILS
+            ================================================== -->
             @if (Model.Images != null && Model.Images.Any())
             {
-                <div id="lostFoundCarousel" class="carousel slide shadow-sm" data-bs-ride="carousel">
-                    <div class="carousel-inner rounded">
-                        @for (int i = 0; i < Model.Images.Count; i++)
-                        {
-                            var img = Model.Images.ElementAt(i);
-                            <div class="carousel-item @(i == 0 ? "active" : "")">
-                                <img src="@img.ImagePath" class="d-block w-100" alt="LostFound image" style="height:400px;object-fit:cover;">
-                            </div>
-                        }
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#lostFoundCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#lostFoundCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+                <div class="lostfound-thumbnail-grid">
+
+                    @for (int i = 0; i < Model.Images.Count; i++)
+                    {
+                        var img = Model.Images.ElementAt(i);
+
+                        <button type="button"
+                                class="lostfound-thumbnail @(i == 0 ? "active" : "")"
+                                data-bs-target="#lostFoundCarousel"
+                                data-bs-slide-to="@i"
+                                aria-label="Go to image @(i + 1)">
+
+                            <img src="@img.ImagePath"
+                                 alt="Listing thumbnail @(i + 1)" />
+
+                        </button>
+                    }
+
                 </div>
             }
-            else
-            {
-                <div class="bg-light text-center py-5 rounded shadow-sm">
-                    <p class="text-muted">No images uploaded for this report.</p>
-                </div>
-            }
+
         </div>
 
-        <!-- Right side: report info -->
-        <div class="col-md-5">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <h3 class="fw-bold">@Model.Title</h3>
-                    <p class="text-muted mb-1">Reported on @Model.DateReported.ToString("MMMM dd, yyyy")</p>
-                    <p class="mb-3">@Model.Description</p>
-                    <p><strong>Type:</strong> @Model.Type</p>
-                    <p><strong>Pet Type:</strong> @Model.PetType</p>
-                    <p><strong>Breed:</strong> @(string.IsNullOrEmpty(Model.Breed) ? "Not specified" : Model.Breed)</p>
-                    <p><strong>Sex:</strong> @(Model.Sex.HasValue ? Model.Sex.ToString() : "Not specified")</p>
-                    @if (Model.Type == LostFoundType.Found)
-                    {
-
-                    }
-                    else
-                    {
-                        <p>
-                            <strong>Lost Date:</strong>
-                            @(Model.LostDate.HasValue
-                                ? Model.LostDate.Value.ToString("MMMM dd, yyyy")
-                                : "Not specified")
-                        </p>
-                    }
-
-                    <hr />
-
-                    <h5>Location</h5>
-
-                    @if (!string.IsNullOrWhiteSpace(Model.StreetAddress))
-                    {
-                        <p>
-                            <strong>Street Address:</strong><br />
-                            @Model.StreetAddress
-                        </p>
-                    }
-
-                    <p>
-                        <strong>Barangay:</strong><br />
-                        @Model.Barangay
-                    </p>
-
-                    <p>
-                        <strong>City:</strong><br />
-                        @Model.City
-                    </p>
-
-                    <p>
-                        <strong>Province:</strong><br />
-                        @Model.Province
-                    </p>
-
-                    <hr />
 
 
-                    <!-- I Added this conditional statement so that if the UserId is null then it means its a client report and it shows its details-->
-                    <!-- But if its a registered member, it shows its firstname and last name -->
-                    @if (Model.UserId == null)
-                    {
+        <!-- =================================================
+             RIGHT SIDE
+             REPORT DETAILS
+        ================================================== -->
 
-                        <!-- Reporter Information -->
-                        <h5>Reporter Information</h5>
+        <div class="lostfound-info-panel">
 
-                        <hr />
 
-                        <p>
-                            <strong>Name:</strong>
-                            @Model.ClientName
+            <!-- ======================================================
+                 PROFILE
+            ====================================================== -->
+
+            <div class="lostfound-profile">
+
+                <div class="lostfound-profile-main">
+
+                    <div class="lostfound-profile-avatar">
+
+                        @if (!string.IsNullOrWhiteSpace(Model.User?.ProfilePicturePath))
+                        {
+                            <img src="@Model.User.ProfilePicturePath"
+                                 alt="Profile Picture" />
+                        }
+                        else
+                        {
+                            <img src="~/images/default_profile.jpg"
+                                 alt="Default Profile Picture" />
+                        }
+
+                    </div>
+
+
+                    <!-- User Information -->
+
+                    <div class="lostfound-profile-details">
+
+                        <p class="lostfound-profile-name">
+
+                            @if (Model.UserId == null)
+                            {
+                                @Model.ClientName
+                            }
+                            else
+                            {
+                                @Model.User?.FirstName
+                                @Model.User?.LastName
+                            }
+
                         </p>
 
-                        <p>
-                            <strong>Contact:</strong>
-                            @Model.ClientContact
-                        </p>
-                    }
-                    else
-                    {
 
-                        <!-- Reporter Information -->
-                        <h5>Reporter Information (Member)</h5>
-                        <hr/>
-                        <p><strong>Posted by:</strong> @Model.User?.FirstName @Model.User?.LastName</p>
-                        <p><strong>Contact Number:</strong> @Model.User?.ContactNumber</p>
-                    }
+                        <div class="lostfound-profile-meta">
+
+                            <span>
+                                @Model.DateReported.ToString("MMMM dd, yyyy")
+                            </span>
+
+                            <span class="lostfound-meta-dot">
+                                ·
+                            </span>
+
+                            <span class="lostfound-type-badge
+                                @(Model.Type == LostFoundType.Lost
+                                    ? "lost"
+                                    : "found")">
+
+                                @(Model.Type == LostFoundType.Lost
+                                    ? "Lost Pet"
+                                    : "Found Pet")
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
                 </div>
-                <div class="card-footer d-flex justify-content-center gap-3">
 
-                    @* Pending reports can still be edited. *@
-                    @if (Model.Status == ApprovalStatus.Pending)
-                    {
-                        <a asp-controller="LostFounds"
-                           asp-action="Edit"
-                           asp-route-id="@Model.LostFoundId"
-                           class="btn btn-warning px-4">
-                            Edit
-                        </a>
-                    }
 
-                    @* Approved reports that are still active can be resolved by the owner. *@
-                    @if (Model.Status == ApprovalStatus.Approved &&
-                         Model.RStatus == ReportStatus.Active)
-                    {
-                        <form asp-action="MarkReportResolved"
+
+                <!-- ==================================================
+                     THREE DOT MENU
+                ================================================== -->
+
+                <div class="lostfound-more-menu">
+
+
+                    <!-- Three Dot Button -->
+
+                    <button type="button"
+                            class="lostfound-more-button"
+                            onclick="this.parentElement.classList.toggle('show')"
+                            aria-label="More options">
+
+                        <i data-lucide="more-horizontal"></i>
+
+                    </button>
+
+
+
+                    <!-- ==================================================
+                         DROPDOWN
+                    ================================================== -->
+
+                    <div class="lostfound-more-dropdown">
+
+
+                        <!-- ==================================================
+                             EDIT
+                             ONLY PENDING
+                        ================================================== -->
+                        @if (Model.Status == ApprovalStatus.Pending)
+                        {
+                            <a asp-controller="LostFounds"
+                               asp-action="Edit"
+                               asp-route-id="@Model.LostFoundId"
+                               class="lostfound-dropdown-item edit-action">
+
+                                <i data-lucide="pencil"></i>
+
+                                <span>
+                                    Edit
+                                </span>
+
+                            </a>
+                        }
+
+
+
+                        <!-- ==================================================
+                             MARK AS FOUND / RESOLVED
+                             ONLY APPROVED + ACTIVE
+                        ================================================== -->
+                        @if (Model.Status == ApprovalStatus.Approved &&
+                                                     Model.RStatus == ReportStatus.Active)
+                        {
+                            <form asp-action="MarkReportResolved"
+                                  asp-controller="MyPosts"
+                                  asp-route-id="@Model.LostFoundId"
+                                  method="post">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit"
+                                        class="lostfound-dropdown-item resolve-action">
+
+                                    @if (Model.Type == LostFoundType.Lost)
+                                    {
+                                        <i data-lucide="circle-check"></i>
+
+                                        <span>
+                                            Mark as Found
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <i data-lucide="circle-check"></i>
+
+                                        <span>
+                                            Mark as Resolved
+                                        </span>
+                                    }
+
+                                </button>
+
+                            </form>
+                        }
+
+
+
+                        <!-- ==================================================
+                             DIVIDER
+                             ONLY IF THERE ARE OTHER ACTIONS
+                        ================================================== -->
+                        @if (hasOtherActions)
+                        {
+                            <div class="lostfound-dropdown-divider"></div>
+                        }
+
+
+
+                        <!-- ==================================================
+                             DELETE
+                             ALWAYS AVAILABLE
+                        ================================================== -->
+
+                        <form asp-action="DeleteLostFound"
                               asp-controller="MyPosts"
                               asp-route-id="@Model.LostFoundId"
                               method="post">
 
                             @Html.AntiForgeryToken()
 
-                            <button type="submit" class="btn btn-success px-4">
-                                @(Model.Type == LostFoundType.Lost
-                                    ? "Mark as Found"
-                                    : "Mark as Resolved")
+                            <button type="submit"
+                                    class="lostfound-dropdown-item delete-action">
+
+                                <i data-lucide="trash-2"></i>
+
+                                <span>
+                                    Delete
+                                </span>
+
                             </button>
+
                         </form>
-                    }
 
-                    @* Show a badge once the report has been resolved. *@
-                    @if (Model.Status == ApprovalStatus.Approved &&
-                         Model.RStatus == ReportStatus.Resolved)
-                    {
-                        <span class="btn btn-outline-success disabled px-4">
-                            @(Model.Type == LostFoundType.Lost
-                                ? "Found"
-                                : "Resolved")
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ==================================================
+                 PROFILE DIVIDER
+            ================================================== -->
+
+            <div class="lostfound-profile-divider"></div>
+
+
+
+            <!-- =================================================
+                 TITLE
+            ================================================== -->
+
+            <div class="lostfound-title-section">
+
+                <h1>
+                    @Model.Title
+                </h1>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ABOUT THIS REPORT
+            ================================================== -->
+
+            <section class="lostfound-info-section">
+
+                <h2>
+                    About This Report
+                </h2>
+
+
+                <p class="lostfound-description">
+
+                    @(string.IsNullOrWhiteSpace(Model.Description)
+                        ? "No description provided."
+                        : Model.Description)
+
+                </p>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 PET INFORMATION
+            ================================================== -->
+
+            <section class="lostfound-info-section">
+
+                <h2>
+                    Pet Information
+                </h2>
+
+
+                <div class="lostfound-information-box">
+
+
+                    <!-- Pet Type -->
+
+                    <div class="lostfound-information-row">
+
+                        <span class="lostfound-information-label">
+                            Pet Type
                         </span>
+
+                        <span class="lostfound-information-value">
+                            @Model.PetType
+                        </span>
+
+                    </div>
+
+
+                    <!-- Breed -->
+
+                    <div class="lostfound-information-row">
+
+                        <span class="lostfound-information-label">
+                            Breed
+                        </span>
+
+                        <span class="lostfound-information-value">
+
+                            @(string.IsNullOrWhiteSpace(Model.Breed)
+                                ? "Not specified"
+                                : Model.Breed)
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- Sex -->
+
+                    <div class="lostfound-information-row">
+
+                        <span class="lostfound-information-label">
+                            Sex
+                        </span>
+
+                        <span class="lostfound-information-value">
+
+                            @(Model.Sex.HasValue
+                                ? Model.Sex.ToString()
+                                : "Not specified")
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- Lost Date -->
+                    @if (Model.Type == LostFoundType.Lost)
+                    {
+                        <div class="lostfound-information-row">
+
+                            <span class="lostfound-information-label">
+                                Lost Date
+                            </span>
+
+                            <span class="lostfound-information-value">
+
+                                @(Model.LostDate.HasValue
+                                    ? Model.LostDate.Value.ToString("MMMM dd, yyyy")
+                                    : "Not specified")
+
+                            </span>
+
+                        </div>
                     }
 
-                    @* Members can always delete their own report.
-                       The controller still validates ownership. *@
-                    <form asp-action="DeleteLostFound"
-                          asp-controller="MyPosts"
-                          asp-route-id="@Model.LostFoundId"
-                          method="post">
+                </div>
 
-                        @Html.AntiForgeryToken()
+            </section>
 
-                        <button type="submit"
-                                class="btn btn-danger px-4">
-                            Delete
-                        </button>
-                    </form>
 
-                    <a asp-controller="MyPosts"
-                       asp-action="Index"
-                       class="btn btn-secondary px-4">
-                        ← Back to My Posts
-                    </a>
 
-                </div>            
+            <!-- =================================================
+                 WHERE TO FIND
+            ================================================== -->
+
+            <section class="lostfound-info-section">
+
+                <h2 class="lostfound-section-heading">
+
+                    <i data-lucide="map-pin"></i>
+
+                    <span>
+                        Where to Find
+                    </span>
+
+                </h2>
+
+
+                <div class="lostfound-information-box">
+
+
+                    <!-- Street Address -->
+                    @if (!string.IsNullOrWhiteSpace(Model.StreetAddress))
+                    {
+                        <div class="lostfound-information-row">
+
+                            <span class="lostfound-information-label">
+                                Street Address
+                            </span>
+
+                            <span class="lostfound-information-value">
+                                @Model.StreetAddress
+                            </span>
+
+                        </div>
+                    }
+
+
+                    <!-- Barangay -->
+
+                    <div class="lostfound-information-row">
+
+                        <span class="lostfound-information-label">
+                            Barangay
+                        </span>
+
+                        <span class="lostfound-information-value">
+                            @Model.Barangay
+                        </span>
+
+                    </div>
+
+
+                    <!-- City -->
+
+                    <div class="lostfound-information-row">
+
+                        <span class="lostfound-information-label">
+                            City
+                        </span>
+
+                        <span class="lostfound-information-value">
+                            @Model.City
+                        </span>
+
+                    </div>
+
+
+                    <!-- Province -->
+
+                    <div class="lostfound-information-row">
+
+                        <span class="lostfound-information-label">
+                            Province
+                        </span>
+
+                        <span class="lostfound-information-value">
+                            @Model.Province
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 CONTACT NUMBER
+            ================================================== -->
+
+            <section class="lostfound-info-section">
+
+                <h2 class="lostfound-section-heading">
+
+                    <i data-lucide="phone"></i>
+
+                    <span>
+                        Contact Number
+                    </span>
+
+                </h2>
+
+
+                <div class="lostfound-information-box">
+
+                    <div class="lostfound-information-row">
+
+                        <span class="lostfound-information-label">
+                            Contact Number
+                        </span>
+
+                        <span class="lostfound-information-value">
+
+                            @if (Model.UserId == null)
+                            {
+                                @(string.IsNullOrWhiteSpace(Model.ClientContact)
+                                    ? "Not Available"
+                                    : Model.ClientContact)
+                            }
+                            else
+                            {
+                                @(string.IsNullOrWhiteSpace(Model.User?.ContactNumber)
+                                    ? "Not Available"
+                                    : Model.User.ContactNumber)
+                            }
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 REPORT STATUS
+            ================================================== -->
+
+            <section class="lostfound-info-section">
+
+                <h2 class="lostfound-section-heading">
+
+                    <i data-lucide="circle-check"></i>
+
+                    <span>
+                        Report Status
+                    </span>
+
+                </h2>
+
+
+                <div class="lostfound-information-box">
+
+                    <div class="lostfound-information-row">
+
+                        <span class="lostfound-information-label">
+                            Status
+                        </span>
+
+                        <span class="lostfound-information-value">
+
+                            @if (Model.Status == ApprovalStatus.Pending)
+                            {
+                                <span class="lostfound-status-badge pending">
+                                    Pending 
+                                </span>
+                            }
+                            else if (Model.Status == ApprovalStatus.Rejected)
+                            {
+                                <span class="lostfound-status-badge rejected">
+                                    Rejected
+                                </span>
+                            }
+                            else if (Model.Status == ApprovalStatus.Approved)
+                            {
+                                @if (Model.RStatus == ReportStatus.Resolved)
+                                {
+                                    <span class="lostfound-status-badge resolved">
+
+                                        @(Model.Type == LostFoundType.Lost
+                                            ? "Found"
+                                            : "Resolved")
+
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="lostfound-status-badge approved">
+                                        Approved
+                                    </span>
+                                }
+                            }
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ======================================================
+                 BACK TO MY POSTS
+                 SAME POSITION AS MARKETPLACE
+            ====================================================== -->
+
+            <div class="my-post-back-container">
+
+                <a asp-action="Index"
+                   asp-controller="MyPosts"
+                   class="my-post-back-btn">
+
+                    <i data-lucide="arrow-left"></i>
+
+                    <span>
+                        Back to My Posts
+                    </span>
+
+                </a>
+
+            </div>
+
+
         </div>
-        </div>
+
     </div>
+
 </div>
+
+
+
+<!-- ==========================================================
+     LUCIDE ICON INITIALIZATION
+========================================================== -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        if (typeof lucide !== "undefined") {
+            lucide.createIcons();
+        }
+
+    });
+
+</script>
+
+
+
+<!-- ==========================================================
+     CLOSE DROPDOWN WHEN RIGHT PANEL IS SCROLLED
+     SAME BEHAVIOR AS MARKETPLACE
+========================================================== -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const detailsPanel =
+            document.querySelector(".lostfound-info-panel");
+
+        if (detailsPanel) {
+
+            detailsPanel.addEventListener("scroll", function() {
+
+                const menu =
+                    document.querySelector(".lostfound-more-menu");
+
+                if (menu) {
+
+                    menu.classList.remove("show");
+
+                }
+
+            });
+
+        }
+
+    });
+
+</script>
+
+
+
+<!-- ==========================================================
+     CLOSE DROPDOWN WHEN CLICKING OUTSIDE
+     SAME BEHAVIOR AS MARKETPLACE
+========================================================== -->
+
+<script>
+
+    document.addEventListener("click", function(event) {
+
+        const menu =
+            document.querySelector(".lostfound-more-menu");
+
+        if (!menu) {
+            return;
+        }
+
+
+        if (!event.target.closest(".lostfound-more-menu")) {
+
+            menu.classList.remove("show");
+
+        }
+
+    });
+
+</script>
