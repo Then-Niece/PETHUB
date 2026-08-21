@@ -5,12 +5,12 @@ namespace PETHUB.Models
     public class ApplicationUser : IdentityUser
     {
         // Common fields
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         // Optional middle name
         public string? MiddleName { get; set; }
 
-        public string ContactNumber { get; set; }
+        public string? ContactNumber { get; set; }
         public UserStatus Status { get; set; } = UserStatus.Active;
 
         // Store registration date for  admins and members
@@ -47,6 +47,7 @@ namespace PETHUB.Models
 
     public enum UserStatus
     {
+        Pending,
         Active,
         Inactive
     }

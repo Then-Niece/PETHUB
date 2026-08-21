@@ -22,7 +22,7 @@ namespace PETHUB.Controllers
             {
                 if (User.IsInRole("Admin"))
                 {
-                    return RedirectToAction("Index", "PetFeeds");
+                    return RedirectToAction("Index", "AdminDashboard");
                 }
                 else if (User.IsInRole("Member"))
                 {

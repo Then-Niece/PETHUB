@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Models;
+using PETHUB.Services;
 using PETHUB.ViewModels;
 
 namespace PETHUB.Controllers
@@ -11,19 +12,27 @@ namespace PETHUB.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly EmailSender _emailSender;
 
-        public AdminsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+
+        public AdminsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, EmailSender emailSender)
         {
             _context = context;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
+            // get the current logged-in user's ID to exclude them from the list
+            var currentUserId = _userManager.GetUserId(User);
+
+            // Get all users in the "Admin" role, excluding the current logged-in user, and order them by CreatedAt descending
             var users = (await _userManager.GetUsersInRoleAsync("Admin"))
+                .Where(u => u.Id != currentUserId)
                 .OrderByDescending(u => u.CreatedAt)
-                .ToList(); // Newest first
+                .ToList();
 
 
             // Build dictionary of user roles (optional if you want to show role column)
@@ -72,41 +81,119 @@ namespace PETHUB.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AdminViewModel model)
+        public async Task<IActionResult> Create(AdminInvitationViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var user = new ApplicationUser
-                {
-                    UserName = model.UserName,
-                    Email = model.Email,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    ContactNumber = model.ContactNumber,
-                    Status = UserStatus.Active
-                };
+                return View(model);
+            }
 
-                var result = await _userManager.CreateAsync(user, model.Password);
+            // Identity already checks the email
 
-                if (result.Succeeded)
-                {
-                    // Always assign Admin role here
-                    // ⚠ NOTE:
-                    // Normally this should assign the "Admin" role.
-                    // But per our adviser's naming scheme, Admins are called "Users".
-                    // So we assign "User" here to match the project convention.
-                    await _userManager.AddToRoleAsync(user, "Admin");
+            // ==========================================
+            // CREATE PENDING USER
+            // ==========================================
 
-                    return RedirectToAction(nameof(Index));
-                }
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
 
+                Status = UserStatus.Pending,
+
+                CreatedAt = DateTime.UtcNow
+            };
+
+            var result = await _userManager.CreateAsync(user);
+
+            if (!result.Succeeded)
+            {
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
+
+                return View(model);
             }
-            return View(model);
+
+
+            // ==========================================
+            // ASSIGN ADMIN ROLE
+            // ==========================================
+
+            var roleResult = await _userManager.AddToRoleAsync(user, "Admin");
+
+            if (!roleResult.Succeeded)
+            {
+                foreach (var error in roleResult.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+                // Remove the pending user if role assignment fails
+                await _userManager.DeleteAsync(user);
+
+                return View(model);
+            }
+
+
+            // ==========================================
+            // GENERATE INVITATION TOKEN
+            // ==========================================
+
+            var token = await _userManager.GenerateUserTokenAsync(
+                user,
+                "PETHubAdminInvitation",
+                "AdminInvitation");
+
+
+
+            // ==========================================
+            // CREATE INVITATION LINK
+            // ==========================================
+
+            var invitationLink = Url.Action(
+                "AdminSetup",
+                "UserAccount",
+                new
+                {
+                    userId = user.Id,
+                    token = token
+                },
+                Request.Scheme);
+
+
+            // ==========================================
+            // CREATE EMAIL
+            // ==========================================
+
+            var emailBody = Helpers.EmailTemplateHelper.AdminInvitation(
+                invitationLink);
+
+
+            // ==========================================
+            // SEND EMAIL
+            // ==========================================
+
+            await _emailSender.SendEmailAsync(
+                user.Email,
+                "PETHUB Administrator Invitation",
+                emailBody);
+
+
+            // ==========================================
+            // DONE
+            // ==========================================
+
+            TempData["SuccessMessage"] =
+                "Administrator invitation sent successfully.";
+
+            return RedirectToAction(nameof(Index));
         }
+
+
+
+
 
 
 

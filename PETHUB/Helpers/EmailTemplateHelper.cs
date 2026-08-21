@@ -78,6 +78,28 @@
             );
         }
 
+
+        // ===========================
+        // ADMIN INVITATION
+        // ===========================
+        public static string AdminInvitation(string invitationLink)
+        {
+            return BuildTemplate(
+                title: "PETHUB Administrator Invitation",
+                heading: "You're Invited to Become a PETHUB Administrator",
+                message:
+                    "You have been invited to create an administrator account for PETHUB.<br><br>" +
+                    "Click the button below to complete your administrator account setup.<br><br>" +
+                    "<strong>This invitation link is for you only. Please do not share it with anyone.</strong>",
+                buttonText: "Create Administrator Account",
+                buttonLink: invitationLink,
+                footer:
+                    "If you were not expecting this invitation, you can safely ignore this email."
+            );
+        }
+
+
+
         // ============================================================
         // MAIN TEMPLATE
         // ============================================================

@@ -1,0 +1,192 @@
+﻿@model PETHUB.ViewModels.AdminViewModel
+
+@{
+    ViewData["Title"] = "Administrator Account Setup";
+
+}
+
+<div class="container-fluid py-4">
+
+    <div class="admin-crud-page">
+
+        <div class="crud-card">
+
+            <div class="crud-header">
+                <h2>Complete Administrator Account</h2>
+
+                <p>
+                    You've been invited to become a PETHUB administrator.
+                    Please enter your information below to complete your account.
+                </p>
+            </div>
+
+            <form asp-action="AdminSetup"
+                  asp-controller="UserAccount"
+                  method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger px-4 pt-3"></div>
+
+                <input type="hidden"
+                       name="userId"
+                       value="@ViewBag.UserId" />
+
+                <input type="hidden"
+                       name="token"
+                       value="@ViewBag.Token" />
+
+                <div class="crud-content-single">
+
+                    <div class="form-grid">
+
+                        <!-- EMAIL -->
+
+                        <div class="form-group">
+
+                            <label asp-for="Email">
+                                Email Address
+                            </label>
+
+                            <input asp-for="Email"
+                                   class="form-control custom-input readonly-input"
+                                   readonly />
+
+                            <span asp-validation-for="Email"
+                                  class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- FIRST NAME -->
+
+                        <div class="form-group">
+
+                            <label asp-for="FirstName">
+                                First Name
+                            </label>
+
+                            <input asp-for="FirstName"
+                                   class="form-control custom-input"
+                                   placeholder="Enter your first name" />
+
+                            <span asp-validation-for="FirstName"
+                                  class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- LAST NAME -->
+
+                        <div class="form-group">
+
+                            <label asp-for="LastName">
+                                Last Name
+                            </label>
+
+                            <input asp-for="LastName"
+                                   class="form-control custom-input"
+                                   placeholder="Enter your last name" />
+
+                            <span asp-validation-for="LastName"
+                                  class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- USERNAME -->
+
+                        <div class="form-group">
+
+                            <label asp-for="UserName">
+                                Username
+                            </label>
+
+                            <input asp-for="UserName"
+                                   class="form-control custom-input"
+                                   placeholder="Choose a username" />
+
+                            <span asp-validation-for="UserName"
+                                  class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- CONTACT NUMBER -->
+
+                        <div class="form-group">
+
+                            <label asp-for="ContactNumber">
+                                Contact Number
+                            </label>
+
+                            <input asp-for="ContactNumber"
+                                   class="form-control custom-input"
+                                   placeholder="11-digit contact number"
+                                   maxlength="11" />
+
+                            <span asp-validation-for="ContactNumber"
+                                  class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- PASSWORD -->
+
+                        <div class="form-group">
+
+                            <label asp-for="Password">
+                                Password
+                            </label>
+
+                            <div class="input-group">
+
+                                <input asp-for="Password"
+                                       type="password"
+                                       class="form-control"
+                                       id="adminPassword"
+                                       placeholder="Create your password" />
+
+                                <button class="password-toggle"
+                                        type="button"
+                                        data-password-target="adminPassword"
+                                        aria-label="Show password">
+
+                                    <i data-lucide="eye"></i>
+
+                                </button>
+
+                            </div>
+
+                            <span asp-validation-for="Password"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="crud-footer">
+
+                    <button type="submit"
+                            class="btn-primary-action">
+                        Create Administrator Account
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}

@@ -21,12 +21,18 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
     // Uses the custom 10-minute provider for password resets
     options.Tokens.PasswordResetTokenProvider = "PETHubPasswordReset";
+
+    // Require every user to have a unique email address
+    options.User.RequireUniqueEmail = true;
+
+    
 })
 // Configure token provider for password reset
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders()
-.AddTokenProvider<PasswordResetTokenProvider<ApplicationUser>>(
-    "PETHubPasswordReset");
+.AddTokenProvider<PasswordResetTokenProvider<ApplicationUser>>("PETHubPasswordReset")
+.AddTokenProvider<AdminInvitationTokenProvider<ApplicationUser>>("PETHubAdminInvitation");
+
 
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<AdminIProfileService, AdminProfileService>();

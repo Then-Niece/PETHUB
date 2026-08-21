@@ -53,6 +53,11 @@ namespace PETHUB.Controllers
                 return View(model);
             }
 
+            // Identity already checks if the email is already taken
+            
+
+
+
             var user = new ApplicationUser
             {
                 UserName = model.UserName,
@@ -397,5 +402,221 @@ namespace PETHUB.Controllers
 
             return View(model);
         }
+
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> AdminSetup(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Invalid administrator invitation.");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+            if (!isAdmin || user.Status != UserStatus.Pending)
+            {
+                return BadRequest(
+                    "This administrator invitation is no longer valid.");
+            }
+
+            var tokenValid = await _userManager.VerifyUserTokenAsync(
+                user,
+                "PETHubAdminInvitation",
+                "AdminInvitation",
+                token);
+
+
+            if (!tokenValid)
+            {
+                return BadRequest(
+                    "This administrator invitation is invalid or has expired.");
+            }
+
+            var model = new AdminViewModel
+            {
+                Email = user.Email,
+                Status = UserStatus.Pending
+            };
+
+            ViewBag.UserId = userId;
+            ViewBag.Token = token;
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AdminSetup(AdminViewModel model, string userId, string token)
+        {
+            // -----------------------------------------
+            // CHECK INVITATION PARAMETERS
+            // -----------------------------------------
+
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Invalid administrator invitation.");
+            }
+
+            // -----------------------------------------
+            // FIND THE PENDING USER
+            // -----------------------------------------
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // -----------------------------------------
+            // MAKE SURE THIS IS A PENDING ADMIN
+            // -----------------------------------------
+
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+            if (!isAdmin || user.Status != UserStatus.Pending)
+            {
+                return BadRequest(
+                    "This administrator invitation is no longer valid.");
+            }
+
+            // -----------------------------------------
+            // VALIDATE INVITATION TOKEN
+            // -----------------------------------------
+
+            var tokenValid = await _userManager.VerifyUserTokenAsync(
+                user,
+                "PETHubAdminInvitation",
+                "AdminInvitation",
+                token);
+
+            if (!tokenValid)
+            {
+                return BadRequest(
+                    "This administrator invitation is invalid or has expired.");
+            }
+
+            // -----------------------------------------
+            // CHECK USERNAME AVAILABILITY
+            // -----------------------------------------
+
+            var existingUser = await _userManager.FindByNameAsync(model.UserName);
+
+            if (existingUser != null && existingUser.Id != user.Id)
+            {
+                ModelState.AddModelError(
+                    "UserName",
+                    "This username is already taken.");
+
+                model.Email = user.Email;
+
+                ViewBag.UserId = userId;
+                ViewBag.Token = token;
+
+                return View(model);
+            }
+
+            // -----------------------------------------
+            // VALIDATE FORM
+            // -----------------------------------------
+
+            if (!ModelState.IsValid)
+            {
+                model.Email = user.Email;
+
+                ViewBag.UserId = userId;
+                ViewBag.Token = token;
+
+                return View(model);
+            }
+
+            // -----------------------------------------
+            // UPDATE PERSONAL INFORMATION
+            // -----------------------------------------
+
+            user.UserName = model.UserName;
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.ContactNumber = model.ContactNumber;
+
+            // -----------------------------------------
+            // SET PASSWORD
+            // -----------------------------------------
+
+            var passwordResult = await _userManager.AddPasswordAsync(
+                user,
+                model.Password);
+
+
+            if (!passwordResult.Succeeded)
+            {
+                foreach (var error in passwordResult.Errors)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        error.Description);
+                }
+
+                model.Email = user.Email;
+
+                ViewBag.UserId = userId;
+                ViewBag.Token = token;
+
+                return View(model);
+            }
+
+            // -----------------------------------------
+            // ACTIVATE ACCOUNT
+            // -----------------------------------------
+
+            user.EmailConfirmed = true;
+            user.Status = UserStatus.Active;
+
+            // -----------------------------------------
+            // SAVE USER
+            // -----------------------------------------
+
+            var updateResult = await _userManager.UpdateAsync(user);
+
+            if (!updateResult.Succeeded)
+            {
+                foreach (var error in updateResult.Errors)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        error.Description);
+                }
+
+                model.Email = user.Email;
+
+                ViewBag.UserId = userId;
+                ViewBag.Token = token;
+
+                return View(model);
+            }
+
+            // -----------------------------------------
+            // SUCCESS
+            // -----------------------------------------
+
+            return RedirectToAction("Login");
+        }
+
+
+
     }
+
 }
+

@@ -79,45 +79,49 @@ namespace PETHUB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MemberViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(model);
+
+
+            // Identity already checks if the email is already taken
+           
+
+
+            var member = new ApplicationUser
             {
-                var member = new ApplicationUser
-                {
-                    UserName = model.UserName,
-                    Email = model.Email,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    ContactNumber = model.ContactNumber,
-                    Status = UserStatus.Active,
+                UserName = model.UserName,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                ContactNumber = model.ContactNumber,
+                Status = UserStatus.Active,
 
-                    // Member-only fields
-                    Province = model.Province,
-                    City = model.City,
-                    Barangay = model.Barangay,
-                    StreetAddress = model.StreetAddress,
-                    Gender = model.Gender,
-                    Birthdate = model.Birthdate
-                };
+                // Member-only fields
+                Province = model.Province,
+                City = model.City,
+                Barangay = model.Barangay,
+                StreetAddress = model.StreetAddress,
+                Gender = model.Gender,
+                Birthdate = model.Birthdate
+            };
 
-                member.IdPhotoPath = await IdPhotoUploadHelper.SaveIdPhotoAsync(model.IdPhoto);
+            member.IdPhotoPath = await IdPhotoUploadHelper.SaveIdPhotoAsync(model.IdPhoto);
 
-                // Create user with password
-                var result = await _userManager.CreateAsync(member, model.Password);
+            // Create user with password
+            var result = await _userManager.CreateAsync(member, model.Password);
 
-                if (result.Succeeded)
-                {
-                    // Always assign Member role here
-                    await _userManager.AddToRoleAsync(member, "Member");
-                    return RedirectToAction(nameof(Index));
-                }
-
-                // Handle errors
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
+            if (result.Succeeded)
+            {
+                // Always assign Member role here
+                await _userManager.AddToRoleAsync(member, "Member");
+                return RedirectToAction(nameof(Index));
             }
 
+            // Handle errors
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
             return View(model);
         }
 
