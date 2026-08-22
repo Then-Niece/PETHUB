@@ -243,7 +243,11 @@ public class LostFoundsController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Member")]
-    public async Task<IActionResult> Edit(int id, LostFound lostFound, List<IFormFile> Images)
+    public async Task<IActionResult> Edit(
+    int id,
+    LostFound lostFound,
+    List<IFormFile> Images,
+    List<int> DeletedImageIds)
     {
         if (id != lostFound.LostFoundId)
         {
@@ -293,6 +297,40 @@ public class LostFoundsController : Controller
         existing.StreetAddress = lostFound.StreetAddress;
         existing.DateReported = DateTime.Now;
 
+    
+
+        // DELETE MARKED EXISTING IMAGES
+
+        if (DeletedImageIds != null && DeletedImageIds.Any())
+        {
+            foreach (var imageId in DeletedImageIds)
+            {
+                var image = existing.Images
+                    .FirstOrDefault(i =>
+                        i.LostFoundImageId == imageId);
+
+                if (image == null)
+                {
+                    continue;
+                }
+
+                var filePath = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    image.ImagePath.TrimStart('/')
+                );
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                _context.LostFoundImages.Remove(image);
+            }
+        }
+
+
+    
 
         if (Images != null && Images.Any(i => i.Length > 0))
         {
