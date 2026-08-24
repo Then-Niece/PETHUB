@@ -6,7 +6,8 @@ namespace PETHUB.Models
     {
         Pending,
         Approved,
-        Rejected
+        Rejected,
+        Removed
     }
 
     public enum ReportStatus
@@ -67,8 +68,8 @@ namespace PETHUB.Models
 
         [Required]
         public PetType PetType { get; set; } // required dropdown: "Dog" or "Cat"
-        
-   
+
+
         public PetSex? Sex { get; set; } // optional dropdown: "Male" or "Female"
 
         [DataType(DataType.Date)]
@@ -90,7 +91,7 @@ namespace PETHUB.Models
         public ApprovalStatus Status { get; set; } = ApprovalStatus.Pending; // default to Pending
 
         //New Property for Client's Id
-        
+
         public string? ClientIdImagePath { get; set; }
         public ReportStatus RStatus { get; set; } = ReportStatus.Active;
     }

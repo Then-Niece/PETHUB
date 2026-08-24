@@ -66,6 +66,17 @@
 
         </a>
 
-    </div>
+        <a asp-controller="RemovedPosts"
+           asp-action="Index"
+           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "RemovedPosts" ? "active" : "")">
 
+            <i data-lucide="file-text"></i>
+
+            <span class="sidebar-text">
+                Removed Posts
+            </span>
+
+        </a>
+
+    </div>
 </nav>

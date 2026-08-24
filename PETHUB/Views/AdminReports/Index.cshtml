@@ -6,11 +6,18 @@
     // Read the current status from the URL so the selected filter can
     // remain active after the page reloads.
     var currentStatus = Context.Request.Query["status"].ToString();
+
     // Retrieve the reusable filter bar configuration created by
     // ReportsController.Index().
     var reportFilters =
         ViewData["ReportFilters"]
         as PETHUB.ViewModels.FilterBarViewModel;
+
+    // Retrieves the report IDs whose existing post currently has
+    // a Pending Appeal.
+    var pendingAppealReportIds =
+        ViewData["PendingAppealReportIds"] as HashSet<int>
+        ?? new HashSet<int>();
 }
 
 <div class="container-fluid py-4">
@@ -110,8 +117,17 @@
                                         }
 
 
-                                        @if (report.Status ==
-                                             PETHUB.Models.UserReportStatus.Pending)
+                                        @if (pendingAppealReportIds.Contains(report.UserReportId))
+                                        {
+                                            <!-- This badge represents the Appeal workflow.
+         The original UserReport may already be Resolved because
+         the post was previously removed. -->
+                                            <span class="badge rounded-pill bg-danger px-3 py-2">
+                                                Under Appeal
+                                            </span>
+                                        }
+                                        else if (report.Status ==
+                                                 PETHUB.Models.UserReportStatus.Pending)
                                         {
                                             <span class="badge rounded-pill bg-warning text-dark px-3 py-2">
                                                 Pending
@@ -181,9 +197,32 @@
 
                                         Reported:
                                         @report.DateCreated.ToLocalTime()
+
                                         &nbsp;|&nbsp;
-                                        Reporter ID:
-                                        @report.ReporterId
+
+                                        Reported By:
+                                        @(
+                                            report.Reporter == null
+                                                ? "Unknown"
+                                                : $"{report.Reporter.FirstName} {report.Reporter.LastName}"
+                                        )
+
+                                        &nbsp;|&nbsp;
+
+                                        Owner:
+                                        @(
+                                            report.ContentType == PETHUB.Models.ReportedContentType.Listing
+                                                ? (
+                                                    report.Listing?.Member == null
+                                                        ? "Unknown"
+                                                        : $"{report.Listing.Member.FirstName} {report.Listing.Member.LastName}"
+                                                  )
+                                                : (
+                                                    report.LostFound?.User == null
+                                                        ? "Unknown"
+                                                        : $"{report.LostFound.User.FirstName} {report.LostFound.User.LastName}"
+                                                  )
+                                        )
 
                                     </small>
 
