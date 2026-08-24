@@ -17,14 +17,14 @@ namespace PETHUB.Controllers
         private readonly NotificationService _notificationService;
 
         // Dependency Injection provides the database context and Identity UserManager.
-        // ApplicationDbContext handles UserReport, Listing, and LostFound database operations.
+        // ApplicationDbContext handles UserReport, Listing, LostFound, and Appeal operations.
         // UserManager retrieves the currently authenticated member's Identity information.
         public ReportsController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             NotificationService notificationService)
         {
-            // Provides database access for reports and reported content.
+            // Provides database access for reports, posts, and appeals.
             _context = context;
 
             // Provides the authenticated user's ID and access to Admin accounts.
@@ -32,17 +32,21 @@ namespace PETHUB.Controllers
 
             // Provides the existing PETHUB notification functionality.
             _notificationService = notificationService;
-        }        // POST: Reports/Create
-        // Allows only Members to submit a new report. Admins can access the controller
-        // but cannot use the member report-submission action.
+        }
+
+
+        // =========================================================
+        // CREATE REPORT
+        // =========================================================
+
+        // POST: Reports/Create
+        // Allows only Members to submit a new report.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Member")]
         public async Task<IActionResult> Create(CreateReportViewModel model)
         {
-            // Get the ID of the currently authenticated member through ASP.NET Identity.
-            // If no ID can be retrieved, the request is rejected because reports require
-            // an authenticated Member account.
+            // Gets the ID of the currently authenticated Member.
             var userId = _userManager.GetUserId(User);
 
             if (string.IsNullOrEmpty(userId))
@@ -55,54 +59,57 @@ namespace PETHUB.Controllers
                 return BadRequest(ModelState);
             }
 
-            // The reported content must exist before a UserReport can be created.
-            // These variables also allow us to perform ownership and duplicate checks
-            // against the correct type of PETHUB post.
+            // Stores the reported Marketplace listing or Lost & Found post.
             Listing? listing = null;
             LostFound? lostFound = null;
 
-            // Load the Marketplace listing when the submitted content type is Listing.
+
+            // =========================================================
+            // MARKETPLACE REPORT
+            // =========================================================
+
             if (model.ContentType == ReportedContentType.Listing)
             {
+                // Retrieves the Marketplace listing being reported.
                 listing = await _context.Listings
                     .FirstOrDefaultAsync(l => l.ListingId == model.ContentId);
 
-                // A report cannot be created for a Marketplace listing that no longer exists.
                 if (listing == null)
                 {
                     return NotFound();
                 }
 
-                // Members are not allowed to report their own Marketplace listings.
-                // This check is performed on the server so it cannot be bypassed by
-                // manually changing the submitted content ID.
+                // Prevents Members from reporting their own listing.
                 if (listing.MemberId == userId)
                 {
                     return Forbid();
                 }
             }
-            // Load the Lost & Found post when the submitted content type is LostFound.
+
+
+            // =========================================================
+            // LOST & FOUND REPORT
+            // =========================================================
+
             else if (model.ContentType == ReportedContentType.LostFound)
             {
+                // Retrieves the Lost & Found post being reported.
                 lostFound = await _context.LostFounds
                     .FirstOrDefaultAsync(l => l.LostFoundId == model.ContentId);
 
-                // A report cannot be created for a Lost & Found post that no longer exists.
                 if (lostFound == null)
                 {
                     return NotFound();
                 }
 
-                // Only Lost & Found posts belonging to registered PETHUB members
-                // can participate in the member reporting system. Unregistered client
-                // reports have UserId == null, so they are explicitly rejected here.
+                // Only registered Member-owned Lost & Found posts
+                // can participate in this reporting workflow.
                 if (string.IsNullOrEmpty(lostFound.UserId))
                 {
                     return Forbid();
                 }
 
-                // Prevent a member from reporting their own Lost & Found post.
-                // The authenticated member's ID is compared with the registered owner's ID.
+                // Prevents Members from reporting their own post.
                 if (lostFound.UserId == userId)
                 {
                     return Forbid();
@@ -110,14 +117,16 @@ namespace PETHUB.Controllers
             }
             else
             {
-                // Reject invalid enum values instead of allowing an unknown content
-                // type to create an incomplete UserReport record.
                 return BadRequest();
             }
 
-            // Prevent duplicate reports while an existing report is still active.
-            // Dismissed reports are intentionally excluded so the same member can
-            // report the same post again after an administrator dismisses the first report.
+
+            // =========================================================
+            // DUPLICATE REPORT CHECK
+            // =========================================================
+
+            // Prevents the same Member from having multiple active reports
+            // against the same post.
             var existingReport = await _context.UserReports
                 .AnyAsync(r =>
                     r.ReporterId == userId &&
@@ -133,20 +142,18 @@ namespace PETHUB.Controllers
 
             if (existingReport)
             {
-                // Conflict is appropriate here because the member already has
-                // a non-dismissed report for the same content.
                 return Conflict("You have already reported this post.");
             }
 
-            // If the member selected a predefined reason, the custom OtherReason
-            // value is not needed and is discarded.
+
+            // Clears OtherReason when a predefined reason was selected.
             if (model.Reason != UserReportReason.Other)
             {
                 model.OtherReason = null;
             }
 
-            // Create the new report using the authenticated member's ID.
-            // The status defaults to Pending through the UserReport model.
+
+            // Creates the new report.
             var report = new UserReport
             {
                 ReporterId = userId,
@@ -158,8 +165,8 @@ namespace PETHUB.Controllers
                 DateCreated = DateTime.UtcNow
             };
 
-            // Store the foreign key for the correct reported content.
-            // Only one of ListingId or LostFoundId is populated for each report.
+
+            // Stores the foreign key for the reported content.
             if (model.ContentType == ReportedContentType.Listing)
             {
                 report.ListingId = model.ContentId;
@@ -169,39 +176,39 @@ namespace PETHUB.Controllers
                 report.LostFoundId = model.ContentId;
             }
 
-            // Add the completed UserReport to EF Core's change tracker.
+
+            // Adds the new report to EF Core.
             _context.UserReports.Add(report);
 
-            // Save the report first so the new Pending report exists in the database
-            // before the Admin notification count is calculated.
+            // Saves the report before updating the Admin notification.
             await _context.SaveChangesAsync();
 
-            // Retrieve all Admin accounts using the same existing PETHUB pattern
-            // already used by ListingsController and LostFoundsController.
+
+            // Retrieves all Admin accounts.
             var admins = await _userManager.GetUsersInRoleAsync("Admin");
 
-            // Update each Admin's single aggregate report notification.
-            // If this is the first Pending report, the notification is created.
-            // If the notification already exists, its message is updated instead of
-            // creating another notification.
+            // Updates the aggregate Admin report notification.
             await _notificationService.UpdateAdminReportNotificationAsync(admins);
 
-            // Return the Member to the existing Home page after successful submission.
+            // Returns the Member to Home after successful report submission.
             return RedirectToAction("Index", "Home");
         }
 
+
+        // =========================================================
+        // ADMIN REPORT INDEX
+        // =========================================================
+
         // GET: Reports
-        // Displays the dedicated Administrator Reports page.
-        // Only Admin accounts can review submitted UserReports.
+        // Displays the Administrator's report moderation queue.
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(
             string? reportStatus,
             string? reportType)
         {
-            // Load the Reporter and the owner of the reported content.
-            // Listing.Member is the Marketplace post owner, while LostFound.User
-            // is the registered Lost & Found post owner.
+            // Loads reports together with their Reporter, post owner,
+            // and reported content.
             var reports = _context.UserReports
                 .Include(r => r.Reporter)
                 .Include(r => r.Listing)
@@ -210,36 +217,89 @@ namespace PETHUB.Controllers
                     .ThenInclude(l => l!.User)
                 .AsQueryable();
 
-            // Filter by the report's moderation status when the Admin
-            // selects Pending, Dismissed, or Resolved.
+
+            // Filters by UserReport status.
             if (!string.IsNullOrWhiteSpace(reportStatus) &&
                 Enum.TryParse<UserReportStatus>(
                     reportStatus,
                     true,
                     out var selectedStatus))
             {
-                // EF Core converts this into a SQL WHERE condition.
+                // EF Core translates this into a database WHERE condition.
                 reports = reports.Where(r => r.Status == selectedStatus);
             }
 
-            // Filter by the type of content that was reported.
+
+            // Filters by reported content type.
             if (!string.IsNullOrWhiteSpace(reportType) &&
                 Enum.TryParse<ReportedContentType>(
                     reportType,
                     true,
                     out var selectedType))
             {
-                // Only reports targeting the selected content type are returned.
                 reports = reports.Where(r => r.ContentType == selectedType);
             }
 
-            // Display newest reports first so the newest submissions
-            // appear at the top of the Administrator's review queue.
-            reports = reports.OrderByDescending(r => r.DateCreated);
 
-            // Create the reusable local filter bar.
-            // The selected values come directly from the Index action parameters.
-            // This avoids using Razor's Context object inside the controller.
+            // Reports belonging to posts with a Pending Appeal are placed first.
+            // The Appeal table is checked against the existing ListingId or LostFoundId,
+            // so no new report or post is created. The newest appeal is prioritized first.
+            // Reports without a Pending Appeal continue to use their original report date.
+            reports = reports
+                .OrderByDescending(r =>
+                    _context.Appeals.Any(a =>
+                        a.Status == AppealStatus.Pending &&
+                        (
+                            (r.ContentType == ReportedContentType.Listing &&
+                             r.ListingId.HasValue &&
+                             a.ListingId == r.ListingId.Value)
+                            ||
+                            (r.ContentType == ReportedContentType.LostFound &&
+                             r.LostFoundId.HasValue &&
+                             a.LostFoundId == r.LostFoundId.Value)
+                        )))
+                .ThenByDescending(r =>
+                    _context.Appeals
+                        .Where(a =>
+                            a.Status == AppealStatus.Pending &&
+                            (
+                                (r.ContentType == ReportedContentType.Listing &&
+                                 r.ListingId.HasValue &&
+                                 a.ListingId == r.ListingId.Value)
+                                ||
+                                (r.ContentType == ReportedContentType.LostFound &&
+                                 r.LostFoundId.HasValue &&
+                                 a.LostFoundId == r.LostFoundId.Value)
+                            ))
+                        .Select(a => (DateTime?)a.DateCreated)
+                        .FirstOrDefault())
+                .ThenByDescending(r => r.DateCreated);
+
+            // Gets the reports whose existing post currently has a Pending Appeal.
+            // This is used only by the Admin Reports view to display the
+            // "Under Appeal" badge on the correct existing report card.
+            var pendingAppealReportIds = await reports
+                .Where(r =>
+                    _context.Appeals.Any(a =>
+                        a.Status == AppealStatus.Pending &&
+                        (
+                            (r.ContentType == ReportedContentType.Listing &&
+                             r.ListingId.HasValue &&
+                             a.ListingId == r.ListingId.Value)
+                            ||
+                            (r.ContentType == ReportedContentType.LostFound &&
+                             r.LostFoundId.HasValue &&
+                             a.LostFoundId == r.LostFoundId.Value)
+                        )))
+                .Select(r => r.UserReportId)
+                .ToListAsync();
+
+            // Stores the IDs for the Razor view without changing the existing
+            // UserReport model or creating another ViewModel.
+            ViewData["PendingAppealReportIds"] =
+                new HashSet<int>(pendingAppealReportIds);
+
+            // Builds the existing Admin report filter bar.
             var filters = PETHUB.Helpers.FilterBarHelper.Create(
                 PETHUB.Helpers.FilterBarHelper.ReportStatus(
                     reportStatus
@@ -249,33 +309,35 @@ namespace PETHUB.Controllers
                 )
             );
 
-            // Pass the filtered reports and filter configuration to the view.
             ViewData["ReportFilters"] = filters;
 
-            // Render the dedicated Admin Reports page.
+
+            // Renders the existing Admin Reports page.
             return View(
                 "~/Views/AdminReports/Index.cshtml",
                 await reports.ToListAsync()
             );
         }
 
+
+        // =========================================================
+        // ADMIN REPORT DETAILS
+        // =========================================================
+
         // GET: Reports/Details/5
-        // Displays the complete report and the content being reported.
-        // Only Admin accounts can access the report-review page.
+        // Displays the selected report, related reports, and the owner's appeal.
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
-            // A report ID is required to locate the specific UserReport.
-            // If no ID was supplied, return a standard 404 response.
+            // A report ID is required.
             if (id == null)
             {
                 return NotFound();
             }
 
-            // Load the Reporter, reported content owner, and images.
-            // Listing.Member identifies the Marketplace listing owner.
-            // LostFound.User identifies the registered Lost & Found post owner.
+
+            // Loads the selected report and its related content.
             var report = await _context.UserReports
                 .Include(r => r.Reporter)
                 .Include(r => r.Listing)
@@ -288,241 +350,673 @@ namespace PETHUB.Controllers
                     .ThenInclude(l => l!.Images)
                 .FirstOrDefaultAsync(r => r.UserReportId == id);
 
-            // If the report no longer exists, there is nothing for the Admin to review.
+
             if (report == null)
             {
                 return NotFound();
             }
 
-            // Render the dedicated Admin Reports Details view.
-            // The view is intentionally stored under Views/AdminReports.
+
+            // =========================================================
+            // RELATED REPORTS
+            // =========================================================
+
+            // Starts with all UserReports.
+            var relatedReportsQuery = _context.UserReports
+                .Include(r => r.Reporter)
+                .AsQueryable();
+
+
+            // Finds reports belonging to the same Marketplace listing.
+            if (report.ContentType == ReportedContentType.Listing &&
+                report.ListingId.HasValue)
+            {
+                relatedReportsQuery = relatedReportsQuery.Where(r =>
+                    r.ContentType == ReportedContentType.Listing &&
+                    r.ListingId == report.ListingId);
+            }
+
+
+            // Finds reports belonging to the same Lost & Found post.
+            else if (report.ContentType == ReportedContentType.LostFound &&
+                     report.LostFoundId.HasValue)
+            {
+                relatedReportsQuery = relatedReportsQuery.Where(r =>
+                    r.ContentType == ReportedContentType.LostFound &&
+                    r.LostFoundId == report.LostFoundId);
+            }
+
+
+            // If the report does not have a valid content relationship,
+            // only the selected report is returned.
+            else
+            {
+                relatedReportsQuery = relatedReportsQuery.Where(r =>
+                    r.UserReportId == report.UserReportId);
+            }
+
+
+            // Newest related reports appear first.
+            var relatedReports = await relatedReportsQuery
+                .OrderByDescending(r => r.DateCreated)
+                .ToListAsync();
+
+
+            // =========================================================
+            // APPEAL
+            // =========================================================
+
+            // Holds the latest appeal belonging to the existing reported post.
+            Appeal? appeal = null;
+
+
+            // Retrieves the latest Marketplace appeal.
+            if (report.ContentType == ReportedContentType.Listing &&
+                report.ListingId.HasValue)
+            {
+                appeal = await _context.Appeals
+                    .Where(a =>
+                        a.ListingId == report.ListingId.Value)
+                    .OrderByDescending(a => a.AppealId)
+                    .FirstOrDefaultAsync();
+            }
+
+
+            // Retrieves the latest Lost & Found appeal.
+            else if (report.ContentType == ReportedContentType.LostFound &&
+                     report.LostFoundId.HasValue)
+            {
+                appeal = await _context.Appeals
+                    .Where(a =>
+                        a.LostFoundId == report.LostFoundId.Value)
+                    .OrderByDescending(a => a.AppealId)
+                    .FirstOrDefaultAsync();
+            }
+
+
+            // Builds the Admin Details ViewModel.
+            var model = new AdminReportDetailsViewModel
+            {
+                Report = report,
+                RelatedReports = relatedReports,
+                Appeal = appeal
+            };
+
+
+            // Renders the existing Admin Details page.
             return View(
                 "~/Views/AdminReports/Details.cshtml",
-                report
+                model
             );
         }
 
+
+        // =========================================================
+        // DISMISS REPORT
+        // =========================================================
+
         // POST: Reports/Dismiss
-        // Marks a pending UserReport as Dismissed without deleting the reported post.
-        // Only Admin accounts are allowed to perform this moderation action.
+        // Dismisses all reports associated with the same post.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Dismiss(int id)
         {
-            // Find the specific report selected by the Administrator.
-            // FirstOrDefaultAsync returns the matching UserReport or null if it
-            // no longer exists in the database.
+            // Retrieves the selected report.
             var report = await _context.UserReports
                 .FirstOrDefaultAsync(r => r.UserReportId == id);
 
-            // Stop if the requested report does not exist.
+
             if (report == null)
             {
                 return NotFound();
             }
 
-            // A report should only be dismissed while it is still waiting for review.
-            // This prevents an already resolved or dismissed report from being changed
-            // accidentally by submitting an old form again.
+
+            // Only Pending reports can be dismissed.
             if (report.Status != UserReportStatus.Pending)
             {
                 return BadRequest("Only pending reports can be dismissed.");
             }
 
-            // Mark the report as dismissed.
-            // The reported post remains available because no violation was confirmed.
-            report.Status = UserReportStatus.Dismissed;
 
-            // Save the report status before creating the outcome notification
-            // and recalculating the Admin's Pending report count.
+            // Retrieves every report associated with the same post.
+            var relatedReports = await _context.UserReports
+                .Where(r =>
+                    r.ContentType == report.ContentType &&
+                    (
+                        (report.ContentType == ReportedContentType.Listing &&
+                         r.ListingId == report.ListingId)
+                        ||
+                        (report.ContentType == ReportedContentType.LostFound &&
+                         r.LostFoundId == report.LostFoundId)
+                    ))
+                .ToListAsync();
+
+
+            // Marks all reports for this post as dismissed.
+            foreach (var relatedReport in relatedReports)
+            {
+                relatedReport.Status = UserReportStatus.Dismissed;
+            }
+
+
             await _context.SaveChangesAsync();
 
-            // Notify the Member who originally submitted the report.
-            // Only the Reporter receives an outcome notification when a report is dismissed.
-            await _notificationService.CreateNotificationAsync(
-                report.ReporterId,
-                NotificationType.UserReportRejected,
-                "Report Rejected",
-                "Your report was reviewed by an administrator and no violation was confirmed."
-            );
 
-            // Retrieve all Admin accounts using the existing PETHUB Identity pattern.
+            // Notifies each Reporter.
+            foreach (var relatedReport in relatedReports)
+            {
+                await _notificationService.CreateNotificationAsync(
+                    relatedReport.ReporterId,
+                    NotificationType.UserReportRejected,
+                    "Report Rejected",
+                    "Your report was reviewed by an administrator and no violation was confirmed."
+                );
+            }
+
+
+            // Updates the Admin aggregate report notification.
             var admins = await _userManager.GetUsersInRoleAsync("Admin");
 
-            // Update the single aggregate Admin report notification.
-            // The count decreases after this report leaves the Pending state.
             await _notificationService.UpdateAdminReportNotificationAsync(admins);
 
-            // Return to the Admin Reports page after the moderation action succeeds.
+
             return RedirectToAction(nameof(Index));
         }
 
+
+        // =========================================================
+        // CONFIRM VIOLATION
+        // =========================================================
+
         // POST: Reports/ConfirmViolation
-        // Confirms that the reported content violates PETHUB rules.
-        // The reported post and its associated images are deleted, but the
-        // UserReport itself is preserved as a moderation record.
+        // Confirms that a reported post violates PETHUB rules.
+        //
+        // This is intentionally separate from ConfirmAppeal.
+        // ConfirmViolation removes a post.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ConfirmViolation(int id)
+        public async Task<IActionResult> ConfirmViolation(
+            int id,
+            string adminActionReason)
         {
-            // Load the report together with the reported Marketplace listing,
-            // Lost & Found post, and their image collections.
-            // Only one of Listing or LostFound should be populated for a valid report.
+            // Requires an Admin removal reason.
+            if (string.IsNullOrWhiteSpace(adminActionReason))
+            {
+                TempData["ReportError"] =
+                    "A reason for removing the post is required.";
+
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+
+            // Removes unnecessary whitespace.
+            adminActionReason = adminActionReason.Trim();
+
+
+            // Protects the database from an excessively long reason.
+            if (adminActionReason.Length > 1000)
+            {
+                TempData["ReportError"] =
+                    "The removal reason cannot exceed 1000 characters.";
+
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+
+            // Retrieves the selected report and its reported post.
             var report = await _context.UserReports
                 .Include(r => r.Listing)
-                    .ThenInclude(l => l!.Images)
                 .Include(r => r.LostFound)
-                    .ThenInclude(l => l!.Images)
                 .FirstOrDefaultAsync(r => r.UserReportId == id);
 
-            // Stop if the requested report does not exist.
+
             if (report == null)
             {
                 return NotFound();
             }
 
+
             // Only Pending reports can be confirmed.
-            // This prevents an already dismissed or resolved report from being
-            // processed again through an old or duplicated request.
             if (report.Status != UserReportStatus.Pending)
             {
                 return BadRequest("Only pending reports can be confirmed.");
             }
 
-            string? reportedUserId = null;
 
-            // Handle a reported Marketplace listing.
+            // Retrieves every report associated with the same post.
+            var relatedReports = await _context.UserReports
+                .Where(r =>
+                    r.ContentType == report.ContentType &&
+                    (
+                        (report.ContentType == ReportedContentType.Listing &&
+                         r.ListingId == report.ListingId)
+                        ||
+                        (report.ContentType == ReportedContentType.LostFound &&
+                         r.LostFoundId == report.LostFoundId)
+                    ))
+                .ToListAsync();
+
+
+            // Resolves every report and stores the Admin's removal reason.
+            foreach (var relatedReport in relatedReports)
+            {
+                relatedReport.AdminActionReason = adminActionReason;
+                relatedReport.Status = UserReportStatus.Resolved;
+            }
+
+
+            // Removes a Marketplace listing without deleting it.
             if (report.ContentType == ReportedContentType.Listing)
             {
-                // The listing may already have been deleted outside the report system.
-                // In that case, the report can still be resolved without attempting
-                // to delete a nonexistent listing.
-                if (report.Listing != null)
+                if (report.Listing == null)
                 {
-                    // Delete each physical image file associated with the listing.
-                    // File.Delete removes the file from the server's file system.
-                    if (report.Listing.Images != null)
-                    {
-                        foreach (var image in report.Listing.Images)
-                        {
-                            // Convert the stored web path into the application's
-                            // physical wwwroot path before deleting the file.
-                            var imagePath = Path.Combine(
-                                Directory.GetCurrentDirectory(),
-                                "wwwroot",
-                                image.ImagePath.TrimStart('/', '\\')
-                            );
-
-                            // Only attempt deletion when the physical file exists.
-                            if (System.IO.File.Exists(imagePath))
-                            {
-                                System.IO.File.Delete(imagePath);
-                            }
-                        }
-
-                        // Remove the ListingImages records from the database.
-                        _context.ListingImages.RemoveRange(report.Listing.Images);
-                    }
-
-                    // Capture the Marketplace listing owner's ID before deleting the listing.
-                    // This ID is needed to notify the user that their post was removed.
-                    reportedUserId = report.Listing.MemberId;
-
-                    // Remove the reported Marketplace listing itself.
-                    _context.Listings.Remove(report.Listing);
+                    return NotFound(
+                        "The reported Marketplace listing no longer exists.");
                 }
+
+                report.Listing.Status = ListApprovalStatus.Removed;
             }
-            // Handle a reported Lost & Found post.
+
+
+            // Removes a Lost & Found post without deleting it.
             else if (report.ContentType == ReportedContentType.LostFound)
             {
-                // The Lost & Found post may already have been deleted elsewhere.
-                if (report.LostFound != null)
+                if (report.LostFound == null)
                 {
-                    // Delete each physical Lost & Found image file first.
-                    if (report.LostFound.Images != null)
-                    {
-                        foreach (var image in report.LostFound.Images)
-                        {
-                            // Convert the stored web path into the application's
-                            // physical wwwroot path before deleting the file.
-                            var imagePath = Path.Combine(
-                                Directory.GetCurrentDirectory(),
-                                "wwwroot",
-                                image.ImagePath.TrimStart('/', '\\')
-                            );
-
-                            // File.Exists prevents an exception when an image file
-                            // is already missing from the server.
-                            if (System.IO.File.Exists(imagePath))
-                            {
-                                System.IO.File.Delete(imagePath);
-                            }
-                        }
-
-                        // Remove the LostFoundImages records from the database.
-                        _context.LostFoundImages.RemoveRange(report.LostFound.Images);
-                    }
-
-                    // Capture the Lost & Found post owner's ID before deleting the post.
-                    // This ID is needed to notify the user that their post was removed.
-                    reportedUserId = report.LostFound.UserId;
-
-                    // Remove the reported Lost & Found post itself.
-                    _context.LostFounds.Remove(report.LostFound);
+                    return NotFound(
+                        "The reported Lost & Found post no longer exists.");
                 }
+
+                report.LostFound.Status = ApprovalStatus.Removed;
             }
+
+
             else
             {
-                // Reject an invalid ContentType instead of resolving an incomplete
-                // or unsupported report.
                 return BadRequest("Invalid report content type.");
             }
 
 
-            // Mark the report as resolved because the reported content was confirmed
-            // to violate PETHUB rules and has been removed.
-            report.Status = UserReportStatus.Resolved;
-
-            // Save the post deletion and the resolved report status first.
-            // The UserReport itself remains in the database as moderation history.
+            // Saves the resolved reports and Removed post status.
             await _context.SaveChangesAsync();
 
-            // Notify the Member who submitted the report.
-            // The report was accepted because the Administrator confirmed a violation
-            // and removed the reported content.
-            await _notificationService.CreateNotificationAsync(
-                report.ReporterId,
-                NotificationType.UserReportAccepted,
-                "Report Accepted",
-                "Your report was reviewed by an administrator and the reported post was removed."
-            );
 
-            // Notify the owner of the removed post.
-            // This notification is only sent when a violation is confirmed.
-            if (!string.IsNullOrEmpty(reportedUserId))
+            // Notifies every Reporter that the report was accepted.
+            foreach (var relatedReport in relatedReports)
             {
-                // Create a notification for the user whose post was removed.
-                // The notification explains that the post was removed after administrative review.
                 await _notificationService.CreateNotificationAsync(
-                    reportedUserId,
-                    NotificationType.ReportedPostRemoved,
-                    "Your Post Was Removed",
-                    "Your post was reviewed by an administrator and was removed because it was found to violate PETHUB rules."
+                    relatedReport.ReporterId,
+                    NotificationType.UserReportAccepted,
+                    "Report Accepted",
+                    "Your report was reviewed by an administrator and the reported post was removed."
                 );
             }
 
-            // Retrieve all Admin accounts using the existing PETHUB notification pattern.
+
+            // Notifies the Marketplace owner.
+            if (report.ContentType == ReportedContentType.Listing &&
+                report.Listing != null)
+            {
+                await _notificationService.CreateNotificationAsync(
+                    report.Listing.MemberId,
+                    NotificationType.ReportedPostRemoved,
+                    "Your Post Was Removed",
+                    "Your post was reviewed by an administrator and was removed because it was found to violate PETHUB rules.",
+                    redirectUrl: "/RemovedPosts"
+                );
+            }
+
+
+            // Notifies the Lost & Found owner.
+            else if (report.ContentType == ReportedContentType.LostFound &&
+                     report.LostFound != null &&
+                     !string.IsNullOrEmpty(report.LostFound.UserId))
+            {
+                await _notificationService.CreateNotificationAsync(
+                    report.LostFound.UserId,
+                    NotificationType.ReportedPostRemoved,
+                    "Your Post Was Removed",
+                    "Your post was reviewed by an administrator and was removed because it was found to violate PETHUB rules.",
+                    redirectUrl: "/RemovedPosts"
+                );
+            }
+
+
+            // Updates the Admin aggregate report notification.
             var admins = await _userManager.GetUsersInRoleAsync("Admin");
 
-            // Recalculate the single aggregate Admin report notification.
-            // The count decreases because this report is no longer Pending.
-            // If this was the final Pending report, the notification is deleted.
             await _notificationService.UpdateAdminReportNotificationAsync(admins);
 
-            // Return to the Admin Reports page after successful moderation.
+
             return RedirectToAction(nameof(Index));
+        }
+
+
+        // =========================================================
+        // CONFIRM APPEAL
+        // =========================================================
+
+        // POST: Reports/ConfirmAppeal
+        //
+        // Approves ONE specific Pending Appeal and restores ONLY the
+        // existing Marketplace listing or Lost & Found post associated
+        // with that Appeal.
+        //
+        // It does NOT modify unrelated Pending posts or reports.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ConfirmAppeal(
+            int appealId,
+            string? adminActionReason)
+        {
+            // Retrieves exactly the Appeal selected by the Admin.
+            // FirstOrDefaultAsync returns only the matching Appeal record.
+            var appeal = await _context.Appeals
+                .FirstOrDefaultAsync(a => a.AppealId == appealId);
+
+
+            // Stop if the Appeal no longer exists.
+            if (appeal == null)
+            {
+                return NotFound();
+            }
+
+
+            // Only Pending Appeals can be confirmed.
+            //
+            // This prevents an already Approved or Rejected Appeal from
+            // being processed a second time.
+            if (appeal.Status != AppealStatus.Pending)
+            {
+                return BadRequest(
+                    "Only pending appeals can be confirmed.");
+            }
+
+
+            // Normalize the optional Admin response.
+            // A null or whitespace-only value is stored as null.
+            adminActionReason =
+                string.IsNullOrWhiteSpace(adminActionReason)
+                    ? null
+                    : adminActionReason.Trim();
+
+
+            // Prevent an unnecessarily large Admin response.
+            if (adminActionReason != null &&
+                adminActionReason.Length > 2000)
+            {
+                return BadRequest(
+                    "The appeal response cannot exceed 2000 characters.");
+            }
+
+
+            // =========================================================
+            // MARKETPLACE APPEAL
+            // =========================================================
+
+            if (appeal.ListingId.HasValue)
+            {
+                // Retrieves ONLY the Listing associated with this Appeal.
+                // No other Listing is queried or modified.
+                var listing = await _context.Listings
+                    .FirstOrDefaultAsync(l =>
+                        l.ListingId == appeal.ListingId.Value);
+
+
+                // The original post must still exist.
+                if (listing == null)
+                {
+                    return NotFound(
+                        "The Marketplace listing associated with this appeal no longer exists.");
+                }
+
+
+                // The appeal is specifically for a Removed post.
+                //
+                // If the post has already been changed by another moderation
+                // action, we stop rather than accidentally overwriting that state.
+                if (listing.Status != ListApprovalStatus.Removed)
+                {
+                    return BadRequest(
+                        "The Marketplace listing is no longer in the Removed state.");
+                }
+
+
+                // Restore the EXISTING listing.
+                //
+                // Nothing is duplicated or recreated.
+                // The same Listing record simply becomes Approved again.
+                listing.Status = ListApprovalStatus.Approved;
+            }
+
+
+            // =========================================================
+            // LOST & FOUND APPEAL
+            // =========================================================
+
+            else if (appeal.LostFoundId.HasValue)
+            {
+                // Retrieves ONLY the Lost & Found post associated with this Appeal.
+                var lostFound = await _context.LostFounds
+                    .FirstOrDefaultAsync(l =>
+                        l.LostFoundId == appeal.LostFoundId.Value);
+
+
+                // The original post must still exist.
+                if (lostFound == null)
+                {
+                    return NotFound(
+                        "The Lost & Found post associated with this appeal no longer exists.");
+                }
+
+
+                // The post must still be Removed before it can be restored.
+                if (lostFound.Status != ApprovalStatus.Removed)
+                {
+                    return BadRequest(
+                        "The Lost & Found post is no longer in the Removed state.");
+                }
+
+
+                // Restores the EXISTING Lost & Found post.
+                //
+                // No new Lost & Found post is created.
+                lostFound.Status = ApprovalStatus.Approved;
+            }
+
+
+            // =========================================================
+            // INVALID APPEAL RELATIONSHIP
+            // =========================================================
+
+            else
+            {
+                // Every Appeal must point to either a Listing or Lost & Found post.
+                // If neither foreign key exists, the Appeal is incomplete.
+                return BadRequest(
+                    "This appeal is not associated with a valid post.");
+            }
+
+
+            // =========================================================
+            // APPROVE THE APPEAL
+            // =========================================================
+
+            // Changes ONLY this selected Appeal to Approved.
+            appeal.Status = AppealStatus.Approved;
+
+            // Stores the optional Admin response.
+            appeal.AdminActionReason = adminActionReason;
+
+            // Records when the Admin made the decision.
+            appeal.DateResolved = DateTime.Now;
+
+
+            // Saves the Appeal and the associated post restoration together.
+            //
+            // The other Pending posts and reports are untouched because
+            // they were never loaded or modified by this action.
+            await _context.SaveChangesAsync();
+
+
+            // Returns to the same Admin Report Details page where the
+            // appeal was reviewed.
+            //
+            // This lets the Admin see the updated Approved Appeal state.
+            var reportId = await GetReportIdForAppealAsync(appeal);
+
+            if (reportId.HasValue)
+            {
+                return RedirectToAction(
+                    nameof(Details),
+                    new { id = reportId.Value });
+            }
+
+
+            // Fallback in case the original report cannot be located.
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        // =========================================================
+        // REJECT APPEAL
+        // =========================================================
+
+        // POST: Reports/RejectAppeal
+        //
+        // Rejects ONE specific Pending Appeal.
+        //
+        // The associated post remains Removed.
+        // No unrelated post or report is changed.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RejectAppeal(
+            int appealId,
+            string? adminActionReason)
+        {
+            // Retrieves only the selected Appeal.
+            var appeal = await _context.Appeals
+                .FirstOrDefaultAsync(a => a.AppealId == appealId);
+
+
+            // Stop if the Appeal does not exist.
+            if (appeal == null)
+            {
+                return NotFound();
+            }
+
+
+            // Only Pending Appeals can be rejected.
+            if (appeal.Status != AppealStatus.Pending)
+            {
+                return BadRequest(
+                    "Only pending appeals can be rejected.");
+            }
+
+
+            // Normalize the optional Admin response.
+            adminActionReason =
+                string.IsNullOrWhiteSpace(adminActionReason)
+                    ? null
+                    : adminActionReason.Trim();
+
+
+            // Protects the Appeal's maximum response length.
+            if (adminActionReason != null &&
+                adminActionReason.Length > 2000)
+            {
+                return BadRequest(
+                    "The appeal response cannot exceed 2000 characters.");
+            }
+
+
+            // Rejects ONLY this Appeal.
+            appeal.Status = AppealStatus.Rejected;
+
+            // Stores the Admin's response.
+            appeal.AdminActionReason = adminActionReason;
+
+            // Records when the decision was made.
+            appeal.DateResolved = DateTime.Now;
+
+
+            // IMPORTANT:
+            // We deliberately do NOT change Listing.Status or LostFound.Status.
+            //
+            // Therefore:
+            //
+            // Rejected Appeal
+            //       ↓
+            // Existing post remains Removed
+            //
+            // Other Pending posts remain completely untouched.
+            await _context.SaveChangesAsync();
+
+
+            // Return to the original Admin Report Details page.
+            var reportId = await GetReportIdForAppealAsync(appeal);
+
+            if (reportId.HasValue)
+            {
+                return RedirectToAction(
+                    nameof(Details),
+                    new { id = reportId.Value });
+            }
+
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        // =========================================================
+        // FIND REPORT FOR APPEAL
+        // =========================================================
+
+        // Finds the existing UserReport associated with the appealed post.
+        //
+        // This helper is used only for redirecting the Admin back to the
+        // correct Report Details page after confirming or rejecting an Appeal.
+        private async Task<int?> GetReportIdForAppealAsync(Appeal appeal)
+        {
+            // Marketplace Appeal.
+            if (appeal.ListingId.HasValue)
+            {
+                // Retrieves the newest report associated with this exact listing.
+                var report = await _context.UserReports
+                    .Where(r =>
+                        r.ContentType == ReportedContentType.Listing &&
+                        r.ListingId == appeal.ListingId.Value)
+                    .OrderByDescending(r => r.UserReportId)
+                    .Select(r => (int?)r.UserReportId)
+                    .FirstOrDefaultAsync();
+
+                return report;
+            }
+
+
+            // Lost & Found Appeal.
+            if (appeal.LostFoundId.HasValue)
+            {
+                // Retrieves the newest report associated with this exact post.
+                var report = await _context.UserReports
+                    .Where(r =>
+                        r.ContentType == ReportedContentType.LostFound &&
+                        r.LostFoundId == appeal.LostFoundId.Value)
+                    .OrderByDescending(r => r.UserReportId)
+                    .Select(r => (int?)r.UserReportId)
+                    .FirstOrDefaultAsync();
+
+                return report;
+            }
+
+
+            // No associated post means no associated report can be found.
+            return null;
         }
     }
 }

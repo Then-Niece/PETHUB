@@ -212,11 +212,6 @@ public class LostFoundsController : Controller
                 l.LostFoundId == id &&
                 l.UserId == userId);
 
-        if (lostfound == null)
-        {
-            return NotFound();
-        }
-
         // Only the owner can edit.
         // Admins (if they ever use this action) bypass this check.
         if (!User.IsInRole("Admin") && lostfound.UserId != userId)
@@ -245,39 +240,66 @@ public class LostFoundsController : Controller
     [Authorize(Roles = "Member")]
     public async Task<IActionResult> Edit(int id, LostFound lostFound, List<IFormFile> Images)
     {
+        // Verify that the ID in the URL matches the ID submitted by the form.
+        // This prevents the form from accidentally updating a different report.
         if (id != lostFound.LostFoundId)
         {
             return NotFound();
         }
 
+        // Validate the submitted Lost & Found data before accessing the database.
+        // If validation fails, return the submitted model so the user can correct it.
         if (!ModelState.IsValid)
         {
             return View(lostFound);
         }
 
+        // Get the Identity ID of the currently authenticated Member.
+        // This is used to ensure that Members can only edit their own reports.
         var userId = _userManager.GetUserId(User);
 
-
+        // Retrieve the existing report from the database.
+        // Images are included because the Edit action can add new images.
         var existing = await _context.LostFounds
             .Include(l => l.Images)
-            .FirstOrDefaultAsync(l => l.LostFoundId == id && l.UserId == userId);
+            .FirstOrDefaultAsync(l =>
+                l.LostFoundId == id &&
+                l.UserId == userId);
+
+        // If the report does not exist or does not belong to the current Member,
+        // do not allow the update.
         if (existing == null)
         {
             return NotFound();
         }
 
-        // Only the owner can save changes. Admins bypass this check.
+        // Only the owner can save changes.
+        // Admins bypass this check, although this action currently only allows Members.
         if (!User.IsInRole("Admin") && existing.UserId != userId)
         {
             return Forbid();
         }
 
-        // Approved reports cannot be edited by members.
-        if (!User.IsInRole("Admin") && existing.Status == ApprovalStatus.Approved)
+        // Members cannot edit an already approved report.
+        // Removed, Pending, and Rejected reports remain editable.
+        if (!User.IsInRole("Admin") &&
+            existing.Status == ApprovalStatus.Approved)
         {
             return Forbid();
         }
 
+        // Remember whether the report was Removed before editing.
+        // This allows us to distinguish a Removed report being resubmitted
+        // from a normal edit of a Pending or Rejected report.
+        bool wasRemoved = existing.Status == ApprovalStatus.Removed;
+
+
+        // =========================================================
+        // UPDATE REPORT INFORMATION
+        // =========================================================
+
+        // Copy the editable values from the submitted model into the
+        // existing database entity.
         existing.Title = lostFound.Title;
         existing.Description = lostFound.Description;
         existing.Type = lostFound.Type;
@@ -291,26 +313,115 @@ public class LostFoundsController : Controller
         existing.City = lostFound.City;
         existing.Barangay = lostFound.Barangay;
         existing.StreetAddress = lostFound.StreetAddress;
+
+        // Preserve the existing behavior of updating the report date whenever
+        // the report is edited.
         existing.DateReported = DateTime.Now;
 
 
+        // =========================================================
+        // REMOVED → PENDING
+        // =========================================================
+
+        // A Removed report must return to Pending when its owner edits and
+        // resubmits it. This sends the corrected report back through the
+        // normal Admin approval process.
+        if (wasRemoved)
+        {
+            existing.Status = ApprovalStatus.Pending;
+        }
+
+
+        // =========================================================
+        // ADD NEW IMAGES
+        // =========================================================
+
+        // Only process the image upload when the Member actually selected
+        // one or more non-empty files.
         if (Images != null && Images.Any(i => i.Length > 0))
         {
+            // Save the uploaded files using the existing ImageHelper.
+            // The helper creates LostFoundImage entities using the report ID
+            // and stores them under the existing "lostfound" image location.
             var savedImages = await ImageHelper.SaveImagesAsync(
                 Images,
                 existing.LostFoundId,
-                (imgId, path) => new LostFoundImage { LostFoundId = imgId, ImagePath = path },
+                (imgId, path) => new LostFoundImage
+                {
+                    LostFoundId = imgId,
+                    ImagePath = path
+                },
                 "lostfound"
             );
 
+            // Add the newly created image entities to Entity Framework's
+            // change tracker so they are inserted when SaveChangesAsync runs.
             _context.AddRange(savedImages);
         }
 
-        // Persist updates (and any new images)
+
+        // =========================================================
+        // SAVE CHANGES
+        // =========================================================
+
+        // Persist the edited report, its new status if it was Removed,
+        // and any newly uploaded images.
         await _context.SaveChangesAsync();
 
-        // Return members to the report they just edited.
-        return RedirectToAction("LostFoundDetails", "MyPosts", new { id = existing.LostFoundId });
+
+        // =========================================================
+        // ADMIN RESUBMISSION NOTIFICATION
+        // =========================================================
+
+        // Only notify Admins when a previously Removed report has been
+        // resubmitted. Normal Pending or Rejected edits do not trigger
+        // this notification.
+        if (wasRemoved)
+        {
+            // Retrieve all users assigned to the Admin role.
+            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+
+            // Determine the notification text based on whether the report
+            // is a Lost or Found report.
+            string notificationTitle;
+            string notificationMessage;
+
+            if (existing.Type == LostFoundType.Lost)
+            {
+                notificationTitle = "Lost Report Resubmitted";
+                notificationMessage =
+                    "A previously removed Lost Report has been edited and resubmitted for approval.";
+            }
+            else
+            {
+                notificationTitle = "Found Report Resubmitted";
+                notificationMessage =
+                    "A previously removed Found Report has been edited and resubmitted for approval.";
+            }
+
+            // Notify every Admin that the corrected report is waiting
+            // for another moderation review.
+            foreach (var admin in admins)
+            {
+                await _notificationService.CreateNotificationAsync(
+                    admin.Id,
+                    NotificationType.NewLostFoundSubmission,
+                    notificationTitle,
+                    notificationMessage,
+                    existing.Images.FirstOrDefault()?.ImagePath,
+                    "/LostFounds/Details/" + existing.LostFoundId,
+                    lostFoundId: existing.LostFoundId
+                );
+            }
+        }
+
+
+        // Return the Member to the existing Lost & Found Details page
+        // after successfully saving the edited report.
+        return RedirectToAction(
+            "LostFoundDetails",
+            "MyPosts",
+            new { id = existing.LostFoundId });
     }
 
     // GET: LostFounds/Delete/5

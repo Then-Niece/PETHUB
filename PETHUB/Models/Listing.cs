@@ -13,7 +13,8 @@ namespace PETHUB.Models
     {
         Pending,
         Approved,
-        Rejected
+        Rejected,
+        Removed
     }
 
     public enum ListPetType
