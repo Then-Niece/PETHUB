@@ -51,6 +51,7 @@ namespace PETHUB.Models
 
 
         [DataType(DataType.Currency)]
+        [Range(0, int.MaxValue, ErrorMessage = "Price must be a whole number.")]
         public int Price { get; set; }
 
         public DateTime DatePosted { get; set; }
