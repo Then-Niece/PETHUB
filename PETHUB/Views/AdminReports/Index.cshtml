@@ -13,8 +13,8 @@
         ViewData["ReportFilters"]
         as PETHUB.ViewModels.FilterBarViewModel;
 
-    // Retrieves the report IDs whose existing post currently has
-    // a Pending Appeal.
+    // Retrieves the IDs of the representative reports whose posts
+    // currently have a Pending Appeal.
     var pendingAppealReportIds =
         ViewData["PendingAppealReportIds"] as HashSet<int>
         ?? new HashSet<int>();

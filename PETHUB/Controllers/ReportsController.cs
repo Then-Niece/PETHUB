@@ -241,63 +241,174 @@ namespace PETHUB.Controllers
             }
 
 
-            // Reports belonging to posts with a Pending Appeal are placed first.
-            // The Appeal table is checked against the existing ListingId or LostFoundId,
-            // so no new report or post is created. The newest appeal is prioritized first.
-            // Reports without a Pending Appeal continue to use their original report date.
-            reports = reports
-                .OrderByDescending(r =>
-                    _context.Appeals.Any(a =>
-                        a.Status == AppealStatus.Pending &&
-                        (
-                            (r.ContentType == ReportedContentType.Listing &&
-                             r.ListingId.HasValue &&
-                             a.ListingId == r.ListingId.Value)
-                            ||
-                            (r.ContentType == ReportedContentType.LostFound &&
-                             r.LostFoundId.HasValue &&
-                             a.LostFoundId == r.LostFoundId.Value)
-                        )))
-                .ThenByDescending(r =>
-                    _context.Appeals
-                        .Where(a =>
-                            a.Status == AppealStatus.Pending &&
-                            (
-                                (r.ContentType == ReportedContentType.Listing &&
-                                 r.ListingId.HasValue &&
-                                 a.ListingId == r.ListingId.Value)
-                                ||
-                                (r.ContentType == ReportedContentType.LostFound &&
-                                 r.LostFoundId.HasValue &&
-                                 a.LostFoundId == r.LostFoundId.Value)
-                            ))
-                        .Select(a => (DateTime?)a.DateCreated)
-                        .FirstOrDefault())
-                .ThenByDescending(r => r.DateCreated);
+            // Groups reports that belong to the same actual post.
+            // Different users can still have separate UserReport records in the database,
+            // but the Admin Index will display only one card for that post.
+            var groupedReports = reports
+                .AsEnumerable()
+                .GroupBy(r =>
+                    r.ContentType == ReportedContentType.Listing
+                        ? $"Listing:{r.ListingId}"
+                        : $"LostFound:{r.LostFoundId}")
+                // Selects the newest report from each post group.
+                // This report becomes the representative record used by the Index card.
+                .Select(group => group
+                    .OrderByDescending(r => r.DateCreated)
+                    .First())
+                .ToList();
 
-            // Gets the reports whose existing post currently has a Pending Appeal.
-            // This is used only by the Admin Reports view to display the
-            // "Under Appeal" badge on the correct existing report card.
-            var pendingAppealReportIds = await reports
+
+            // Gets the IDs of the posts represented by the Admin queue.
+            // This is done after grouping so each post is checked only once,
+            // instead of repeatedly checking the same post for every UserReport.
+            var listingIds = groupedReports
                 .Where(r =>
-                    _context.Appeals.Any(a =>
-                        a.Status == AppealStatus.Pending &&
-                        (
-                            (r.ContentType == ReportedContentType.Listing &&
-                             r.ListingId.HasValue &&
-                             a.ListingId == r.ListingId.Value)
-                            ||
-                            (r.ContentType == ReportedContentType.LostFound &&
-                             r.LostFoundId.HasValue &&
-                             a.LostFoundId == r.LostFoundId.Value)
-                        )))
-                .Select(r => r.UserReportId)
+                    r.ContentType == ReportedContentType.Listing &&
+                    r.ListingId.HasValue)
+                .Select(r => r.ListingId!.Value)
+                .ToList();
+
+            var lostFoundIds = groupedReports
+                .Where(r =>
+                    r.ContentType == ReportedContentType.LostFound &&
+                    r.LostFoundId.HasValue)
+                .Select(r => r.LostFoundId!.Value)
+                .ToList();
+
+
+            // Retrieves Pending Appeals for the Marketplace listings represented
+            // in the current Admin queue.
+            //
+            // This query runs once instead of performing an Appeals query for every
+            // individual UserReport. The result is stored in memory so the final
+            // sorting and badge detection do not repeatedly access the database.
+            var pendingListingAppeals = await _context.Appeals
+                .Where(a =>
+                    a.Status == AppealStatus.Pending &&
+                    a.ListingId.HasValue &&
+                    listingIds.Contains(a.ListingId.Value))
+                .Select(a => new
+                {
+                    ListingId = a.ListingId!.Value,
+                    a.DateCreated
+                })
                 .ToListAsync();
 
-            // Stores the IDs for the Razor view without changing the existing
-            // UserReport model or creating another ViewModel.
-            ViewData["PendingAppealReportIds"] =
-                new HashSet<int>(pendingAppealReportIds);
+
+            // Retrieves Pending Appeals for the Lost & Found posts represented
+            // in the current Admin queue.
+            //
+            // Like the Marketplace query above, this executes one database query
+            // for all relevant Lost & Found posts instead of one query per report.
+            var pendingLostFoundAppeals = await _context.Appeals
+                .Where(a =>
+                    a.Status == AppealStatus.Pending &&
+                    a.LostFoundId.HasValue &&
+                    lostFoundIds.Contains(a.LostFoundId.Value))
+                .Select(a => new
+                {
+                    LostFoundId = a.LostFoundId!.Value,
+                    a.DateCreated
+                })
+                .ToListAsync();
+
+
+            // Creates quick in-memory lookups for Pending Appeals.
+            //
+            // If multiple Pending Appeal records somehow exist for the same post,
+            // Max() ensures that the newest appeal date is used for sorting.
+            var pendingListingAppealDates = pendingListingAppeals
+                .GroupBy(a => a.ListingId)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Max(a => a.DateCreated));
+
+            var pendingLostFoundAppealDates = pendingLostFoundAppeals
+                .GroupBy(a => a.LostFoundId)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Max(a => a.DateCreated));
+
+
+            // Determines the latest activity date for every representative report.
+            //
+            // Normal reports use their own DateCreated value.
+            // A post with a Pending Appeal uses the newer of:
+            // - its newest report date
+            // - its newest Pending Appeal date
+            //
+            // This means a newly submitted appeal can bring an older removed post
+            // back to the top of the Admin Reports queue.
+            var orderedReports = groupedReports
+                .Select(report =>
+                {
+                    DateTime? appealDate = null;
+
+                    // Checks the Pending Appeal lookup for Marketplace listings.
+                    if (report.ContentType == ReportedContentType.Listing &&
+                        report.ListingId.HasValue &&
+                        pendingListingAppealDates.TryGetValue(
+                            report.ListingId.Value,
+                            out var listingAppealDate))
+                    {
+                        appealDate = listingAppealDate;
+                    }
+
+                    // Checks the Pending Appeal lookup for Lost & Found posts.
+                    if (report.ContentType == ReportedContentType.LostFound &&
+                        report.LostFoundId.HasValue &&
+                        pendingLostFoundAppealDates.TryGetValue(
+                            report.LostFoundId.Value,
+                            out var lostFoundAppealDate))
+                    {
+                        appealDate = lostFoundAppealDate;
+                    }
+
+                    // Uses the newest activity associated with this post.
+                    // If there is no Pending Appeal, this simply becomes the report date.
+                    var latestActivity =
+                        appealDate.HasValue && appealDate.Value > report.DateCreated
+                            ? appealDate.Value
+                            : report.DateCreated;
+
+                    return new
+                    {
+                        Report = report,
+                        HasPendingAppeal = appealDate.HasValue,
+                        LatestActivity = latestActivity
+                    };
+                })
+                // Posts currently under appeal are prioritized first.
+                .OrderByDescending(x => x.HasPendingAppeal)
+                // Within the same priority group, newest activity appears first.
+                .ThenByDescending(x => x.LatestActivity)
+                // Converts the anonymous objects back into the UserReport collection
+                // expected by the existing Admin Reports view.
+                .Select(x => x.Report)
+                .ToList();
+
+
+            // Stores the IDs of the representative reports whose posts currently
+            // have a Pending Appeal.
+            //
+            // The Admin Index view can use this collection to display "Under Appeal"
+            // without changing the UserReport model or database schema.
+            var pendingAppealReportIds = orderedReports
+                .Where(report =>
+                    (report.ContentType == ReportedContentType.Listing &&
+                     report.ListingId.HasValue &&
+                     pendingListingAppealDates.ContainsKey(report.ListingId.Value))
+                    ||
+                    (report.ContentType == ReportedContentType.LostFound &&
+                     report.LostFoundId.HasValue &&
+                     pendingLostFoundAppealDates.ContainsKey(report.LostFoundId.Value)))
+                .Select(report => report.UserReportId)
+                .ToHashSet();
+
+
+            // Makes the Pending Appeal information available to the existing
+            // Admin Reports Index Razor view.
+            ViewData["PendingAppealReportIds"] = pendingAppealReportIds;
 
             // Builds the existing Admin report filter bar.
             var filters = PETHUB.Helpers.FilterBarHelper.Create(
@@ -312,10 +423,11 @@ namespace PETHUB.Controllers
             ViewData["ReportFilters"] = filters;
 
 
-            // Renders the existing Admin Reports page.
+            // Sends one representative report per reported post to the Index view.
+            // The original UserReport records remain unchanged in the database.
             return View(
                 "~/Views/AdminReports/Index.cshtml",
-                await reports.ToListAsync()
+                orderedReports
             );
         }
 
@@ -1018,5 +1130,6 @@ namespace PETHUB.Controllers
             // No associated post means no associated report can be found.
             return null;
         }
+
     }
 }
