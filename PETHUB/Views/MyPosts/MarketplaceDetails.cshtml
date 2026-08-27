@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Listing Details";
 
-    // Used to determine whether the dropdown and needs a divider before Delete.
+    // Used to determine whether the dropdown needs a divider before Delete.
     bool hasOtherActions =
         Model.Status == ListApprovalStatus.Pending ||
         Model.Status == ListApprovalStatus.Rejected ||
@@ -15,6 +15,7 @@
 
 
 <div class="marketplace-details-page">
+
 
     <!-- =====================================================
          MAIN DETAILS LAYOUT
@@ -137,8 +138,8 @@
                                  style="width:44px;height:44px;object-fit:cover;" />
                         }
 
-
                     </div>
+
 
                     <!-- User Information -->
 
@@ -160,13 +161,22 @@
 
                             <span>·</span>
 
-                            <span>
 
-                                @(Model.Type == ListType.For_Adoption
-                                    ? "For Adoption"
-                                    : "For Sale")
-
-                            </span>
+                            <!-- ==================================================
+                                 LISTING TYPE PILL
+                            ================================================== -->
+                            @if (Model.Type == ListType.For_Adoption)
+                            {
+                                <span class="listing-type-pill listing-type-pill-adoption">
+                                    For Adoption
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="listing-type-pill listing-type-pill-sale">
+                                    For Sale
+                                </span>
+                            }
 
                         </div>
 
@@ -336,11 +346,13 @@
             <!-- =================================================
                  TITLE
             ================================================== -->
+
             <div class="listing-title-section">
 
                 <h1>
                     @Model.Title
                 </h1>
+
 
                 @if (Model.Type == PETHUB.Models.ListType.For_Sale)
                 {
@@ -387,24 +399,28 @@
                 </h3>
 
 
-                <div class="pet-information-list">
+                <div class="listing-details-table">
 
 
                     <!-- Pet Type -->
 
-                    <div class="pet-information-item">
+                    <div class="listing-details-row">
 
-                        <span class="pet-information-label">
+                        <div class="listing-details-label">
 
                             <i data-lucide="paw-print"></i>
 
-                        </span>
+                            <span>
+                                Pet Type
+                            </span>
 
-                        <span class="pet-information-value">
+                        </div>
+
+                        <div class="listing-details-value">
 
                             @Model.PetType
 
-                        </span>
+                        </div>
 
                     </div>
 
@@ -412,21 +428,25 @@
 
                     <!-- Breed -->
 
-                    <div class="pet-information-item">
+                    <div class="listing-details-row">
 
-                        <span class="pet-information-label">
+                        <div class="listing-details-label">
 
                             <i data-lucide="tag"></i>
 
-                        </span>
+                            <span>
+                                Breed
+                            </span>
 
-                        <span class="pet-information-value">
+                        </div>
+
+                        <div class="listing-details-value">
 
                             @(string.IsNullOrWhiteSpace(Model.Breed)
                                 ? "Not specified"
                                 : Model.Breed)
 
-                        </span>
+                        </div>
 
                     </div>
 
@@ -434,19 +454,23 @@
 
                     <!-- Sex -->
 
-                    <div class="pet-information-item">
+                    <div class="listing-details-row">
 
-                        <span class="pet-information-label">
+                        <div class="listing-details-label">
 
                             <i data-lucide="venus-and-mars"></i>
 
-                        </span>
+                            <span>
+                                Sex
+                            </span>
 
-                        <span class="pet-information-value">
+                        </div>
+
+                        <div class="listing-details-value">
 
                             @Model.PetSex
 
-                        </span>
+                        </div>
 
                     </div>
 
@@ -472,24 +496,28 @@
                 </h3>
 
 
-                <div class="listing-location-grid">
+                <div class="listing-details-table">
 
 
                     <!-- Street Address -->
 
-                    <div class="listing-location-item">
+                    <div class="listing-details-row">
 
-                        <span class="listing-location-label">
-                            Street Address
-                        </span>
+                        <div class="listing-details-label">
 
-                        <span class="listing-location-value">
+                            <span>
+                                Street Address
+                            </span>
+
+                        </div>
+
+                        <div class="listing-details-value">
 
                             @(string.IsNullOrWhiteSpace(Model.StreetAddress)
                                 ? "Not specified"
                                 : Model.StreetAddress)
 
-                        </span>
+                        </div>
 
                     </div>
 
@@ -497,19 +525,23 @@
 
                     <!-- Barangay -->
 
-                    <div class="listing-location-item">
+                    <div class="listing-details-row">
 
-                        <span class="listing-location-label">
-                            Barangay
-                        </span>
+                        <div class="listing-details-label">
 
-                        <span class="listing-location-value">
+                            <span>
+                                Barangay
+                            </span>
+
+                        </div>
+
+                        <div class="listing-details-value">
 
                             @(string.IsNullOrWhiteSpace(Model.Barangay)
                                 ? "Not specified"
                                 : Model.Barangay)
 
-                        </span>
+                        </div>
 
                     </div>
 
@@ -517,19 +549,23 @@
 
                     <!-- City -->
 
-                    <div class="listing-location-item">
+                    <div class="listing-details-row">
 
-                        <span class="listing-location-label">
-                            City
-                        </span>
+                        <div class="listing-details-label">
 
-                        <span class="listing-location-value">
+                            <span>
+                                City
+                            </span>
+
+                        </div>
+
+                        <div class="listing-details-value">
 
                             @(string.IsNullOrWhiteSpace(Model.City)
                                 ? "Not specified"
                                 : Model.City)
 
-                        </span>
+                        </div>
 
                     </div>
 
@@ -537,19 +573,23 @@
 
                     <!-- Province -->
 
-                    <div class="listing-location-item">
+                    <div class="listing-details-row">
 
-                        <span class="listing-location-label">
-                            Province
-                        </span>
+                        <div class="listing-details-label">
 
-                        <span class="listing-location-value">
+                            <span>
+                                Province
+                            </span>
+
+                        </div>
+
+                        <div class="listing-details-value">
 
                             @(string.IsNullOrWhiteSpace(Model.Province)
                                 ? "Not specified"
                                 : Model.Province)
 
-                        </span>
+                        </div>
 
                     </div>
 
@@ -575,15 +615,29 @@
                 </h3>
 
 
-                <p class="listing-contact-number">
+                <div class="listing-details-table">
 
-                  
+                    <div class="listing-details-row">
 
-                    @(string.IsNullOrWhiteSpace(Model.Member?.ContactNumber)
-                        ? "Not Available"
-                        : Model.Member.ContactNumber)
+                        <div class="listing-details-label">
 
-                </p>
+                            <span>
+                                Contact Number
+                            </span>
+
+                        </div>
+
+                        <div class="listing-details-value">
+
+                            @(string.IsNullOrWhiteSpace(Model.Member?.ContactNumber)
+                                ? "Not Available"
+                                : Model.Member.ContactNumber)
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </section>
 
@@ -660,8 +714,7 @@
 
             <!-- ======================================================
                  BACK TO MY POSTS
-
-WIDE + CENTERED INSIDE RIGHT PANEL
+                 WIDE + CENTERED INSIDE RIGHT PANEL
             ====================================================== -->
 
             <div class="my-post-back-container">
@@ -695,7 +748,7 @@ WIDE + CENTERED INSIDE RIGHT PANEL
 
 <script>
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
 
         if (typeof lucide !== "undefined") {
 
@@ -715,14 +768,14 @@ WIDE + CENTERED INSIDE RIGHT PANEL
 
 <script>
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
 
         const detailsPanel =
             document.querySelector(".listing-info-panel");
 
         if (detailsPanel) {
 
-            detailsPanel.addEventListener("scroll", function() {
+            detailsPanel.addEventListener("scroll", function () {
 
                 const menu =
                     document.querySelector(".listing-more-menu");
@@ -749,7 +802,7 @@ WIDE + CENTERED INSIDE RIGHT PANEL
 
 <script>
 
-    document.addEventListener("click", function(event) {
+    document.addEventListener("click", function (event) {
 
         const menu =
             document.querySelector(".listing-more-menu");

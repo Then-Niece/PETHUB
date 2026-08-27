@@ -2,30 +2,348 @@
 
 @{
     ViewData["Title"] = "Lost & Found Reports";
-    // Create a filter bar containing the Lost/Found report-type filter.
-    // Request.Query preserves the currently selected value after reload.
+
+    // =========================================================
+    // LOST & FOUND FILTERS
+    // =========================================================
+
     var lostFoundFilters = PETHUB.Helpers.FilterBarHelper.Create(
         PETHUB.Helpers.FilterBarHelper.LostFoundType(
             Context.Request.Query["lostFoundType"].ToString()
         ),
         PETHUB.Helpers.FilterBarHelper.PetType(
-               Context.Request.Query["petType"].ToString()
-           )
-        );
+            Context.Request.Query["petType"].ToString()
+        )
+    );
+
+
+    // =========================================================
+    // LOST & FOUND REPORT COUNT
+    // =========================================================
+
+    var reportCount = Model.Count();
+
+    var selectedPetType =
+        Context.Request.Query["petType"].ToString();
+
+
+    // =========================================================
+    // COUNT LABEL
+    // =========================================================
+
+    var countLabel = "Reports";
+
+    if (!string.IsNullOrEmpty(selectedPetType))
+    {
+        if (selectedPetType.Equals(
+                "dog",
+                StringComparison.OrdinalIgnoreCase) ||
+            selectedPetType.Equals(
+                "dogs",
+                StringComparison.OrdinalIgnoreCase))
+        {
+            countLabel = "Dogs";
+        }
+        else if (selectedPetType.Equals(
+                     "cat",
+                     StringComparison.OrdinalIgnoreCase) ||
+                 selectedPetType.Equals(
+                     "cats",
+                     StringComparison.OrdinalIgnoreCase))
+        {
+            countLabel = "Cats";
+        }
+        else
+        {
+            countLabel = selectedPetType;
+        }
+    }
 }
 
-@* Render the reusable Lost/Found filter. *@
-<partial name="Components/_FilterBar"
-         model="lostFoundFilters" />
 
-<!-- Add Report Button -->
-<!-- Only the member and client can add lost and found reports -->
+
+<!-- =========================================================
+     LOST & FOUND HERO
+========================================================== -->
+
+<section class="lost-found-hero"
+         style="background-image: url('@Url.Content("~/images/banner_hero.jpg")');">
+
+    <div class="lost-found-hero-overlay"></div>
+
+    <div class="lost-found-hero-content">
+
+        <h1 class="lost-found-hero-title">
+            Help Bring Pets Home
+        </h1>
+
+        <p class="lost-found-hero-description">
+            Help reunite lost pets with their families
+            and give found pets a chance to return home.
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     LOST & FOUND FILTER
+========================================================== -->
+
+<div class="lost-found-filter-container">
+
+    <div class="lost-found-filter-bar">
+
+
+        <!-- =====================================================
+             FILTER LABEL
+        ====================================================== -->
+
+        <div class="lost-found-filter-label">
+
+            <i data-lucide="sliders-horizontal"></i>
+
+            <span>
+                Filters
+            </span>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             FILTER CONTROLS
+        ====================================================== -->
+
+        <div class="lost-found-filter-controls">
+
+            @foreach (var filter in lostFoundFilters.Filters)
+            {
+                var selectedValue =
+                    filter.SelectedValue ?? filter.DefaultValue;
+
+
+                var filterIcon =
+                    filter.ParameterName == "lostFoundType"
+                        ? "search"
+                        : "paw-print";
+
+
+                // =================================================
+                // BUILD OPTION URLS
+                // =================================================
+
+                var filterOptions = new List<dynamic>();
+
+                foreach (var option in filter.Options)
+                {
+                    var query = Context.Request.Query
+                        .ToDictionary(
+                            item => item.Key,
+                            item => item.Value.ToString()
+                        );
+
+
+                    if (string.IsNullOrEmpty(option.Value))
+                    {
+                        query.Remove(filter.ParameterName);
+                    }
+                    else
+                    {
+                        query[filter.ParameterName] = option.Value;
+                    }
+
+
+                    var queryString = string.Join(
+                        "&",
+                        query.Select(
+                            item =>
+                                $"{item.Key}={Uri.EscapeDataString(item.Value)}"
+                        )
+                    );
+
+
+                    var baseUrl =
+                        Context.Request.Path.ToString();
+
+
+                    var optionUrl =
+                        string.IsNullOrEmpty(queryString)
+                            ? baseUrl
+                            : $"{baseUrl}?{queryString}";
+
+
+                    var isSelected =
+                        option.Value == selectedValue;
+
+
+                    filterOptions.Add(new
+                    {
+                        Label = option.Label,
+                        Value = option.Value,
+                        Url = optionUrl,
+                        IsSelected = isSelected
+                    });
+                }
+
+
+
+                // =================================================
+                // CURRENT DISPLAY LABEL
+                // =================================================
+
+                var selectedOption =
+                    filterOptions.FirstOrDefault(
+                        x => x.IsSelected
+                    );
+
+
+                var displayLabel =
+                    selectedOption?.Label;
+
+
+                if (string.IsNullOrEmpty(selectedValue))
+                {
+                    displayLabel =
+                        filter.ParameterName == "lostFoundType"
+                            ? "All Reports"
+                            : "All Pets";
+                }
+
+
+                if (string.IsNullOrEmpty(displayLabel))
+                {
+                    displayLabel =
+                        filter.ParameterName == "lostFoundType"
+                            ? "All Reports"
+                            : "All Pets";
+                }
+
+
+
+                <!-- =================================================
+                     DROPDOWN
+                ================================================== -->
+
+                <div class="lost-found-filter-item lost-found-dropdown"
+                     data-filter-dropdown>
+
+
+                    <!-- DROPDOWN BUTTON -->
+
+                    <button type="button"
+                            class="lost-found-dropdown-button"
+                            data-dropdown-button
+                            aria-haspopup="true"
+                            aria-expanded="false">
+
+                        <span class="lost-found-dropdown-button-content">
+
+                            <i data-lucide="@filterIcon"
+                               class="lost-found-filter-select-icon"></i>
+
+                            <span class="lost-found-dropdown-current">
+                                @displayLabel
+                            </span>
+
+                        </span>
+
+                        <i data-lucide="chevron-down"
+                           class="lost-found-dropdown-chevron"></i>
+
+                    </button>
+
+
+
+                    <!-- =================================================
+                         DROPDOWN MENU
+                    ================================================== -->
+
+                    <div class="lost-found-dropdown-menu"
+                         data-dropdown-menu
+                         role="menu">
+
+                        @foreach (var option in filterOptions)
+                        {
+                            <a href="@option.Url"
+                               class="lost-found-dropdown-item @(option.IsSelected ? "active" : "")"
+                               role="menuitem">
+
+                                <span class="lost-found-dropdown-item-content">
+
+                                    <span>
+
+                                        @if (filter.ParameterName == "lostFoundType" &&
+                                             string.IsNullOrEmpty(option.Value))
+                                        {
+                                            @:All Reports
+                                        }
+                                        else if (filter.ParameterName == "petType" &&
+                                                 string.IsNullOrEmpty(option.Value))
+                                        {
+                                            @:All Pets
+                                        }
+                                        else
+                                        {
+                                            @option.Label
+                                        }
+
+                                    </span>
+
+                                </span>
+
+                            </a>
+                        }
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+
+
+        <!-- =====================================================
+             REPORT COUNT
+        ====================================================== -->
+
+        <div class="lost-found-filter-count">
+
+            <strong>
+                @reportCount
+            </strong>
+
+            <span>
+                @countLabel
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     OLD TOP CREATE REPORT BUTTON
+
+COMMENTED OUT BECAUSE WE ALREADY HAVE THE
+     FLOATING CREATE REPORT BUTTON.
+========================================================== -->
+@*
 @if (User.IsInRole("Member"))
 {
     <a asp-controller="LostFounds"
        asp-action="Create"
-       class="btn  btn-lg rounded-pill" style="background-color:#8ACE79; color:white;">
-        Add Report
+       class="btn btn-lg rounded-pill"
+       style="background-color:#8ACE79; color:white;">
+
+        Create Report
+
     </a>
 }
 else if (User.IsInRole("Admin"))
@@ -39,84 +357,239 @@ else
             style="color:white; background-color:#8ACE79;"
             data-bs-toggle="modal"
             data-bs-target="#guestActionModal">
+
         Add Report
+
     </button>
 }
+*@
 
 
-<div class="row mt-4">
+
+<!-- =========================================================
+     LOST & FOUND CARDS
+
+========================================================== -->
+
+<div class="row mt-4 lost-found-card-grid">
+
     @foreach (var item in Model)
     {
+        var isLost = item.Type.ToString().Equals(
+            "Lost",
+            StringComparison.OrdinalIgnoreCase
+        );
+
+        var location =
+            string.IsNullOrEmpty(item.City)
+                ? "Not specified"
+                : item.City + ", " + item.Province;
+
+
         <div class="col-md-3 mb-4">
 
-            <!-- The card contains both the navigation link and the Report button.
-                 Keeping the button outside the link prevents the two interactive
-                 elements from interfering with each other. -->
-            <div class="card h-100 shadow-sm position-relative">
 
-                <!-- Makes the normal card area navigate to BrowseDetails.
-                     Bootstrap's stretched-link allows the card to behave like
-                     a clickable card while keeping the Report button independent. -->
+            <!-- =================================================
+                 LOST & FOUND CARD
+            ================================================== -->
+
+            <div class="lost-found-card h-100 position-relative @(isLost ? "lost-card" : "found-card")">
+
+
+                <!-- =================================================
+                     EXISTING DETAILS LINK
+                ================================================== -->
+
                 <a asp-action="BrowseDetails"
                    asp-route-id="@item.LostFoundId"
-                   class="stretched-link text-decoration-none text-dark">
+                   class="lost-found-card-link">
 
-                    @if (item.Images != null && item.Images.Any())
-                    {
-                        <img src="@Url.Content(item.Images.First().ImagePath)"
-                             class="card-img-top"
-                             alt="LostFound image"
-                             style="height:200px;object-fit:cover;">
-                    }
-                    else
-                    {
-                        <img src="@Url.Content("~/images/no-image.png")"
-                             class="card-img-top"
-                             alt="No image"
-                             style="height:200px;object-fit:cover;">
-                    }
 
-                    <div class="card-body">
+                    <article class="lost-found-card-inner">
 
-                        <h5 class="card-title">
-                            @item.Title
-                        </h5>
 
-                        <p class="card-text text-muted">
-                            @item.Description
-                        </p>
+                        <!-- =================================================
+                             STATUS RAIL
+                        ================================================== -->
 
-                        <p>
-                            <strong>Type:</strong> @item.Type
-                        </p>
+                        <span class="lost-found-status-rail"></span>
 
-                        <p>
-                            <small>
-                                Reported @item.DateReported.ToString("MMM dd, yyyy")
-                            </small>
-                        </p>
 
-                        <p>
-                            <small class="text-muted">
-                                Location:
-                                @(string.IsNullOrEmpty(item.City)
-                                    ? "Not specified"
-                                    : item.City + ", " + item.Province)
-                            </small>
-                        </p>
 
-                    </div>
+                        <!-- =================================================
+                             IMAGE
+                        ================================================== -->
+
+                        <div class="lost-found-card-image-wrapper">
+
+                            @if (item.Images != null && item.Images.Any())
+                            {
+                                <img src="@Url.Content(item.Images.First().ImagePath)"
+                                     class="lost-found-card-image"
+                                     alt="@item.Title" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/images/no-image.png")"
+                                     class="lost-found-card-image"
+                                     alt="No image" />
+                            }
+
+
+                            <!-- Image gradient -->
+
+                            <div class="lost-found-card-image-gradient"></div>
+
+
+
+                            <!-- =================================================
+                                 LOST / FOUND BADGE
+                            ================================================== -->
+                            @if (isLost)
+                            {
+                                <span class="lost-found-type-badge lost-found-type-badge-lost">
+
+                                    <i data-lucide="search"></i>
+
+                                    LOST
+
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="lost-found-type-badge lost-found-type-badge-found">
+
+                                    <i data-lucide="heart-handshake"></i>
+
+                                    FOUND
+
+                                </span>
+                            }
+
+
+
+                            <!-- =================================================
+                                 PET TYPE BADGE
+                            ================================================== -->
+
+                            <span class="lost-found-pet-badge">
+
+                                <i data-lucide="paw-print"></i>
+
+                                @item.PetType
+
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             CARD BODY
+                        ================================================== -->
+
+                        <div class="lost-found-card-body">
+
+
+                            <!-- =================================================
+                                 TITLE
+                            ================================================== -->
+
+                            <h3 class="lost-found-card-title">
+
+                                @item.Title
+
+                            </h3>
+
+
+
+                            <!-- =================================================
+                                 LOCATION
+                            ================================================== -->
+
+                            <div class="lost-found-card-location-row">
+
+                                <i data-lucide="map-pin"></i>
+
+                                <span>
+
+                                    <span class="lost-found-location-label">
+
+                                        @(isLost
+                                            ? "Last seen: "
+                                            : "Found in ")
+
+                                    </span>
+
+                                    <span class="lost-found-location-value">
+
+                                        @location
+
+                                    </span>
+
+                                </span>
+
+                            </div>
+
+
+
+                            <!-- =================================================
+                                 DESCRIPTION
+                            ================================================== -->
+
+                            <p class="lost-found-card-description">
+
+                                @item.Description
+
+                            </p>
+
+
+
+                            <!-- =================================================
+                                 FOOTER
+
+                            ================================================== -->
+
+                            <div class="lost-found-card-footer">
+
+                                <span class="lost-found-card-date">
+
+                                    <i data-lucide="clock"></i>
+
+                                    @item.DateReported.ToString("MMM dd, yyyy")
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
 
                 </a>
 
+
+
+                <!-- =================================================
+                     REPORT BUTTON
+
+COMMENTED OUT.
+
+ORIGINAL PROGRAMMER LOGIC PRESERVED.
+                ================================================== -->
+                @*
                 @if (User.IsInRole("Member") &&
                      !string.IsNullOrEmpty(item.UserId) &&
                      item.UserId != User.FindFirst(
                          System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
                 {
-                    <!-- Only registered-member Lost & Found posts can be reported.
-                         The owner cannot report their own post, and posts created
-                         by unregistered clients have no UserId. -->
+                    <!-- Only registered-member Lost & Found posts
+                         can be reported.
+
+                         The owner cannot report their own post,
+                         and posts created by unregistered clients
+                         have no UserId. -->
+
                     <button type="button"
                             class="btn btn-sm btn-light shadow-sm report-card-button position-absolute top-0 end-0 m-2"
                             style="z-index:2;"
@@ -131,14 +604,62 @@ else
 
                     </button>
                 }
+                *@
 
             </div>
 
         </div>
     }
+
 </div>
 
-<!-- Guest Modal -->
+
+
+<!-- =========================================================
+     FLOATING CREATE REPORT BUTTON
+========================================================== -->
+@if (User.IsInRole("Member"))
+{
+    <a asp-controller="LostFounds"
+       asp-action="Create"
+       class="lost-found-floating-add">
+
+        <i data-lucide="plus"></i>
+
+        <span>
+            Create Report
+        </span>
+
+    </a>
+}
+else if (User.IsInRole("Admin"))
+{
+    //Admin Cannot add a Marketplace Listing
+}
+else
+{
+    <button type="button"
+            class="lost-found-floating-add"
+            data-bs-toggle="modal"
+            data-bs-target="#guestActionModal">
+
+        <i data-lucide="plus"></i>
+
+        <span>
+            Create Report
+        </span>
+
+    </button>
+}
+
+
+
+<!-- =========================================================
+     GUEST MODAL
+
+KEPT AS YOUR ORIGINAL.
+========================================================== -->
+
 <div class="modal fade"
      id="guestActionModal"
      tabindex="-1"
@@ -207,3 +728,30 @@ else
     </div>
 
 </div>
+
+
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            /*
+             * Lucide icon initialization.
+             *
+             * The reusable dropdown JavaScript continues
+             * to handle the filter dropdown behavior.
+             */
+
+            if (typeof lucide !== "undefined") {
+
+                lucide.createIcons();
+
+            }
+
+        });
+
+    </script>
+
+}

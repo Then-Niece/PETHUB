@@ -163,3 +163,160 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+
+
+// ==========================================
+// PETHUB REUSABLE DROPDOWN
+// ==========================================
+//
+// Reusable helper for custom dropdowns.
+//
+// Any dropdown can use:
+//
+// data-filter-dropdown
+// data-dropdown-button
+// data-dropdown-menu
+//
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const dropdowns = document.querySelectorAll(
+        "[data-filter-dropdown]"
+    );
+
+    /*
+     * If the current page does not contain
+     * any custom dropdowns, do nothing.
+     */
+    if (dropdowns.length === 0) {
+        return;
+    }
+
+
+    // ==========================================
+    // CLOSE ALL DROPDOWNS
+    // ==========================================
+
+    function closeAllDropdowns() {
+
+        dropdowns.forEach(function (dropdown) {
+
+            const button = dropdown.querySelector(
+                "[data-dropdown-button]"
+            );
+
+            const menu = dropdown.querySelector(
+                "[data-dropdown-menu]"
+            );
+
+            if (!button || !menu) {
+                return;
+            }
+
+            dropdown.classList.remove("open");
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            menu.classList.remove("show");
+
+        });
+
+    }
+
+
+    // ==========================================
+    // SETUP EACH DROPDOWN
+    // ==========================================
+
+    dropdowns.forEach(function (dropdown) {
+
+        const button = dropdown.querySelector(
+            "[data-dropdown-button]"
+        );
+
+        const menu = dropdown.querySelector(
+            "[data-dropdown-menu]"
+        );
+
+        if (!button || !menu) {
+            return;
+        }
+
+
+        // ==========================================
+        // OPEN / CLOSE DROPDOWN
+        // ==========================================
+
+        button.addEventListener("click", function (event) {
+
+            event.stopPropagation();
+
+            const isOpen =
+                dropdown.classList.contains("open");
+
+
+            // Close other dropdowns first.
+            closeAllDropdowns();
+
+
+            // Open this dropdown if it was closed.
+            if (!isOpen) {
+
+                dropdown.classList.add("open");
+
+                button.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+
+                menu.classList.add("show");
+
+            }
+
+        });
+
+
+        // ==========================================
+        // KEEP MENU CLICK FROM TRIGGERING
+        // OUTSIDE CLICK HANDLER
+        // ==========================================
+
+        menu.addEventListener("click", function (event) {
+
+            event.stopPropagation();
+
+        });
+
+    });
+
+
+    // ==========================================
+    // CLICK OUTSIDE
+    // ==========================================
+
+    document.addEventListener("click", function () {
+
+        closeAllDropdowns();
+
+    });
+
+
+    // ==========================================
+    // ESCAPE KEY
+    // ==========================================
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape") {
+
+            closeAllDropdowns();
+
+        }
+
+    });
+
+});

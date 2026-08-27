@@ -3588,3 +3588,1171 @@
         font-size: 0.78rem;
     }
 }
+
+
+
+
+/* ==========================================================
+   LOST & FOUND
+========================================================== */
+
+
+/* ==========================================================
+   HERO
+========================================================== */
+
+.lost-found-hero {
+    position: relative;
+    width: calc(100% - 40px);
+    height: 280px;
+    margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center 55%;
+    background-repeat: no-repeat;
+    border-radius: 18px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+
+.lost-found-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient( to bottom, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.48) );
+    z-index: 1;
+}
+
+
+.lost-found-hero-content {
+    position: relative;
+    z-index: 2;
+    width: min(800px, 90%);
+    padding: 20px;
+    text-align: center;
+    color: #ffffff;
+}
+
+
+.lost-found-hero-title {
+    margin: 0 0 10px;
+    color: #ffffff;
+    font-family: Georgia,serif;
+    font-size: clamp(34px, 4vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+
+.lost-found-hero-description {
+    max-width: 650px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1rem;
+    line-height: 1.6;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+
+
+/* ==========================================================
+   FILTER CONTAINER
+========================================================== */
+
+.lost-found-filter-container {
+    position: sticky;
+    top: 80px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: -30px;
+    margin-bottom: 44px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+
+
+/* ==========================================================
+   FILTER BAR
+========================================================== */
+
+.lost-found-filter-bar {
+    width: auto;
+    min-height: 64px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 10px 14px;
+    background: rgba(248, 251, 247, 0.82);
+    border: 1px solid rgba(228, 233, 230, 0.75);
+    border-radius: 22px;
+    box-shadow: 0 4px 14px rgba(31, 41, 55, 0.08), 0 8px 24px rgba(31, 41, 55, 0.06);
+    box-sizing: border-box;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+
+
+/* ==========================================================
+   FILTER LABEL
+========================================================== */
+
+.lost-found-filter-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 0 4px;
+    color: #344054;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+    .lost-found-filter-label svg {
+        width: 16px;
+        height: 16px;
+        color: #687783;
+        stroke-width: 2;
+    }
+
+
+
+/* ==========================================================
+   FILTER CONTROLS
+========================================================== */
+
+.lost-found-filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+
+.lost-found-filter-item {
+    position: relative;
+    flex-shrink: 0;
+}
+
+
+
+/* ==========================================================
+   DROPDOWN
+========================================================== */
+
+.lost-found-dropdown {
+    position: relative;
+}
+
+
+
+/* ==========================================================
+   DROPDOWN BUTTON
+========================================================== */
+
+.lost-found-dropdown-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    min-width: 190px;
+    min-height: 44px;
+    padding: 0 13px;
+    border: 1px solid #dfe5e2;
+    border-radius: 11px;
+    background: #ffffff;
+    color: #344054;
+    font-family: inherit;
+    font-size: 0.79rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+    .lost-found-dropdown-button:hover {
+        border-color: #cbd5d0;
+        background: #fbfdfb;
+    }
+
+
+.lost-found-dropdown.open
+.lost-found-dropdown-button {
+    border-color: #8ace79;
+    box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
+}
+
+
+.lost-found-dropdown-button-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+}
+
+
+.lost-found-filter-select-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    color: #667085;
+    stroke-width: 2;
+}
+
+
+.lost-found-dropdown-current {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.lost-found-dropdown-chevron {
+    flex-shrink: 0;
+    width: 15px;
+    height: 15px;
+    color: #667085;
+    stroke-width: 2;
+    transition: transform 0.2s ease;
+}
+
+
+.lost-found-dropdown.open
+.lost-found-dropdown-chevron {
+    transform: rotate(180deg);
+}
+
+
+
+/* ==========================================================
+   DROPDOWN MENU
+========================================================== */
+
+.lost-found-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 1100;
+    min-width: 100%;
+    padding: 7px;
+    background: #ffffff;
+    border: 1px solid #e5e9e7;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.12);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-5px);
+    pointer-events: none;
+    transition: opacity 0.16s ease, visibility 0.16s ease, transform 0.16s ease;
+}
+
+
+.lost-found-dropdown.open
+.lost-found-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+
+
+/* ==========================================================
+   DROPDOWN ITEM
+========================================================== */
+
+.lost-found-dropdown-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 40px;
+    padding: 9px 11px;
+    border-radius: 9px;
+    color: #344054;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+
+    .lost-found-dropdown-item:hover {
+        background: #eaf8e6;
+        color: #4f8d42;
+        text-decoration: none;
+    }
+
+
+    .lost-found-dropdown-item.active {
+        color: #344054;
+        background: transparent;
+    }
+
+
+        .lost-found-dropdown-item.active:hover {
+            background: #eaf8e6;
+            color: #4f8d42;
+        }
+
+
+.lost-found-dropdown-item-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+}
+
+
+
+/* ==========================================================
+   FILTER COUNT
+========================================================== */
+
+.lost-found-filter-count {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-left: auto;
+    padding-left: 18px;
+    color: #718096;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+
+    .lost-found-filter-count strong {
+        color: #344054;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+
+
+/* ==========================================================
+   CARD GRID
+========================================================== */
+
+.lost-found-card-grid {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+}
+
+
+
+/* ==========================================================
+   LOST & FOUND CARD
+========================================================== */
+
+.lost-found-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e1e7e4;
+    border-radius: 22px;
+    box-shadow: 0 3px 10px rgba(31, 41, 55, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+
+    .lost-found-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 30px rgba(31, 41, 55, 0.11);
+        border-color: #d8e2dc;
+    }
+
+
+
+/* ==========================================================
+   CARD LINK
+========================================================== */
+
+.lost-found-card-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+
+    .lost-found-card-link:hover {
+        color: inherit;
+        text-decoration: none;
+    }
+
+
+
+/* ==========================================================
+   CARD INNER
+========================================================== */
+
+.lost-found-card-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+
+
+/* ==========================================================
+   STATUS RAIL
+========================================================== */
+
+.lost-found-status-rail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 5px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+
+/* LOST = CORAL */
+
+.lost-card .lost-found-status-rail {
+    background: #ef6c60;
+}
+
+
+/* FOUND = PETHUB GREEN */
+
+.found-card .lost-found-status-rail {
+    background: #8ace79;
+}
+
+
+
+/* ==========================================================
+   IMAGE
+========================================================== */
+
+.lost-found-card-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #f1f3f2;
+}
+
+
+.lost-found-card-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+
+.lost-found-card:hover
+.lost-found-card-image {
+    transform: scale(1.05);
+}
+
+
+
+/* ==========================================================
+   IMAGE GRADIENT
+========================================================== */
+
+.lost-found-card-image-gradient {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient( to top, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.08) 48%, transparent 75% );
+}
+
+
+
+/* ==========================================================
+   LOST / FOUND BADGE
+========================================================== */
+
+.lost-found-type-badge {
+    position: absolute;
+    top: 13px;
+    left: 17px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 29px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+
+    .lost-found-type-badge svg {
+        width: 13px;
+        height: 13px;
+        stroke-width: 2.2;
+    }
+
+
+
+/* ==========================================================
+   LOST BADGE
+========================================================== */
+
+.lost-found-type-badge-lost {
+    background: #ef6c60;
+}
+
+
+
+/* ==========================================================
+   FOUND BADGE
+========================================================== */
+
+.lost-found-type-badge-found {
+    background: #8ace79;
+}
+
+
+
+/* ==========================================================
+   PET TYPE BADGE
+========================================================== */
+
+.lost-found-pet-badge {
+    position: absolute;
+    left: 17px;
+    bottom: 13px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 26px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.86);
+    color: #344054;
+    font-size: 0.68rem;
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
+}
+
+
+    .lost-found-pet-badge svg {
+        width: 13px;
+        height: 13px;
+        color: #667085;
+        stroke-width: 2;
+    }
+
+
+
+/* ==========================================================
+   CARD BODY
+========================================================== */
+
+.lost-found-card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    padding: 18px 18px 15px 20px;
+}
+
+
+
+/* ==========================================================
+   CARD TITLE
+========================================================== */
+
+.lost-found-card-title {
+    margin: 0 0 9px;
+    color: #172b46;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    transition: color 0.2s ease;
+}
+
+
+.lost-found-card:hover
+.lost-found-card-title {
+    color: #67b95a;
+}
+
+
+
+/* ==========================================================
+   LOCATION ROW
+========================================================== */
+
+.lost-found-card-location-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin-bottom: 9px;
+    color: #344054;
+    font-size: 0.76rem;
+    line-height: 1.45;
+}
+
+
+    .lost-found-card-location-row > svg {
+        flex-shrink: 0;
+        width: 15px;
+        height: 15px;
+        margin-top: 2px;
+        stroke-width: 2;
+    }
+
+
+
+/* LOST LOCATION ICON */
+
+.lost-card
+.lost-found-card-location-row > svg {
+    color: #ef6c60;
+}
+
+
+
+/* FOUND LOCATION ICON */
+
+.found-card
+.lost-found-card-location-row > svg {
+    color: #8ace79;
+}
+
+
+
+/* ==========================================================
+   LOCATION LABEL
+========================================================== */
+
+.lost-found-location-label {
+    color: #98a2b3;
+   
+}
+
+
+
+/* ==========================================================
+   LOCATION VALUE
+========================================================== */
+
+.lost-found-location-value {
+    color: #98a2b3;
+    font-weight: 500;
+}
+
+
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.lost-found-card-description {
+    flex: 1;
+    min-height: 42px;
+    margin: 0 0 15px;
+    color: #697586;
+    font-size: 0.76rem;
+    line-height: 1.55;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+
+
+/* ==========================================================
+   CARD FOOTER
+========================================================== */
+
+.lost-found-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 11px;
+    border-top: 1px solid #e8ecea;
+}
+
+
+
+/* ==========================================================
+   DATE
+========================================================== */
+
+.lost-found-card-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #718096;
+    font-size: 0.68rem;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+
+    .lost-found-card-date svg {
+        width: 13px;
+        height: 13px;
+        color: #78bf69;
+        stroke-width: 2;
+    }
+
+
+
+/* ==========================================================
+   FLOATING CREATE REPORT BUTTON
+========================================================== */
+
+.lost-found-floating-add {
+    position: fixed;
+    right: 28px;
+    bottom: 28px;
+    z-index: 1050;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 46px;
+    padding: 0 20px;
+    border: 1px solid #82cf72;
+    border-radius: 999px;
+    background: #8ACE79;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 0.84rem;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 5px 16px rgba(76, 130, 67, 0.22);
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+    .lost-found-floating-add:hover {
+        background: #79c96b;
+        border-color: #79c96b;
+        color: #ffffff;
+        text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(76, 130, 67, 0.28);
+    }
+
+
+    .lost-found-floating-add:focus {
+        color: #ffffff;
+        text-decoration: none;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.20), 0 5px 16px rgba(76, 130, 67, 0.22);
+    }
+
+
+    .lost-found-floating-add svg {
+        width: 17px;
+        height: 17px;
+        stroke-width: 2.2;
+    }
+
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 991px) {
+
+    .lost-found-hero {
+        height: 260px;
+        width: calc(100% - 16px);
+        margin-left: 8px;
+        margin-right: 8px;
+        background-position: center;
+    }
+
+
+    .lost-found-hero-title {
+        font-size: 40px;
+    }
+
+
+    .lost-found-filter-container {
+        top: 74px;
+        margin-top: -28px;
+        margin-bottom: 38px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+
+    .lost-found-filter-bar {
+        gap: 12px;
+        padding: 11px 13px;
+    }
+
+
+    .lost-found-filter-controls {
+        gap: 8px;
+    }
+
+
+    .lost-found-filter-count {
+        padding-left: 12px;
+        font-size: 0.75rem;
+    }
+
+
+        .lost-found-filter-count strong {
+            font-size: 0.86rem;
+        }
+
+
+    .lost-found-dropdown-button {
+        min-width: 170px;
+    }
+
+
+    .lost-found-dropdown-menu {
+        min-width: 170px;
+    }
+
+
+    .lost-found-card-grid {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+
+    .lost-found-card-body {
+        padding: 16px 16px 14px 18px;
+    }
+
+
+    .lost-found-card-title {
+        font-size: 0.95rem;
+    }
+
+
+    .lost-found-card-description {
+        font-size: 0.74rem;
+    }
+
+
+    .lost-found-floating-add {
+        right: 22px;
+        bottom: 22px;
+    }
+}
+
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 767px) {
+
+    .lost-found-hero {
+        height: 245px;
+        width: calc(100% - 24px);
+        margin-left: 12px;
+        margin-right: 12px;
+        background-position: center;
+    }
+
+
+    .lost-found-hero-content {
+        padding: 20px 15px;
+    }
+
+
+    .lost-found-hero-title {
+        font-size: 32px;
+        line-height: 1.15;
+    }
+
+
+    .lost-found-hero-description {
+        font-size: 0.86rem;
+        line-height: 1.5;
+    }
+
+
+    /* ======================================================
+       MOBILE FILTER
+    ====================================================== */
+
+    .lost-found-filter-container {
+        top: 68px;
+        margin-top: -26px;
+        margin-bottom: 30px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+
+    .lost-found-filter-bar {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 12px 14px;
+        min-height: auto;
+        border-radius: 18px;
+    }
+
+
+    .lost-found-filter-controls {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+
+    .lost-found-filter-item,
+    .lost-found-dropdown {
+        width: 100%;
+    }
+
+
+    .lost-found-dropdown-button {
+        width: 100%;
+        min-width: 0;
+    }
+
+
+    .lost-found-dropdown-menu {
+        width: 100%;
+        min-width: 0;
+    }
+
+
+    .lost-found-filter-count {
+        justify-content: flex-start;
+        width: 100%;
+        margin-left: 0;
+        padding-left: 2px;
+        padding-top: 3px;
+    }
+
+
+    .lost-found-card-grid {
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+
+
+    .lost-found-card {
+        border-radius: 19px;
+    }
+
+
+    .lost-found-card-body {
+        padding: 16px 16px 14px 18px;
+    }
+
+
+    .lost-found-type-badge {
+        top: 11px;
+        left: 15px;
+    }
+
+
+    .lost-found-pet-badge {
+        left: 15px;
+        bottom: 11px;
+    }
+
+
+    .lost-found-floating-add {
+        right: 16px;
+        bottom: 16px;
+    }
+}
+
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 480px) {
+
+    .lost-found-hero {
+        height: 230px;
+        width: calc(100% - 20px);
+        margin-left: 10px;
+        margin-right: 10px;
+        background-position: center;
+    }
+
+
+    .lost-found-hero-title {
+        font-size: 28px;
+    }
+
+
+    .lost-found-hero-description {
+        font-size: 0.8rem;
+    }
+
+
+    .lost-found-filter-container {
+        top: 64px;
+        margin-top: -22px;
+        margin-bottom: 25px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    .lost-found-filter-bar {
+        padding: 11px;
+        border-radius: 15px;
+    }
+
+
+    .lost-found-filter-controls {
+        grid-template-columns: 1fr;
+    }
+
+
+    .lost-found-filter-count {
+        padding-top: 2px;
+        font-size: 0.73rem;
+    }
+
+
+        .lost-found-filter-count strong {
+            font-size: 0.84rem;
+        }
+
+
+    .lost-found-dropdown-button {
+        min-height: 42px;
+        font-size: 0.76rem;
+    }
+
+
+    .lost-found-dropdown-item {
+        min-height: 42px;
+        font-size: 0.76rem;
+    }
+
+
+    .lost-found-card-grid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+
+    .lost-found-card {
+        border-radius: 18px;
+    }
+
+
+    .lost-found-status-rail {
+        width: 4px;
+    }
+
+
+    .lost-found-type-badge {
+        top: 9px;
+        left: 13px;
+        min-height: 26px;
+        padding: 5px 9px;
+        font-size: 0.65rem;
+    }
+
+
+    .lost-found-pet-badge {
+        left: 13px;
+        bottom: 9px;
+        font-size: 0.65rem;
+    }
+
+
+    .lost-found-card-body {
+        padding: 15px 14px 13px 17px;
+    }
+
+
+    .lost-found-card-title {
+        font-size: 0.92rem;
+    }
+
+
+    .lost-found-card-location-row {
+        font-size: 0.72rem;
+    }
+
+
+    .lost-found-card-description {
+        font-size: 0.73rem;
+    }
+
+
+    .lost-found-card-date {
+        font-size: 0.64rem;
+    }
+
+
+    .lost-found-floating-add {
+        right: 12px;
+        bottom: 12px;
+        min-height: 42px;
+        padding: 0 15px;
+        font-size: 0.76rem;
+    }
+
+
+        .lost-found-floating-add svg {
+            width: 16px;
+            height: 16px;
+        }
+}

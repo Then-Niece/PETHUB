@@ -7,6 +7,11 @@
     bool isAdmin = User.IsInRole("Admin");
     bool isMember = User.IsInRole("Member");
 
+    bool isHome = controller == "Home" &&
+              action == "Index";
+
+    bool isPetFeed = controller == "PetFeeds" &&
+       action == "Feed";
     // Shared Pages (Member & Admin)
     bool isFeed = controller == "PetFeeds" && action == "Feed";
     bool isMarketplace = controller == "Listings" && action == "Marketplace";
@@ -61,7 +66,7 @@
                     <ul class="navbar-nav align-items-center gap-lg-3">
 
                         <li class="nav-item">
-                            <a class="nav-link fw-semibold"
+                            <a class="nav-link fw-semibold @(isHome ? "active" : "")"
                                asp-controller="Home"
                                asp-action="Index">
                                 Home
@@ -69,7 +74,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link fw-semibold"
+                            <a class="nav-link fw-semibold @(isMarketplace ? "active" : "")"
                                asp-controller="Listings"
                                asp-action="Marketplace">
                                 Marketplace
@@ -77,7 +82,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link fw-semibold"
+                            <a class="nav-link fw-semibold @(isLostFound ? "active" : "")"
                                asp-controller="LostFounds"
                                asp-action="Browse">
                                 Lost &amp; Found
@@ -85,8 +90,10 @@
                         </li>
 
                         <li class="nav-item mx-2">
-                            <a class="nav-link fw-semibold" asp-controller="PetFeeds" asp-action="Feed">
-                                PetFeed
+                            <a class="nav-link fw-semibold @(isPetFeed ? "active" : "")"
+                               asp-controller="PetFeeds"
+                               asp-action="Feed">
+                                Pet Feed
                             </a>
                         </li>
 
