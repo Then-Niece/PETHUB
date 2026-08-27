@@ -1,104 +1,552 @@
-﻿    @model IEnumerable<PETHUB.Models.Listing>
+﻿@model IEnumerable<PETHUB.Models.Listing>
 
 @{
     ViewData["Title"] = "Marketplace Client";
-    // Create a filter bar containing the Marketplace listing-type filter.
-    // Request.Query reads the current URL so the selected option remains
-    // selected after the page reloads.
+
+    // =========================================================
+    // MARKETPLACE FILTERS
+    // =========================================================
+
     var marketplaceFilters = PETHUB.Helpers.FilterBarHelper.Create(
         PETHUB.Helpers.FilterBarHelper.ListingType(
             Context.Request.Query["listingType"].ToString()
         ),
         PETHUB.Helpers.FilterBarHelper.PetType(
-               Context.Request.Query["petType"].ToString()
-           )
-        );
+            Context.Request.Query["petType"].ToString()
+        )
+    );
+
+
+    // =========================================================
+    // MARKETPLACE LISTING COUNT
+    // =========================================================
+
+    var listingCount = Model.Count();
+
+    var selectedPetType =
+        Context.Request.Query["petType"].ToString();
+
+
+    // =========================================================
+    // MARKETPLACE COUNT LABEL
+    // =========================================================
+
+    var countLabel = "Listings";
+
+    if (!string.IsNullOrEmpty(selectedPetType))
+    {
+        if (selectedPetType.Equals(
+                "dog",
+                StringComparison.OrdinalIgnoreCase) ||
+            selectedPetType.Equals(
+                "dogs",
+                StringComparison.OrdinalIgnoreCase))
+        {
+            countLabel = "Dogs";
+        }
+        else if (selectedPetType.Equals(
+                     "cat",
+                     StringComparison.OrdinalIgnoreCase) ||
+                 selectedPetType.Equals(
+                     "cats",
+                     StringComparison.OrdinalIgnoreCase))
+        {
+            countLabel = "Cats";
+        }
+        else
+        {
+            countLabel = selectedPetType;
+        }
+    }
 }
 
-@* Render the reusable Marketplace filter. *@
-<partial name="Components/_FilterBar"
-         model="marketplaceFilters" />
 
-<!-- Add Listing Button -->
-@if (User.IsInRole("Member"))
-{
-    <a asp-controller="Listings"
-       asp-action="Create"
-       class="btn  btn-lg rounded-pill" style="background-color:#8ACE79; color:white;">
-        Add Listing
-    </a>
-}
-else if(User.IsInRole("Admin"))
-{
-    //Admin Cannot add a Marketplace Listing
-}
-else{
-    <button type="button"
-            class="btn btn-lg rounded-pill"
-            style="color:white; background-color:#8ACE79;"
-            data-bs-toggle="modal"
-            data-bs-target="#guestActionModal">
 
-        Add Listing
+<!-- =========================================================
+     MARKETPLACE HERO
+========================================================== -->
 
-    </button>
-}
+<section class="marketplace-hero"
+         style="background-image: url('@Url.Content("~/images/hero_banner.jpg")');">
 
-<div class="row mt-4">
+    <div class="marketplace-hero-overlay"></div>
+
+
+    <div class="marketplace-hero-content">
+
+        <h1 class="marketplace-hero-title">
+
+            Find Your New Best Friend
+
+        </h1>
+
+
+        <p class="marketplace-hero-description">
+
+            Discover pets looking for loving homes
+            and pets available for sale.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     MARKETPLACE FILTER
+
+     The filter overlaps the bottom of the hero.
+========================================================== -->
+
+<div class="marketplace-filter-container">
+
+    <div class="marketplace-filter-bar">
+
+
+        <!-- =====================================================
+             FILTER LABEL
+        ====================================================== -->
+
+        <div class="marketplace-filter-label">
+
+            <i data-lucide="sliders-horizontal"></i>
+
+            <span>
+                Filters
+            </span>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             FILTER CONTROLS
+        ====================================================== -->
+
+        <div class="marketplace-filter-controls">
+
+            @foreach (var filter in marketplaceFilters.Filters)
+            {
+                var selectedValue =
+                    filter.SelectedValue ?? filter.DefaultValue;
+
+
+                var filterIcon =
+                    filter.ParameterName == "listingType"
+                        ? "tag"
+                        : "paw-print";
+
+
+                // =================================================
+                // BUILD OPTION URLS
+                // =================================================
+
+                var filterOptions = new List<dynamic>();
+
+                foreach (var option in filter.Options)
+                {
+                    var query = Context.Request.Query
+                        .ToDictionary(
+                            item => item.Key,
+                            item => item.Value.ToString()
+                        );
+
+
+                    // Replace only the current filter.
+
+                    if (string.IsNullOrEmpty(option.Value))
+                    {
+                        query.Remove(filter.ParameterName);
+                    }
+                    else
+                    {
+                        query[filter.ParameterName] = option.Value;
+                    }
+
+
+                    // Build query string.
+
+                    var queryString = string.Join(
+                        "&",
+                        query.Select(
+                            item =>
+                                $"{item.Key}={Uri.EscapeDataString(item.Value)}"
+                        )
+                    );
+
+
+                    var baseUrl =
+                        Context.Request.Path.ToString();
+
+
+                    var optionUrl =
+                        string.IsNullOrEmpty(queryString)
+                            ? baseUrl
+                            : $"{baseUrl}?{queryString}";
+
+
+                    var isSelected =
+                        option.Value == selectedValue;
+
+
+                    filterOptions.Add(new
+                    {
+                        Label = option.Label,
+                        Value = option.Value,
+                        Url = optionUrl,
+                        IsSelected = isSelected
+                    });
+                }
+
+
+
+                <!-- =================================================
+                     DETERMINE MARKETPLACE DISPLAY LABEL
+                ================================================== -->
+                var selectedOption =
+                                    filterOptions.FirstOrDefault(
+                                        x => x.IsSelected
+                                    );
+
+
+                var displayLabel =
+                    selectedOption?.Label;
+
+
+                // Marketplace-specific default names.
+
+                if (string.IsNullOrEmpty(selectedValue))
+                {
+                    displayLabel =
+                        filter.ParameterName == "listingType"
+                            ? "All Listings"
+                            : "All Pets";
+                }
+
+
+                if (string.IsNullOrEmpty(displayLabel))
+                {
+                    displayLabel =
+                        filter.ParameterName == "listingType"
+                            ? "All Listings"
+                            : "All Pets";
+                }
+
+
+
+                <!-- =================================================
+                     DROPDOWN
+                ================================================== -->
+
+                <div class="marketplace-filter-item marketplace-dropdown"
+                     data-filter-dropdown>
+
+
+                    <!-- DROPDOWN BUTTON -->
+
+                    <button type="button"
+                            class="marketplace-filter-select marketplace-dropdown-button"
+                            data-dropdown-button
+                            aria-haspopup="true"
+                            aria-expanded="false">
+
+                        <span class="marketplace-dropdown-button-content">
+
+                            <i data-lucide="@filterIcon"
+                               class="marketplace-filter-select-icon"></i>
+
+                            <span class="marketplace-dropdown-current">
+
+                                @displayLabel
+
+                            </span>
+
+                        </span>
+
+
+                        <i data-lucide="chevron-down"
+                           class="marketplace-dropdown-chevron"></i>
+
+                    </button>
+
+
+
+                    <!-- =================================================
+                         DROPDOWN MENU
+                    ================================================== -->
+
+                    <div class="marketplace-dropdown-menu"
+                         data-dropdown-menu
+                         role="menu">
+
+                        @foreach (var option in filterOptions)
+                        {
+                            <a href="@option.Url"
+                               class="marketplace-dropdown-item @(option.IsSelected ? "active" : "")"
+                               role="menuitem">
+
+                                <span class="marketplace-dropdown-item-content">
+
+                                    @if (filter.ParameterName == "listingType")
+                                    {
+                                        @if (option.Label == "For Adoption")
+                                        {
+                                        }
+                                        else if (option.Label == "For Sale")
+                                        {
+                                        }
+                                        else
+                                        {
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @if (option.Label == "Dogs")
+                                        {
+                                        }
+                                        else if (option.Label == "Cats")
+                                        {
+                                        }
+                                        else
+                                        {
+                                        }
+                                    }
+
+
+                                    <span>
+
+                                        @if (filter.ParameterName == "listingType" &&
+                                             string.IsNullOrEmpty(option.Value))
+                                        {
+                                            @:All Listings
+                                        }
+                                        else if (filter.ParameterName == "petType" &&
+                                                 string.IsNullOrEmpty(option.Value))
+                                        {
+                                            @:All Pets
+                                        }
+                                        else
+                                        {
+                                            @option.Label
+                                        }
+
+                                    </span>
+
+                                </span>
+
+                            </a>
+                        }
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+
+
+        <!-- =====================================================
+             MARKETPLACE LISTING COUNT
+        ====================================================== -->
+
+        <div class="marketplace-filter-count">
+
+            <strong>
+                @listingCount
+            </strong>
+
+            <span>
+                @countLabel
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     MARKETPLACE LISTING CARDS
+========================================================== -->
+
+<div class="row mt-4 marketplace-card-grid">
+
     @foreach (var item in Model)
     {
         <div class="col-md-3 mb-4">
 
-            <div class="card h-100 shadow-sm position-relative">
+
+            <!-- =================================================
+                 MARKETPLACE CARD
+            ================================================== -->
+
+            <div class="marketplace-card h-100">
+
+
+                <!-- =================================================
+                     CARD LINK
+
+Existing programmer navigation preserved.
+                ================================================== -->
 
                 <a asp-action="MarketplaceDetails"
                    asp-route-id="@item.ListingId"
-                   class="stretched-link text-decoration-none text-dark">
+                   class="marketplace-card-link">
 
-                    @if (item.Images != null && item.Images.Any())
-                    {
-                        <img src="@item.Images.First().ImagePath"
-                             class="card-img-top"
-                             alt="Listing image"
-                             style="height:200px;object-fit:cover;" />
-                    }
-                    else
-                    {
-                        <img src="/images/no-image.png"
-                             class="card-img-top"
-                             alt="No image"
-                             style="height:200px;object-fit:cover;" />
-                    }
 
-                    <div class="card-body">
-                        <h5 class="card-title">@item.Title</h5>
+                    <!-- =================================================
+                         IMAGE
+                    ================================================== -->
 
-                        <p class="card-text text-muted">
-                            @item.Description
-                        </p>
+                    <div class="marketplace-card-image-wrapper">
 
-                        <p class="card-text">
-                            <strong>₱@item.Price</strong>
-                        </p>
+                        @if (item.Images != null && item.Images.Any())
+                        {
+                            <img src="@item.Images.First().ImagePath"
+                                 class="marketplace-card-image"
+                                 alt="Listing image" />
+                        }
+                        else
+                        {
+                            <img src="/images/no-image.png"
+                                 class="marketplace-card-image"
+                                 alt="No image" />
+                        }
 
-                        <p class="card-text">
-                            <small>
-                                Posted @item.DatePosted.ToString("MMM dd, yyyy")
-                            </small>
-                        </p>
 
-                        <p class="card-text">
-                            <small class="text-muted">
-                                Location:
+                       
+
+
+
+                        <!-- =================================================
+                             LISTING TYPE BADGE
+                        ================================================== -->
+                        @if (item.Type == ListType.For_Adoption)
+                        {
+                            <span class="marketplace-listing-badge marketplace-listing-badge-adoption">
+
+                                <i data-lucide="paw-print"></i>
+
+                                Adoption
+
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="marketplace-listing-badge marketplace-listing-badge-sale">
+
+                                <i data-lucide="paw-print"></i>
+
+                                For Sale
+
+                            </span>
+                        }
+
+
+
+                        <!-- =================================================
+                             PRICE BADGE
+
+Only shown for listings that are for sale.
+                        ================================================== -->
+                        @if (item.Type != ListType.For_Adoption)
+                        {
+                            <span class="marketplace-price-badge">
+
+                                ₱ @item.Price.ToString("N0")
+
+                            </span>
+                        }
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         CARD BODY
+                    ================================================== -->
+
+                    <div class="marketplace-card-body">
+
+
+                        <!-- =================================================
+                             TITLE
+                        ================================================== -->
+
+                        <h5 class="marketplace-card-title">
+
+                            @item.Title
+
+                        </h5>
+
+
+
+                        <!-- =================================================
+                             LOCATION
+                        ================================================== -->
+
+                        <div class="marketplace-card-location-row">
+
+                            <i data-lucide="map-pin"></i>
+
+                            <span>
+
                                 @(string.IsNullOrEmpty(item.City)
                                     ? "Not specified"
                                     : item.City + ", " + item.Province)
-                            </small>
+
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             DESCRIPTION
+                        ================================================== -->
+
+                        <p class="marketplace-card-description">
+
+                            @item.Description
+
                         </p>
+
+
+
+                        <!-- =================================================
+                             CARD FOOTER
+                        ================================================== -->
+
+                        <div class="marketplace-card-footer">
+
+                            <span class="marketplace-card-date">
+
+                                <i data-lucide="calendar"></i>
+
+                                @item.DatePosted.ToString("MMM dd, yyyy")
+
+                            </span>
+
+                        </div>
+
                     </div>
 
                 </a>
 
+
+
+                <!-- =================================================
+                     REPORT BUTTON
+
+Kept as a comment so the original programmer
+                     logic is not deleted.
+                ================================================== -->
+                @*
                 @if (User.IsInRole("Member") &&
                      item.MemberId != User.FindFirst(
                          System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
@@ -117,13 +565,62 @@ else{
 
                     </button>
                 }
+                *@
 
             </div>
+
         </div>
     }
+
 </div>
 
-<!-- Guest Modal -->
+
+
+<!-- =========================================================
+     FLOATING ADD LISTING BUTTON
+
+     Existing Member / Admin / Guest logic is preserved.
+========================================================== -->
+@if (User.IsInRole("Member"))
+{
+    <a asp-controller="Listings"
+       asp-action="Create"
+       class="marketplace-floating-add">
+
+        <i data-lucide="plus"></i>
+
+        <span>
+            Create Listing
+        </span>
+
+    </a>
+}
+else if (User.IsInRole("Admin"))
+{
+    //Admin Cannot add a Marketplace Listing
+}
+else
+{
+    <button type="button"
+            class="marketplace-floating-add"
+            data-bs-toggle="modal"
+            data-bs-target="#guestActionModal">
+
+        <i data-lucide="plus"></i>
+
+        <span>
+            Create Listing
+        </span>
+
+    </button>
+}
+
+
+
+<!-- =========================================================
+     GUEST MODAL
+========================================================== -->
+
 <div class="modal fade"
      id="guestActionModal"
      tabindex="-1"
@@ -192,3 +689,23 @@ else{
     </div>
 
 </div>
+
+
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            if (typeof lucide !== "undefined") {
+
+                lucide.createIcons();
+
+            }
+
+        });
+
+    </script>
+
+}

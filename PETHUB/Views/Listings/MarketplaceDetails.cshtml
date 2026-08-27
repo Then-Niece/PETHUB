@@ -167,14 +167,15 @@
                                  style="width:44px;height:44px;object-fit:cover;" />
                         }
 
-
                     </div>
 
                     <div class="listing-profile-details">
 
                         <div class="listing-profile-name">
+
                             @Model.Member?.FirstName
                             @Model.Member?.LastName
+
                         </div>
 
                         <div class="listing-profile-meta">
@@ -185,11 +186,22 @@
 
                             <span>·</span>
 
-                            <span>
-                                @(Model.Type == ListType.For_Adoption
-                                    ? "For Adoption"
-                                    : "For Sale")
-                            </span>
+
+                            <!-- ==================================================
+                                 LISTING TYPE PILL
+                            =================================================== -->
+                            @if (Model.Type == ListType.For_Adoption)
+                            {
+                                <span class="listing-type-pill listing-type-pill-adoption">
+                                    For Adoption
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="listing-type-pill listing-type-pill-sale">
+                                    For Sale
+                                </span>
+                            }
 
                         </div>
 
@@ -215,23 +227,39 @@
                     <div class="listing-more-dropdown">
 
                         <button type="button">
+
                             <i data-lucide="link"></i>
-                            <span>Copy Link</span>
+
+                            <span>
+                                Copy Link
+                            </span>
+
                         </button>
 
+
                         <button type="button">
+
                             <i data-lucide="share-2"></i>
-                            <span>Share Listing</span>
+
+                            <span>
+                                Share Listing
+                            </span>
+
                         </button>
+
 
                         <div class="menu-divider"></div>
 
+
                         @if (User.IsInRole("Member") &&
-                             Model.MemberId != User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                             Model.MemberId != User.FindFirst(
+                                 System.Security.Claims.ClaimTypes.NameIdentifier
+                             )?.Value)
                         {
                             <!-- Opens the shared Report modal for this Marketplace listing.
                                  The server-side controller still verifies ownership before accepting
                                  the submitted report. -->
+
                             <button type="button"
                                     class="danger-action"
                                     data-bs-toggle="modal"
@@ -242,10 +270,13 @@
 
                                 <i data-lucide="flag"></i>
 
-                                <span>Report Listing</span>
+                                <span>
+                                    Report Listing
+                                </span>
 
                             </button>
                         }
+
                     </div>
 
                 </div>
@@ -270,6 +301,7 @@
                     @Model.Title
                 </h1>
 
+
                 @if (Model.Type == PETHUB.Models.ListType.For_Sale)
                 {
                     <div class="listing-price">
@@ -279,9 +311,6 @@
 
             </div>
 
-         
-
-
 
             <!-- ==================================================
                  ABOUT THIS PET
@@ -289,16 +318,17 @@
 
             <section class="listing-info-section">
 
-               
-
                 <h3>
-                    About This Pet 
+                    About This Pet
                 </h3>
 
+
                 <p class="listing-description">
+
                     @(string.IsNullOrWhiteSpace(Model.Description)
                         ? "No description provided."
                         : Model.Description)
+
                 </p>
 
             </section>
@@ -315,62 +345,74 @@
                 </h3>
 
 
-                <div class="pet-information-list">
+                <div class="listing-details-table">
 
 
                     <!-- Pet Type -->
 
-                    <div class="pet-information-item">
+                    <div class="listing-details-row">
 
-                        <span class="pet-information-label">
+                        <div class="listing-details-label">
 
                             <i data-lucide="paw-print"></i>
 
-                            Pet Type
+                            <span>
+                                Pet Type
+                            </span>
 
-                        </span>
+                        </div>
 
-                        <span class="pet-information-value">
+                        <div class="listing-details-value">
+
                             @Model.PetType
-                        </span>
+
+                        </div>
 
                     </div>
 
 
                     <!-- Breed -->
 
-                    <div class="pet-information-item">
+                    <div class="listing-details-row">
 
-                        <span class="pet-information-label">
+                        <div class="listing-details-label">
 
                             <i data-lucide="tag"></i>
 
-                            Breed
+                            <span>
+                                Breed
+                            </span>
 
-                        </span>
+                        </div>
 
-                        <span class="pet-information-value">
+                        <div class="listing-details-value">
+
                             @Model.Breed
-                        </span>
+
+                        </div>
 
                     </div>
 
 
                     <!-- Sex -->
 
-                    <div class="pet-information-item">
+                    <div class="listing-details-row">
 
-                        <span class="pet-information-label">
+                        <div class="listing-details-label">
 
                             <i data-lucide="venus-and-mars"></i>
 
-                            Sex
+                            <span>
+                                Sex
+                            </span>
 
-                        </span>
+                        </div>
 
-                        <span class="pet-information-value">
+                        <div class="listing-details-value">
+
                             @Model.PetSex
-                        </span>
+
+                        </div>
 
                     </div>
 
@@ -380,7 +422,7 @@
 
 
             <!-- ==================================================
-                 LOCATION
+                 WHERE TO FIND
             =================================================== -->
 
             <section class="listing-info-section">
@@ -394,73 +436,97 @@
                 </h3>
 
 
-                <div class="listing-location-grid">
+                <div class="listing-details-table">
 
 
                     <!-- Street Address -->
 
-                    <div class="listing-location-item">
+                    <div class="listing-details-row">
 
-                        <span class="listing-location-label">
-                            Street Address
-                        </span>
+                        <div class="listing-details-label">
 
-                        <span class="listing-location-value">
+                            <span>
+                                Street Address
+                            </span>
+
+                        </div>
+
+                        <div class="listing-details-value">
+
                             @(string.IsNullOrWhiteSpace(Model.StreetAddress)
                                 ? "Not specified"
                                 : Model.StreetAddress)
-                        </span>
+
+                        </div>
 
                     </div>
 
 
                     <!-- Barangay -->
 
-                    <div class="listing-location-item">
+                    <div class="listing-details-row">
 
-                        <span class="listing-location-label">
-                            Barangay
-                        </span>
+                        <div class="listing-details-label">
 
-                        <span class="listing-location-value">
+                            <span>
+                                Barangay
+                            </span>
+
+                        </div>
+
+                        <div class="listing-details-value">
+
                             @(string.IsNullOrWhiteSpace(Model.Barangay)
                                 ? "Not specified"
                                 : Model.Barangay)
-                        </span>
+
+                        </div>
 
                     </div>
 
 
                     <!-- City -->
 
-                    <div class="listing-location-item">
+                    <div class="listing-details-row">
 
-                        <span class="listing-location-label">
-                            City
-                        </span>
+                        <div class="listing-details-label">
 
-                        <span class="listing-location-value">
+                            <span>
+                                City
+                            </span>
+
+                        </div>
+
+                        <div class="listing-details-value">
+
                             @(string.IsNullOrWhiteSpace(Model.City)
                                 ? "Not specified"
                                 : Model.City)
-                        </span>
+
+                        </div>
 
                     </div>
 
 
                     <!-- Province -->
 
-                    <div class="listing-location-item">
+                    <div class="listing-details-row">
 
-                        <span class="listing-location-label">
-                            Province
-                        </span>
+                        <div class="listing-details-label">
 
-                        <span class="listing-location-value">
+                            <span>
+                                Province
+                            </span>
+
+                        </div>
+
+                        <div class="listing-details-value">
+
                             @(string.IsNullOrWhiteSpace(Model.Province)
                                 ? "Not specified"
                                 : Model.Province)
-                        </span>
+
+                        </div>
 
                     </div>
 
@@ -483,15 +549,30 @@
 
                 </h3>
 
-                <p class="listing-contact-number">
 
-                  
+                <div class="listing-details-table">
 
-                    @(string.IsNullOrWhiteSpace(Model.Member?.ContactNumber)
-                        ? "Not Available"
-                        : Model.Member.ContactNumber)
+                    <div class="listing-details-row">
 
-                </p>
+                        <div class="listing-details-label">
+
+                            <span>
+                                Contact Number
+                            </span>
+
+                        </div>
+
+                        <div class="listing-details-value">
+
+                            @(string.IsNullOrWhiteSpace(Model.Member?.ContactNumber)
+                                ? "Not Available"
+                                : Model.Member.ContactNumber)
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </section>
 
@@ -538,7 +619,7 @@
 
 <script>
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
 
         const moreMenu =
             document.querySelector(".listing-more-menu");
@@ -551,11 +632,12 @@
            CLOSE WHEN CLICKING OUTSIDE
         ================================================== */
 
-        document.addEventListener("click", function(event) {
+        document.addEventListener("click", function (event) {
 
             if (!moreMenu) {
                 return;
             }
+
 
             if (!event.target.closest(".listing-more-menu")) {
 
@@ -572,7 +654,7 @@
 
         if (infoPanel && moreMenu) {
 
-            infoPanel.addEventListener("scroll", function() {
+            infoPanel.addEventListener("scroll", function () {
 
                 moreMenu.classList.remove("show");
 

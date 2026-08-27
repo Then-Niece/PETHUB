@@ -5,88 +5,49 @@
     ViewData["Title"] = "PetHub";
 }
 
-<div class="container-fluid p-0">
+<div class="landing-page">
 
-    <!-- ============================= -->
-    <!-- HERO SECTION -->
-    <!-- ============================= -->
+    <!-- ==========================================================
+         HERO SECTION
+    ========================================================== -->
 
-    <section style="
-        background:#F8FAF7;
-        padding:100px 0;">
+    <section class="landing-hero">
 
-        <div class="container">
+        <div class="landing-hero-container">
 
-            <div class="row align-items-center">
+            <div class="landing-hero-content">
 
                 <!-- LEFT SIDE -->
 
-                <div class="col-lg-6">
+                <div class="landing-hero-text">
 
-                    <span class="badge rounded-pill mb-4 px-3 py-2"
-                          style="
-                        background:#EAF8E6;
-                        color:#4F8D42;
-                        font-size:.9rem;">
-
-                        Trusted Pet Community
-
-                    </span>
-
-                    <h1 class="display-3 fw-bold mb-4"
-                        style="
-                        color:#2D3748;
-                        line-height:1.2;">
-
-                        Helping Every Pet
-                        <br />
-
-                        Find a Loving Home.
-
+                    <h1>
+                        Helping Pets Find
+                        <span>Loving</span> Homes
                     </h1>
 
-                    <p class="fs-5 text-muted mb-5"
-                       style="line-height:1.8;">
-
-                        PetHub is a trusted community platform where pet owners,
-                        adopters, and animal lovers reconnect lost pets,
-                        discover adoption opportunities, and promote
-                        responsible pet ownership.
-
+                    <p>
+                        PetHub is a community platform where members can
+                        report lost pets, browse pet listings, and support
+                        responsible pet ownership — all in one trusted place.
                     </p>
 
-                    <div class="d-flex gap-3">
+                    <div class="landing-hero-buttons">
 
                         <a asp-controller="UserAccount"
                            asp-action="Register"
-                           class="btn btn-lg rounded-pill fw-semibold px-5 py-3 text-white"
-                           style="
-                            background:#8ACE79;
-                            border:none;
-                            transition:.3s;"
-                           onmouseover="
-                            this.style.background='#6FBF5E'"
-                           onmouseout="
-                            this.style.background='#8ACE79'">
+                           class="landing-primary-button">
 
                             Join PetHub
 
+                            <i data-lucide="arrow-right"></i>
+
                         </a>
 
-                        <a href="#services"
-                           class="btn btn-lg rounded-pill fw-semibold px-5 py-3"
-                           style="
-                            border:2px solid #8ACE79;
-                            color:#2D3748;
-                            transition:.3s;"
-                           onmouseover="
-                            this.style.background='#8ACE79';
-                            this.style.color='white';"
-                           onmouseout="
-                            this.style.background='transparent';
-                            this.style.color='#2D3748';">
+                        <a href="#marketplace"
+                           class="landing-outline-button">
 
-                            Explore
+                            Explore Marketplace
 
                         </a>
 
@@ -97,15 +58,1187 @@
 
                 <!-- RIGHT SIDE -->
 
-                <div class="col-lg-6 text-center">
+                <div class="landing-hero-image-wrapper">
 
-                    <img src="~/images/hero-dog.png"
+                    <img src="~/images/hero_banner.jpg"
                          asp-append-version="true"
-                         class="img-fluid"
-                         style="
-                    max-height:520px;
-                    border-radius:30px;"
-                         alt="PetHub Hero">
+                         class="landing-hero-image"
+                         alt="PetHub">
+
+                    <!-- Floating image badge -->
+
+                    <div class="landing-hero-image-badge">
+
+                        <div class="landing-hero-image-badge-icon">
+                            <i data-lucide="paw-print"></i>
+                        </div>
+
+                        <div>
+                            <strong>Pets Reunited</strong>
+                            <span>180+ happy stories</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================================
+         OUR MISSION
+    ========================================================== -->
+
+    <section id="about"
+             class="landing-section landing-mission-section">
+
+        <div class="landing-container">
+
+            <div class="landing-mission">
+
+                <!-- IMAGE -->
+
+                <div class="landing-mission-image-wrapper">
+
+                    <img src="~/images/orangetabby.jpg"
+                         asp-append-version="true"
+                         class="landing-mission-image"
+                         alt="PetHub Mission">
+
+                    <div class="landing-mission-label">
+                        Every Pet Matters
+                    </div>
+
+                </div>
+
+
+                <!-- CONTENT -->
+
+                <div class="landing-mission-content">
+
+                    <span class="landing-section-badge mission">
+
+                        <i data-lucide="heart"></i>
+
+                        Our Mission
+
+                    </span>
+
+                    <h2>
+                        Creating a safe and supportive community
+                        for every cat and dog
+                    </h2>
+
+                    <p>
+                        PetHub is committed to creating a safe and supportive
+                        community where pet owners, adopters, and animal lovers
+                        can work together to reunite lost pets, promote
+                        responsible pet ownership, and help every cat and dog
+                        find a loving home.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================================
+         WHY PETHUB
+    ========================================================== -->
+
+    <section class="landing-section landing-why-section">
+
+        <div class="landing-container">
+
+            <div class="landing-centered-content">
+
+                <span class="landing-eyebrow">
+                    WHY PETHUB?
+                </span>
+
+                <h2>
+                    Because every pet deserves a way home
+                </h2>
+
+                <p>
+                    Every year, many pets become lost or are abandoned.
+                    PetHub provides one trusted platform where pet owners,
+                    adopters, and community members can work together to help
+                    animals find safe and loving homes.
+                </p>
+
+                <div class="landing-section-divider"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================================
+         WHAT WE OFFER
+    ========================================================== -->
+
+    <section id="services"
+             class="landing-section landing-offer-section">
+
+        <div class="landing-container">
+
+            <div class="landing-centered-content landing-offer-heading">
+
+                <span class="landing-eyebrow">
+                    WHAT WE OFFER
+                </span>
+
+                <h2>
+                    Everything you need in one place
+                </h2>
+
+            </div>
+
+
+            <div class="landing-offer-grid">
+
+                <!-- MARKETPLACE -->
+
+                <a asp-controller="Listings"
+                   asp-action="Marketplace"
+                   class="landing-offer-card">
+
+                    <div class="landing-offer-icon green">
+                        <i data-lucide="store"></i>
+                    </div>
+
+                    <h3>
+                        Marketplace
+                    </h3>
+
+                    <p>
+                        Buy, sell, or adopt pets in a trusted,
+                        moderated community space.
+                    </p>
+
+                </a>
+
+
+                <!-- LOST & FOUND -->
+
+                <a asp-controller="LostFounds"
+                   asp-action="Browse"
+                   class="landing-offer-card">
+
+                    <div class="landing-offer-icon coral">
+                        <i data-lucide="map-pin"></i>
+                    </div>
+
+                    <h3>
+                        Lost &amp; Found
+                    </h3>
+
+                    <p>
+                        Report missing pets and help reunite
+                        them with their families.
+                    </p>
+
+                </a>
+
+
+                <!-- PET ADOPTION -->
+
+                <a asp-controller="Listings"
+                   asp-action="Marketplace"
+                   class="landing-offer-card">
+
+                    <div class="landing-offer-icon green">
+                        <i data-lucide="heart"></i>
+                    </div>
+
+                    <h3>
+                        Pet Adoption
+                    </h3>
+
+                    <p>
+                        Help pets find permanent, loving homes
+                        through adoption.
+                    </p>
+
+                </a>
+
+
+                <!-- COMMUNITY -->
+
+                <a href="#petfeed"
+                   class="landing-offer-card">
+
+                    <div class="landing-offer-icon coral">
+                        <i data-lucide="users"></i>
+                    </div>
+
+                    <h3>
+                        Member Community
+                    </h3>
+
+                    <p>
+                        Connect with fellow pet lovers and
+                        stay informed through PetHub.
+                    </p>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================================
+     MARKETPLACE
+========================================================== -->
+
+    <section id="marketplace"
+             class="landing-section landing-marketplace-section">
+
+        <div class="landing-container">
+
+            <div class="landing-section-heading">
+
+                <div>
+
+                    <span class="landing-eyebrow">
+                        MARKETPLACE
+                    </span>
+
+                    <h2>
+                        Find Your Perfect Companion
+                    </h2>
+
+                </div>
+
+                <a asp-controller="Listings"
+                   asp-action="Marketplace"
+                   class="landing-view-all">
+
+                    View All
+
+                    <i data-lucide="arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- ==================================================
+             HORIZONTAL CARD AREA
+        ================================================== -->
+
+            <div class="landing-horizontal-scroll">
+
+                @foreach (var item in Model.MarketplaceListings)
+                {
+                    <div class="landing-scroll-card">
+
+                        <!-- ==================================================
+                         LANDING MARKETPLACE CARD
+
+These classes belong ONLY to the
+                         public landing page.
+                    ================================================== -->
+
+                        <a asp-controller="Listings"
+                           asp-action="MarketplaceDetails"
+                           asp-route-id="@item.ListingId"
+                           class="landing-marketplace-card-link">
+
+                            <div class="landing-marketplace-card">
+
+
+                                <!-- ==================================================
+                                 IMAGE
+                            ================================================== -->
+
+                                <div class="landing-marketplace-card-image-wrapper">
+
+                                    @if (item.Images != null && item.Images.Any())
+                                    {
+                                        <img src="@item.Images.First().ImagePath"
+                                             class="landing-marketplace-card-image"
+                                             alt="@item.Title" />
+                                    }
+                                    else
+                                    {
+                                        <img src="/images/no-image.png"
+                                             class="landing-marketplace-card-image"
+                                             alt="No image" />
+                                    }
+
+
+                                    <!-- ==================================================
+                                     LISTING TYPE BADGE
+                                ================================================== -->
+                                    @if (item.Type == ListType.For_Sale)
+                                    {
+                                        <div class="landing-marketplace-listing-badge landing-marketplace-listing-badge-sale">
+
+                                            <i data-lucide="paw-print"></i>
+
+                                            <span>
+                                                For Sale
+                                            </span>
+
+                                        </div>
+                                    }
+                                    else if (item.Type == ListType.For_Adoption)
+                                    {
+                                        <div class="landing-marketplace-listing-badge landing-marketplace-listing-badge-adoption">
+
+                                            <i data-lucide="paw-print"></i>
+
+                                            <span>
+                                                Adoption
+                                            </span>
+
+                                        </div>
+                                    }
+
+
+                                    <!-- ==================================================
+                                     PRICE
+                                ================================================== -->
+                                    @if (item.Type == ListType.For_Sale)
+                                    {
+                                        <div class="landing-marketplace-price-badge">
+
+                                            ₱@item.Price.ToString("N0")
+
+                                        </div>
+                                    }
+
+                                </div>
+
+
+                                <!-- ==================================================
+                                 CARD BODY
+
+                                 Title
+                                 Location
+                                 Description
+                                 Date
+                            ================================================== -->
+
+                                <div class="landing-marketplace-card-body">
+
+
+                                    <!-- TITLE -->
+
+                                    <h3 class="landing-marketplace-card-title"
+                                        title="@item.Title">
+
+                                        @item.Title
+
+                                    </h3>
+
+
+                                    <!-- LOCATION -->
+
+                                    <div class="landing-marketplace-card-location">
+
+                                        <i data-lucide="map-pin"></i>
+
+                                        <span>
+
+                                            @(string.IsNullOrEmpty(item.City)
+                                                ? "Not specified"
+                                                : item.City + ", " + item.Province)
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- DESCRIPTION -->
+
+                                    <p class="landing-marketplace-card-description">
+
+                                        @item.Description
+
+                                    </p>
+
+
+                                    <!-- DATE -->
+
+                                    <div class="landing-marketplace-card-meta">
+
+                                        <div class="landing-marketplace-card-date">
+
+                                            <i data-lucide="calendar-days"></i>
+
+                                            <span>
+                                                @item.DatePosted.ToString("MMM dd, yyyy")
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+                }
+
+
+                <!-- ==================================================
+                 EXPLORE MARKETPLACE CARD
+
+                 LEFT UNCHANGED
+            ================================================== -->
+
+                <div class="landing-scroll-card">
+
+                    <a asp-controller="Listings"
+                       asp-action="Marketplace"
+                       class="landing-explore-card marketplace">
+
+                        <div class="landing-explore-icon">
+
+                            <i data-lucide="store"></i>
+
+                        </div>
+
+                        <h3>
+                            Explore Marketplace
+                        </h3>
+
+                        <p>
+                            View all available pets
+                            and listings.
+                        </p>
+
+                        <span>
+
+                            Explore
+
+                            <i data-lucide="arrow-right"></i>
+
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================================
+     LOST & FOUND
+========================================================== -->
+
+    <section id="lostandfound"
+             class="landing-section landing-lost-section">
+
+        <div class="landing-container">
+
+            <!-- ==================================================
+             SECTION HEADING
+        ================================================== -->
+
+            <div class="landing-section-heading">
+
+                <div>
+
+                    <span class="landing-eyebrow">
+                        LOST &amp; FOUND
+                    </span>
+
+                    <h2>
+                        Help Them Reunite With Their Loved Ones
+                    </h2>
+
+                </div>
+
+                <a asp-controller="LostFounds"
+                   asp-action="Browse"
+                   class="landing-view-all">
+
+                    View All
+
+                    <i data-lucide="arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- ==================================================
+             HORIZONTAL CARD AREA
+        ================================================== -->
+
+            <div class="landing-horizontal-scroll">
+
+                @foreach (var item in Model.LostFoundReports)
+                {
+                    var isLost = item.Type.ToString().Equals(
+                        "Lost",
+                        StringComparison.OrdinalIgnoreCase
+                    );
+
+                    var location =
+                        string.IsNullOrEmpty(item.City)
+                            ? "Not specified"
+                            : item.City + ", " + item.Province;
+
+
+                    <div class="landing-scroll-card">
+
+                        <!-- ==================================================
+                         LANDING LOST & FOUND CARD
+                    ================================================== -->
+
+                        <a asp-controller="LostFounds"
+                           asp-action="BrowseDetails"
+                           asp-route-id="@item.LostFoundId"
+                           class="landing-lost-found-card-link">
+
+                            <article class="landing-lost-found-card @(isLost ? "landing-lost-card" : "landing-found-card")">
+
+
+                                <!-- ==================================================
+                                 STATUS RAIL
+                            ================================================== -->
+
+                                <span class="landing-lost-found-status-rail"></span>
+
+
+                                <!-- ==================================================
+                                 IMAGE
+                            ================================================== -->
+
+                                <div class="landing-lost-found-card-image-wrapper">
+
+                                    @if (item.Images != null && item.Images.Any())
+                                    {
+                                        <img src="@Url.Content(item.Images.First().ImagePath)"
+                                             class="landing-lost-found-card-image"
+                                             alt="@item.Title" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Url.Content("~/images/no-image.png")"
+                                             class="landing-lost-found-card-image"
+                                             alt="No image" />
+                                    }
+
+
+                                    <!-- Image gradient -->
+
+                                    <div class="landing-lost-found-card-image-gradient"></div>
+
+
+                                    <!-- ==================================================
+                                     LOST / FOUND BADGE
+                                ================================================== -->
+                                    @if (isLost)
+                                    {
+                                        <span class="landing-lost-found-type-badge landing-lost-found-type-badge-lost">
+
+                                            <i data-lucide="search"></i>
+
+                                            LOST
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="landing-lost-found-type-badge landing-lost-found-type-badge-found">
+
+                                            <i data-lucide="heart-handshake"></i>
+
+                                            FOUND
+
+                                        </span>
+                                    }
+
+
+                                    <!-- ==================================================
+                                     PET TYPE BADGE
+                                ================================================== -->
+
+                                    <span class="landing-lost-found-pet-badge">
+
+                                        <i data-lucide="paw-print"></i>
+
+                                        @item.PetType
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- ==================================================
+                                 CARD BODY
+                            ================================================== -->
+
+                                <div class="landing-lost-found-card-body">
+
+
+                                    <!-- ==================================================
+                                     TITLE
+                                ================================================== -->
+
+                                    <h3 class="landing-lost-found-card-title">
+
+                                        @item.Title
+
+                                    </h3>
+
+
+                                    <!-- ==================================================
+                                     LOCATION
+                                ================================================== -->
+
+                                    <div class="landing-lost-found-card-location-row">
+
+                                        <i data-lucide="map-pin"></i>
+
+                                        <span>
+
+                                            <span class="landing-lost-found-location-label">
+
+                                                @(isLost
+                                                    ? "Last seen: "
+                                                    : "Found in ")
+
+                                            </span>
+
+                                            <span class="landing-lost-found-location-value">
+
+                                                @location
+
+                                            </span>
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- ==================================================
+                                     DESCRIPTION
+                                ================================================== -->
+
+                                    <p class="landing-lost-found-card-description">
+
+                                        @item.Description
+
+                                    </p>
+
+
+                                    <!-- ==================================================
+                                     DATE
+                                ================================================== -->
+
+                                    <div class="landing-lost-found-card-footer">
+
+                                        <span class="landing-lost-found-card-date">
+
+                                            <i data-lucide="clock"></i>
+
+                                            @item.DateReported.ToString("MMM dd, yyyy")
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+                        </a>
+
+                    </div>
+                }
+
+
+                <!-- ==================================================
+                 EXPLORE LOST & FOUND CARD
+            ================================================== -->
+
+                <div class="landing-scroll-card">
+
+                    <a asp-controller="LostFounds"
+                       asp-action="Browse"
+                       class="landing-explore-card lost-found">
+
+                        <div class="landing-explore-icon">
+
+                            <i data-lucide="search"></i>
+
+                        </div>
+
+                        <h3>
+                            Explore Lost &amp; Found
+                        </h3>
+
+                        <p>
+                            Help reunite lost pets
+                            with their families.
+                        </p>
+
+                        <span>
+
+                            Explore
+
+                            <i data-lucide="arrow-right"></i>
+
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================================
+         PET TIPS & ANNOUNCEMENTS
+    ========================================================== -->
+
+    <section id="petfeed"
+             class="landing-section landing-petfeed-section">
+
+        <div class="landing-container">
+
+            <div class="landing-section-heading">
+
+                <div>
+
+                    <span class="landing-eyebrow">
+                        PET CARE &amp; COMMUNITY
+                    </span>
+
+                    <h2>
+                        Stay Informed With the Latest Updates
+                    </h2>
+
+                </div>
+
+                <a asp-controller="PetFeeds"
+                   asp-action="Feed"
+                   class="landing-view-all">
+
+                    View All
+
+                    <i data-lucide="arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+            <p class="landing-section-description">
+
+                Read the latest pet care tips and community
+                announcements from PetHub.
+
+            </p>
+
+
+            <div class="landing-petfeed-grid">
+
+                @if (Model.PetFeeds.Any())
+                {
+                    @foreach (var item in Model.PetFeeds)
+                    {
+                        <div class="landing-petfeed-item">
+
+                            <a asp-controller="PetFeeds"
+                               asp-action="Feed"
+                               asp-route-postId="@item.PetFeedId"
+                               asp-fragment="post-@item.PetFeedId"
+                               class="text-decoration-none text-dark">
+
+                                <div class="card marketplace-card h-100 border-0 shadow-sm">
+
+                                    @if (item.Images != null && item.Images.Any())
+                                    {
+                                        <img src="@item.Images.First().ImagePath"
+                                             class="card-img-top"
+                                             alt="@item.Title" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/no-image.png"
+                                             class="card-img-top"
+                                             alt="No Image Available" />
+                                    }
+
+                                    <div class="card-body d-flex flex-column">
+
+                                        <small class="text-muted mb-2">
+
+                                            @item.DateCreated.ToString("MMMM dd, yyyy")
+
+                                        </small>
+
+                                        <h5 class="fw-bold">
+                                            @item.Title
+                                        </h5>
+
+                                        <p class="description flex-grow-1">
+
+                                            @(item.Content.Length > 120
+                                                ? item.Content.Substring(0, 120) + "..."
+                                                : item.Content)
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+                    }
+                }
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================================
+         HOW PETHUB WORKS
+    ========================================================== -->
+
+    <section id="how-it-works"
+             class="landing-section landing-how-section">
+
+        <div class="landing-container">
+
+            <div class="landing-centered-content">
+
+                <span class="landing-eyebrow">
+                    SIMPLE &amp; INTUITIVE
+                </span>
+
+                <h2>
+                    How PetHub Works
+                </h2>
+
+            </div>
+
+
+            <div class="landing-steps">
+
+                <!-- STEP 1 -->
+
+                <div class="landing-step">
+
+                    <div class="landing-step-circle">
+
+                        <i data-lucide="user-plus"></i>
+
+                        <span>1</span>
+
+                    </div>
+
+                    <h3>
+                        Create an account
+                    </h3>
+
+                    <p>
+                        Join the PetHub community
+                        in just a few clicks.
+                    </p>
+
+                </div>
+
+
+                <!-- STEP 2 -->
+
+                <div class="landing-step">
+
+                    <div class="landing-step-circle">
+
+                        <i data-lucide="compass"></i>
+
+                        <span>2</span>
+
+                    </div>
+
+                    <h3>
+                        Explore PetHub
+                    </h3>
+
+                    <p>
+                        Browse listings, lost pets,
+                        and community posts.
+                    </p>
+
+                </div>
+
+
+                <!-- STEP 3 -->
+
+                <div class="landing-step">
+
+                    <div class="landing-step-circle">
+
+                        <i data-lucide="file-text"></i>
+
+                        <span>3</span>
+
+                    </div>
+
+                    <h3>
+                        Post or browse listings
+                    </h3>
+
+                    <p>
+                        List a pet for adoption
+                        or report a lost pet.
+                    </p>
+
+                </div>
+
+
+                <!-- STEP 4 -->
+
+                <div class="landing-step">
+
+                    <div class="landing-step-circle">
+
+                        <i data-lucide="heart"></i>
+
+                        <span>4</span>
+
+                    </div>
+
+                    <h3>
+                        Connect with the community
+                    </h3>
+
+                    <p>
+                        Meet fellow pet lovers
+                        and make a difference.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================================
+         WHY CHOOSE PETHUB
+    ========================================================== -->
+
+    <section class="landing-section landing-trust-section">
+
+        <div class="landing-container">
+
+            <div class="landing-centered-content">
+
+                <span class="landing-eyebrow">
+                    BUILT ON TRUST
+                </span>
+
+                <h2>
+                    Why Choose PetHub?
+                </h2>
+
+            </div>
+
+
+            <div class="landing-trust-grid">
+
+                <!-- EASY TO USE -->
+
+                <div class="landing-trust-card">
+
+                    <div class="landing-trust-icon green">
+                        <i data-lucide="zap"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Easy to Use
+                        </h3>
+
+                        <p>
+                            Clean and beginner-friendly interface
+                            that anyone can navigate with confidence.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COMMUNITY -->
+
+                <div class="landing-trust-card">
+
+                    <div class="landing-trust-icon green">
+                        <i data-lucide="users"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Community Driven
+                        </h3>
+
+                        <p>
+                            Pet lovers helping pet lovers —
+                            a community built on trust and compassion.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SAFE -->
+
+                <div class="landing-trust-card">
+
+                    <div class="landing-trust-icon green">
+                        <i data-lucide="shield"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Safe &amp; Secure
+                        </h3>
+
+                        <p>
+                            Registered members and active moderation
+                            help keep the platform trustworthy.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOCAL -->
+
+                <div class="landing-trust-card">
+
+                    <div class="landing-trust-icon green">
+                        <i data-lucide="map-pin"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Local Support
+                        </h3>
+
+                        <p>
+                            Focused on helping nearby communities
+                            so help is always close to home.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================================
+         FINAL CTA
+    ========================================================== -->
+
+    <section class="landing-section landing-cta-section">
+
+        <div class="landing-container">
+
+            <div class="landing-cta">
+
+                <div class="landing-cta-content">
+
+                    <span class="landing-cta-badge">
+
+                        <i data-lucide="paw-print"></i>
+
+                        Join our community
+
+                    </span>
+
+                    <h2>
+                        Ready to become part
+                        of our community?
+                    </h2>
+
+                    <p>
+                        Join PetHub today and help make a difference
+                        for cats and dogs in your area. It's free to sign
+                        up and only takes a minute.
+                    </p>
+
+                    <div class="landing-cta-buttons">
+
+                        <a asp-controller="UserAccount"
+                           asp-action="Register"
+                           class="landing-cta-primary">
+
+                            Create an Account
+
+                            <i data-lucide="arrow-right"></i>
+
+                        </a>
+
+                        <a href="#marketplace"
+                           class="landing-cta-secondary">
+
+                            Explore First
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="landing-cta-image">
+
+                    <img src="~/images/ShihTzu.jpg"
+                         asp-append-version="true"
+                         alt="PetHub">
 
                 </div>
 
@@ -116,543 +1249,3 @@
     </section>
 
 </div>
-
-<!-- ============================= -->
-<!-- OUR MISSION -->
-<!-- ============================= -->
-
-<section id="about" class="bg-white py-5">
-
-    <div class="container">
-
-        <div class="row align-items-start g-5">
-
-            <!-- Left Image -->
-
-            <div class="col-lg-6">
-
-                <img src="~/images/mission-cat.jpg"
-                     asp-append-version="true"
-                     class="img-fluid shadow"
-                     style="
-                border-radius:28px;
-                width:100%;
-                height:500px;
-                object-fit:cover;"
-                     alt="PetHub Mission">
-
-            </div>
-
-            <!-- Right Content -->
-
-            <div class="col-lg-6 pt-lg-3">
-
-                <!-- Badge -->
-
-                <span class="badge rounded-pill mb-3 px-3 py-2"
-                      style="
-                    background:#EEF8EC;
-                    color:#8ACE79;
-                    font-size:14px;">
-
-                    Our Mission
-
-                </span>
-
-                <!-- Heading -->
-
-                <h2 class="fw-bold mb-4"
-                    style="
-                    color:#2D3748;
-                    font-size:3rem;
-                    line-height:1.2;">
-
-                    Creating a Safe and Supportive Community
-                    for Every Cat and Dog
-
-                </h2>
-
-                <!-- Description -->
-
-                <p class="text-muted"
-                   style="
-                    font-size:1.15rem;
-                    line-height:2;">
-
-                    PetHub is committed to creating a trusted online community
-                    where pet owners, adopters, and animal lovers work together
-                    to reunite lost pets, encourage responsible pet ownership,
-                    and help every cat and dog find a safe and loving home.
-
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- ============================= -->
-<!-- OUR SERVICES -->
-<!-- ============================= -->
-
-<section id="services"
-         class="py-5"
-         style="background:#F8FAF7;">
-
-   
-
-    <div class="mb-5 text-center">
-
-        <span class="fw-semibold"
-              style="color:#8ACE79; letter-spacing:1px;">
-
-            WHAT WE OFFER
-
-        </span>
-
-        <h2 class="fw-bold mt-3 mb-3"
-            style="color:#2D3748;">
-
-            Everything You Need
-            in One Pet Community
-
-        </h2>
-
-        <p class="text-muted mx-auto"
-           style="max-width:700px; line-height:1.8;">
-
-            PetHub brings together essential features that help pet owners
-            and animal lovers connect through a trusted community.
-            Browse pets available for adoption or sale in the Marketplace,
-            help reunite lost pets through Lost &amp; Found reports,
-            and explore educational pet care tips designed to promote
-            responsible pet ownership.
-
-        </p>
-
-    </div>
-
-</section>
-
-<!-- ============================= -->
-<!-- MARKETPLACE -->
-<!-- ============================= -->
-
-<section id="marketplace" class="bg-white py-5">
-
-    <div class="container">
-
-        <div class="mb-5 text-center">
-
-            <span class="fw-semibold"
-                  style="color:#8ACE79; letter-spacing:1px;">
-                MARKETPLACE
-            </span>
-
-            <h2 class="fw-bold mt-3"
-                style="color:#2D3748;">
-                Find Your Perfect Companion
-            </h2>
-
-        </div>
-
-        <div class="row g-4">
-
-            @foreach (var item in Model.MarketplaceListings)
-            {
-                <div class="col-lg-3 col-md-6">
-
-                    <a asp-controller="Listings"
-                       asp-action="Marketplace"
-                       class="text-decoration-none text-dark">
-
-                        <div class="card marketplace-card h-100 border-0 shadow-sm">
-
-                            @if (item.Images != null && item.Images.Any())
-                            {
-                                <img src="@item.Images.First().ImagePath"
-                                     class="card-img-top"
-                                     alt="@item.Title">
-                            }
-                            else
-                            {
-                                <img src="~/images/no-image.png"
-                                     class="card-img-top"
-                                     alt="No Image">
-                            }
-
-                            <div class="card-body">
-
-                                <h5 class="fw-bold mb-2">
-                                    @item.Title
-                                </h5>
-
-                                <p class="text-muted small description">
-                                    @item.Description
-                                </p>
-
-                                <p class="price mb-3">
-                                    ₱@item.Price
-                                </p>
-
-                                <p class="text-muted small mb-1">
-                                    <i class="bi bi-calendar3"></i>
-                                    @item.DatePosted.ToString("MMM dd, yyyy")
-                                </p>
-
-                                <p class="text-muted small mb-0">
-                                    <i class="bi bi-geo-alt"></i>
-                                    @(string.IsNullOrEmpty(item.City) ? "Not specified" : item.City + ", " + item.Province)
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </a>
-
-                </div>
-            }
-
-        </div>
-
-    </div>
-
-    <div class="mt-5 text-center">
-
-        <a asp-controller="Listings"
-           asp-action="Marketplace"
-           class="marketplace-link">
-
-            Explore Marketplace ->
-            <i class="bi bi-arrow-right"></i>
-
-        </a>
-
-        <p class="marketplace-subtitle mt-2">
-            View all available pets and listings.
-        </p>
-
-    </div>
-
-</section>
-
-
-<!-- ============================= -->
-<!-- WHY CHOOSE PETHUB -->
-<!-- ============================= -->
-
-<section class="pet-feature-strip">
-
-    <div class="container">
-
-        <div class="row justify-content-center text-center">
-
-            <div class="col-lg-4 col-md-6 col-12">
-
-                <i data-lucide="shield-check" class="feature-icon"></i>
-
-                <h5>Verified Listings</h5>
-
-                <p>
-                    Every marketplace listing is reviewed before it becomes visible.
-                </p>
-
-            </div>
-
-            <div class="col-lg-4 col-md-6 col-12">
-
-                <i data-lucide="paw-print" class="feature-icon"></i>
-
-                <h5>Pet Welfare</h5>
-
-                <p>
-                    Supporting responsible pet ownership and better homes for pets.
-                </p>
-
-            </div>
-
-            <div class="col-lg-4 col-md-6 col-12">
-
-                <i data-lucide="heart-handshake" class="feature-icon"></i>
-
-                <h5>Lost & Found</h5>
-
-                <p>
-                    Helping reunite lost pets with their families.
-                </p>
-
-            </div>
-
-            
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- ============================= -->
-<!-- Lost & FOUND -->
-<!-- ============================= -->
-
-<section id="lostandfound" class="bg-white py-5">
-
-    <div class="container">
-
-        <div class="mb-5 text-center">
-
-            <span class="fw-semibold"
-                  style="color:#8ACE79; letter-spacing:1px;">
-                LOST & FOUND
-            </span>
-
-            <h2 class="fw-bold mt-3"
-                style="color:#2D3748;">
-                Help them reunite with their love ones
-            </h2>
-
-        </div>
-
-        <div class="row g-4">
-
-            @foreach (var item in Model.LostFoundReports)
-            {
-                <div class="col-lg-3 col-md-6">
-
-                    <a asp-controller="LostFounds"
-                       asp-action="Browse"
-                       class="text-decoration-none text-dark">
-
-                        <div class="card marketplace-card h-100 border-0 shadow-sm">
-
-                            @if (item.Images != null && item.Images.Any())
-                            {
-                                <img src="@item.Images.First().ImagePath"
-                                     class="card-img-top"
-                                     alt="@item.Title">
-                            }
-                            else
-                            {
-                                <img src="~/images/no-image.png"
-                                     class="card-img-top"
-                                     alt="No Image">
-                            }
-
-                            <div class="card-body">
-
-                                <h5 class="fw-bold mb-2">
-                                    @item.Title
-                                </h5>
-
-                                <p class="text-muted small description">
-                                    @item.Description
-                                </p>
-
-                                <p class="mb-3">
-                                    Type: @item.Type
-                                </p>
-
-                                <p class="text-muted small mb-1">
-                                    <i class="bi bi-calendar3"></i>
-                                    @item.DateReported.ToString("MMM dd, yyyy")
-                                </p>
-
-                                <p class="text-muted small mb-0">
-                                    <i class="bi bi-geo-alt"></i>
-                                    @(string.IsNullOrEmpty(item.City) ? "Not specified" : item.City + ", " + item.Province)
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </a>
-
-                </div>
-            }
-
-        </div>
-
-    </div>
-
-    <div class="mt-5 text-center">
-
-        <a asp-controller="LostFounds"
-           asp-action="Browse"
-           class="marketplace-link">
-
-            Explore Lost & Found ->
-            <i class="bi bi-arrow-right"></i>
-
-        </a>
-
-        <p class="marketplace-subtitle mt-2">
-            View all lost and found reports.
-        </p>
-
-    </div>
-
-</section>
-
-
-<!-- ============================= -->
-<!-- PET TIPS & ANNOUNCEMENTS -->
-<!-- ============================= -->
-
-<section id="petfeed" class="bg-white py-5">
-
-    <div class="container">
-
-        <div class="mb-5 text-center">
-
-            <span class="fw-semibold"
-                  style="color:#8ACE79; letter-spacing:1px;">
-                PET CARE & COMMUNITY
-            </span>
-
-            <h2 class="fw-bold mt-3"
-                style="color:#2D3748;">
-                Stay Informed with the Latest Updates
-            </h2>
-
-            <p class="text-muted mx-auto"
-               style="max-width:700px; line-height:1.8;">
-                Read the latest pet care tips and community announcements from PetHub.
-            </p>
-
-        </div>
-
-        <div class="row g-4">
-
-      @if (Model.PetFeeds.Any())
-    {
-        @foreach (var item in Model.PetFeeds)
-        {
-            <div class="col-lg-4 col-md-6">
-
-                <a asp-controller="PetFeeds"
-                    asp-action="Feed"
-                    asp-route-postId="@item.PetFeedId"
-                    asp-fragment="post-@item.PetFeedId"
-                    class="text-decoration-none text-dark">
-
-                    <div class="card marketplace-card h-100 border-0 shadow-sm">
-
-                        @if (item.Images != null && item.Images.Any())
-                        {
-                            <img src="@item.Images.First().ImagePath"
-                                 class="card-img-top"
-                                 alt="@item.Title" />
-                        }
-                        else
-                        {
-                            <img src="~/images/no-image.png"
-                                 class="card-img-top"
-                                 alt="No Image Available" />
-                        }
-
-                        <div class="card-body d-flex flex-column">
-
-                            <small class="text-muted mb-2">
-                                @item.DateCreated.ToString("MMMM dd, yyyy")
-                            </small>
-
-                            <h5 class="fw-bold">
-                                @item.Title
-                            </h5>
-
-                            <p class="description flex-grow-1">
-                                @(item.Content.Length > 120
-                                    ? item.Content.Substring(0, 120) + "..."
-                                    : item.Content)
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </a>
-
-            </div>
-        }
-    }
-
-        </div>
-
-    </div>
-
-    <div class="mt-5 text-center">
-
-        <a asp-controller="PetFeeds"
-           asp-action="Feed"
-           class="marketplace-link">
-
-            Explore Pet Feed ->
-            <i class="bi bi-arrow-right"></i>
-
-        </a>
-
-        <p class="marketplace-subtitle mt-2">
-            Read more pet care tips and community announcements.
-        </p>
-
-    </div>
-
-</section>
-
-
-
-
-<!-- ============================= -->
-<!-- CALL TO ACTION -->
-<!-- ============================= -->
-
-<section class="cta-section">
-    <div class="container">
-
-        <div class="cta-box text-center">
-
-            <h2>Start Your PetHub Journey Today</h2>
-
-            <p>
-                Create an account to discover pets for adoption, report lost pets,
-                and become part of a trusted community dedicated to responsible
-                pet ownership.
-            </p>
-
-            <a asp-controller="UserAccount"
-               asp-action="Register"
-               class="btn cta-btn">
-                Create Your Account
-            </a>
-
-            <div class="mt-4">
-                <span class="text-white-50">
-                    Already have an account?
-                </span>
-
-                <a asp-controller="UserAccount"
-                   asp-action="Login"
-                   class="cta-login">
-                    Log In
-                </a>
-            </div>
-
-        </div>
-
-    </div>
-</section>
-
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2026 - PETHUB -
-        <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
-</footer>
-
