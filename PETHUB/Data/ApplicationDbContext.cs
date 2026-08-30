@@ -31,6 +31,14 @@ namespace PETHUB.Data
         // NOTIFICATIONS
         public DbSet<Notification> Notifications { get; set; }
 
+
+        // MESSAGING
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<MessageImage> MessageImages { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -188,6 +196,112 @@ namespace PETHUB.Data
                 .HasOne(i => i.LostFound)
                 .WithMany(l => l.Images)
                 .HasForeignKey(i => i.LostFoundId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
+
+            // =========================================================
+            // MESSAGING
+            // =========================================================
+
+
+            // =========================================================
+            // CONVERSATION → LISTING
+            // =========================================================
+
+            builder.Entity<Conversation>()
+                .HasOne(c => c.Listing)
+                .WithMany()
+                .HasForeignKey(c => c.ListingId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            // =========================================================
+            // CONVERSATION → LOST & FOUND
+            // =========================================================
+
+            builder.Entity<Conversation>()
+                .HasOne(c => c.LostFound)
+                .WithMany()
+                .HasForeignKey(c => c.LostFoundId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            // =========================================================
+            // CONVERSATION → PARTICIPANTS
+            // =========================================================
+
+            builder.Entity<ConversationParticipant>()
+                .HasOne(cp => cp.Conversation)
+                .WithMany(c => c.Participants)
+                .HasForeignKey(cp => cp.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            // =========================================================
+            // PARTICIPANT → APPLICATION USER
+            // =========================================================
+
+            builder.Entity<ConversationParticipant>()
+                .HasOne(cp => cp.User)
+                .WithMany()
+                .HasForeignKey(cp => cp.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // =========================================================
+            // CONVERSATION → MESSAGES
+            // =========================================================
+
+            builder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            // =========================================================
+            // MESSAGE → SENDER
+            // =========================================================
+
+            builder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // =========================================================
+            // UNIQUE PARTICIPANT PER CONVERSATION
+            // =========================================================
+
+            builder.Entity<ConversationParticipant>()
+                .HasIndex(cp => new
+                {
+                    cp.ConversationId,
+                    cp.UserId
+                })
+                .IsUnique();
+
+
+            // =========================================================
+            // MESSAGE QUERY INDEX
+            // =========================================================
+
+            builder.Entity<Message>()
+                .HasIndex(m => new
+                {
+                    m.ConversationId,
+                    m.CreatedAt
+                });
+
+
+
+            builder.Entity<MessageImage>()
+                .HasOne(mi => mi.Message)
+                .WithMany(m => m.Images)
+                .HasForeignKey(mi => mi.MessageId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

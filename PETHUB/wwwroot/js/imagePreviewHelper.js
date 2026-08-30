@@ -1,213 +1,352 @@
-﻿//LEARN THIS CODE!!!
-
-// This is an image preview helper function that allows users to preview selected images before uploading them.
-// It also provides a remove button for each image preview, allowing users to remove images from the selection.
+﻿// =========================================================
+// IMAGE PREVIEW HELPER
+// =========================================================
 //
-// Fixed problem: This doesnt reset the preview images
+// Reusable image preview helper.
 //
-// NEW:
-// Added an optional "options" parameter so the same helper can work for both:
-// - Multiple image uploads (default behavior - existing pages won't break)
-// - Single image uploads (ex. ID Photo in Register page)
+// Supports:
+// - Multiple image selection
+// - Single image selection
+// - Removing selected images
+// - Maximum file count
+// - Configurable preview size
+// - Optional placeholder
+//
+// =========================================================
 
 function setupImagePreview(inputId, previewContainerId, options = {}) {
 
-   
-    // Each uploader gets its own file storage.
-    // Prevents the pet images and ID image from mixing together.
+    // Each uploader gets its own selected files.
     let selectedFiles = [];
 
-  
-    // Default settings.
-    // Existing pages automatically use multiple = true, so no changes are needed.
+
+    // =====================================================
+    // SETTINGS
+    // =====================================================
+
     const settings = {
+
+        // Multiple images by default
         multiple: true,
 
-      
-        // Number of existing database photos on Edit pages.
+        // Existing images already stored in database
         existingCount: 0,
+
+        // null = unlimited
+        maxFiles: null,
+
+        // Preview dimensions
+        previewWidth: 120,
+        previewHeight: 120,
+
+        // Optional placeholder element
+        placeholderId: null,
 
         ...options
     };
 
-    const imageInput = document.getElementById(inputId);
-    const previewContainer = document.getElementById(previewContainerId);
 
-    if (!imageInput || !previewContainer) return;
+    const imageInput =
+        document.getElementById(inputId);
+
+    const previewContainer =
+        document.getElementById(previewContainerId);
+
+
+    // Prevent errors on pages that don't have this uploader
+    if (!imageInput || !previewContainer) {
+        return;
+    }
+
+
+    // =====================================================
+    // WHEN USER SELECTS FILES
+    // =====================================================
 
     imageInput.addEventListener("change", function () {
 
-      
-        // If this input only accepts one image,
-        // replace the previous image instead of adding another one.
+        const newFiles =
+            Array.from(this.files);
+
+
         if (settings.multiple) {
 
-            // Existing behavior for multiple image uploads.
-            selectedFiles.push(...Array.from(this.files));
+            selectedFiles.push(...newFiles);
 
-        } else {
 
-         
-            // For single image uploads (ID Photo),
-            // keep only the newly selected file.
-            selectedFiles = Array.from(this.files);
+            // =================================================
+            // MAX FILE LIMIT
+            // =================================================
+
+            if (
+                settings.maxFiles !== null &&
+                selectedFiles.length > settings.maxFiles
+            ) {
+
+                selectedFiles =
+                    selectedFiles.slice(
+                        0,
+                        settings.maxFiles
+                    );
+
+                showImageLimitMessage();
+            }
 
         }
+        else {
 
-        // Update the real input
-        const dataTransfer = new DataTransfer();
+            // Single image mode
+            selectedFiles =
+                newFiles.slice(0, 1);
+        }
 
-        selectedFiles.forEach(file => {
-            dataTransfer.items.add(file);
-        });
 
-        imageInput.files = dataTransfer.files;
+        updateRealInput();
 
         renderPreviews();
-
     });
+
+
+    // =====================================================
+    // UPDATE ACTUAL FILE INPUT
+    // =====================================================
+
+    function updateRealInput() {
+
+        const dataTransfer =
+            new DataTransfer();
+
+
+        selectedFiles.forEach(file => {
+
+            dataTransfer.items.add(file);
+
+        });
+
+
+        imageInput.files =
+            dataTransfer.files;
+    }
+
+
+    // =====================================================
+    // RENDER IMAGE PREVIEWS
+    // =====================================================
 
     function renderPreviews() {
 
         previewContainer.innerHTML = "";
 
-      
-        // Existing photos already use some of the 4 visible spaces.
-        const visibleSlots =
-            Math.max(0, 4 - settings.existingCount);
 
-       
-        // Count all photos that are hidden from the preview.
-        const hiddenCount =
-            Math.max(
-                0,
-                settings.existingCount +
-                selectedFiles.length -
-                4
+        selectedFiles.forEach(file => {
+
+            // Preview wrapper
+            const previewDiv =
+                document.createElement("div");
+
+
+            previewDiv.classList.add(
+                "image-preview-item"
             );
 
-        const visibleFiles =
-            selectedFiles.slice(0, visibleSlots);
 
-  
-        // Keep track of loaded previews so +more appears last.
-        let loadedImages = 0;
+            previewDiv.style.width =
+                `${settings.previewWidth}px`;
 
-        visibleFiles.forEach((file, index) => {
+            previewDiv.style.height =
+                `${settings.previewHeight}px`;
 
-            const reader = new FileReader();
 
-            reader.onload = function (e) {
+            // =================================================
+            // IMAGE
+            // =================================================
 
-                const previewDiv = document.createElement("div");
-                previewDiv.classList.add("position-relative", "border", "rounded");
-                previewDiv.style.width = "120px";
-                previewDiv.style.height = "120px";
-                previewDiv.style.overflow = "hidden";
+            const img =
+                document.createElement("img");
 
-                const img = document.createElement("img");
-                img.src = e.target.result;
-                img.classList.add("w-100", "h-100", "object-fit-cover");
 
-                const removeBtn = document.createElement("button");
+            const objectUrl =
+                URL.createObjectURL(file);
 
-             
-                // Prevent the remove button from submitting the form.
-                removeBtn.type = "button";
 
-                removeBtn.innerHTML = "&times;";
+            img.src = objectUrl;
 
-                removeBtn.classList.add("remove-image-btn");
+            img.classList.add(
+                "image-preview-img"
+            );
 
-                removeBtn.style.top = "0";
-                removeBtn.style.right = "0";
-                removeBtn.style.borderRadius = "50%";
 
-                removeBtn.addEventListener("click", () => {
+            // Release temporary browser URL after loading
+            img.onload = function () {
 
-                    selectedFiles.splice(index, 1);
-
-                    const dt = new DataTransfer();
-
-                    selectedFiles.forEach(f => dt.items.add(f));
-
-                    imageInput.files = dt.files;
-
-                    renderPreviews();
-
-                
-                    // Show placeholder again if all images are removed.
-                    if (selectedFiles.length === 0 && settings.placeholderId) {
-
-                        const placeholder = document.getElementById(settings.placeholderId);
-
-                        if (placeholder) {
-                            placeholder.style.display = "block";
-                        }
-
-                    }
-
-                });
-
-                previewDiv.appendChild(img);
-                previewDiv.appendChild(removeBtn);
-                previewContainer.appendChild(previewDiv);
-
-             
-                // Hide placeholder when an image is selected.
-                // If a page does not have a placeholder, nothing happens.
-                if (settings.placeholderId) {
-
-                    const placeholder = document.getElementById(settings.placeholderId);
-
-                    if (placeholder) {
-                        placeholder.style.display = "none";
-                    }
-
-                }
-
-               
-                // Wait until all visible images are rendered.
-                loadedImages++;
-
-                if (loadedImages === visibleFiles.length) {
-
-             
-                    // Put +more after the visible photos.
-                    if (hiddenCount > 0) {
-
-                        const more = document.createElement("div");
-
-                        more.classList.add("more-images");
-
-                        more.textContent = `+${hiddenCount} more photos`;
-
-                        previewContainer.appendChild(more);
-
-                    }
-
-                }
+                URL.revokeObjectURL(objectUrl);
 
             };
 
-            reader.readAsDataURL(file);
 
+            // =================================================
+            // REMOVE BUTTON
+            // =================================================
+
+            const removeBtn =
+                document.createElement("button");
+
+
+            removeBtn.type = "button";
+
+            removeBtn.innerHTML = "&times;";
+
+            removeBtn.classList.add(
+                "remove-image-btn"
+            );
+
+
+            removeBtn.addEventListener(
+                "click",
+                function () {
+
+                    const index =
+                        selectedFiles.indexOf(file);
+
+
+                    if (index !== -1) {
+
+                        selectedFiles.splice(
+                            index,
+                            1
+                        );
+                    }
+
+
+                    updateRealInput();
+
+                    renderPreviews();
+                }
+            );
+
+
+            previewDiv.appendChild(img);
+
+            previewDiv.appendChild(
+                removeBtn
+            );
+
+
+            previewContainer.appendChild(
+                previewDiv
+            );
         });
 
-      
-        // Handles cases where there are no new photos to preview.
-        if (visibleFiles.length === 0 && hiddenCount > 0) {
 
-            const more = document.createElement("div");
+        updatePlaceholder();
+    }
 
-            more.classList.add("more-images");
 
-            more.textContent = `+${hiddenCount} more photos`;
+    // =====================================================
+    // MAX IMAGE WARNING
+    // =====================================================
 
-            previewContainer.appendChild(more);
+    function showImageLimitMessage() {
 
+        if (!settings.maxFiles) {
+            return;
         }
 
+
+        /*
+         * Check parent because the warning is inserted
+         * beside the preview container, not inside it.
+         */
+        let message =
+            previewContainer.parentElement
+                ?.querySelector(
+                    ".image-limit-message"
+                );
+
+
+        if (!message) {
+
+            message =
+                document.createElement("div");
+
+
+            message.classList.add(
+                "image-limit-message"
+            );
+
+
+            previewContainer.parentElement
+                ?.insertBefore(
+                    message,
+                    previewContainer
+                );
+        }
+
+
+        message.textContent =
+            `You can send up to ${settings.maxFiles} photos at a time.`;
+
+
+
+        // Remove old timer if user triggers warning repeatedly
+        if (message._removeTimer) {
+
+            clearTimeout(
+                message._removeTimer
+            );
+        }
+
+
+        message._removeTimer =
+            setTimeout(function () {
+
+                message.remove();
+
+            }, 3000);
     }
+
+
+    // =====================================================
+    // OPTIONAL PLACEHOLDER
+    // =====================================================
+
+    function updatePlaceholder() {
+
+        if (!settings.placeholderId) {
+            return;
+        }
+
+
+        const placeholder =
+            document.getElementById(
+                settings.placeholderId
+            );
+
+
+        if (!placeholder) {
+            return;
+        }
+
+
+        placeholder.style.display =
+            selectedFiles.length > 0
+                ? "none"
+                : "block";
+    }
+
+
+    // =====================================================
+    // ALLOW OTHER JS FILES TO RESET THIS UPLOADER
+    // =====================================================
+
+    imageInput.resetImagePreview = function () {
+
+        selectedFiles = [];
+
+        updateRealInput();
+
+        renderPreviews();
+    };
+
 
 }

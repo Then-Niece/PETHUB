@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/admin-dashboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/messages.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Marketplace.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Lost&Found.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/PetFeed.css" asp-append-version="true" />
@@ -52,7 +53,7 @@
     <div class="app">
 
         @if (!(ViewData["HideSidebar"] as bool? ?? false)
-            && User.Identity?.IsAuthenticated == true)
+     && User.Identity?.IsAuthenticated == true)
         {
             <div id="sidebar-wrapper">
 
@@ -69,6 +70,10 @@
 
                 </aside>
 
+            </div>
+
+            <div id="sidebarOverlay"
+                 class="sidebar-overlay">
             </div>
         }
 
@@ -93,6 +98,10 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/sidebar.js" asp-append-version="true"></script>
     <script src="~/js/user-crud.js"></script>
+    <script src="~/js/imagePreviewHelper.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script src="~/js/global-messaging.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

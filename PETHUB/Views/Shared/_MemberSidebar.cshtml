@@ -1,4 +1,26 @@
-﻿<nav class="sidebar-nav">
+﻿@using Microsoft.AspNetCore.Identity
+@using PETHUB.Models
+@using PETHUB.Services
+
+@inject UserManager<ApplicationUser> UserManager
+@inject MessagingService MessagingService
+
+@{
+    int totalUnreadMessages = 0;
+
+    if (User.Identity?.IsAuthenticated == true &&
+        User.IsInRole("Member"))
+    {
+        var currentUserId = UserManager.GetUserId(User);
+
+        if (!string.IsNullOrEmpty(currentUserId))
+        {
+            totalUnreadMessages = await MessagingService.GetTotalUnreadCountAsync(currentUserId);
+        }
+    }
+}
+
+<nav class="sidebar-nav">
 
     <!-- Explore -->
     <div class="sidebar-section">
@@ -40,7 +62,6 @@
             <span class="sidebar-text">
                 Lost &amp; Found
             </span>
-
         </a>
 
     </div>
@@ -79,4 +100,42 @@
         </a>
 
     </div>
+
+    <hr class="sidebar-divider" />
+
+    <!-- Messages -->
+    <div class="sidebar-section">
+
+        <h6 class="sidebar-section-title">
+            Communication
+        </h6>
+
+        <a asp-controller="Messages"
+           asp-action="Index"
+           class="sidebar-link messages-sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Messages" ? "active" : "")">
+
+            <div class="sidebar-icon-wrapper">
+
+                <i data-lucide="message-circle"></i>
+
+                <span id="globalMessagesUnreadBadge"
+                      class="messages-unread-badge @(totalUnreadMessages == 0 ? "d-none" : "")">
+
+                    @(totalUnreadMessages > 99
+                        ? "99+"
+                        : totalUnreadMessages.ToString())
+
+                </span>
+                
+
+            </div>
+
+            <span class="sidebar-text">
+                Messages
+            </span>
+
+        </a>
+
+    </div>
+
 </nav>

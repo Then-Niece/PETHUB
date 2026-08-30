@@ -119,21 +119,59 @@ document.addEventListener("DOMContentLoaded", function () {
         // TOGGLE SIDEBAR
         // ==========================================
 
-        sidebarToggle.addEventListener("click", function ()
-        {
+        sidebarToggle.addEventListener(
+            "click",
+            function () {
 
-                sidebarWrapper.classList.toggle("collapsed");
+                const isMobile =
+                    window.innerWidth <= 768;
 
-                const isCollapsed = sidebarWrapper.classList.contains("collapsed");
 
-                /*
-                 * Remember the user's preference.
-                 */
+                // ==========================================
+                // MOBILE
+                // ==========================================
+
+                if (isMobile) {
+
+                    sidebarWrapper.classList.toggle(
+                        "mobile-open"
+                    );
+
+
+                    const overlay =
+                        document.getElementById(
+                            "sidebarOverlay"
+                        );
+
+
+                    overlay?.classList.toggle(
+                        "open"
+                    );
+
+
+                    return;
+                }
+
+
+                // ==========================================
+                // DESKTOP
+                // ==========================================
+
+                sidebarWrapper.classList.toggle(
+                    "collapsed"
+                );
+
+
+                const isCollapsed =
+                    sidebarWrapper.classList.contains(
+                        "collapsed"
+                    );
+
+
                 localStorage.setItem(
                     sidebarStorageKey,
                     isCollapsed
                 );
-
             }
         );
 
@@ -276,6 +314,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // ==========================================
+    // MOBILE SIDEBAR OVERLAY
+    // ==========================================
+
+    const sidebarOverlay =
+        document.getElementById(
+            "sidebarOverlay"
+        );
+
+
+    if (sidebarOverlay && sidebarWrapper) {
+
+        sidebarOverlay.addEventListener(
+            "click",
+            function () {
+
+                sidebarWrapper.classList.remove(
+                    "mobile-open"
+                );
+
+
+                sidebarOverlay.classList.remove(
+                    "open"
+                );
+            }
+        );
+    }
+
+
+    // ==========================================
     // INITIALIZE LUCIDE ICONS
     // ==========================================
 
@@ -289,5 +356,44 @@ document.addEventListener("DOMContentLoaded", function () {
         lucide.createIcons();
 
     }
+
+
+
+    if (sidebarWrapper) {
+
+        const sidebarLinks =
+            sidebarWrapper.querySelectorAll(
+                ".sidebar-link"
+            );
+
+
+        sidebarLinks.forEach(
+            function (link) {
+
+                link.addEventListener(
+                    "click",
+                    function () {
+
+                        if (
+                            window.innerWidth > 768
+                        ) {
+                            return;
+                        }
+
+
+                        sidebarWrapper.classList.remove(
+                            "mobile-open"
+                        );
+
+
+                        sidebarOverlay?.classList.remove(
+                            "open"
+                        );
+                    }
+                );
+            }
+        );
+    }
+
 
 });

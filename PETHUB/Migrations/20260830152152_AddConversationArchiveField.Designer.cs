@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PETHUB.Data;
 
@@ -11,9 +12,11 @@ using PETHUB.Data;
 namespace PETHUB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260830152152_AddConversationArchiveField")]
+    partial class AddConversationArchiveField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,47 +156,6 @@ namespace PETHUB.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("PETHUB.Models.Appeal", b =>
-                {
-                    b.Property<int>("AppealId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppealId"));
-
-                    b.Property<string>("AdminActionReason")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("AppealMessage")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateResolved")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ListingId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LostFoundId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MemberId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("AppealId");
-
-                    b.ToTable("Appeals");
                 });
 
             modelBuilder.Entity("PETHUB.Models.ApplicationUser", b =>
@@ -815,9 +777,6 @@ namespace PETHUB.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserReportId"));
-
-                    b.Property<string>("AdminActionReason")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ContentType")
                         .HasColumnType("int");

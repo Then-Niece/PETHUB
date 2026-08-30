@@ -1,0 +1,712 @@
+﻿@model PETHUB.ViewModels.MessagesIndexViewModel
+
+@{
+    ViewData["Title"] = "Messages";
+}
+
+<div class="messages-page">
+
+    <input type="hidden"
+           id="isArchiveView"
+           value="@Model.IsArchiveView.ToString().ToLower()" />
+
+    <div class="messages-layout @(Model.SelectedConversation != null
+                      ? "has-selected-conversation"
+                      : "")">
+        <!-- =========================================================
+             LEFT SIDE - CONVERSATION LIST
+        ========================================================== -->
+
+        <aside class="messages-sidebar">
+
+            <div class="messages-sidebar-header">
+
+                @if (!Model.IsArchiveView)
+                {
+                    <h2>Messages</h2>
+                }
+                else
+                {
+                    <h2>Archived Chats</h2>
+                }
+
+            </div>
+
+
+            <!-- Search UI for now.
+                 We can make this functional later. -->
+
+            <div class="messages-search">
+
+                <i data-lucide="search"></i>
+
+                <input type="text"
+                       id="conversationSearch"
+                       placeholder="Search conversations..."
+                       autocomplete="off" />
+
+            </div>
+
+            <!-- =========================================================
+                 CONVERSATION FILTERS
+            ========================================================== -->
+            @if (!Model.IsArchiveView)
+            {
+                <div class="conversation-filters">
+
+                    <button type="button"
+                            class="conversation-filter active"
+                            data-conversation-filter="all">
+
+                        All
+
+                    </button>
+
+                    <button type="button"
+                            class="conversation-filter"
+                            data-conversation-filter="Marketplace">
+
+                        Marketplace
+
+                    </button>
+
+                    <button type="button"
+                            class="conversation-filter"
+                            data-conversation-filter="LostFound">
+
+                        Lost &amp; Found
+
+                    </button>
+
+                    <a asp-controller="Messages"
+                       asp-action="Index"
+                       asp-route-view="archived"
+                       class="conversation-filter conversation-archive-filter">
+
+                        <i data-lucide="archive"></i>
+
+                        Archived
+
+                    </a>
+
+                </div>
+            }
+            else
+            {
+                <div class="conversation-filters">
+
+                    <a asp-controller="Messages"
+                       asp-action="Index"
+                       class="conversation-filter">
+
+                        Back to Inbox
+
+                    </a>
+
+                </div>
+            }
+
+
+            <div class="conversation-list">
+
+                @if (Model.Conversations.Any())
+                {
+                    @foreach (var conversation in Model.Conversations)
+                    {
+                        var isActive =
+                            Model.SelectedConversation?.ConversationId
+                            == conversation.ConversationId;
+
+                        <a asp-controller="Messages"
+                           asp-action="Index"
+                           asp-route-conversationId="@conversation.ConversationId"
+                           asp-route-view="@(Model.IsArchiveView ? "archived" : null)"
+                           class="conversation-item @(isActive ? "active" : "")"
+
+                           data-conversation-id="@conversation.ConversationId"
+
+                           data-search-name="@conversation.OtherUserName"
+                           data-search-context="@conversation.ContextType"
+                           data-search-title="@conversation.ContextTitle"
+                           data-search-message="@conversation.LastMessage">
+
+                            <!-- Profile Picture -->
+
+                            <div class="conversation-avatar">
+
+                                @if (!string.IsNullOrWhiteSpace(
+                                    conversation.OtherUserProfilePicture))
+                                {
+                                    <img src="@conversation.OtherUserProfilePicture"
+                                         alt="@conversation.OtherUserName" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/default_profile.jpg"
+                                         alt="@conversation.OtherUserName" />
+                                }
+
+                            </div>
+
+
+                            <!-- Conversation Details -->
+
+                            <div class="conversation-content">
+
+                                <div class="conversation-top-row">
+
+                                    <span class="conversation-name">
+                                        @conversation.OtherUserName
+                                    </span>
+
+                                    <div class="conversation-meta">
+
+                                        <span class="conversation-unread-badge @(conversation.UnreadCount == 0 ? "d-none" : "")"
+                                              data-conversation-unread="@conversation.ConversationId">
+
+                                            @conversation.UnreadCount
+
+                                        </span>
+                                        <span class="conversation-time @(conversation.LastMessageAt.HasValue ? "" : "d-none")">
+
+                                            @if (conversation.LastMessageAt.HasValue)
+                                            {
+                                                @(conversation.LastMessageAt.Value
+                                                    .ToLocalTime()
+                                                    .ToString("h:mm tt"))
+                                            }
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="conversation-context">
+
+                                    @if (conversation.ContextType == "Marketplace")
+                                    {
+                                        <i data-lucide="shopping-bag"></i>
+
+                                        <span>
+                                            Marketplace
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <i data-lucide="search"></i>
+
+                                        <span>
+                                            Lost &amp; Found
+                                        </span>
+                                    }
+
+                                    <span class="conversation-context-dot">
+                                        ·
+                                    </span>
+
+                                    <span class="conversation-context-title">
+                                        @conversation.ContextTitle
+                                    </span>
+
+                                </div>
+
+
+                                <div class="conversation-preview">
+
+                                    @(conversation.LastMessage
+                                        ?? "No messages yet")
+
+                                </div>
+
+                            </div>
+
+                        </a>
+                    }
+                }
+                else
+                {
+                    <div class="messages-empty-list">
+
+                        <i data-lucide="message-circle"></i>
+
+                        <p>
+                            No conversations yet.
+                        </p>
+
+                    </div>
+                }
+
+            </div>
+
+        </aside>
+
+
+        <!-- =========================================================
+             RIGHT SIDE - ACTIVE CONVERSATION
+        ========================================================== -->
+
+        <section class="messages-chat">
+
+
+            @if (Model.SelectedConversation != null)
+            {
+                
+                <input type="hidden"
+                       id="currentConversationId"
+                       value="@Model.SelectedConversation.ConversationId" />
+
+                <input type="hidden"
+                       id="currentUserId"
+                       value="@Model.CurrentUserId" />
+
+
+                <!-- =================================================
+                     CHAT HEADER
+                ================================================== -->
+
+                <div class="chat-header">
+
+                    <!-- =================================================
+                         MOBILE BACK BUTTON
+                         Only visible on mobile.
+                         Returns to the conversation list.
+                    ================================================== -->
+
+                    <a asp-controller="Messages"
+                       asp-action="Index"
+                       asp-route-view="@(Model.IsArchiveView ? "archived" : null)"
+                       class="mobile-chat-back"
+                       aria-label="Back to messages">
+
+                        <i data-lucide="arrow-left"></i>
+
+                    </a>
+
+
+                    <div class="chat-user">
+
+                        <div class="chat-user-avatar">
+
+                            @if (!string.IsNullOrWhiteSpace(
+                                Model.SelectedConversation.OtherUserProfilePicture))
+                            {
+                                <img src="@Model.SelectedConversation.OtherUserProfilePicture"
+                                     alt="@Model.SelectedConversation.OtherUserName" />
+                            }
+                            else
+                            {
+                                <img src="~/images/default_profile.jpg"
+                                     alt="@Model.SelectedConversation.OtherUserName" />
+                            }
+
+                        </div>
+
+
+                        <div class="chat-user-details">
+
+                            <h3>
+                                @Model.SelectedConversation.OtherUserName
+                            </h3>
+
+                            <div class="chat-context">
+
+                                @if (Model.SelectedConversation.ContextType == "Marketplace")
+                                {
+                                    <span>
+                                        Marketplace
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        Lost &amp; Found
+                                    </span>
+                                }
+
+                                <span>·</span>
+
+                                <span>
+                                    @Model.SelectedConversation.ContextTitle
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="chat-header-actions">
+
+                        <!-- =================================================
+                             CONTEXT LINK
+                        ================================================== -->
+                        @if (Model.SelectedConversation.ContextAvailable)
+                        {
+                            @if (Model.SelectedConversation.ContextType == "Marketplace" &&
+                                 Model.SelectedConversation.ListingId.HasValue)
+                            {
+                                <a asp-controller="Listings"
+                                   asp-action="MarketplaceDetails"
+                                   asp-route-id="@Model.SelectedConversation.ListingId"
+                                   class="chat-context-button">
+
+                                    View Listing
+
+                                    <i data-lucide="external-link"></i>
+
+                                </a>
+                            }
+                            else if (Model.SelectedConversation.ContextType == "LostFound" &&
+                                     Model.SelectedConversation.LostFoundId.HasValue)
+                            {
+                                <a asp-controller="LostFounds"
+                                   asp-action="BrowseDetails"
+                                   asp-route-id="@Model.SelectedConversation.LostFoundId"
+                                   class="chat-context-button">
+
+                                    View Report
+
+                                    <i data-lucide="external-link"></i>
+
+                                </a>
+                            }
+                        }
+                        else
+                        {
+                            <span class="chat-context-unavailable">
+
+                                @(Model.SelectedConversation.ContextType == "Marketplace"
+                                    ? "This listing is no longer available."
+                                    : "This report is no longer available.")
+
+                            </span>
+                        }
+
+
+                        <!-- =================================================
+                             ARCHIVE CONVERSATION
+                        ================================================== -->
+                        @if (!Model.IsArchiveView)
+                        {
+                            <form asp-controller="Messages"
+                                  asp-action="ArchiveConversation"
+                                  method="post"
+                                  class="chat-archive-form">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="conversationId"
+                                       value="@Model.SelectedConversation.ConversationId" />
+
+                                <button type="submit"
+                                        class="chat-archive-button"
+                                        title="Archive conversation"
+                                        aria-label="Archive conversation">
+
+                                    <i data-lucide="archive"></i>
+
+                                </button>
+
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-controller="Messages"
+                                  asp-action="UnarchiveConversation"
+                                  method="post"
+                                  class="chat-archive-form">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="conversationId"
+                                       value="@Model.SelectedConversation.ConversationId" />
+
+                                <button type="submit"
+                                        class="chat-archive-button"
+                                        title="Unarchive conversation"
+                                        aria-label="Unarchive conversation">
+
+                                    <i data-lucide="archive-restore"></i>
+
+                                </button>
+
+                            </form>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     MESSAGE AREA
+                ================================================== -->
+
+                <div class="chat-messages">
+
+                    @if (Model.SelectedConversation.Messages.Any())
+                    {
+                        var latestOutgoingMessageId =
+                            Model.SelectedConversation.Messages
+                                .Where(m => m.IsMine)
+                                .OrderByDescending(m => m.MessageId)
+                                .Select(m => (int?)m.MessageId)
+                                .FirstOrDefault();
+
+                        @foreach (var message in Model.SelectedConversation.Messages)
+                        {
+                            <div class="message-row @(message.IsMine ? "mine" : "theirs")"
+                                 data-message-id="@message.MessageId">
+
+                                <div class="message-bubble">
+
+                                    @if (!string.IsNullOrWhiteSpace(message.Content))
+                                    {
+                                        <div class="message-text">
+                                            @message.Content
+                                        </div>
+                                    }
+
+                                    @if (message.ImagePaths.Any())
+                                    {
+                                        var imageCount = message.ImagePaths.Count;
+
+                                        <div class="message-images image-count-@imageCount">
+
+                                            @for (int i = 0; i < imageCount; i++)
+                                            {
+                                                <button type="button"
+                                                        class="message-image-button"
+                                                        data-message-images='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(message.ImagePaths))'
+                                                        data-image-index="@i"
+                                                        aria-label="View image">
+
+                                                    <img src="@message.ImagePaths[i]"
+                                                         class="message-image"
+                                                         alt="Sent image" />
+
+                                                </button>
+                                            }
+
+                                        </div>
+                                    }
+
+                                    <div class="message-time">
+                                        @(message.CreatedAt
+                                            .ToLocalTime()
+                                            .ToString("h:mm tt"))
+                                    </div>
+
+                                </div>
+
+
+                                @* =====================================================
+                                   SENT / SEEN
+                                   Only show this on my latest outgoing message.
+                                   This is OUTSIDE the message bubble.
+                                   ===================================================== *@
+
+                                @if (message.IsMine &&
+                                     latestOutgoingMessageId == message.MessageId)
+                                {
+                                    var isSeen =
+                                        Model.SelectedConversation
+                                            .OtherParticipantLastReadMessageId
+                                            .HasValue
+                                        &&
+                                        Model.SelectedConversation
+                                            .OtherParticipantLastReadMessageId
+                                            .Value >= message.MessageId;
+
+                                    <div class="message-delivery-status"
+                                         data-message-status-id="@message.MessageId">
+
+                                        @(isSeen ? "Seen" : "Sent")
+
+                                    </div>
+                                }
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="chat-empty">
+
+                            <i data-lucide="messages-square"></i>
+
+                            <h4>
+                                Start the conversation
+                            </h4>
+
+                            <p>
+                                Send a message about
+                                @Model.SelectedConversation.ContextTitle.
+                            </p>
+
+                        </div>
+                    }
+
+                </div>
+
+
+
+                <div id="typingIndicator"
+                     class="typing-indicator d-none">
+
+                    <span id="typingUserName">
+                        @Model.SelectedConversation.OtherUserName
+                    </span>
+
+                    <span> is typing</span>
+
+                    <span class="typing-dots">
+                        <span>.</span>
+                        <span>.</span>
+                        <span>.</span>
+                    </span>
+
+                </div>
+
+
+                <!-- =================================================
+                     MESSAGE INPUT
+                ================================================== -->
+
+                <div class="chat-input-area">
+
+                    <div id="messageImagePreview"
+                         class="message-image-preview">
+                    </div>
+
+                    <form asp-controller="Messages"
+                          asp-action="SendMessage"
+                          method="post"
+                          enctype="multipart/form-data"
+                          class="chat-input-form"
+                          id="messageSendForm">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="conversationId"
+                               value="@Model.SelectedConversation.ConversationId" />
+
+                        <input type="file"
+                               id="messageImageInput"
+                               name="imageFiles"
+                               accept=".jpg,.jpeg,.png,.webp"
+                               multiple
+                               hidden />
+
+                        <label for="messageImageInput"
+                               class="chat-image-button"
+                               aria-label="Send images">
+
+                            <i data-lucide="image"></i>
+
+                        </label>
+
+                        <input type="text"
+                               name="content"
+                               class="chat-message-input"
+                               placeholder="Type a message..."
+                               autocomplete="off" />
+
+                        <button type="submit"
+                                class="chat-send-button"
+                                aria-label="Send message">
+
+                            <i data-lucide="send"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+            }
+            else
+            {
+                <!-- =================================================
+                     NO CONVERSATION SELECTED
+                ================================================== -->
+
+                <div class="chat-placeholder">
+
+                    <div class="chat-placeholder-icon">
+
+                        <i data-lucide="message-circle"></i>
+
+                    </div>
+
+                    <h3>
+                        Your Messages
+                    </h3>
+
+                    <p>
+                        Select a conversation to start messaging.
+                    </p>
+
+                </div>
+            }
+
+        </section>
+
+    </div>
+
+</div>
+
+
+<div id="messageImageLightbox"
+     class="message-lightbox">
+
+    <button type="button"
+            class="message-lightbox-close"
+            id="messageLightboxClose"
+            aria-label="Close image viewer">
+
+        &times;
+
+    </button>
+
+
+    <button type="button"
+            class="message-lightbox-nav previous"
+            id="messageLightboxPrevious"
+            aria-label="Previous image">
+
+        &#10094;
+
+    </button>
+
+
+    <img id="messageLightboxImage"
+         class="message-lightbox-image"
+         alt="Message image" />
+
+
+    <button type="button"
+            class="message-lightbox-nav next"
+            id="messageLightboxNext"
+            aria-label="Next image">
+
+        &#10095;
+
+    </button>
+
+
+    <div id="messageLightboxCounter"
+         class="message-lightbox-counter">
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script src="~/js/messages.js" asp-append-version="true"></script>
+}

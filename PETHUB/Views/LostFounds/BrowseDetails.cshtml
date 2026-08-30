@@ -511,68 +511,118 @@
 
 
                     <!-- =================================================
-                         CONTACT NUMBER
+                         GUEST / CLIENT CONTACT INFORMATION
+
+                         Guest-created reports cannot use PETHUB messaging
+                         because they do not have an ApplicationUser account.
+
+                         Their name and contact number are displayed instead.
                     ================================================= -->
+                    @if (Model.UserId == null)
+                    {
+                        <div class="lostfound-information-section">
 
-                    <div class="lostfound-information-section">
+                            <h5 class="lostfound-section-title">
 
-                        <h5 class="lostfound-section-title">
+                                <i data-lucide="phone"></i>
 
-                            <i data-lucide="phone"></i>
-
-                            <span>
-                                Contact Number
-                            </span>
-
-                        </h5>
-
-
-                        <div class="lostfound-information-box">
-
-                            <div class="lostfound-information-row">
-
-                                <span class="lostfound-information-label">
-                                    Contact Number
+                                <span>
+                                    Contact Reporter
                                 </span>
 
-                                <span class="lostfound-information-value">
+                            </h5>
 
-                                    @if (Model.UserId == null)
-                                    {
-                                        @Model.ClientContact
-                                    }
-                                    else
-                                    {
-                                        @Model.User?.ContactNumber
-                                    }
 
-                                </span>
+                            <div class="lostfound-information-box">
+
+                                <!-- Client Name -->
+
+                                <div class="lostfound-information-row">
+
+                                    <span class="lostfound-information-label">
+                                        Name
+                                    </span>
+
+                                    <span class="lostfound-information-value">
+
+                                        @(string.IsNullOrWhiteSpace(Model.ClientName)
+                                            ? "Not Available"
+                                            : Model.ClientName)
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Client Contact -->
+
+                                <div class="lostfound-information-row">
+
+                                    <span class="lostfound-information-label">
+                                        Contact Number
+                                    </span>
+
+                                    <span class="lostfound-information-value">
+
+                                        @(string.IsNullOrWhiteSpace(Model.ClientContact)
+                                            ? "Not Available"
+                                            : Model.ClientContact)
+
+                                    </span>
+
+                                </div>
 
                             </div>
 
                         </div>
-
-                    </div>
+                    }
 
 
 
                     <!-- =================================================
-                         MESSAGE ME
+                         MESSAGE REPORTER
+
+                         Messaging is available only when:
+                         1. The viewer is logged in.
+                         2. The viewer is a Member.
+                         3. The report belongs to a registered Member.
+                         4. The viewer is not the report owner.
                     ================================================= -->
 
-                    <div class="lostfound-message-section">
+                    @if (User.Identity?.IsAuthenticated == true &&
+                         User.IsInRole("Member") &&
+                         !string.IsNullOrEmpty(Model.UserId) &&
+                         Model.UserId != User.FindFirst(
+                             System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                    {
+                        <div class="lostfound-message-section">
 
-                        <button type="button"
-                                class="lostfound-message-button">
+                            <form asp-controller="Messages"
+                                  asp-action="StartLostFoundConversation"
+                                  method="post"
+                                  class="lostfound-message-form">
 
-                            <i data-lucide="message-circle"></i>
+                                @Html.AntiForgeryToken()
 
-                            <span>
-                                Message Me
-                            </span>
+                                <input type="hidden"
+                                       name="lostFoundId"
+                                       value="@Model.LostFoundId" />
 
-                        </button>
+                                <button type="submit"
+                                        class="lostfound-message-button">
 
+                                    <i data-lucide="message-circle"></i>
+
+                                    <span>
+                                        Message Me
+                                    </span>
+
+                                </button>
+
+                            </form>
+
+                        </div>
+                    }
                      
            
                    
