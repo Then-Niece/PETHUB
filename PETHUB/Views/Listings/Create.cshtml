@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create Listing";
+
 }
 
 
@@ -81,12 +82,26 @@
                         </div>
 
                         <!-- Price (HTML Entity &#8369; used for Peso sign to fix encoding issues) -->
-                        <div class="mb-3" id="priceGroup">
-                            <label asp-for="Price" class="form-label"></label>
-                            <input asp-for="Price" class="form-control" placeholder="&#8369;0.00" />
-                            <span asp-validation-for="Price" class="text-danger"></span>
+                    <div class="mb-3" id="priceGroup">
+                        <label asp-for="Price" class="form-label"></label>
+
+                        <div class="price-input">
+                            <span class="peso-sign" id="pesoSign">₱</span>
+
+                            <input asp-for="Price"
+                                   type="number"
+                                   class="form-control"
+                                   min="0"
+                                   step="1"
+                                   placeholder="0"
+                                   onkeydown="return event.key !== '.' &&
+                                                      event.key !== ',' &&
+                                                      event.key !== 'e' &&
+                                                      event.key !== 'E';" />
                         </div>
 
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
                         <!-- Pet Type -->
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Pet Type</label>

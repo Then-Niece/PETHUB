@@ -321,6 +321,11 @@ namespace PETHUB.Controllers
                 return NotFound();
             }
 
+            // Remember whether this listing was Removed before the edit.
+            // This allows the save process to distinguish a Removed post being
+            // resubmitted from a normal Pending or Rejected post edit.
+            bool wasRemoved = existingListing.Status == ListApprovalStatus.Removed;
+
             // Get the currently logged-in user's ID
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -360,11 +365,15 @@ namespace PETHUB.Controllers
             existingListing.PetSex = listing.PetSex;
             existingListing.Type = listing.Type;
 
-
+            // A previously Removed listing must return to Pending when the owner
+            // edits and resubmits it. This sends the corrected listing back through
+            // the normal Admin approval process.
+            if (wasRemoved)
+            {
+                existingListing.Status = ListApprovalStatus.Pending;
+            }
 
             // DELETE MARKED EXISTING IMAGES
-            
-
             if (DeletedImageIds != null && DeletedImageIds.Any())
             {
                 foreach (var imageId in DeletedImageIds)
@@ -415,9 +424,52 @@ namespace PETHUB.Controllers
                 _context.AddRange(savedImages);
             }
 
+            // Save the edited listing and any image changes to the database.
+            // If the listing was previously Removed, its status is now Pending.
             await _context.SaveChangesAsync();
 
-            // Return the owner to the updated Marketplace Details page.
+
+            // Notify Admins only when a Removed listing has been resubmitted.
+            // Normal edits to Pending or Rejected listings do not trigger this notification.
+            if (wasRemoved)
+            {
+                // Get all users assigned to the Admin role.
+                var admins = await _userManager.GetUsersInRoleAsync("Admin");
+
+                // Determine the notification text based on the Marketplace listing type.
+                string notificationTitle;
+                string notificationMessage;
+
+                if (existingListing.Type == ListType.For_Adoption)
+                {
+                    notificationTitle = "Adoption Listing Resubmitted";
+                    notificationMessage =
+                        "A previously removed adoption listing has been edited and resubmitted for approval.";
+                }
+                else
+                {
+                    notificationTitle = "Marketplace Listing Resubmitted";
+                    notificationMessage =
+                        "A previously removed Marketplace listing has been edited and resubmitted for approval.";
+                }
+
+                // Send the resubmission notification to every Admin.
+                foreach (var admin in admins)
+                {
+                    await _notificationService.CreateNotificationAsync(
+                        admin.Id,
+                        NotificationType.NewMarketplaceSubmission,
+                        notificationTitle,
+                        notificationMessage,
+                        existingListing.Images.FirstOrDefault()?.ImagePath,
+                        "/Listings/Details/" + existingListing.ListingId,
+                        listingId: existingListing.ListingId
+                    );
+                }
+            }
+
+
+            // Return the owner to the existing Marketplace Details page.
             return RedirectToAction(
                 "MarketplaceDetails",
                 "MyPosts",

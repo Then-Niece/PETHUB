@@ -16,6 +16,10 @@ namespace PETHUB.Data
         public DbSet<LostFoundImage> LostFoundImages { get; set; }
 
         public DbSet<UserReport> UserReports { get; set; }
+        // Provides EF Core access to Member appeals against removed Marketplace
+        // listings and Lost & Found posts.
+        public DbSet<Appeal> Appeals { get; set; }
+        //This is for the PETFEED Feature
 
         // PETFEED
         public DbSet<PetFeed> PetFeeds { get; set; }

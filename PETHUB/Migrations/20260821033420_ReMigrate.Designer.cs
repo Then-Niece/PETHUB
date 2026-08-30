@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PETHUB.Data;
 
@@ -11,9 +12,11 @@ using PETHUB.Data;
 namespace PETHUB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260821033420_ReMigrate")]
+    partial class ReMigrate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,47 +158,6 @@ namespace PETHUB.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("PETHUB.Models.Appeal", b =>
-                {
-                    b.Property<int>("AppealId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppealId"));
-
-                    b.Property<string>("AdminActionReason")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("AppealMessage")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateResolved")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ListingId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LostFoundId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MemberId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("AppealId");
-
-                    b.ToTable("Appeals");
-                });
-
             modelBuilder.Entity("PETHUB.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -224,6 +186,7 @@ namespace PETHUB.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -237,6 +200,7 @@ namespace PETHUB.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
@@ -246,6 +210,7 @@ namespace PETHUB.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -559,6 +524,7 @@ namespace PETHUB.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetFeedId"));
 
                     b.Property<string>("AdminId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Content")
@@ -791,8 +757,7 @@ namespace PETHUB.Migrations
                 {
                     b.HasOne("PETHUB.Models.ApplicationUser", "Member")
                         .WithMany()
-                        .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("MemberId");
 
                     b.Navigation("Member");
                 });
@@ -812,8 +777,7 @@ namespace PETHUB.Migrations
                 {
                     b.HasOne("PETHUB.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -834,7 +798,7 @@ namespace PETHUB.Migrations
                     b.HasOne("PETHUB.Models.ApplicationUser", "User")
                         .WithMany("Notifications")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -845,7 +809,8 @@ namespace PETHUB.Migrations
                     b.HasOne("PETHUB.Models.ApplicationUser", "Admin")
                         .WithMany()
                         .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Admin");
                 });
@@ -855,7 +820,7 @@ namespace PETHUB.Migrations
                     b.HasOne("PETHUB.Models.ApplicationUser", "Member")
                         .WithMany()
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PETHUB.Models.PetFeed", "PetFeed")
@@ -885,7 +850,7 @@ namespace PETHUB.Migrations
                     b.HasOne("PETHUB.Models.ApplicationUser", "Member")
                         .WithMany()
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PETHUB.Models.PetFeed", "PetFeed")
@@ -904,7 +869,7 @@ namespace PETHUB.Migrations
                     b.HasOne("PETHUB.Models.ApplicationUser", "Member")
                         .WithMany()
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PETHUB.Models.PetFeed", "PetFeed")
@@ -923,12 +888,12 @@ namespace PETHUB.Migrations
                     b.HasOne("PETHUB.Models.Listing", "Listing")
                         .WithMany()
                         .HasForeignKey("ListingId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("PETHUB.Models.LostFound", "LostFound")
                         .WithMany()
                         .HasForeignKey("LostFoundId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("PETHUB.Models.ApplicationUser", "Reporter")
                         .WithMany()

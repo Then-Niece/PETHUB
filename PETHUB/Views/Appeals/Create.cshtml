@@ -1,0 +1,124 @@
+﻿@model PETHUB.ViewModels.AppealViewModel
+
+@{
+    ViewData["Title"] = "Appeal Removed Post";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- Page header and return navigation. -->
+    <div class="d-flex align-items-center mb-4">
+
+        <a asp-controller="RemovedPosts"
+           asp-action="Details"
+           asp-route-type="@Model.PostType"
+           asp-route-id="@Model.PostId"
+           class="btn btn-outline-secondary rounded-pill me-3">
+
+            <i data-lucide="arrow-left"></i>
+
+            Back
+        </a>
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Appeal Removed Post
+            </h2>
+
+            <p class="text-muted mb-0">
+                Explain why you believe this post should be restored.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- Appeal form. -->
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-body p-4">
+
+            <!-- Shows which existing post the Member is appealing.
+                 This does not create a duplicate post. -->
+            <div class="mb-4">
+
+                <label class="form-label fw-bold">
+                    Post
+                </label>
+
+                <div class="form-control bg-light">
+                    @Model.PostTitle
+                </div>
+
+            </div>
+
+
+            <form asp-controller="Appeals"
+                  asp-action="Create"
+                  method="post">
+
+                <!-- Hidden values identify the existing removed post.
+                     The controller validates these values again against
+                     the authenticated Member before creating the Appeal. -->
+                <input type="hidden"
+                       asp-for="PostType" />
+
+                <input type="hidden"
+                       asp-for="PostId" />
+
+
+                <div class="mb-4">
+
+                    <label asp-for="AppealMessage"
+                           class="form-label fw-bold">
+                        Your Appeal
+                    </label>
+
+                    <textarea asp-for="AppealMessage"
+                              class="form-control"
+                              rows="7"
+                              placeholder="Explain why you believe this post is appropriate and should be restored."></textarea>
+
+                    <span asp-validation-for="AppealMessage"
+                          class="text-danger">
+                    </span>
+
+                    <div class="form-text">
+                        Your appeal will be reviewed by an Administrator.
+                    </div>
+
+                </div>
+
+
+                <div class="d-flex justify-content-end gap-2">
+
+                    <!-- Returns without creating an appeal. -->
+                    <a asp-controller="RemovedPosts"
+                       asp-action="Details"
+                       asp-route-type="@Model.PostType"
+                       asp-route-id="@Model.PostId"
+                       class="btn btn-outline-secondary rounded-pill px-4">
+                        Cancel
+                    </a>
+
+                    <!-- Submits the Member's appeal message. -->
+                    <button type="submit"
+                            class="btn btn-danger rounded-pill px-4">
+                        Submit Appeal
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

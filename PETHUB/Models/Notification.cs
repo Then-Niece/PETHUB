@@ -23,7 +23,13 @@ namespace PETHUB.Models
 
         // Admin
         NewMarketplaceSubmission,
-        NewLostFoundSubmission
+        NewLostFoundSubmission,
+        NewUserReport,
+
+        // Member
+        UserReportAccepted,
+        UserReportRejected,
+        ReportedPostRemoved
     }
 
     public class Notification

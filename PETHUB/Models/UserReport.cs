@@ -91,5 +91,6 @@ namespace PETHUB.Models
         // Records when the member submitted the report.
         // UTC is used so the stored timestamp is consistent regardless of server location.
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public string? AdminActionReason { get; set; } // Records the reason an administrator resolved or dismissed the report.
     }
 }
