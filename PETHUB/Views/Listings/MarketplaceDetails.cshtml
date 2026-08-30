@@ -502,19 +502,35 @@
 
             <div class="listing-actions">
 
-
                 <!-- Message -->
+                @if (User.Identity?.IsAuthenticated == true &&
+                         User.IsInRole("Member") &&
+                         Model.MemberId != User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                {
+                    <form asp-controller="Messages"
+                          asp-action="StartMarketplaceConversation"
+                          method="post"
+                          class="listing-message-form">
 
-                <button type="button"
-                        class="btn listing-message-btn">
+                        @Html.AntiForgeryToken()
 
-                    <i data-lucide="message-circle"></i>
+                        <input type="hidden"
+                               name="listingId"
+                               value="@Model.ListingId" />
 
-                    <span>
-                        Message Me
-                    </span>
+                        <button type="submit"
+                                class="btn listing-message-btn">
 
-                </button>
+                            <i data-lucide="message-circle"></i>
+
+                            <span>
+                                Message Me
+                            </span>
+
+                        </button>
+
+                    </form>
+                }
 
 
                 <!-- Favorite -->

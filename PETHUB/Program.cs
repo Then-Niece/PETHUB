@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Models;
 using PETHUB.Services;
+using PETHUB.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,12 @@ builder.Services.AddTransient<EmailSender>();
 
 // Register NotificationService here
 builder.Services.AddScoped<NotificationService>();
+
+// Register MessagingService here
+builder.Services.AddScoped<MessagingService>();
+
+// Register SignalR here
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -85,5 +92,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     await DbInitializer.SeedAdminAsync(services);
 }
+
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

@@ -3,24 +3,50 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PETHUB.Helpers
 {
     public static class ImageHelper
     {
-        // Save uploaded images
-        // Review this code
         public static async Task<List<TImage>> SaveImagesAsync<TImage>(
             List<IFormFile> files,
             int entityId,
             Func<int, string, TImage> createImage,
-            string folderName)
+            string folderName,
+            int? maxFiles = null,
+            long maxFileSize = 5 * 1024 * 1024)
         {
             var images = new List<TImage>();
 
             if (files == null || files.Count == 0)
                 return images;
+
+            var allowedExtensions = new[]
+            {
+                ".jpg",
+                ".jpeg",
+                ".png",
+                ".webp"
+            };
+
+            var allowedContentTypes = new[]
+            {
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            };
+
+            var validFiles = files
+                .Where(file => file != null && file.Length > 0);
+
+            if (maxFiles.HasValue)
+            {
+                validFiles = validFiles.Take(maxFiles.Value);
+            }
+
+            var filesToSave = validFiles.ToList();
 
             var uploadDir = Path.Combine(
                 Directory.GetCurrentDirectory(),
@@ -30,23 +56,67 @@ namespace PETHUB.Helpers
             );
 
             if (!Directory.Exists(uploadDir))
-                Directory.CreateDirectory(uploadDir);
-
-            foreach (var file in files)
             {
-                var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                var filePath = Path.Combine(uploadDir, uniqueFileName);
+                Directory.CreateDirectory(uploadDir);
+            }
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+            foreach (var file in validFiles)
+            {
+                // File size validation
+                if (file.Length > maxFileSize)
+                {
+                    continue;
+                }
+
+                var extension = Path
+                    .GetExtension(file.FileName)
+                    .ToLowerInvariant();
+
+                // Extension validation
+                if (!allowedExtensions.Contains(extension))
+                {
+                    continue;
+                }
+
+                // Content type validation
+                if (!allowedContentTypes.Contains(
+                        file.ContentType.ToLowerInvariant()))
+                {
+                    continue;
+                }
+
+                var uniqueFileName =
+                    $"{Guid.NewGuid()}{extension}";
+
+                var filePath = Path.Combine(
+                    uploadDir,
+                    uniqueFileName
+                );
+
+                using (var stream =
+                    new FileStream(filePath, FileMode.Create))
+                {
                     await file.CopyToAsync(stream);
+                }
 
-                images.Add(createImage(entityId, $"/uploads/{folderName}/{uniqueFileName}"));
+                var relativePath =
+                    $"/uploads/{folderName}/{uniqueFileName}";
+
+                images.Add(
+                    createImage(
+                        entityId,
+                        relativePath
+                    )
+                );
             }
 
             return images;
         }
 
-        // Delete the image file in the folder and database
+
+        // =========================================================
+        // DELETE IMAGE
+        // =========================================================
         public static async Task<int?> RemoveImageAsync<TImage>(
             DbContext context,
             DbSet<TImage> dbSet,
@@ -58,22 +128,50 @@ namespace PETHUB.Helpers
             where TImage : class
         {
             var image = await dbSet.FindAsync(imageId);
-            if (image == null) return null;
+
+            if (image == null)
+            {
+                return null;
+            }
+
 
             // Optional ownership check
-            if (getUserId != null && currentUserId != null && getUserId(image) != currentUserId)
+            if (getUserId != null &&
+                currentUserId != null &&
+                getUserId(image) != currentUserId)
+            {
                 return null;
+            }
 
-            // Delete file
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", getImagePath(image).TrimStart('/'));
-            if (File.Exists(filePath)) File.Delete(filePath);
 
-            // Remove DB record
+            var imagePath = getImagePath(image);
+
+
+            // -------------------------------------------------
+            // DELETE PHYSICAL FILE
+            // -------------------------------------------------
+            var filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                imagePath.TrimStart('/')
+            );
+
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+
+            // -------------------------------------------------
+            // REMOVE DATABASE RECORD
+            // -------------------------------------------------
             dbSet.Remove(image);
+
             await context.SaveChangesAsync();
+
 
             return getParentId(image);
         }
-
     }
 }
