@@ -18,14 +18,19 @@ namespace PETHUB.Controllers
         //gamiton rani sya ug IConfiguration para sa pagkuha sa appsettings.json values
         private readonly IConfiguration _config;
 
+        // Provides centralized audit logging for authentication activities.
+        // This records successful login and logout events in the AuditLogs table.
+        private readonly AuditLogService _auditLogService;
+
         public UserAccountController(UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, EmailSender emailSender, IConfiguration config)
+            SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, EmailSender emailSender, IConfiguration config, AuditLogService auditLogService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _emailSender = emailSender;
             _config = config;
+            _auditLogService = auditLogService;
         }
 
         [HttpGet]
@@ -40,8 +45,10 @@ namespace PETHUB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
+            {
                 return View(model);
+            }
 
             // Ensure Terms are accepted
             if (!model.AcceptTerms)
@@ -54,7 +61,7 @@ namespace PETHUB.Controllers
             }
 
             // Identity already checks if the email is already taken
-            
+
 
 
 
@@ -114,7 +121,9 @@ namespace PETHUB.Controllers
             }
 
             foreach (var error in result.Errors)
+            {
                 ModelState.AddModelError(string.Empty, error.Description);
+            }
 
             return View(model);
         }
@@ -192,7 +201,10 @@ namespace PETHUB.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
             // Allow login by either username or email
             var user = await _userManager.FindByNameAsync(model.UserNameOrEmail)
@@ -209,6 +221,14 @@ namespace PETHUB.Controllers
 
             if (result.Succeeded)
             {
+                // Records the successful login event after Identity confirms
+                // that the supplied username/email and password are correct.
+                // The existing user object already contains the user's Identity ID.
+                await _auditLogService.LogAsync(
+                    user,
+                    "Logged In"
+                );
+
                 if (await _userManager.IsInRoleAsync(user, "Admin"))
                 {
                     return RedirectToAction("Index", "PetFeeds");
@@ -241,10 +261,27 @@ namespace PETHUB.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
+            // Retrieves the currently authenticated user before the Identity
+            // authentication session is cleared by SignOutAsync().
+            var user = await _userManager.GetUserAsync(User);
+
+            // Only create the audit record if an authenticated user was found.
+            if (user != null)
+            {
+                // Records the logout event before signing the user out.
+                // The service stores the user's ID, role, action, and UTC timestamp.
+                await _auditLogService.LogAsync(
+                    user,
+                    "Logged Out"
+                );
+            }
+
+            // Clears the user's authentication session.
             await _signInManager.SignOutAsync();
+
+            // Keeps the existing redirect behavior after logout.
             return RedirectToAction("Index", "Home");
         }
-
 
 
         // ======================================================
@@ -265,7 +302,9 @@ namespace PETHUB.Controllers
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return View(model);
+            }
 
             var user = await _userManager.FindByEmailAsync(model.Email);
 
@@ -363,8 +402,9 @@ namespace PETHUB.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return View(model);
-
+            }
 
             var user = await _userManager.FindByEmailAsync(model.Email);
 

@@ -31,6 +31,8 @@ namespace PETHUB.Data
         // NOTIFICATIONS
         public DbSet<Notification> Notifications { get; set; }
 
+        // AUDIT LOGS
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
         // MESSAGING
         public DbSet<Conversation> Conversations { get; set; }

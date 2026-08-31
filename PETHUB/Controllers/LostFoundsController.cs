@@ -12,12 +12,13 @@ public class LostFoundsController : Controller
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly NotificationService _notificationService;
-
-    public LostFoundsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationService notificationService)
+    private readonly AuditLogService _auditLogService;
+    public LostFoundsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationService notificationService, AuditLogService auditLogService)
     {
         _context = context;
         _userManager = userManager;
         _notificationService = notificationService;
+        _auditLogService = auditLogService;
     }
 
     // GET: LostFounds
@@ -110,6 +111,19 @@ public class LostFoundsController : Controller
         report.Status = ApprovalStatus.Approved;
 
         await _context.SaveChangesAsync();
+
+        // Retrieves the Admin who successfully approved the Lost & Found report.
+        // UserManager gets the ApplicationUser associated with the current login.
+        var currentUser = await _userManager.GetUserAsync(User);
+
+        // Records the approval only after the report status has been
+        // successfully saved as Approved in the database.
+        if (currentUser != null)
+        {
+            await _auditLogService.LogAsync(
+                currentUser,
+                "Approved Post");
+        }
 
         // Notify the report owner
         if (!string.IsNullOrEmpty(report.UserId))
@@ -322,7 +336,7 @@ public class LostFoundsController : Controller
         // the report is edited.
         existing.DateReported = DateTime.Now;
 
-    
+
 
         // DELETE MARKED EXISTING IMAGES
 
@@ -355,7 +369,7 @@ public class LostFoundsController : Controller
         }
 
 
-    
+
 
         // =========================================================
         // REMOVED → PENDING
@@ -406,6 +420,18 @@ public class LostFoundsController : Controller
         // and any newly uploaded images.
         await _context.SaveChangesAsync();
 
+        // Retrieve the Member who successfully edited the Lost & Found post.
+        // UserManager gets the ApplicationUser associated with the current login.
+        var currentUser = await _userManager.GetUserAsync(User);
+
+        // Record the edit only after the report and its image changes
+        // have been successfully saved to the database.
+        if (currentUser != null)
+        {
+            await _auditLogService.LogAsync(
+                currentUser,
+                "Edited Post");
+        }
 
         // =========================================================
         // ADMIN RESUBMISSION NOTIFICATION
@@ -534,6 +560,18 @@ public class LostFoundsController : Controller
 
         await _context.SaveChangesAsync();
 
+        // Retrieve the Member who successfully deleted the Lost & Found post.
+        var currentUser = await _userManager.GetUserAsync(User);
+
+        // Record the deletion only after the report has been successfully
+        // removed from the database.
+        if (currentUser != null)
+        {
+            await _auditLogService.LogAsync(
+                currentUser,
+                "Deleted Post");
+        }
+
         return RedirectToAction("Index", "MyPosts");
     }
 
@@ -628,8 +666,21 @@ public class LostFoundsController : Controller
         _context.Add(lostFound);
         await _context.SaveChangesAsync();
 
-        string? imagePath = null;
+        // Only authenticated users have an Identity account that can be
+        // associated with an audit record. Anonymous Lost & Found submissions
+        // therefore do not create a Member audit log.
+        var currentUser = await _userManager.GetUserAsync(User);
 
+        // Record the successful creation of the Lost & Found post.
+        // This happens only after the report has been saved successfully.
+        if (currentUser != null)
+        {
+            await _auditLogService.LogAsync(
+                currentUser,
+                "Created Post");
+        }
+
+        string? imagePath = null;
         if (Images != null && Images.Count > 0)
         {
             try

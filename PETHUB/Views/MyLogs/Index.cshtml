@@ -1,0 +1,85 @@
+﻿@model IEnumerable<PETHUB.Models.AuditLog>
+
+@{
+    ViewData["Title"] = "My Logs";
+
+    // Gets the Admin user dictionary supplied by MyLogsController.
+    // It is only needed when the current viewer is an Admin.
+    var adminUsers = ViewBag.AdminUsers
+        as Dictionary<string, PETHUB.Models.ApplicationUser>;
+}
+
+<div class="container mt-4">
+
+    <!-- Displays the title of the activity log page. -->
+    <h2>My Logs</h2>
+
+    @if (!Model.Any())
+    {
+        <!-- Displays a message when the user has no recorded activities. -->
+        <p>You don't have any activity logs yet.</p>
+    }
+    else
+    {
+        <!-- Makes the table responsive on smaller screens. -->
+        <div class="table-responsive">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <!-- Displays which Admin performed the activity. -->
+                            <th>Admin</th>
+                        }
+
+                        <!-- Displays when the activity occurred. -->
+                        <th>Date &amp; Time</th>
+
+                        <!-- Displays the general activity that occurred. -->
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var log in Model)
+                    {
+                        <tr>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td>
+                                    @if (adminUsers != null &&
+                                         adminUsers.TryGetValue(log.UserId, out var adminUser))
+                                    {
+                                        <!-- Displays the Admin's actual name using
+                                             the FirstName, MiddleName, and LastName fields. -->
+                                        @($"{adminUser.FirstName} {adminUser.MiddleName} {adminUser.LastName}")
+                                    }
+                                    else
+                                    {
+                                        <!-- Fallback if the Admin account cannot be found. -->
+                                        @("Unknown Admin")
+                                    }
+                                </td>
+                            }
+
+
+                            <td>
+                                <!-- Converts the stored UTC timestamp to local time
+                                     and formats it for readable display. -->
+                                @log.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")
+                            </td>
+
+
+                            <td>
+                                <!-- Displays the general audit event. -->
+                                @log.Action
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    }
+</div>

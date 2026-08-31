@@ -16,12 +16,13 @@ namespace PETHUB.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly NotificationService _notificationService;
-
-        public ListingsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationService notificationService)
+        private readonly AuditLogService _auditLogService;
+        public ListingsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationService notificationService, AuditLogService auditLogService)
         {
             _context = context;
             _userManager = userManager;
             _notificationService = notificationService;
+            _auditLogService = auditLogService;
         }
 
         // GET: Listings
@@ -186,6 +187,20 @@ namespace PETHUB.Controllers
             _context.Add(listing);
             await _context.SaveChangesAsync();
 
+            // Retrieve the Member who successfully created the Marketplace post.
+            // UserManager returns the authenticated ApplicationUser associated
+            // with the current login session.
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Record the successful post creation only after the listing
+            // has been successfully saved to the database.
+            if (currentUser != null)
+            {
+                await _auditLogService.LogAsync(
+                    currentUser,
+                    "Created Post");
+            }
+
             string? imagePath = null;
 
             if (ImageFiles != null && ImageFiles.Count > 0)
@@ -201,7 +216,6 @@ namespace PETHUB.Controllers
 
                     _context.AddRange(savedImages);
                     await _context.SaveChangesAsync();
-
 
                     // Get the path of the first saved image for notification purposes
                     imagePath = savedImages
@@ -428,6 +442,18 @@ namespace PETHUB.Controllers
             // If the listing was previously Removed, its status is now Pending.
             await _context.SaveChangesAsync();
 
+            // Retrieve the Member who successfully edited the Marketplace post.
+            // UserManager gets the ApplicationUser associated with the current login.
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Record the edit only after the listing and its image changes
+            // have been successfully saved to the database.
+            if (currentUser != null)
+            {
+                await _auditLogService.LogAsync(
+                    currentUser,
+                    "Edited Post");
+            }
 
             // Notify Admins only when a Removed listing has been resubmitted.
             // Normal edits to Pending or Rejected listings do not trigger this notification.
@@ -552,6 +578,18 @@ namespace PETHUB.Controllers
             _context.Listings.Remove(listing);
             await _context.SaveChangesAsync();
 
+            // Retrieve the Member who successfully deleted the Marketplace post.
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Record the deletion only after the listing has been successfully
+            // removed from the database.
+            if (currentUser != null)
+            {
+                await _auditLogService.LogAsync(
+                    currentUser,
+                    "Deleted Post");
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -602,6 +640,19 @@ namespace PETHUB.Controllers
             // Save changes to the database
             await _context.SaveChangesAsync();
 
+            // Retrieves the Admin who successfully approved the Marketplace post.
+            // UserManager gets the ApplicationUser associated with the current login.
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Records the approval only after the listing status has been
+            // successfully saved as Approved in the database.
+            if (currentUser != null)
+            {
+                await _auditLogService.LogAsync(
+                    currentUser,
+                    "Approved Post");
+            }
+
             // Determine notification content based on listing type
             string notificationTitle;
             string notificationMessage;
@@ -649,6 +700,19 @@ namespace PETHUB.Controllers
             listing.Status = ListApprovalStatus.Rejected;
 
             await _context.SaveChangesAsync();
+
+            // Retrieves the Admin who successfully rejected the Marketplace post.
+            // UserManager gets the ApplicationUser associated with the current login.
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Records the rejection only after the listing status has been
+            // successfully saved as Rejected in the database.
+            if (currentUser != null)
+            {
+                await _auditLogService.LogAsync(
+                    currentUser,
+                    "Rejected Post");
+            }
 
             // Determine notification content based on listing type
             string notificationTitle;
