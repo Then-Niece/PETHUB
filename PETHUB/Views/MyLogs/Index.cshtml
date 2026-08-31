@@ -12,7 +12,14 @@
 <div class="container mt-4">
 
     <!-- Displays the title of the activity log page. -->
-    <h2>My Logs</h2>
+    @if (User.IsInRole("Admin"))
+    {
+        <h2>Admin Logs</h2>
+    }
+    else
+    {
+        <h2>My Logs</h2>
+    }
 
     @if (!Model.Any())
     {
