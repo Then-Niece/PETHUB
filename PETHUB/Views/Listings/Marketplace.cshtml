@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PETHUB.Models.Listing>
+﻿@model PETHUB.ViewModels.PaginationViewModel<PETHUB.Models.Listing>
 
 @{
     ViewData["Title"] = "Marketplace Client";
@@ -21,7 +21,7 @@
     // MARKETPLACE LISTING COUNT
     // =========================================================
 
-    var listingCount = Model.Count();
+    var listingCount = Model.TotalItems;
 
     var selectedPetType =
         Context.Request.Query["petType"].ToString();
@@ -376,7 +376,7 @@
 
 <div class="row mt-4 marketplace-card-grid">
 
-    @foreach (var item in Model)
+    @foreach (var item in Model.Items)
     {
         <div class="col-md-3 mb-4">
 
@@ -574,12 +574,13 @@ Kept as a comment so the original programmer
 
 </div>
 
+<partial name="_Pagination" model="Model" />
+
 
 
 <!-- =========================================================
      FLOATING ADD LISTING BUTTON
 
-     Existing Member / Admin / Guest logic is preserved.
 ========================================================== -->
 @if (User.IsInRole("Member"))
 {

@@ -3770,9 +3770,9 @@
     gap: 14px;
     min-width: 190px;
     min-height: 44px;
-    padding: 0 13px;
+    padding: 0 16px;
     border: 1px solid #dfe5e2;
-    border-radius: 11px;
+    border-radius: 999px;
     background: #ffffff;
     color: #344054;
     font-family: inherit;
@@ -3782,7 +3782,6 @@
     outline: none;
     transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 
     .lost-found-dropdown-button:hover {
         border-color: #cbd5d0;
@@ -3901,8 +3900,9 @@
 
 
     .lost-found-dropdown-item.active {
-        color: #344054;
-        background: transparent;
+        color: #4f8d42;
+        background: #eaf8e6;
+        font-weight: 600;
     }
 
 
@@ -4756,3 +4756,5 @@
             height: 16px;
         }
 }
+
+

@@ -2,226 +2,395 @@
 
 @{
     ViewData["Title"] = "My Posts";
-    // Create the individual filter definitions required by MyPosts
-    // and combine them into the FilterBarViewModel expected by _FilterBar.
+
+    // =========================================================
+    // MY POSTS FILTERS
+    // =========================================================
+
     var myPostsFilters = PETHUB.Helpers.FilterBarHelper.Create(
         PETHUB.Helpers.FilterBarHelper.Status(Model.StatusFilter),
         PETHUB.Helpers.FilterBarHelper.PostType(Model.TypeFilter)
     );
 }
 
-@* Header and Edit Profile Button*@
-<div class="d-flex justify-content-between align-items-center mb-4">
+
+<div class="my-posts-page">
 
 
-</div>
+    <!-- ==========================================================
+         PROFILE SUMMARY
+    ========================================================== -->
 
-    @* Profile Summary Card is displayed here *@
+    <partial name="_ProfileSummaryCard"
+             model="Model.Profile" />
 
-    <a asp-controller="MyProfile"
-       asp-action="View"
-       class="text-decoration-none text-reset d-block">
-        <partial name="_ProfileSummaryCard" model="Model.Profile" />
-    </a>
 
-    <h2 class="mb-4 mt-4">
-        My Posts
-    </h2>
+    <!-- ==========================================================
+         MY POSTS HEADER
+    ========================================================== -->
 
-<div class="d-flex gap-3 mb-3 align-items-center">
-    @* Render the complete filter bar containing the Status and Post Type filters. *@
-    <partial name="Components/_FilterBar"
-             model="myPostsFilters" />
-</div>
+    <div class="my-posts-heading">
 
-    @foreach (var post in Model.Posts)
-    {
-        @* ===========================
-           MARKETPLACE POSTS
-           =========================== *@
-        @if (post.Listing != null)
-        {
-            <div class="card shadow-sm">
+        <div>
 
-                <!-- Card Body -->
-                <div class="card-body d-flex justify-content-between align-items-center">
+            <h2>
+                My Posts
+            </h2>
 
-                    <!-- LEFT SIDE -->
-                    <a asp-controller="MyPosts"
-                       asp-action="MarketplaceDetails"
-                       asp-route-id="@post.Listing.ListingId"
-                       class="d-flex align-items-center flex-grow-1 text-decoration-none text-dark">
+            <p>
+                Manage your listings and reports
+            </p>
 
-                        <!-- Listing Thumbnail -->
-                        <div class="me-4">
+        </div>
 
-                            @if (post.Listing.Images != null && post.Listing.Images.Any())
+    </div>
+
+
+    <!-- ==========================================================
+         FILTERS + TOTAL POST COUNT
+    ========================================================== -->
+
+    <div class="my-posts-toolbar">
+
+        <div class="my-posts-filters">
+
+            @foreach (var filter in myPostsFilters.Filters)
+            {
+                var selectedValue = filter.SelectedValue ?? filter.DefaultValue;
+
+                <div class="my-post-filter"
+                     data-filter-dropdown>
+
+                    <span class="my-post-filter-label">
+                        @filter.Label
+                    </span>
+
+                    <button type="button"
+                            class="my-post-filter-button"
+                            data-dropdown-button
+                            aria-expanded="false">
+
+                        <span>
+                            @(filter.Options.FirstOrDefault(x => x.Value == selectedValue)?.Label
+                                ?? filter.Options.FirstOrDefault()?.Label)
+                        </span>
+
+                        <i data-lucide="chevron-down"></i>
+
+                    </button>
+
+                    <div class="my-post-filter-menu"
+                         data-dropdown-menu>
+
+                        @foreach (var option in filter.Options)
+                        {
+                            var query = Context.Request.Query
+                                .ToDictionary(
+                                    item => item.Key,
+                                    item => item.Value.ToString()
+                                );
+
+                            if (string.IsNullOrEmpty(option.Value))
                             {
-                                <img src="@Url.Content(post.Listing.Images.First().ImagePath)"
-                                     class="img-fluid rounded"
-                                     alt="Listing Image"
-                                     style="width:140px;height:140px;object-fit:cover;" />
+                                query.Remove(filter.ParameterName);
                             }
                             else
                             {
-                                <img src="@Url.Content("~/images/no-image.png")"
-                                     class="img-fluid rounded"
-                                     alt="No Image"
-                                     style="width:140px;height:140px;object-fit:cover;" />
+                                query[filter.ParameterName] = option.Value;
                             }
 
-                        </div>
+                            var queryString = string.Join(
+                                "&",
+                                query.Select(
+                                    item => $"{item.Key}={Uri.EscapeDataString(item.Value)}"
+                                )
+                            );
 
-                        <!-- Listing Information -->
-                        <div>
+                            var baseUrl = Context.Request.Path.ToString();
 
-                            <h4 class="fw-bold">
-                                @post.Listing.Title
-                            </h4>
+                            var optionUrl = string.IsNullOrEmpty(queryString)
+                                ? baseUrl
+                                : $"{baseUrl}?{queryString}";
 
-                            <p class="mb-1">
-                                <strong>Created:</strong>
-                                @post.Listing.DatePosted.ToString("MMM dd, yyyy")
-                            </p>
+                            var isSelected = option.Value == selectedValue;
 
-                            <p class="mb-1">
-                                <strong>Listing Type:</strong>
-                                @post.Listing.Type
-                            </p>
+                            <a href="@optionUrl"
+                               class="my-post-filter-option @(isSelected ? "selected" : "")">
 
-                        </div>
+                                @option.Label
+
+                            </a>
+                        }
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+        <span class="my-posts-count">
+
+            @Model.TotalItems
+            @(Model.TotalItems == 1 ? "post" : "posts")
+
+        </span>
+
+    </div>
+
+
+    <!-- ==========================================================
+         MY POSTS RESULTS
+    ========================================================== -->
+
+    <div class="my-posts-results">
+
+        @foreach (var post in Model.Posts)
+        {
+
+            <!-- ==================================================
+                 MARKETPLACE POST
+            ================================================== -->
+            @if (post.Listing != null)
+            {
+                <div class="my-post-card">
+
+
+                    <!-- ==================================================
+                         LISTING IMAGE
+                    ================================================== -->
+
+                    <a asp-controller="MyPosts"
+                       asp-action="MarketplaceDetails"
+                       asp-route-id="@post.Listing.ListingId"
+                       class="my-post-card-image-link">
+
+                        @if (post.Listing.Images != null &&
+                             post.Listing.Images.Any())
+                        {
+                            <img src="@Url.Content(post.Listing.Images.First().ImagePath)"
+                                 class="my-post-card-image"
+                                 alt="Listing Image" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/images/no-image.png")"
+                                 class="my-post-card-image"
+                                 alt="No Image" />
+                        }
 
                     </a>
 
-                    <!-- RIGHT SIDE -->
-                    <div class="d-flex flex-wrap gap-2 justify-content-end ms-4">
+
+                    <!-- ==================================================
+                         LISTING INFORMATION
+                    ================================================== -->
+
+                    <a asp-controller="MyPosts"
+                       asp-action="MarketplaceDetails"
+                       asp-route-id="@post.Listing.ListingId"
+                       class="my-post-card-content">
+
+                        <h3>
+                            @post.Listing.Title
+                        </h3>
+
+                        <p class="my-post-card-type">
+                            Marketplace · @post.Listing.Type
+                        </p>
+
+                        <p class="my-post-card-date">
+                            Created @post.Listing.DatePosted.ToString("MMM dd, yyyy")
+                        </p>
+
+                    </a>
 
 
-                    </div>
-                    
-                </div>
+                    <!-- ==================================================
+                         RIGHT SIDE ACTIONS
+                    ================================================== -->
 
-                <!-- Footer -->
-                <div class="card-footer d-flex justify-content-end align-items-center">
+                    <div class="my-post-card-actions">
 
-                    <div>
 
-                        <strong>Approval:</strong>
+                        <!-- ==================================================
+                             THREE-DOT MENU
+                        ================================================== -->
 
+                        <div class="dropdown">
+
+                            <button class="my-post-more-button"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    aria-label="Post options">
+
+                                <i data-lucide="ellipsis"></i>
+
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+
+                                <li>
+
+                                    <a asp-controller="MyPosts"
+                                       asp-action="MarketplaceDetails"
+                                       asp-route-id="@post.Listing.ListingId"
+                                       class="dropdown-item">
+
+                                        View Details
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+
+                        <!-- ==================================================
+                             APPROVAL STATUS
+                        ================================================== -->
                         @if (post.Listing.Status == ListApprovalStatus.Pending)
                         {
-                            <span class="badge bg-warning text-dark">
-                                Pending Approval
+                            <span class="my-post-status my-post-status-pending">
+                                Pending
                             </span>
                         }
                         else if (post.Listing.Status == ListApprovalStatus.Approved)
                         {
-                            <span class="badge bg-success">
+                            <span class="my-post-status my-post-status-approved">
                                 Approved
                             </span>
                         }
                         else
                         {
-                            <span class="badge bg-danger">
+                            <span class="my-post-status my-post-status-rejected">
                                 Rejected
                             </span>
                         }
 
                     </div>
 
-
                 </div>
+            }
+            else if (post.Report != null)
+            {
+                <div class="my-post-card">
 
-            </div>
-        }
 
-        @* ===========================
-           LOST & FOUND POSTS
-           =========================== *@
-        else if (post.Report != null)
-        {
-            <div class="card shadow-sm">
+                    <!-- ==================================================
+                         REPORT IMAGE
+                    ================================================== -->
 
-                <!-- Card Body -->
-                <div class="card-body d-flex justify-content-between align-items-center">
-
-                    <!-- LEFT SIDE -->
                     <a asp-controller="MyPosts"
                        asp-action="LostFoundDetails"
                        asp-route-id="@post.Report.LostFoundId"
-                       class="d-flex align-items-center flex-grow-1 text-decoration-none text-dark">
+                       class="my-post-card-image-link">
 
-                        <!-- Report Thumbnail -->
-                        <div class="me-4">
-
-                            @if (post.Report.Images != null && post.Report.Images.Any())
-                            {
-                                <img src="@Url.Content(post.Report.Images.First().ImagePath)"
-                                     class="img-fluid rounded"
-                                     alt="Report Image"
-                                     style="width:140px;height:140px;object-fit:cover;" />
-                            }
-                            else
-                            {
-                                <img src="@Url.Content("~/images/no-image.png")"
-                                     class="img-fluid rounded"
-                                     alt="No Image"
-                                     style="width:140px;height:140px;object-fit:cover;" />
-                            }
-
-                        </div>
-
-                        <!-- Report Information -->
-                        <div>
-
-                            <h4 class="fw-bold">
-                                @post.Report.Title
-                            </h4>
-
-                            <p class="mb-1">
-                                <strong>Created:</strong>
-                                @post.Report.DateReported.ToString("MMM dd, yyyy")
-                            </p>
-
-                            <p class="mb-1">
-                                <strong>Report Type:</strong>
-                                @post.Report.Type
-                            </p>
-
-                        </div>
+                        @if (post.Report.Images != null &&
+                             post.Report.Images.Any())
+                        {
+                            <img src="@Url.Content(post.Report.Images.First().ImagePath)"
+                                 class="my-post-card-image"
+                                 alt="Report Image" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/images/no-image.png")"
+                                 class="my-post-card-image"
+                                 alt="No Image" />
+                        }
 
                     </a>
 
-                    <!-- RIGHT SIDE -->
-                    <div class="d-flex flex-wrap gap-2 justify-content-end ms-4">
+
+                    <!-- ==================================================
+                         REPORT INFORMATION
+                    ================================================== -->
+
+                    <a asp-controller="MyPosts"
+                       asp-action="LostFoundDetails"
+                       asp-route-id="@post.Report.LostFoundId"
+                       class="my-post-card-content">
+
+                        <h3>
+                            @post.Report.Title
+                        </h3>
+
+                        <p class="my-post-card-type">
+                            Lost &amp; Found · @post.Report.Type
+                        </p>
+
+                        <p class="my-post-card-date">
+                            Created @post.Report.DateReported.ToString("MMM dd, yyyy")
+                        </p>
+
+                    </a>
 
 
-                    </div>
+                    <!-- ==================================================
+                         RIGHT SIDE ACTIONS
+                    ================================================== -->
 
-                </div>
+                    <div class="my-post-card-actions">
 
-                <!-- Footer -->
-                <div class="card-footer d-flex justify-content-end align-items-end">
 
-                    <div>
+                        <!-- ==================================================
+                             THREE-DOT MENU
+                        ================================================== -->
 
-                        <strong>Approval:</strong>
+                        <div class="dropdown">
 
+                            <button class="my-post-more-button"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    aria-label="Post options">
+
+                                <i data-lucide="ellipsis"></i>
+
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+
+                                <li>
+
+                                    <a asp-controller="MyPosts"
+                                       asp-action="LostFoundDetails"
+                                       asp-route-id="@post.Report.LostFoundId"
+                                       class="dropdown-item">
+
+                                        View Details
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+
+                        <!-- ==================================================
+                             APPROVAL STATUS
+                        ================================================== -->
                         @if (post.Report.Status == ApprovalStatus.Pending)
                         {
-                            <span class="badge bg-warning text-dark">
-                                Pending Approval
+                            <span class="my-post-status my-post-status-pending">
+                                Pending
                             </span>
                         }
                         else if (post.Report.Status == ApprovalStatus.Approved)
                         {
-                            <span class="badge bg-success">
+                            <span class="my-post-status my-post-status-approved">
                                 Approved
                             </span>
                         }
                         else
                         {
-                            <span class="badge bg-danger">
+                            <span class="my-post-status my-post-status-rejected">
                                 Rejected
                             </span>
                         }
@@ -229,10 +398,29 @@
                     </div>
 
                 </div>
+            }
 
-            </div>
         }
-    }
+
+    </div>
+
+    <partial name="_Pagination" model="Model" />
 
 </div>
 
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            if (typeof lucide !== "undefined") {
+                lucide.createIcons();
+            }
+
+        });
+
+    </script>
+
+}

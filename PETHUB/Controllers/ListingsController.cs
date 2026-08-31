@@ -8,6 +8,7 @@ using PETHUB.Helpers;
 using PETHUB.Models;
 using PETHUB.Services;
 using System.Security.Claims;
+using PETHUB.ViewModels;
 
 namespace PETHUB.Controllers
 {
@@ -76,11 +77,34 @@ namespace PETHUB.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Marketplace(
             string? listingType,
-            string? petType)
+            string? petType,
+            int page = 1)
         {
+            // =========================================================
+            // PAGINATION SETTINGS
+            // =========================================================
+
+            const int pageSize = 12;
+
+            // Prevent invalid page numbers.
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+
+            // =========================================================
+            // GET CURRENT USER
+            // =========================================================
+
             // Get the current user's ID so members do not see their own listings.
             // For guests, GetUserId returns null and all public listings remain available.
             var memberid = _userManager.GetUserId(User);
+
+
+            // =========================================================
+            // EXISTING MARKETPLACE QUERY
+            // =========================================================
 
             // Start with the existing public Marketplace rules.
             // Only approved and currently pending/available listings are shown.
@@ -93,27 +117,100 @@ namespace PETHUB.Controllers
                     l.MemberId != memberid)
                 .AsQueryable();
 
+
+            // =========================================================
+            // EXISTING LISTING TYPE FILTER
+            // =========================================================
+
             // Apply the Listing Type filter when a specific type was selected.
             // Enum.TryParse converts "For_Adoption" or "For_Sale" from the URL
             // into the corresponding ListType enum value.
             if (!string.IsNullOrWhiteSpace(listingType) &&
-                Enum.TryParse<ListType>(listingType, out var selectedListingType))
+                Enum.TryParse<ListType>(
+                    listingType,
+                    out var selectedListingType))
             {
                 // EF Core translates this comparison into a database WHERE condition.
-                listings = listings.Where(l => l.Type == selectedListingType);
+                listings = listings.Where(
+                    l => l.Type == selectedListingType);
             }
+
+
+            // =========================================================
+            // EXISTING PET TYPE FILTER
+            // =========================================================
 
             // Apply the Pet Type filter when Dog or Cat was selected.
             // The Marketplace Listing model uses the ListPetType enum.
             if (!string.IsNullOrWhiteSpace(petType) &&
-                Enum.TryParse<ListPetType>(petType, out var selectedPetType))
+                Enum.TryParse<ListPetType>(
+                    petType,
+                    out var selectedPetType))
             {
                 // Only listings matching the selected Dog/Cat type are returned.
-                listings = listings.Where(l => l.PetType == selectedPetType);
+                listings = listings.Where(
+                    l => l.PetType == selectedPetType);
             }
 
-            // Execute the final query after all selected filters have been applied.
-            return View(await listings.ToListAsync());
+
+            // =========================================================
+            // PAGINATION
+            // =========================================================
+
+            // Count the results AFTER all selected filters have been applied.
+            // Example:
+            // 48 total listings
+            // → For Sale filter
+            // → 19 matching listings
+            //
+            // TotalItems will therefore be 19.
+            var totalItems = await listings.CountAsync();
+
+
+            // Calculate the total number of pages.
+            var totalPages = (int)Math.Ceiling(
+                totalItems / (double)pageSize);
+
+
+            // Prevent the requested page from going beyond
+            // the available number of pages.
+            if (totalPages > 0 && page > totalPages)
+            {
+                page = totalPages;
+            }
+
+
+            // =========================================================
+            // GET CURRENT PAGE
+            // =========================================================
+
+            // Retrieve only the listings needed for the current page.
+            // Marketplace displays 12 listings per page.
+            var pagedListings = await listings
+                .OrderByDescending(l => l.DatePosted)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+
+            // =========================================================
+            // CREATE PAGED RESULT
+            // =========================================================
+
+            var result = new PaginationViewModel<Listing>
+            {
+                Items = pagedListings,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalItems = totalItems
+            };
+
+
+            // =========================================================
+            // RETURN TO MARKETPLACE VIEW
+            // =========================================================
+
+            return View(result);
         }
 
         // GET: Listings/Details/AdminView
