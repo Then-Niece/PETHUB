@@ -1,255 +1,41 @@
 ﻿@using System.Linq
+@using PETHUB.ViewModels
 @model IEnumerable<PETHUB.ViewModels.PetFeedFeedViewModel>
 
 @{
-    ViewData["Title"] = "Pet Feed";
-    var petFeedFilters = PETHUB.Helpers.FilterBarHelper.Create(
-       PETHUB.Helpers.FilterBarHelper.PetFeedType(
-           Context.Request.Query["petFeedType"].ToString()
-       )
-   );
+    // Retrieve the active administrator announcements supplied by
+    // PetFeedsController. If none exist, use an empty collection so
+    // the partial can safely render nothing.
+    var announcements =
+        ViewData["Announcements"] as IEnumerable<PETHUB.Models.PetFeed>
+        ?? Enumerable.Empty<PETHUB.Models.PetFeed>();
 }
 
-<div class="feed-container">
-
-    @* Render the reusable PetFeed type filter. *@
-    <partial name="Components/_FilterBar"
-             model="petFeedFilters" />
-
-   @foreach (var post in Model)
-   {
-        <div class="card mb-4 shadow-sm @(post.IsHighlighted ? "highlight-post" : "")" id="post-@post.PetFeedId">
-
-            <div class="card-body">
-
-                <!-- POST HEADER -->
-                <div class="d-flex align-items-center mb-3">
-
-                    <img src="~/images/PETHUB-LOGO.png"
-                         class="rounded-circle me-2"
-                         style="width:40px;height:40px;" />
-
-                    <div>
-                        <strong>PETHUB</strong>
-                        <br />
-
-                        <small class="text-muted">
-                            @post.DateCreated.ToString("MMM dd, yyyy")
-                        </small>
-                    </div>
-
-                </div>
-
-
-                <!-- POST CONTENT -->
-
-                <h4 class="fw-bold">
-                    @post.Title
-                </h4>
-
-                <p>
-                    @post.Content
-                </p>
-
-
-                <!-- IMAGES -->
-                @if (post.Images != null && post.Images.Any())
-                {
-                    var images = post.Images.ToList();
-
-                    @if (images.Count == 1)
-                    {
-                        <img src="@images[0].ImagePath"
-                             class="post-image w-100 rounded" />
-                    }
-                    else
-                    {
-                        <div class="image-grid">
-
-                            @foreach (var image in images.Take(4))
-                            {
-                                <img src="@image.ImagePath"
-                                     class="grid-image rounded" />
-                            }
-
-
-                            @if (images.Count > 4)
-                            {
-                                <div class="more-images">
-                                    +@(images.Count - 4)
-                                </div>
-                            }
-
-                        </div>
-                    }
-                }
-
-
-                <!-- PAW BUTTON -->
-
-                <div class="mt-3">
-                    🐾 @post.PawCount paws
-                </div>
-
-
-                <!-- IF THE USER IS AUTHENTICATED ONLY THE MEMBER CAN PAW AND UNPAW POSTS WHILE !AUTHENTICATED IS CLIENT -->
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <form asp-action="@(post.IsPawed ? "Unpaw" : "Paw")" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" value="@post.PetFeedId" />
-                        <button class="btn btn-primary mt-2">
-                            @(post.IsPawed ? "Remove Paw" : "Paw")
-                        </button>
-                    </form>
-                }
-                else
-                {
-                    <!-- Show modal trigger instead -->
-                    <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#loginModal">
-                        Paw
-                    </button>
-                }
-                
-
-
-                <hr />
-
-
-                <!-- COMMENTS -->
-
-                <h6 class="fw-bold">
-                    Comments
-                </h6>
-
-
-                @if (post.Comments != null && post.Comments.Any())
-                {
-
-                    <div class="mt-3">
-
-                        @foreach (var comment in post.Comments)
-                        {
-                            <div class="card mb-3 border-0 bg-light">
-
-                                <div class="card-body p-3">
-
-                                    <div class="d-flex align-items-center">
-
-
-                                        <div class="rounded-circle bg-success text-white
-                                            d-flex justify-content-center
-                                            align-items-center"
-                                             style="width:35px;height:35px;">
-
-                                            
-
-                                            @if (!string.IsNullOrEmpty(comment.Member?.ProfilePicturePath))
-                                            {
-                                                <img src="@comment.Member.ProfilePicturePath"
-                                                     class="rounded-circle border"
-                                                     style="width:35px;height:35px;object-fit:cover;" />
-                                            }
-                                            else
-                                            {
-                                                @(comment.Member?.FirstName?.Substring(0, 1) ?? "?")
-                                            }
-
-                                        </div>
-
-
-                                        <div class="ms-2">
-
-                                            <strong>
-                                                @comment.Member?.FirstName
-                                                @comment.Member?.LastName
-                                            </strong>
-
-                                            <br />
-
-                                            <small class="text-muted">
-                                                @comment.DatePosted.ToString("MMM dd, yyyy")
-                                            </small>
-
-                                        </div>
-
-
-                                        @if (User.IsInRole("Admin") ||
-                                            comment.MemberId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
-                                        {
-                                            <form asp-action="DeleteComment"
-                                                  method="post"
-                                                  class="ms-auto">
-
-                                                @Html.AntiForgeryToken()
-
-                                                <input type="hidden"
-                                                       name="id"
-                                                       value="@comment.CommentId" />
-
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-danger">
-                                                    Delete
-                                                </button>
-
-                                            </form>
-                                        }
-
-                                    </div>
-
-
-                                    <p class="mt-2 mb-0">
-                                        @comment.Content
-                                    </p>
-
-
-                                </div>
-
-                            </div>
-                        }
-
-
-                    </div>
-
-                }
-                else
-                {
-                    <p class="text-muted">
-                        No comments yet. Be the first to comment!
-                    </p>
-                }
-
-
-
-                <!-- ADD COMMENT -->
-                <!-- IF THE USE IS AUTHENTICATED, ONLY THE MEMBER CAN ADD COMMENTS WHILE !AUTHENTICATED IS ONLY THE CLIENT -->
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <form asp-action="AddComment" method="post" class="mt-3">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" value="@post.PetFeedId" />
-                        <textarea name="content" class="form-control" rows="2" placeholder="Write a comment..."></textarea>
-                        <button class="btn btn-primary mt-2">Comment</button>
-                    </form>
-                }
-                else
-                {
-                    <button class="btn btn-secondary mt-3 w-100" data-bs-toggle="modal" data-bs-target="#loginModal">
-                        Login to comment
-                    </button>
-                }
-
-
-
-            </div>
-
-        </div>
-    }
+<!--
+    Announcement carousel always appears before the normal combined feed.
+    The partial renders nothing when there are no active announcements.
+-->
+@await Html.PartialAsync(
+    "_Announcements",
+    announcements
+)
+
+@* 
+    The FeedSeed identifies the current randomized feed session.
+    petfeed.js reads this value so every LoadMore request uses the same
+    ordering generated by the controller.
+*@
+<div class="feed-container"
+     data-feed-seed="@ViewData["FeedSeed"]">
+
+    @await Html.PartialAsync("_FeedItems", Model)
 
 </div>
 
+<!-- ==============================================================
+     LOGIN MODAL
+     ============================================================== -->
 
-<!-- LOGIN MODAL -->
 <div class="modal fade"
      id="loginModal"
      tabindex="-1"

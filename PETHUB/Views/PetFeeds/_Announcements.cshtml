@@ -1,0 +1,128 @@
+﻿@using PETHUB.Models
+@model IEnumerable<PetFeed>
+
+@{
+    // Convert the supplied announcements to a list so we can safely
+    // determine whether there are any announcements to display.
+    var announcements = Model?.ToList() ?? new List<PetFeed>();
+}
+
+@if (announcements.Any())
+{
+    <!--
+        This is the single container for all active announcements.
+        Bootstrap's carousel component handles moving between announcements.
+        Only one announcement is visible at a time.
+    -->
+    <div id="announcementCarousel"
+         class="carousel slide mb-4">
+
+        <!--
+            Create navigation indicators only when there is more than
+            one announcement. Each button selects a specific carousel item.
+        -->
+        @if (announcements.Count > 1)
+        {
+            <div class="carousel-indicators">
+
+                @for (int i = 0; i < announcements.Count; i++)
+                {
+                    <!--
+                        Bootstrap uses data-bs-slide-to to select the
+                        corresponding carousel position.
+                    -->
+                    <button type="button"
+                            data-bs-target="#announcementCarousel"
+                            data-bs-slide-to="@i"
+                            class="@(i == 0 ? "active" : "")"
+                            aria-current="@(i == 0 ? "true" : "false")"
+                            aria-label="Announcement @(i + 1)">
+                    </button>
+                }
+
+            </div>
+        }
+
+        <!-- Contains all announcement slides. -->
+        <div class="carousel-inner">
+
+            @for (int i = 0; i < announcements.Count; i++)
+            {
+                var announcement = announcements[i];
+
+                <!--
+                    The first announcement receives Bootstrap's active class.
+                    Without an active slide, the carousel would have nothing
+                    visible when it first loads.
+                -->
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+
+                    <div class="card shadow-sm">
+
+                        <div class="card-body">
+
+                            <!-- Announcement label -->
+                            <div class="mb-2">
+                                <span class="badge bg-success">
+                                    Announcement
+                                </span>
+                            </div>
+
+                            <!-- Announcement title -->
+                            <h4 class="fw-bold">
+                                @announcement.Title
+                            </h4>
+
+                            <!-- Announcement content -->
+                            <p class="mb-0">
+                                @announcement.Content
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+        <!--
+            Previous button is only useful when there are multiple
+            announcements, so it is hidden for a single announcement.
+        -->
+        @if (announcements.Count > 1)
+        {
+            <button class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#announcementCarousel"
+                    data-bs-slide="prev">
+
+                <span class="carousel-control-prev-icon"
+                      aria-hidden="true">
+                </span>
+
+                <span class="visually-hidden">
+                    Previous
+                </span>
+
+            </button>
+
+            <button class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#announcementCarousel"
+                    data-bs-slide="next">
+
+                <span class="carousel-control-next-icon"
+                      aria-hidden="true">
+                </span>
+
+                <span class="visually-hidden">
+                    Next
+                </span>
+
+            </button>
+        }
+
+    </div>
+}
