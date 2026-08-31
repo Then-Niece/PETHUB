@@ -1,4 +1,4 @@
-@model IEnumerable<PETHUB.Models.LostFound>
+@model PETHUB.ViewModels.PaginationViewModel<PETHUB.Models.LostFound>
 
 @{
     ViewData["Title"] = "Lost & Found Reports";
@@ -21,7 +21,7 @@
     // LOST & FOUND REPORT COUNT
     // =========================================================
 
-    var reportCount = Model.Count();
+    var reportCount = Model.TotalItems;
 
     var selectedPetType =
         Context.Request.Query["petType"].ToString();
@@ -373,7 +373,7 @@ else
 
 <div class="row mt-4 lost-found-card-grid">
 
-    @foreach (var item in Model)
+    @foreach (var item in Model.Items)
     {
         var isLost = item.Type.ToString().Equals(
             "Lost",
@@ -612,6 +612,8 @@ ORIGINAL PROGRAMMER LOGIC PRESERVED.
     }
 
 </div>
+
+<partial name="_Pagination" model="Model" />
 
 
 

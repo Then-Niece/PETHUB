@@ -6,6 +6,7 @@ using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
 using PETHUB.Services;
+using PETHUB.ViewModels;
 
 public class LostFoundsController : Controller
 {
@@ -706,11 +707,35 @@ public class LostFoundsController : Controller
     // lostFoundType filters Lost/Found while petType filters Dog/Cat.
     [AllowAnonymous]
     public async Task<IActionResult> Browse(
-        string? lostFoundType,
-        string? petType)
+       string? lostFoundType,
+       string? petType,
+       int page = 1)
     {
+        // =========================================================
+        // PAGINATION SETTINGS
+        // =========================================================
+
+        const int pageSize = 12;
+
+        // Prevent invalid page numbers.
+        if (page < 1)
+        {
+            page = 1;
+        }
+
+
+        // =========================================================
+        // GET CURRENT USER
+        // =========================================================
+
         // Get the current user's ID so members do not see their own reports.
+        // For guests, GetUserId returns null and all public reports remain available.
         var userid = _userManager.GetUserId(User);
+
+
+        // =========================================================
+        // EXISTING LOST & FOUND QUERY
+        // =========================================================
 
         // Start with the existing public Lost & Found rules.
         // Only approved and active reports are displayed.
@@ -723,6 +748,11 @@ public class LostFoundsController : Controller
             .Include(l => l.Images)
             .AsQueryable();
 
+
+        // =========================================================
+        // EXISTING LOST / FOUND FILTER
+        // =========================================================
+
         // Apply the Lost/Found filter when a specific report type was selected.
         // Enum.TryParse converts "Lost" or "Found" into LostFoundType.
         if (!string.IsNullOrWhiteSpace(lostFoundType) &&
@@ -731,20 +761,80 @@ public class LostFoundsController : Controller
                 out var selectedReportType))
         {
             // EF Core filters the query to the selected Lost/Found type.
-            lostfounds = lostfounds.Where(l => l.Type == selectedReportType);
+            lostfounds = lostfounds.Where(
+                l => l.Type == selectedReportType);
         }
+
+
+        // =========================================================
+        // EXISTING PET TYPE FILTER
+        // =========================================================
 
         // Apply the Dog/Cat filter when a specific pet type was selected.
-        // LostFound uses its own PetType enum, separate from Marketplace's ListPetType.
+        // Lost & Found uses its own PetType enum.
         if (!string.IsNullOrWhiteSpace(petType) &&
-            Enum.TryParse<PetType>(petType, out var selectedPetType))
+            Enum.TryParse<PetType>(
+                petType,
+                out var selectedPetType))
         {
-            // Only reports matching the selected pet type are returned.
-            lostfounds = lostfounds.Where(l => l.PetType == selectedPetType);
+            // EF Core filters the query to the selected pet type.
+            lostfounds = lostfounds.Where(
+                l => l.PetType == selectedPetType);
         }
 
-        // Execute the final query after all selected filters have been applied.
-        return View(await lostfounds.ToListAsync());
+
+        // =========================================================
+        // PAGINATION
+        // =========================================================
+
+        // Count the results AFTER all selected filters have been applied.
+        var totalItems = await lostfounds.CountAsync();
+
+
+        // Calculate the total number of pages.
+        var totalPages = (int)Math.Ceiling(
+            totalItems / (double)pageSize);
+
+
+        // Prevent the requested page from going beyond
+        // the available number of pages.
+        if (totalPages > 0 && page > totalPages)
+        {
+            page = totalPages;
+        }
+
+
+        // =========================================================
+        // GET CURRENT PAGE
+        // =========================================================
+
+        // Retrieve only the reports needed for the current page.
+        // Lost & Found displays 12 reports per page.
+        var pagedLostFounds = await lostfounds
+            .OrderByDescending(l => l.DateReported)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+
+        // =========================================================
+        // CREATE PAGED RESULT
+        // =========================================================
+
+        var result = new PaginationViewModel<LostFound>
+        {
+            Items = pagedLostFounds,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalItems
+        };
+
+
+        // =========================================================
+        // RETURN TO LOST & FOUND VIEW
+        // =========================================================
+
+        return View(result);
     }
 
     // GET: LOSTFOUNDS/Details/5

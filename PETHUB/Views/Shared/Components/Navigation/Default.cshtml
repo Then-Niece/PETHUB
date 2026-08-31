@@ -73,6 +73,14 @@
                             </a>
                         </li>
 
+                        <li class="nav-item mx-2">
+                            <a class="nav-link fw-semibold @(isPetFeed ? "active" : "")"
+                               asp-controller="PetFeeds"
+                               asp-action="Feed">
+                                Pet Feed
+                            </a>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link fw-semibold @(isMarketplace ? "active" : "")"
                                asp-controller="Listings"
@@ -89,13 +97,7 @@
                             </a>
                         </li>
 
-                        <li class="nav-item mx-2">
-                            <a class="nav-link fw-semibold @(isPetFeed ? "active" : "")"
-                               asp-controller="PetFeeds"
-                               asp-action="Feed">
-                                Pet Feed
-                            </a>
-                        </li>
+  
 
                         <li class="nav-item ms-lg-2">
                             <a asp-controller="UserAccount"

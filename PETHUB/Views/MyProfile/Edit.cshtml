@@ -2,701 +2,263 @@
 
 @{
     ViewData["Title"] = "Edit My Profile";
+
     ViewData["Province"] = Model.Province;
     ViewData["City"] = Model.City;
     ViewData["Barangay"] = Model.Barangay;
     ViewData["StreetAddress"] = Model.StreetAddress;
 }
 
-<div class="container py-4">
 
-    <div class="row justify-content-center">
+<div class="container-fluid py-4">
 
-        <div class="col-lg-9">
+    @* Success message *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-4">
 
-            <!-- ========================================================= -->
-            <!-- PAGE HEADER                                                -->
-            <!-- ========================================================= -->
-            @if (TempData["SuccessMessage"] != null) @* Shows Success Message After Saving Changes *@
-            {
-                <div class="alert alert-success alert-dismissible fade show">
+            @TempData["SuccessMessage"]
 
-                    @TempData["SuccessMessage"] @* Call from TempData in MyProfileController *@
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
 
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert">
-                    </button>
+        </div>
+    }
 
-                </div>
-            }
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
+    <form asp-action="Edit"
+          method="post"
+          enctype="multipart/form-data">
 
-                <div>
+        @Html.AntiForgeryToken()
 
-                    <h2 class="mb-1">Edit My Profile</h2>
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger mb-3">
+        </div>
 
-                    <p class="text-muted mb-0">
-                        Manage your personal information and account details.
-                    </p>
 
-                </div>
+        <div class="profile-page-layout">
 
-            </div>
 
-            <form asp-action="Edit"
-                  method="post"
-                  enctype="multipart/form-data">
+            @* =====================================================
+               LEFT SIDE
+               ===================================================== *@
 
-                @Html.AntiForgeryToken()
-                @* Summarize overall error on validation fields *@
-                <div asp-validation-summary="ModelOnly"
-                     class="text-danger mb-3">
-                </div>
-                <!-- ========================================================= -->
-                <!-- PROFILE CARD                                               -->
-                <!-- ========================================================= -->
+            <div class="profile-left-column">
 
-                <div class="card shadow-sm mb-4 mt-4">
 
-                    <div class="card-body text-center">
+                @* Profile card *@
 
-                        <!-- Profile Picture -->
+                <div class="profile-member-card">
+
+                    <div class="profile-card-cover">
+                    </div>
+
+
+                    <div class="profile-picture-wrapper">
+
                         @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
                         {
                             <img id="profilePicturePreview"
                                  src="@Model.ProfilePicturePath"
-                                 class="rounded-circle border mb-3"
-                                 width="180"
-                                 height="180"
-                                 style="object-fit:cover;" />
+                                 class="profile-picture"
+                                 alt="Profile Picture" />
                         }
                         else
                         {
                             <img id="profilePicturePreview"
                                  src="~/images/default_profile.jpg"
-                                 class="rounded-circle border mb-3"
-                                 width="180"
-                                 height="180"
-                                 style="object-fit:cover;" />
+                                 class="profile-picture"
+                                 alt="Default Profile Picture" />
                         }
-                        <!-- Name -->
 
-                        <h3 class="mb-1">
+                    </div>
+
+
+                    <div class="profile-member-info">
+
+                        <h3 class="profile-member-name">
 
                             @Model.FirstName
 
                             @if (!string.IsNullOrWhiteSpace(Model.MiddleName))
                             {
-                                @Model.MiddleName
+                                <span>
+                                    @Model.MiddleName
+                                </span>
                             }
 
                             @Model.LastName
 
                         </h3>
 
-                        <!-- User Type -->
 
-                        <p class="text-muted mb-2">
-
+                        <div class="profile-member-role">
                             Member
+                        </div>
 
-                        </p>
 
-                        <!-- Joined Date -->
+                        <p class="profile-member-joined">
 
-                        <p class="text-secondary">
-
-                            <strong>Joined:</strong>
-
+                            Joined
                             @Model.CreatedAt.ToString("MMMM dd, yyyy")
 
                         </p>
 
-                        <!-- Change Profile Picture -->
-                        <!-- Hidden file input used for selecting a new profile picture -->
+
+                        @* Profile picture input *@
+
                         <input asp-for="ProfilePictureFile"
                                type="file"
                                id="profilePictureInput"
                                accept=".jpg,.jpeg,.png,.webp"
                                class="d-none" />
 
-                        <!-- Hidden input to mark profile picture for removal -->
+
                         <input asp-for="RemoveProfilePicture"
                                type="hidden"
                                id="RemoveProfilePicture" />
 
-                        <!-- Opens the hidden file picker -->
+
+                        <button type="button"
+                                id="openProfilePhotoModalBtn"
+                                class="profile-edit-button">
+
+                            Change Profile Photo
+
+                        </button>
+
+
+                        @* Existing helper buttons *@
+
                         <button type="button"
                                 id="changeProfilePictureBtn"
-                                class="btn btn-outline-success mb-4">
+                                class="d-none">
 
                             Change Profile Picture
 
                         </button>
 
+
                         <button type="button"
                                 id="removeProfilePictureBtn"
-                                class="btn btn-outline-danger mb-4">
+                                class="d-none">
 
                             Remove Photo
 
                         </button>
 
+
                         <span asp-validation-for="ProfilePictureFile"
                               class="text-danger d-block mt-2">
                         </span>
-                        <hr />
 
-                        <div class="border-top mt-4 pt-4">
+                    </div>
 
-                            <!-- ========================================================= -->
-                            <!-- ACTIVITY SUMMARY                                          -->
-                            <!-- ========================================================= -->
+                </div>
 
-                        <div class="row g-0 text-center">
 
-                            <div class="col">
 
-                                <small class="text-muted d-block">
-                                    Marketplace Listings
-                                </small>
+                @* =================================================
+                   ACTIVITY
+                   ================================================= *@
 
-                                <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.MarketplaceListingsCount
-                                </h3>
+                <div class="profile-activity-card">
 
-                            </div>
+                    <div class="profile-section-header">
 
-                            <div class="col border-start">
+                        <h4>
+                            Activity
+                        </h4>
 
-                                <small class="text-muted d-block">
-                                    Lost &amp; Found Reports
-                                </small>
+                        <p>
+                            Overview of your activity
+                        </p>
 
-                                <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.LostFoundReportsCount
-                                </h3>
+                    </div>
 
-                            </div>
 
-                            <div class="col border-start">
+                    <div class="profile-activity-item">
 
-                                <small class="text-muted d-block">
-                                    Pets Sold
-                                </small>
+                        <div class="profile-activity-content">
 
-                                <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.PetsSoldCount
-                                </h3>
+                            <strong>
+                                @Model.MarketplaceListingsCount
+                            </strong>
 
-                            </div>
-
-                            <div class="col border-start">
-
-                                <small class="text-muted d-block">
-                                    Pets Adopted
-                                </small>
-
-                                <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.PetsAdoptedCount
-                                </h3>
-
-                            </div>
-
-                            <div class="col border-start">
-
-                                <small class="text-muted d-block">
-                                    Resolved Reports
-                                </small>
-
-                                <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.ResolvedReportsCount
-                                </h3>
-
-                            </div>
+                            <span>
+                                Marketplace Listings
+                            </span>
 
                         </div>
 
+                    </div>
 
-                        @* ========================================================= *@
-                        @* ABOUT ME                                                  *@
-                        @* ========================================================= *@
 
-                        <div class="card shadow-sm mb-4 mt-4">
+                    <div class="profile-activity-item">
 
-                            <div class="card-body text-start">
+                        <div class="profile-activity-content">
 
-                                <h4 class="mb-1">
-                                    About Me
-                                </h4>
+                            <strong>
+                                @Model.LostFoundReportsCount
+                            </strong>
 
-                                <p class="text-muted mb-4">
-                                    Share a short introduction about yourself with other members.
-                                </p>
-
-                                <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
-                                    Biography
-                                </h6>
-
-                                <textarea asp-for="Bio"
-                                          rows="5"
-                                          class="form-control"
-                                          placeholder="Tell other members a little about yourself...">
-                                    </textarea>
-                                <span asp-validation-for="Bio" class="text-danger"></span>
-                            </div>
+                            <span>
+                                Lost &amp; Found Reports
+                            </span>
 
                         </div>
 
-                        @* ========================================================= *@
-                        @* PERSONAL INFORMATION                                      *@
-                        @* ========================================================= *@
+                    </div>
 
-                        <div class="card shadow-sm mb-4 mt-4">
 
-                            <div class="card-body">
+                    <div class="profile-activity-item">
 
-                                <h4 class="mb-1 text-start">
-                                    Personal Information
-                                </h4>
+                        <div class="profile-activity-content">
 
-                                <p class="text-muted mb-4 text-start">
-                                    Update your personal details below.
-                                </p>
+                            <strong>
+                                @Model.PetsSoldCount
+                            </strong>
 
-                                @* ------------------------------------------------- *@
-                                @* NAME                                              *@
-                                @* ------------------------------------------------- *@
-
-                                <h6 class="fw-bold text-success border-bottom pb-2 mb-4 text-start">
-                                    Name
-                                </h6>
-
-                                <div class="row align-items-center mb-3">
-
-                                    <div class="col-md-4">
-                                        <label asp-for="FirstName" class="fw-semibold"></label>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <input asp-for="FirstName" class="form-control" />
-                                        <span asp-validation-for="FirstName" class="text-danger"></span>
-                                    </div>
-
-                                </div>
-
-                                <div class="row align-items-center mb-3">
-
-                                    <div class="col-md-4">
-                                        <label asp-for="MiddleName" class="fw-semibold"></label>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <input asp-for="MiddleName" class="form-control" />
-                                        <span asp-validation-for="MiddleName" class="text-danger"></span>
-                                    </div>
-
-                                </div>
-
-                                <div class="row align-items-center">
-
-                                    <div class="col-md-4">
-                                        <label asp-for="LastName" class="fw-semibold"></label>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <input asp-for="LastName" class="form-control" />
-                                        <span asp-validation-for="LastName" class="text-danger"></span>
-                                    </div>
-
-                                </div>
-
-                                @* ------------------------------------------------- *@
-                                @* CONTACT DETAILS                                   *@
-                                @* ------------------------------------------------- *@
-
-                                <h6 class="fw-bold text-success border-bottom pb-2 mt-5 mb-4 text-start">
-                                    Contact Details
-                                </h6>
-
-                                <div class="row align-items-center mb-3">
-
-                                    <div class="col-md-4">
-
-                                        <label class="fw-semibold">
-                                            Email Address
-                                        </label>
-
-                                    </div>
-
-                                    <div class="col-md-8">
-
-                                        <input asp-for="Email"
-                                               class="form-control"
-                                               readonly />
-
-                                    </div>
-
-                                </div>
-
-                                <div class="row align-items-center">
-
-                                    <div class="col-md-4">
-
-                                        <label asp-for="ContactNumber"
-                                               class="fw-semibold">
-                                        </label>
-
-                                    </div>
-
-                                    <div class="col-md-8">
-
-                                        <input asp-for="ContactNumber"
-                                               class="form-control" />
-                                        <span asp-validation-for="ContactNumber" class="text-danger"></span>
-
-                                    </div>
-
-                                </div>
-
-                                @* ------------------------------------------------- *@
-                                @* PERSONAL DETAILS                                  *@
-                                @* ------------------------------------------------- *@
-
-                                <h6 class="fw-bold text-success border-bottom pb-2 mt-5 mb-4 text-start">
-                                    Personal Details
-                                </h6>
-
-                                <div class="row align-items-center mb-3">
-
-                                    <div class="col-md-4">
-
-                                        <label asp-for="Gender"
-                                               class="fw-semibold">
-                                        </label>
-
-                                    </div>
-
-                                    <div class="col-md-8">
-
-                                        <select asp-for="Gender"
-                                                class="form-select">
-
-                                            <option value="">
-                                                Select Gender
-                                            </option>
-
-                                            <option>Male</option>
-
-                                            <option>Female</option>
-
-                                        </select>
-                                        <span asp-validation-for="Gender" class="text-danger"></span>
-                                    </div>
-
-                                </div>
-
-                                <div class="row align-items-center">
-
-                                    <div class="col-md-4">
-
-                                        <label asp-for="Birthdate"
-                                               class="fw-semibold">
-                                        </label>
-
-                                    </div>
-
-                                    <div class="col-md-8">
-
-                                        <input asp-for="Birthdate"
-                                               type="date"
-                                               class="form-control" />
-                                        <span asp-validation-for="Birthdate" class="text-danger"></span>
-                                    </div>
-
-                                </div>
-                            </div>
+                            <span>
+                                Pets Sold
+                            </span>
 
                         </div>
-                        @* ========================================================= *@
-                        @* ADDRESS                                                   *@
-                        @* ========================================================= *@
 
-                        <div class="card shadow-sm mb-4 mt-4">
+                    </div>
 
-                            <div class="card-body text-start">
 
-                                <h4 class="mb-1">
-                                    Address
-                                </h4>
+                    <div class="profile-activity-item">
 
-                                <p class="text-muted mb-4">
-                                    Update your residential address below.
-                                </p>
+                        <div class="profile-activity-content">
 
-                                @* ------------------------------------------------- *@
-                                @* LOCATION                                          *@
-                                @* ------------------------------------------------- *@
+                            <strong>
+                                @Model.PetsAdoptedCount
+                            </strong>
 
-                                <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
-                                    Location
-                                </h6>
-
-                                <partial name="Components/_EditProfileAddressFields"
-                                         model="Model" />
-                            </div>
-                        </div>
-                        @* ========================================================= *@
-                        @* VERIFICATION                                              *@
-                        @* ========================================================= *@
-
-                        <div class="card shadow-sm mb-4">
-
-                            <div class="card-body text-start">
-
-                                <h4 class="mb-1">
-                                    Verification
-                                </h4>
-
-                                <p class="text-muted mb-4">
-                                    Manage your identity verification document.
-                                </p>
-
-                                @* ------------------------------------------------- *@
-                                @* VERIFICATION DOCUMENT                            *@
-                                @* ------------------------------------------------- *@
-
-                                <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
-                                    Verification Document
-                                </h6>
-
-                                <div class="row align-items-start">
-
-                                    <div class="col-md-4">
-
-                                        <label class="fw-semibold">
-                                            Current Valid ID
-                                        </label>
-
-                                    </div>
-
-                                    <div class="col-md-8">
-
-                                        @* Only Members are allowed to upload and replace Valid IDs *@
-                                        @if (User.IsInRole("Member"))
-                                        {
-                                            @* Display the currently uploaded Valid ID if one exists *@
-                                            @if (!string.IsNullOrEmpty(Model.IdPhotoPath))
-                                            {
-                                                <img src="@Model.IdPhotoPath"
-                                                     id="validIdPreview"
-                                                     class="img-thumbnail mb-3"
-                                                     style="max-width:350px; max-height:220px; object-fit:contain;" />
-                                            }
-                                            else
-                                            {
-                                                @* Placeholder shown when no Valid ID has been uploaded *@
-                                                <div id="validIdPlaceholder"
-                                                     class="border rounded d-flex justify-content-center align-items-center mb-3"
-                                                     style="width:350px; height:220px;">
-
-                                                    <span class="text-muted">
-                                                        No Valid ID Uploaded
-                                                    </span>
-
-                                                </div>
-
-                                                @* Hidden preview image that will be shown after selecting a file *@
-                                                <img id="validIdPreview"
-                                                     class="img-thumbnail mb-3 d-none"
-                                                     style="max-width:350px; max-height:220px; object-fit:contain;" />
-                                            }
-
-                                            @* Hidden file input used to upload a replacement Valid ID *@
-                                            <input asp-for="IdPhotoFile"
-                                                   type="file"
-                                                   id="validIdInput"
-                                                   accept=".jpg,.jpeg,.png,.webp"
-                                                   class="d-none" />
-
-                                            @* Opens the hidden file picker *@
-                                            <button type="button"
-                                                    id="changeValidIdBtn"
-                                                    class="btn btn-outline-success">
-
-                                                Change Valid ID
-
-                                            </button>
-
-                                            <span asp-validation-for="IdPhotoFile"
-                                                  class="text-danger d-block mt-2">
-                                            </span>
-
-                                            <small class="text-muted d-block mt-2">
-
-                                                Accepted formats:
-                                                JPG, JPEG, PNG, WEBP
-
-                                                <br />
-
-                                                Maximum file size:
-                                                5 MB
-
-                                            </small>
-                                        }
-
-                                    </div>
-
-                                </div>
-
-                            </div>
+                            <span>
+                                Pets Adopted
+                            </span>
 
                         </div>
 
-                        @* ========================================================= *@
-                        @* ACCOUNT INFORMATION                                       *@
-                        @* ========================================================= *@
+                    </div>
 
-                        <div class="card shadow-sm mb-4">
 
-                            <div class="card-body text-start">
+                    <div class="profile-activity-item">
 
-                                <h4 class="mb-1">
-                                    Account Information
-                                </h4>
+                        <div class="profile-activity-content">
 
-                                <p class="text-muted mb-4">
-                                    View your account information and membership details.
-                                </p>
+                            <strong>
+                                @Model.ResolvedReportsCount
+                            </strong>
 
-                                @* ------------------------------------------------- *@
-                                @* ACCOUNT                                           *@
-                                @* ------------------------------------------------- *@
-
-                                <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
-                                    Account
-                                </h6>
-
-                                <div class="row align-items-center mb-3">
-
-                                    <div class="col-md-4">
-                                        <label class="fw-semibold">
-                                            Email Address
-                                        </label>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <input asp-for="Email"
-                                               class="form-control"
-                                               readonly />
-                                    </div>
-
-                                </div>
-
-                                <div class="row align-items-center">
-
-                                    <div class="col-md-4">
-                                        <label class="fw-semibold">
-                                            Member Since
-                                        </label>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <input class="form-control"
-                                               value="@Model.CreatedAt.ToString("MMMM dd, yyyy")"
-                                               readonly />
-                                    </div>
-
-                                </div>
-
-                                @* ------------------------------------------------- *@
-                                @* ACCOUNT STATUS                                    *@
-                                @* ------------------------------------------------- *@
-
-                                <h6 class="fw-bold text-success border-bottom pb-2 mt-5 mb-4">
-                                    Account Status
-                                </h6>
-
-                                <div class="row align-items-center mb-3">
-
-                                    <div class="col-md-4">
-                                        <label class="fw-semibold">
-                                            Status
-                                        </label>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <input asp-for="Status"
-                                               class="form-control"
-                                               readonly />
-                                    </div>
-
-                                </div>
-
-                                <div class="row align-items-center">
-
-                                    <div class="col-md-4">
-                                        <label class="fw-semibold">
-                                            Accepted Terms
-                                        </label>
-                                    </div>
-
-                                    <div class="col-md-8">
-
-                                        <input class="form-control"
-                                               value="@(Model.AcceptedTermsDate?.ToString("MMMM dd, yyyy") ?? "Not Accepted Terms and Agreement")"
-                                               readonly />
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-                        @* ========================================================= *@
-                        @* ACTIONS                                                   *@
-                        @* ========================================================= *@
-
-                        <div class="card shadow-sm mb-4">
-
-                            <div class="card-body">
-
-                                <h4 class="mb-1 text-start">
-                                    Actions
-                                </h4>
-
-                                <p class="text-muted mb-4 text-start">
-                                    Review your changes before saving.
-                                </p>
-
-                                <div class="d-flex justify-content-end gap-2">
-
-                                    <a asp-action="View"
-                                       class="btn btn-outline-secondary">
-
-                                        Back
-
-                                    </a>
-
-                                    <a asp-action="Edit"
-                                       class="btn btn-outline-secondary">
-
-                                        Cancel
-
-                                    </a>
-
-                                    <button type="submit"
-                                            class="btn btn-success">
-
-                                        Save Changes
-
-                                    </button>
-
-                                </div>
-
-                            </div>
+                            <span>
+                                Resolved Reports
+                            </span>
 
                         </div>
 
@@ -704,7 +266,509 @@
 
                 </div>
 
-            </form>
+            </div>
+
+
+
+            @* =====================================================
+               RIGHT SIDE
+               ===================================================== *@
+
+            <div class="profile-right-column">
+
+
+                @* =================================================
+                   PERSONAL INFORMATION
+                   ================================================= *@
+
+                <div class="profile-information-card">
+
+                    <div class="profile-section-header">
+
+                        <h3>
+                            Personal Information
+                        </h3>
+
+                        <p>
+                            Update your personal details.
+                        </p>
+
+                    </div>
+
+
+                    <h6 class="profile-subsection-title">
+                        Name
+                    </h6>
+
+
+                    <div class="profile-information-grid">
+
+                        <div class="profile-information-item">
+
+                            <label asp-for="FirstName"
+                                   class="profile-information-label">
+                            </label>
+
+                            <input asp-for="FirstName"
+                                   class="form-control" />
+
+                            <span asp-validation-for="FirstName"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-information-item">
+
+                            <label asp-for="MiddleName"
+                                   class="profile-information-label">
+                            </label>
+
+                            <input asp-for="MiddleName"
+                                   class="form-control" />
+
+                            <span asp-validation-for="MiddleName"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-information-item">
+
+                            <label asp-for="LastName"
+                                   class="profile-information-label">
+                            </label>
+
+                            <input asp-for="LastName"
+                                   class="form-control" />
+
+                            <span asp-validation-for="LastName"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <h6 class="profile-subsection-title">
+                        Contact Details
+                    </h6>
+
+
+                    <div class="profile-information-grid">
+
+                        <div class="profile-information-item">
+
+                            <label class="profile-information-label">
+                                Email Address
+                            </label>
+
+                            <input asp-for="Email"
+                                   class="form-control"
+                                   readonly />
+
+                        </div>
+
+
+                        <div class="profile-information-item">
+
+                            <label asp-for="ContactNumber"
+                                   class="profile-information-label">
+                            </label>
+
+                            <input asp-for="ContactNumber"
+                                   class="form-control" />
+
+                            <span asp-validation-for="ContactNumber"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <h6 class="profile-subsection-title">
+                        Personal Details
+                    </h6>
+
+
+                    <div class="profile-information-grid">
+
+                        <div class="profile-information-item">
+
+                            <label asp-for="Gender"
+                                   class="profile-information-label">
+                            </label>
+
+                            <select asp-for="Gender"
+                                    class="form-select">
+
+                                <option value="">
+                                    Select Gender
+                                </option>
+
+                                <option>
+                                    Male
+                                </option>
+
+                                <option>
+                                    Female
+                                </option>
+
+                            </select>
+
+                            <span asp-validation-for="Gender"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-information-item">
+
+                            <label asp-for="Birthdate"
+                                   class="profile-information-label">
+                            </label>
+
+                            <input asp-for="Birthdate"
+                                   type="date"
+                                   class="form-control" />
+
+                            <span asp-validation-for="Birthdate"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                @* =================================================
+                   ADDRESS
+                   ================================================= *@
+
+                <div class="profile-information-card">
+
+                    <div class="profile-section-header">
+
+                        <h3>
+                            Address
+                        </h3>
+
+                        <p>
+                            Update your residential address.
+                        </p>
+
+                    </div>
+
+
+                    <h6 class="profile-subsection-title">
+                        Location
+                    </h6>
+
+
+                    <partial name="Components/_EditProfileAddressFields"
+                             model="Model" />
+
+                </div>
+
+
+
+                @* =================================================
+                   VERIFICATION
+                   ================================================= *@
+
+                <div class="profile-information-card">
+
+                    <div class="profile-section-header">
+
+                        <h3>
+                            Verification
+                        </h3>
+
+                        <p>
+                            Manage your identity verification document.
+                        </p>
+
+                    </div>
+
+
+                    <h6 class="profile-subsection-title">
+                        Verification Document
+                    </h6>
+
+
+                    <div class="profile-verification-container">
+
+                        @if (User.IsInRole("Member"))
+                        {
+
+                            <label class="profile-information-label">
+                                Current Valid ID
+                            </label>
+
+
+                            @if (!string.IsNullOrEmpty(Model.IdPhotoPath))
+                            {
+                                <img src="@Model.IdPhotoPath"
+                                     id="validIdPreview"
+                                     class="profile-id-image"
+                                     alt="Current Valid ID" />
+                            }
+                            else
+                            {
+                                <div id="validIdPlaceholder"
+                                     class="profile-id-placeholder">
+
+                                    <span>
+                                        No Valid ID Uploaded
+                                    </span>
+
+                                </div>
+
+
+                                <img id="validIdPreview"
+                                     class="profile-id-image d-none"
+                                     alt="Valid ID Preview" />
+                            }
+
+
+                            @* Existing Valid ID input *@
+
+                            <input asp-for="IdPhotoFile"
+                                   type="file"
+                                   id="validIdInput"
+                                   accept=".jpg,.jpeg,.png,.webp"
+                                   class="d-none" />
+
+
+                            @* Existing button with custom UI class *@
+
+                            <button type="button"
+                                    id="changeValidIdBtn"
+                                    class="profile-valid-id-button">
+
+                                Change Valid ID
+
+                            </button>
+
+
+                            <span asp-validation-for="IdPhotoFile"
+                                  class="text-danger d-block mt-2">
+                            </span>
+
+
+                            <small class="text-muted d-block mt-2">
+
+                                Accepted formats:
+                                JPG, JPEG, PNG, WEBP
+
+                                <br />
+
+                                Maximum file size:
+                                5 MB
+
+                            </small>
+
+                        }
+
+                    </div>
+
+                </div>
+
+
+
+                @* =================================================
+                   ACCOUNT INFORMATION
+                   ================================================= *@
+
+                <div class="profile-information-card">
+
+                    <div class="profile-section-header">
+
+                        <h3>
+                            Account Information
+                        </h3>
+
+                        <p>
+                            View your account information and membership details.
+                        </p>
+
+                    </div>
+
+
+                    <h6 class="profile-subsection-title">
+                        Account
+                    </h6>
+
+
+                    <div class="profile-information-grid">
+
+                        <div class="profile-information-item">
+
+                            <label class="profile-information-label">
+                                Email Address
+                            </label>
+
+                            <input asp-for="Email"
+                                   class="form-control"
+                                   readonly />
+
+                        </div>
+
+
+                        <div class="profile-information-item">
+
+                            <label class="profile-information-label">
+                                Member Since
+                            </label>
+
+                            <input class="form-control"
+                                   value="@Model.CreatedAt.ToString("MMMM dd, yyyy")"
+                                   readonly />
+
+                        </div>
+
+                    </div>
+
+
+                    <h6 class="profile-subsection-title">
+                        Account Status
+                    </h6>
+
+
+                    <div class="profile-information-grid">
+
+                        <div class="profile-information-item">
+
+                            <label class="profile-information-label">
+                                Status
+                            </label>
+
+                            <input asp-for="Status"
+                                   class="form-control"
+                                   readonly />
+
+                        </div>
+
+
+                        <div class="profile-information-item">
+
+                            <label class="profile-information-label">
+                                Accepted Terms
+                            </label>
+
+                            <input class="form-control"
+                                   value="@(Model.AcceptedTermsDate?.ToString("MMMM dd, yyyy") ?? "Not Accepted Terms and Agreement")"
+                                   readonly />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                @* =================================================
+                   ACTIONS
+                   ================================================= *@
+
+                <div class="profile-actions-card">
+
+                    <div class="profile-actions">
+
+                        <a asp-action="View"
+                           class="profile-cancel-button">
+
+                            Cancel
+
+                        </a>
+
+
+                        <button type="submit"
+                                class="profile-save-button">
+
+                            Save Changes
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+
+@* =============================================================
+   PROFILE PHOTO MODAL
+   ============================================================= *@
+
+<div id="profilePhotoModal"
+     class="profile-photo-modal"
+     aria-hidden="true">
+
+    <div class="profile-photo-modal-backdrop"
+         id="profilePhotoModalBackdrop">
+    </div>
+
+
+    <div class="profile-photo-modal-content"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="profilePhotoModalTitle">
+
+
+        <div class="profile-photo-modal-header">
+
+            <h4 id="profilePhotoModalTitle">
+                Change Profile Photo
+            </h4>
+
+        </div>
+
+
+        <div class="profile-photo-modal-body">
+
+            <button type="button"
+                    id="modalUploadProfilePhotoBtn"
+                    class="profile-photo-modal-button">
+
+                Upload Photo
+
+            </button>
+
+
+            <button type="button"
+                    id="modalRemoveProfilePhotoBtn"
+                    class="profile-photo-modal-button profile-photo-remove-button">
+
+                Remove Current Photo
+
+            </button>
+
+
+            <button type="button"
+                    id="closeProfilePhotoModalBtn"
+                    class="profile-photo-modal-button profile-photo-cancel-button">
+
+                Cancel
+
+            </button>
 
         </div>
 
@@ -712,23 +776,248 @@
 
 </div>
 
-    @section Scripts
-    {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
 
-        <script src="~/js/profilePictureHelper.js"></script>
 
-        <script src="~/js/address-helper.js" asp-append-version="true"></script>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 
-        <script>
 
-            document.addEventListener("DOMContentLoaded", function () {
+    <script src="~/js/profilePictureHelper.js"></script>
+
+    <script src="~/js/address-helper.js"
+            asp-append-version="true"></script>
+
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            /* Profile picture */
 
             setupProfilePicture();
 
-            });
 
-        </script>
-    }
+            /* Profile photo modal */
+
+            const modal =
+                document.getElementById("profilePhotoModal");
+
+            const openModalButton =
+                document.getElementById("openProfilePhotoModalBtn");
+
+            const closeModalButton =
+                document.getElementById("closeProfilePhotoModalBtn");
+
+            const backdrop =
+                document.getElementById("profilePhotoModalBackdrop");
+
+            const existingChangeButton =
+                document.getElementById("changeProfilePictureBtn");
+
+            const existingRemoveButton =
+                document.getElementById("removeProfilePictureBtn");
+
+            const modalUploadButton =
+                document.getElementById("modalUploadProfilePhotoBtn");
+
+            const modalRemoveButton =
+                document.getElementById("modalRemoveProfilePhotoBtn");
+
+
+            function openProfilePhotoModal() {
+
+                if (!modal) {
+                    return;
+                }
+
+                modal.classList.add("show");
+
+                modal.setAttribute(
+                    "aria-hidden",
+                    "false"
+                );
+
+            }
+
+
+            function closeProfilePhotoModal() {
+
+                if (!modal) {
+                    return;
+                }
+
+                modal.classList.remove("show");
+
+                modal.setAttribute(
+                    "aria-hidden",
+                    "true"
+                );
+
+            }
+
+
+            if (openModalButton) {
+
+                openModalButton.addEventListener(
+                    "click",
+                    openProfilePhotoModal
+                );
+
+            }
+
+
+            if (closeModalButton) {
+
+                closeModalButton.addEventListener(
+                    "click",
+                    closeProfilePhotoModal
+                );
+
+            }
+
+
+            if (backdrop) {
+
+                backdrop.addEventListener(
+                    "click",
+                    closeProfilePhotoModal
+                );
+
+            }
+
+
+            if (modalUploadButton && existingChangeButton) {
+
+                modalUploadButton.addEventListener(
+                    "click",
+                    function () {
+
+                        existingChangeButton.click();
+
+                        closeProfilePhotoModal();
+
+                    }
+                );
+
+            }
+
+
+            if (modalRemoveButton && existingRemoveButton) {
+
+                modalRemoveButton.addEventListener(
+                    "click",
+                    function () {
+
+                        existingRemoveButton.click();
+
+                        closeProfilePhotoModal();
+
+                    }
+                );
+
+            }
+
+
+            /* Valid ID file picker */
+
+            const changeValidIdButton =
+                document.getElementById("changeValidIdBtn");
+
+            const validIdInput =
+                document.getElementById("validIdInput");
+
+
+            if (changeValidIdButton && validIdInput) {
+
+                changeValidIdButton.addEventListener(
+                    "click",
+                    function () {
+
+                        validIdInput.click();
+
+                    }
+                );
+
+            }
+
+
+            /* Valid ID preview */
+
+            const validIdPreview =
+                document.getElementById("validIdPreview");
+
+            const validIdPlaceholder =
+                document.getElementById("validIdPlaceholder");
+
+
+            if (validIdInput && validIdPreview) {
+
+                validIdInput.addEventListener(
+                    "change",
+                    function () {
+
+                        if (!this.files || !this.files[0]) {
+                            return;
+                        }
+
+
+                        const file = this.files[0];
+
+                        const reader = new FileReader();
+
+
+                        reader.onload = function (event) {
+
+                            validIdPreview.src =
+                                event.target.result;
+
+                            validIdPreview.classList.remove(
+                                "d-none"
+                            );
+
+
+                            if (validIdPlaceholder) {
+
+                                validIdPlaceholder.classList.add(
+                                    "d-none"
+                                );
+
+                            }
+
+                        };
+
+
+                        reader.readAsDataURL(file);
+
+                    }
+                );
+
+            }
+
+
+            /* Escape closes modal */
+
+            document.addEventListener(
+                "keydown",
+                function (event) {
+
+                    if (
+                        event.key === "Escape" &&
+                        modal &&
+                        modal.classList.contains("show")
+                    ) {
+
+                        closeProfilePhotoModal();
+
+                    }
+
+                }
+            );
+
+        });
+
+    </script>
+}

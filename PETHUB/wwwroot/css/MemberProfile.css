@@ -1,0 +1,1770 @@
+﻿/* ==========================================================
+   MEMBER PROFILE
+   Profile Summary Card
+========================================================== */
+
+
+/* ==========================================================
+   PROFILE SUMMARY CARD
+========================================================== */
+
+.my-posts-profile-card {
+    position: relative;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e6e6e6;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+
+/* ==========================================================
+   PROFILE INFORMATION
+========================================================== */
+
+.my-posts-profile-info {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px 28px;
+    text-align: center;
+}
+
+
+/* ==========================================================
+   HORIZONTAL THREE-DOT MENU
+========================================================== */
+
+.my-posts-profile-dropdown {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    margin: 0;
+}
+
+.my-posts-profile-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #555555;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+    .my-posts-profile-menu:hover {
+        background-color: #f2f2f2;
+        color: #222222;
+    }
+
+    .my-posts-profile-menu:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    .my-posts-profile-menu svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2;
+    }
+
+
+/* ==========================================================
+   PROFILE DROPDOWN
+========================================================== */
+
+.my-posts-profile-dropdown .dropdown-menu {
+    min-width: 180px;
+    padding: 8px 0;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+}
+
+.my-posts-profile-dropdown .dropdown-item {
+    padding: 9px 16px;
+    font-size: 0.92rem;
+    color: #333333;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+    .my-posts-profile-dropdown .dropdown-item:hover {
+        background-color: #f3f8f1;
+        color: #4d8f45;
+    }
+
+
+/* ==========================================================
+   PROFILE PICTURE
+========================================================== */
+
+.my-posts-profile-picture {
+    display: block;
+    width: 130px;
+    height: 130px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    margin-bottom: 16px;
+}
+
+
+/* ==========================================================
+   PROFILE DETAILS
+========================================================== */
+
+.my-posts-profile-details {
+    margin: 0;
+}
+
+    .my-posts-profile-details h3 {
+        margin: 0 0 6px;
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 1.3;
+        color: #222222;
+    }
+
+    .my-posts-profile-details p {
+        margin: 0;
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: #777777;
+    }
+
+
+/* ==========================================================
+   ACTIVITY SUMMARY
+========================================================== */
+
+.my-posts-activity-summary {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    border-top: 1px solid #eeeeee;
+}
+
+
+/* ==========================================================
+   INDIVIDUAL STAT
+========================================================== */
+
+.my-posts-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 92px;
+    padding: 14px 12px;
+    text-align: center;
+    border-right: 1px solid #eeeeee;
+}
+
+    .my-posts-stat:last-child {
+        border-right: none;
+    }
+
+
+    /* ==========================================================
+   STAT NUMBER
+========================================================== */
+
+    .my-posts-stat strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 1.35rem;
+        font-weight: 600;
+        line-height: 1;
+        color: #222222;
+    }
+
+
+    /* ==========================================================
+   STAT LABEL
+========================================================== */
+
+    .my-posts-stat span {
+        display: block;
+        max-width: 150px;
+        font-size: 0.78rem;
+        font-weight: 400;
+        line-height: 1.35;
+        color: #777777;
+    }
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .my-posts-profile-info {
+        padding: 28px 20px 24px;
+    }
+
+    .my-posts-profile-picture {
+        width: 115px;
+        height: 115px;
+    }
+
+    .my-posts-profile-details h3 {
+        font-size: 1.35rem;
+    }
+
+    .my-posts-stat {
+        padding: 12px 8px;
+    }
+
+        .my-posts-stat strong {
+            font-size: 1.2rem;
+        }
+
+        .my-posts-stat span {
+            font-size: 0.72rem;
+        }
+}
+
+
+@media (max-width: 650px) {
+
+    .my-posts-profile-info {
+        padding: 26px 18px 22px;
+    }
+
+    .my-posts-profile-dropdown {
+        top: 14px;
+        right: 14px;
+    }
+
+    .my-posts-profile-picture {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 13px;
+    }
+
+    .my-posts-profile-details h3 {
+        font-size: 1.2rem;
+    }
+
+    .my-posts-profile-details p {
+        font-size: 0.8rem;
+    }
+
+    .my-posts-activity-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .my-posts-stat {
+        min-height: 80px;
+        border-right: 1px solid #eeeeee;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+        .my-posts-stat:nth-child(2n) {
+            border-right: none;
+        }
+
+        .my-posts-stat:last-child {
+            border-bottom: none;
+        }
+}
+
+
+@media (max-width: 400px) {
+
+    .my-posts-profile-info {
+        padding: 24px 14px 20px;
+    }
+
+    .my-posts-profile-picture {
+        width: 85px;
+        height: 85px;
+    }
+
+    .my-posts-profile-details h3 {
+        font-size: 1.1rem;
+    }
+
+    .my-posts-activity-summary {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .my-posts-stat strong {
+        font-size: 1.1rem;
+    }
+
+    .my-posts-stat span {
+        font-size: 0.7rem;
+    }
+}
+
+
+/* ==========================================================
+   MY POSTS
+========================================================== */
+
+
+
+
+/* ==========================================================
+   MY POSTS PAGE CONTAINER
+========================================================== */
+
+.my-posts-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+
+
+/* ==========================================================
+   MY POSTS HEADER
+========================================================== */
+
+.my-posts-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+    .my-posts-heading h2 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 1.2;
+        color: #172b4d;
+    }
+
+    .my-posts-heading p {
+        margin: 6px 0 0;
+        font-size: 0.95rem;
+        font-weight: 400;
+        color: #52627a;
+    }
+
+
+/* ==========================================================
+   FILTER TOOLBAR
+========================================================== */
+
+.my-posts-toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    padding: 14px 18px;
+    background: #ffffff;
+    border: 1px solid #e1e5e8;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+
+/* ==========================================================
+   MY POSTS FILTERS
+========================================================== */
+
+.my-posts-filters {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin: 0;
+}
+
+
+/* ==========================================================
+   INDIVIDUAL FILTER
+========================================================== */
+
+.my-post-filter {
+    position: relative;
+    width: 200px;
+}
+
+
+/* ==========================================================
+   FILTER LABEL
+========================================================== */
+
+.my-post-filter-label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #344054;
+}
+/* ==========================================================
+   MY POSTS FILTER BUTTON
+========================================================== */
+
+.my-post-filter-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 42px;
+    padding: 0 16px;
+    background: #ffffff;
+    border: 1px solid #d9e0e5;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #344054;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+    .my-post-filter-button:hover {
+        border-color: #c5ced6;
+    }
+
+    .my-post-filter-button:focus {
+        outline: none;
+    }
+
+
+    /* ==========================================================
+   CHEVRON
+========================================================== */
+
+    .my-post-filter-button svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        color: #667085;
+        transition: transform 0.2s ease;
+    }
+
+
+/* ==========================================================
+   OPEN STATE
+========================================================== */
+
+.my-post-filter.open .my-post-filter-button {
+    border-color: #8ace79;
+    box-shadow: 0 0 0 2px rgba(138, 206, 121, 0.10);
+}
+
+    .my-post-filter.open .my-post-filter-button svg {
+        transform: rotate(180deg);
+    }
+
+/* ==========================================================
+   DROPDOWN MENU
+========================================================== */
+
+.my-post-filter-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 1000;
+    display: none;
+    width: 100%;
+    padding: 7px;
+    background: #ffffff;
+    border: 1px solid #e6e9e7;
+    border-radius: 11px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+}
+
+
+    /* JavaScript adds .show */
+
+    .my-post-filter-menu.show {
+        display: block;
+    }
+
+
+/* ==========================================================
+   FILTER OPTION
+========================================================== */
+
+.my-post-filter-option {
+    display: block;
+    width: 100%;
+    padding: 10px 11px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.86rem;
+    font-weight: 400;
+    line-height: 1.3;
+    color: #344054;
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+
+    /* ==========================================================
+   OPTION HOVER
+========================================================== */
+
+    .my-post-filter-option:hover {
+        background-color: #eef8eb;
+        color: #4d8f45;
+        text-decoration: none;
+    }
+
+
+    /* ==========================================================
+   SELECTED OPTION
+========================================================== */
+
+    .my-post-filter-option.selected {
+        background-color: #e9f6e5;
+        color: #4d8f45;
+        font-weight: 500;
+    }
+
+
+        /* ==========================================================
+   SELECTED OPTION HOVER
+========================================================== */
+
+        .my-post-filter-option.selected:hover {
+            background-color: #e2f3dd;
+            color: #43803c;
+        }
+
+
+/* ==========================================================
+   TOTAL POST COUNT
+========================================================== */
+
+.my-posts-count {
+    flex-shrink: 0;
+    margin-left: auto;
+    margin-bottom: 9px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #667085;
+}
+
+    .my-posts-count strong {
+        font-weight: 600;
+    }
+
+
+/* ==========================================================
+   MY POSTS RESULTS
+========================================================== */
+
+.my-posts-results {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}
+
+
+/* ==========================================================
+   MY POST CARD
+========================================================== */
+
+.my-post-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 145px;
+    background: #ffffff;
+    border: 1px solid #e1e5e8;
+    border-radius: 14px;
+    overflow: visible;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+    .my-post-card:hover {
+        border-color: #d6ded9;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+        transform: translateY(-1px);
+    }
+
+
+/* ==========================================================
+   POST IMAGE LINK
+========================================================== */
+
+.my-post-card-image-link {
+    display: block;
+    width: 135px;
+    height: 135px;
+    flex-shrink: 0;
+    margin: 4px 0 4px 5px;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+
+/* ==========================================================
+   POST IMAGE
+========================================================== */
+
+.my-post-card-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.25s ease;
+}
+
+.my-post-card:hover .my-post-card-image {
+    transform: scale(1.02);
+}
+
+
+/* ==========================================================
+   POST CONTENT
+========================================================== */
+
+.my-post-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    padding: 18px 20px;
+    text-decoration: none;
+    color: inherit;
+}
+
+    .my-post-card-content:hover {
+        text-decoration: none;
+        color: inherit;
+    }
+
+
+    /* ==========================================================
+   POST TITLE
+========================================================== */
+
+    .my-post-card-content h3 {
+        margin: 0 0 6px;
+        font-size: 1.12rem;
+        font-weight: 600;
+        line-height: 1.35;
+        color: #172b4d;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: color 0.2s ease;
+    }
+
+.my-post-card:hover .my-post-card-content h3 {
+    color: #5fa957;
+}
+
+
+/* ==========================================================
+   POST TYPE
+========================================================== */
+
+.my-post-card-type {
+    margin: 0 0 5px;
+    font-size: 0.86rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #52627a;
+}
+
+
+/* ==========================================================
+   POST DATE
+========================================================== */
+
+.my-post-card-date {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #7b8794;
+}
+
+
+/* ==========================================================
+   RIGHT SIDE ACTIONS
+========================================================== */
+
+.my-post-card-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    align-self: stretch;
+    min-width: 105px;
+    padding: 12px 14px;
+}
+
+
+/* ==========================================================
+   HORIZONTAL THREE-DOT MENU
+========================================================== */
+
+.my-post-more-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #68737d;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+    .my-post-more-button:hover {
+        background-color: #f2f5f3;
+        color: #333333;
+    }
+
+    .my-post-more-button:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    .my-post-more-button svg {
+        width: 18px;
+        height: 18px;
+        stroke-width: 2;
+    }
+
+
+/* ==========================================================
+   POST DROPDOWN
+========================================================== */
+
+.my-post-card-actions .dropdown-menu {
+    min-width: 160px;
+    padding: 7px 0;
+    border: 1px solid #e3e6e8;
+    border-radius: 9px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+}
+
+.my-post-card-actions .dropdown-item {
+    padding: 9px 15px;
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: #333333;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+    .my-post-card-actions .dropdown-item:hover {
+        background-color: #f3f8f1;
+        color: #4d8f45;
+    }
+
+
+/* ==========================================================
+APPROVAL STATUS PILLS
+========================================================== */
+
+.my-post-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 82px;
+    min-height: 30px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+/* ==========================================================
+PENDING
+========================================================== */
+
+.my-post-status-pending {
+    background-color: #fff8e8;
+    border: 1px solid #f0dca7;
+    color: #a66a00;
+}
+
+/* ==========================================================
+APPROVED
+========================================================== */
+
+.my-post-status-approved {
+    background-color: #eef8f0;
+    border: 1px solid #c9e4cf;
+    color: #3f8b50;
+}
+
+/* ==========================================================
+REJECTED
+========================================================== */
+
+.my-post-status-rejected {
+    background-color: #fff0f0;
+    border: 1px solid #efcaca;
+    color: #b64242;
+}
+/* ==========================================================
+   RESPONSIVE — TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .my-posts-filters {
+        gap: 12px;
+    }
+
+    .my-post-filter {
+        width: 180px;
+    }
+
+    .my-post-card-image-link {
+        width: 120px;
+        height: 120px;
+    }
+
+    .my-post-card-content {
+        padding: 16px 14px;
+    }
+
+        .my-post-card-content h3 {
+            font-size: 1rem;
+        }
+
+    .my-post-card-type {
+        font-size: 0.82rem;
+    }
+
+    .my-post-card-date {
+        font-size: 0.76rem;
+    }
+
+    .my-post-card-actions {
+        min-width: 100px;
+        padding: 10px 12px;
+    }
+}
+
+
+/* ==========================================================
+   RESPONSIVE — MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .my-posts-heading h2 {
+        font-size: 1.7rem;
+    }
+
+    .my-posts-toolbar {
+        align-items: flex-start;
+    }
+
+    .my-posts-filters {
+        gap: 10px;
+        overflow-x: auto;
+    }
+
+    .my-post-filter {
+        width: 170px;
+        flex-shrink: 0;
+    }
+
+    .my-posts-count {
+        font-size: 0.78rem;
+    }
+
+    .my-post-card {
+        min-height: 110px;
+    }
+
+    .my-post-card-image-link {
+        width: 95px;
+        height: 95px;
+    }
+
+    .my-post-card-content {
+        padding: 12px 10px;
+    }
+
+        .my-post-card-content h3 {
+            font-size: 0.92rem;
+        }
+
+    .my-post-card-type {
+        font-size: 0.76rem;
+    }
+
+    .my-post-card-date {
+        font-size: 0.7rem;
+    }
+
+    .my-post-card-actions {
+        min-width: 72px;
+        padding: 8px;
+    }
+
+    .my-post-status {
+        min-width: 0;
+        padding: 4px 8px;
+        font-size: 0.68rem;
+    }
+}
+
+
+/* ==========================================================
+   RESPONSIVE — SMALL MOBILE
+========================================================== */
+
+@media (max-width: 450px) {
+
+    .my-posts-toolbar {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .my-posts-filters {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .my-posts-count {
+        margin-left: 0;
+        align-self: flex-end;
+    }
+
+    .my-post-card-image-link {
+        width: 80px;
+        height: 80px;
+    }
+
+    .my-post-card-content h3 {
+        max-width: 130px;
+    }
+
+    .my-post-card-type {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .my-post-card-actions {
+        min-width: 58px;
+    }
+
+    .my-post-status {
+        font-size: 0.62rem;
+        padding: 4px 6px;
+    }
+}
+
+/* ==========================================================
+   MY PROFILE PAGE
+   ========================================================== */
+
+.profile-page-layout {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+
+/* ==========================================================
+   LEFT COLUMN
+   ========================================================== */
+
+.profile-left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 20px;
+}
+
+
+/* ==========================================================
+   PROFILE CARD
+   ========================================================== */
+
+.profile-member-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.profile-card-cover {
+    height: 90px;
+    background: #8ACE79;
+}
+
+.profile-picture-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: -55px;
+    position: relative;
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+}
+
+.profile-member-info {
+    padding: 18px 24px 24px;
+    text-align: center;
+}
+
+.profile-member-name {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.profile-member-role {
+    margin-top: 5px;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.profile-member-joined {
+    margin: 8px 0 18px;
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
+.profile-edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 42px;
+    border-radius: 999px;
+    background-color: #8ACE79 !important;
+    border: 1px solid #8ACE79 !important;
+    color: #ffffff !important;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: box-shadow 0.2s ease;
+}
+
+    .profile-edit-button:hover {
+        background-color: #8ACE79 !important;
+        border-color: #8ACE79 !important;
+        color: #ffffff !important;
+        box-shadow: inset 0 0 0 100px rgba(255, 255, 255, 0.12);
+    }
+
+
+/* ==========================================================
+   ACTIVITY CARD
+   ========================================================== */
+
+.profile-activity-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.profile-activity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+    .profile-activity-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .profile-activity-item:first-of-type {
+        padding-top: 0;
+    }
+
+
+.profile-activity-content {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+    .profile-activity-content strong {
+        color: #1f2937;
+        font-size: 1rem;
+        font-weight: 700;
+        min-width: 24px;
+    }
+
+    .profile-activity-content span {
+        color: #6b7280;
+        font-size: 0.85rem;
+    }
+
+
+
+
+
+/* ==========================================================
+   INFORMATION CARDS
+   ========================================================== */
+
+.profile-information-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+    .profile-information-card:last-child {
+        margin-bottom: 0;
+    }
+
+
+/* ==========================================================
+   SUBSECTION HEADINGS
+   ========================================================== */
+
+.profile-subsection-title {
+    margin: 26px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+    font-weight: 700;
+}
+
+    .profile-subsection-title:first-of-type {
+        margin-top: 0;
+    }
+
+
+/* ==========================================================
+   INFORMATION GRID
+   ========================================================== */
+
+.profile-information-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.profile-information-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 14px 16px;
+    background: #f8faf8;
+    border: 1px solid #edf1ec;
+    border-radius: 10px;
+}
+
+.profile-information-label {
+    color: #6b7280;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.profile-information-value {
+    color: #1f2937;
+    font-size: 0.92rem;
+    font-weight: 500;
+    word-break: break-word;
+}
+
+
+/* ==========================================================
+   VERIFICATION
+   ========================================================== */
+
+.profile-verification-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.profile-id-image {
+    display: block;
+    max-width: 350px;
+    max-height: 220px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.profile-id-placeholder {
+    width: 100%;
+    min-height: 180px;
+    padding: 30px;
+    border: 2px dashed #d9e2d6;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #fafcfa;
+}
+
+.profile-id-placeholder-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef8ea;
+    color: #4f8d42;
+    font-weight: 700;
+}
+
+.profile-id-placeholder strong {
+    color: #374151;
+}
+
+.profile-id-placeholder span {
+    margin-top: 5px;
+    color: #9ca3af;
+    font-size: 0.8rem;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+@media (max-width: 991.98px) {
+
+    .profile-page-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-left-column {
+        position: static;
+    }
+
+    .profile-right-column {
+        height: auto;
+        overflow-y: visible;
+        padding-right: 0;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .profile-information-card {
+        padding: 20px;
+    }
+
+    .profile-information-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-member-card,
+    .profile-activity-card,
+    .profile-information-card {
+        border-radius: 12px;
+    }
+
+    .profile-picture {
+        width: 105px;
+        height: 105px;
+    }
+
+    .profile-card-cover {
+        height: 75px;
+    }
+
+    .profile-picture-wrapper {
+        margin-top: -48px;
+    }
+}
+
+
+/* ==========================================================
+   EDIT PROFILE
+   ========================================================== */
+
+.profile-page-layout {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 24px;
+    width: 100%;
+}
+
+.profile-left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.profile-right-column {
+    min-width: 0;
+}
+
+
+/* ==========================================================
+   INFORMATION CARDS
+   ========================================================== */
+
+.profile-information-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 26px 28px;
+    margin-bottom: 24px;
+}
+
+
+/* ==========================================================
+   SUBSECTIONS
+   ========================================================== */
+
+.profile-subsection-title {
+    margin-top: 26px;
+    margin-bottom: 18px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   FORM GRID
+   ========================================================== */
+
+.profile-information-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 20px;
+}
+
+.profile-information-item {
+    min-width: 0;
+}
+
+.profile-information-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #374151;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   FORM FIELDS
+   ========================================================== */
+
+.profile-information-item .form-control,
+.profile-information-item .form-select {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid #dfe5dc;
+    border-radius: 9px;
+    background-color: #ffffff;
+    color: #374151;
+    font-size: 0.88rem;
+    box-shadow: none;
+}
+
+    .profile-information-item .form-control:focus,
+    .profile-information-item .form-select:focus {
+        border-color: #8ACE79;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.15);
+    }
+
+    .profile-information-item .form-control[readonly] {
+        background-color: #f8faf7;
+        color: #6b7280;
+    }
+
+
+/* Validation */
+
+.profile-information-item .text-danger {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.75rem;
+}
+
+
+/* ==========================================================
+   EDIT PROFILE BUTTON
+   ========================================================== */
+
+.profile-edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 18px;
+    border: 1px solid #8ACE79 !important;
+    border-radius: 999px;
+    background-color: #8ACE79 !important;
+    color: #ffffff !important;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+
+    .profile-edit-button:hover {
+        background-color: #8ACE79 !important;
+        border-color: #8ACE79 !important;
+        color: #ffffff !important;
+        text-decoration: none;
+        box-shadow: inset 0 0 0 100px rgba(255, 255, 255, 0.12);
+    }
+
+    .profile-edit-button:focus,
+    .profile-edit-button:active {
+        background-color: #8ACE79 !important;
+        border-color: #8ACE79 !important;
+        color: #ffffff !important;
+        box-shadow: none;
+    }
+
+
+/* ==========================================================
+   CHANGE VALID ID
+   ========================================================== */
+
+.profile-valid-id-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 220px;
+    min-height: 42px;
+    margin-top: 14px;
+    padding: 9px 20px;
+    border: 1px solid #8ACE79;
+    border-radius: 999px;
+    background-color: #8ACE79;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+
+    .profile-valid-id-button:hover {
+        background-color: #8ACE79;
+        border-color: #8ACE79;
+        color: #ffffff;
+        box-shadow: inset 0 0 0 100px rgba(255, 255, 255, 0.12);
+    }
+
+    .profile-valid-id-button:focus,
+    .profile-valid-id-button:active {
+        background-color: #8ACE79;
+        border-color: #8ACE79;
+        color: #ffffff;
+        box-shadow: none;
+    }
+
+
+/* ==========================================================
+   VERIFICATION
+   ========================================================== */
+
+.profile-verification-container {
+    width: 100%;
+}
+
+.profile-id-image {
+    display: block;
+    width: 100%;
+    max-width: 350px;
+    max-height: 220px;
+    margin-top: 10px;
+    object-fit: contain;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #f8faf7;
+}
+
+.profile-id-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 350px;
+    height: 220px;
+    margin-top: 10px;
+    border: 1px dashed #d1d5db;
+    border-radius: 10px;
+    background: #f8faf7;
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
+
+/* ==========================================================
+   FORM ACTIONS
+   ========================================================== */
+
+.profile-actions-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+}
+
+.profile-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+
+/* Cancel */
+
+.profile-cancel-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    min-height: 40px;
+    padding: 8px 20px;
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+    background-color: #ffffff;
+    color: #4b5563;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+    .profile-cancel-button:hover {
+        background-color: #f8faf7;
+        border-color: #bfc8bc;
+        color: #374151;
+        text-decoration: none;
+    }
+
+
+/* Save */
+
+.profile-save-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+    min-height: 40px;
+    padding: 8px 20px;
+    border: 1px solid #8ACE79 !important;
+    border-radius: 999px;
+    background-color: #8ACE79 !important;
+    color: #ffffff !important;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+
+    .profile-save-button:hover {
+        background-color: #8ACE79 !important;
+        border-color: #8ACE79 !important;
+        color: #ffffff !important;
+        box-shadow: inset 0 0 0 100px rgba(255, 255, 255, 0.12);
+    }
+
+
+/* ==========================================================
+   PROFILE PHOTO MODAL
+   ========================================================== */
+
+.profile-photo-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+    .profile-photo-modal.show {
+        display: flex;
+    }
+
+.profile-photo-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(17, 24, 39, 0.35);
+}
+
+.profile-photo-modal-content {
+    position: relative;
+    z-index: 1;
+    width: min(420px, calc(100% - 32px));
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+
+/* Modal header */
+
+.profile-photo-modal-header {
+    padding: 22px 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+    .profile-photo-modal-header h4 {
+        margin: 0;
+        color: #1f2937;
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+
+/* Modal body */
+
+.profile-photo-modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Modal buttons */
+
+.profile-photo-modal-button {
+    width: 100%;
+    padding: 17px 24px;
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #374151;
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    .profile-photo-modal-button:hover {
+        background-color: #f7faf5;
+    }
+
+    .profile-photo-modal-button:last-child {
+        border-bottom: none;
+    }
+
+
+/* Remove */
+
+.profile-photo-remove-button {
+    color: #b45353;
+}
+
+
+/* Cancel */
+
+.profile-photo-cancel-button {
+    color: #6b7280;
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+@media (max-width: 992px) {
+
+    .profile-page-layout {
+        grid-template-columns: 280px minmax(0, 1fr);
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .profile-page-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-information-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-information-card {
+        padding: 22px 20px;
+    }
+
+    .profile-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .profile-cancel-button,
+    .profile-save-button {
+        width: 100%;
+    }
+
+    .profile-valid-id-button {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 576px) {
+
+    .profile-page-layout {
+        gap: 16px;
+    }
+
+    .profile-left-column {
+        gap: 16px;
+    }
+
+    .profile-information-card {
+        border-radius: 14px;
+        padding: 20px 16px;
+    }
+}

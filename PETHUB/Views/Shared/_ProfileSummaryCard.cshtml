@@ -4,134 +4,166 @@
 @{
 }
 
-<div class="card shadow-sm mb-4 mt-4">
+<div class="my-posts-profile-card">
 
-    <div class="card-body text-center">
+    <!-- ==========================================================
+         PROFILE INFORMATION
+    ========================================================== -->
+
+    <div class="my-posts-profile-info">
 
         <!-- Profile Picture -->
         @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
         {
             <img id="profilePicturePreview"
                  src="@Model.ProfilePicturePath"
-                 class="rounded-circle border mb-3"
-                 width="180"
-                 height="180"
-                 style="object-fit:cover;" />
+                 class="my-posts-profile-picture"
+                 alt="Profile Picture" />
         }
         else
         {
             <img id="profilePicturePreview"
                  src="~/images/default_profile.jpg"
-                 class="rounded-circle border mb-3"
-                 width="180"
-                 height="180"
-                 style="object-fit:cover;" />
+                 class="my-posts-profile-picture"
+                 alt="Default Profile Picture" />
         }
-        <!-- Name -->
-
-        <h3 class="mb-1">
-
-            @Model.FirstName
-
-            @if (!string.IsNullOrWhiteSpace(Model.MiddleName))
-            {
-                @Model.MiddleName
-            }
-
-            @Model.LastName
-
-        </h3>
-
-        <!-- User Type -->
-
-        <p class="text-muted mb-2">
-
-            Member
-
-        </p>
-
-        <!-- Joined Date -->
-
-        <p class="text-secondary">
-
-            <strong>Joined:</strong>
-
-            @Model.CreatedAt.ToString("MMMM dd, yyyy")
-
-        </p>
 
 
-        <div class="border-top mt-4 pt-4">
+        <!-- Name + Membership -->
 
-            <!-- ========================================================= -->
-            <!-- ACTIVITY SUMMARY                                          -->
-            <!-- ========================================================= -->
+        <div class="my-posts-profile-details">
 
-            <div class="row g-0 text-center">
+            <h3>
 
-                <div class="col">
+                @Model.FirstName
 
-                    <small class="text-muted d-block">
-                        Marketplace Listings
-                    </small>
+                @if (!string.IsNullOrWhiteSpace(Model.MiddleName))
+                {
+                    @Model.MiddleName
+                }
 
-                    <h3 class="fw-bold mt-2 mb-0">
-                        @Model.MarketplaceListingsCount
-                    </h3>
+                @Model.LastName
 
-                </div>
+            </h3>
 
-                <div class="col border-start">
-
-                    <small class="text-muted d-block">
-                        Lost &amp; Found Reports
-                    </small>
-
-                    <h3 class="fw-bold mt-2 mb-0">
-                        @Model.LostFoundReportsCount
-                    </h3>
-
-                </div>
-
-                <div class="col border-start">
-
-                    <small class="text-muted d-block">
-                        Pets Sold
-                    </small>
-
-                    <h3 class="fw-bold mt-2 mb-0">
-                        @Model.PetsSoldCount
-                    </h3>
-
-                </div>
-
-                <div class="col border-start">
-
-                    <small class="text-muted d-block">
-                        Pets Adopted
-                    </small>
-
-                    <h3 class="fw-bold mt-2 mb-0">
-                        @Model.PetsAdoptedCount
-                    </h3>
-
-                </div>
-
-                <div class="col border-start">
-
-                    <small class="text-muted d-block">
-                        Resolved Reports
-                    </small>
-
-                    <h3 class="fw-bold mt-2 mb-0">
-                        @Model.ResolvedReportsCount
-                    </h3>
-
-                </div>
-
-            </div>
+            <p>
+                Member since @Model.CreatedAt.ToString("MMM dd, yyyy")
+            </p>
 
         </div>
 
+
+        <!-- Horizontal Three-Dot Menu -->
+
+        <div class="dropdown my-posts-profile-dropdown">
+
+            <button class="my-posts-profile-menu"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    aria-label="Profile options">
+
+                <i data-lucide="ellipsis"></i>
+
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+
+                <li>
+                    <a asp-controller="MyProfile"
+                       asp-action="View"
+                       class="dropdown-item">
+                        Personal Details
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#"
+                       class="dropdown-item">
+                        Archive
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#"
+                       class="dropdown-item">
+                        Settings
+                    </a>
+                </li>
+
+            </ul>
+
         </div>
+
+    </div>
+
+
+    <!-- ==========================================================
+         ACTIVITY SUMMARY
+    ========================================================== -->
+
+    <div class="my-posts-activity-summary">
+
+        <div class="my-posts-stat">
+
+            <strong>
+                @Model.MarketplaceListingsCount
+            </strong>
+
+            <span>
+                Marketplace Listings
+            </span>
+
+        </div>
+
+        <div class="my-posts-stat">
+
+            <strong>
+                @Model.LostFoundReportsCount
+            </strong>
+
+            <span>
+                Lost &amp; Found Reports
+            </span>
+
+        </div>
+
+        <div class="my-posts-stat">
+
+            <strong>
+                @Model.PetsSoldCount
+            </strong>
+
+            <span>
+                Sold
+            </span>
+
+        </div>
+
+        <div class="my-posts-stat">
+
+            <strong>
+                @Model.PetsAdoptedCount
+            </strong>
+
+            <span>
+                Adopted
+            </span>
+
+        </div>
+
+        <div class="my-posts-stat">
+
+            <strong>
+                @Model.ResolvedReportsCount
+            </strong>
+
+            <span>
+                Resolved Reports
+            </span>
+
+        </div>
+
+    </div>
+
 </div>
