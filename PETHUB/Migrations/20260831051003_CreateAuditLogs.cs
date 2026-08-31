@@ -48,7 +48,7 @@ namespace PETHUB.Migrations
                     CreatedAt = table.Column<DateTime>(
                         type: "datetime2",
                         nullable: false)
-                },
+                }, 
                 constraints: table =>
                 {
                     // Sets Id as the primary key for AuditLogs.
