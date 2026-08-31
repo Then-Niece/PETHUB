@@ -75,18 +75,6 @@
             My Content
         </h6>
 
-        <a asp-controller="MyPosts"
-           asp-action="Index"
-           class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "MyPosts" ? "active" : "")">
-
-            <i data-lucide="file-text"></i>
-
-            <span class="sidebar-text">
-                My Posts
-            </span>
-
-        </a>
-
         <a asp-controller="RemovedPosts"
            asp-action="Index"
            class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "RemovedPosts" ? "active" : "")">
