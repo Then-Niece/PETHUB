@@ -190,40 +190,85 @@ namespace PETHUB.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            ViewData["HideSidebar"] = true;
 
-            // Allow login by either username or email
-            var user = await _userManager.FindByNameAsync(model.UserNameOrEmail)
-                       ?? await _userManager.FindByEmailAsync(model.UserNameOrEmail);
-
-            if (user == null)
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Invalid login attempt.");
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(
-                user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
+            // Allow login by either username or email.
+            var user =
+                await _userManager.FindByNameAsync(
+                    model.UserNameOrEmail)
+                ??
+                await _userManager.FindByEmailAsync(
+                    model.UserNameOrEmail);
+
+            if (user == null)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Invalid login attempt.");
+
+                return View(model);
+            }
+
+            var result =
+                await _signInManager.PasswordSignInAsync(
+                    user.UserName!,
+                    model.Password,
+                    model.RememberMe,
+                    lockoutOnFailure: true);
+
+
+            // =========================================================
+            // SUCCESSFUL LOGIN
+            // =========================================================
 
             if (result.Succeeded)
             {
                 if (await _userManager.IsInRoleAsync(user, "Admin"))
                 {
-                    return RedirectToAction("Index", "PetFeeds");
+                    return RedirectToAction(
+                        "Index",
+                        "AdminDashboard");
+                }
 
-                }
-                else if (await _userManager.IsInRoleAsync(user, "Member"))
+                if (await _userManager.IsInRoleAsync(user, "Member"))
                 {
-                    return RedirectToAction("Feed", "PetFeeds");
+                    return RedirectToAction(
+                        "Feed",
+                        "PetFeeds");
                 }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+
+                return RedirectToAction(
+                    "Index",
+                    "Home");
             }
-            // Check if the user is not allowed to sign in (e.g., email not confirmed)
+
+
+            // =========================================================
+            // ACCOUNT LOCKED
+            // =========================================================
+
+            if (result.IsLockedOut)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Your account has been temporarily locked because of too many failed login attempts. Please try again in 15 minutes.");
+
+                return View(model);
+            }
+
+
+            // =========================================================
+            // EMAIL NOT CONFIRMED
+            // =========================================================
+
             if (result.IsNotAllowed)
             {
                 ModelState.AddModelError(
@@ -234,9 +279,42 @@ namespace PETHUB.Controllers
             }
 
 
-            ModelState.AddModelError("", "Invalid login attempt.");
+            // =========================================================
+            // INVALID PASSWORD
+            // SHOW REMAINING ATTEMPTS
+            // =========================================================
+
+            var failedAttempts =
+                await _userManager.GetAccessFailedCountAsync(user);
+
+            var maxFailedAttempts =
+                _userManager.Options
+                    .Lockout
+                    .MaxFailedAccessAttempts;
+
+            var remainingAttempts =
+                maxFailedAttempts - failedAttempts;
+
+
+            // Make sure the displayed number
+            // can never become negative.
+            remainingAttempts =
+                Math.Max(remainingAttempts, 0);
+
+
+            var attemptText =
+                remainingAttempts == 1
+                    ? "attempt"
+                    : "attempts";
+
+
+            ModelState.AddModelError(
+                "",
+                $"Invalid login attempt. {remainingAttempts} {attemptText} remaining before your account is temporarily locked.");
+
             return View(model);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Logout()

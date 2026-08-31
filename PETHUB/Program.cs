@@ -26,7 +26,21 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     // Require every user to have a unique email address
     options.User.RequireUniqueEmail = true;
 
-    
+
+    // =========================================================
+    // ACCOUNT LOCKOUT
+    // =========================================================
+
+    // Allow users to be locked out.
+    options.Lockout.AllowedForNewUsers = true;
+
+    // Lock the account after 5 failed login attempts.
+    options.Lockout.MaxFailedAccessAttempts = 5;
+
+    // Lock the account for 15 minutes.
+    options.Lockout.DefaultLockoutTimeSpan =
+        TimeSpan.FromMinutes(15);
+
 })
 // Configure token provider for password reset
 .AddEntityFrameworkStores<ApplicationDbContext>()
