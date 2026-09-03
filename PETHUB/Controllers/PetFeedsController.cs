@@ -793,11 +793,53 @@ public class PetFeedsController : Controller
         return View(result.Items);
     }
 
+    // Displays one administrator announcement to Members and anonymous visitors.
+    //
+    // This is intentionally separate from Details() because Details() is the
+    // administrator-only PetFeed management details page.
+    //
+    // The member-facing page does NOT expose the administrator who created
+    // the announcement.
+    [AllowAnonymous]
+    public async Task<IActionResult> AnnouncementDetails(int? id)
+    {
+        // Return 404 when no announcement ID was supplied.
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        // Retrieve only the selected PetFeed announcement.
+        // Include(p => p.Images) loads the related images so the details page
+        // can display the announcement's first uploaded image.
+        var announcement = await _context.PetFeeds
+            .AsNoTracking()
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p =>
+                p.PetFeedId == id &&
+                p.Type == PetFeedType.Announcement);
+
+        // Return 404 when the selected record does not exist
+        // or is not an Announcement.
+        if (announcement == null)
+        {
+            return NotFound();
+        }
+
+        // Return the announcement to the member-facing Razor view.
+        //
+        // The view will intentionally display only the announcement's public
+        // information and will not display Admin or AdminId.
+        return View(announcement);
+    }
+
     // Adds a paw to an existing PetFeed.
     [HttpPost]
     [Authorize(Roles = "Member")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Paw(int id)
+    public async Task<IActionResult> Paw(
+        int id,
+        long? feedSeed)
     {
         // Get the current member's Identity ID.
         var userId = _userManager.GetUserId(User);
@@ -823,7 +865,29 @@ public class PetFeedsController : Controller
             await _context.SaveChangesAsync();
         }
 
-        return RedirectToAction(nameof(Feed));
+        // AJAX requests get a small JSON response instead of a redirect,
+        // so petfeed.js can update the paw button/count in place without
+        // reloading the page (and without losing scroll position).
+        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        {
+            var currentPawCount = await _context.PetFeedPaws
+                .CountAsync(p => p.PetFeedId == id);
+
+            return Json(new
+            {
+                success = true,
+                petFeedId = id,
+                isPawed = true,
+                pawCount = currentPawCount
+            });
+        }
+
+        // Non-AJAX fallback (e.g. JavaScript disabled): forward the
+        // current feedSeed so the redirect back to Feed keeps the same
+        // random order instead of generating a new one.
+        return RedirectToAction(
+            nameof(Feed),
+            new { feedSeed });
     }
 
 
@@ -831,7 +895,9 @@ public class PetFeedsController : Controller
     [HttpPost]
     [Authorize(Roles = "Member")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Unpaw(int id)
+    public async Task<IActionResult> Unpaw(
+        int id,
+        long? feedSeed)
     {
         // Get the current member's Identity ID.
         var userId = _userManager.GetUserId(User);
@@ -850,7 +916,29 @@ public class PetFeedsController : Controller
             await _context.SaveChangesAsync();
         }
 
-        return RedirectToAction(nameof(Feed));
+        // AJAX requests get a small JSON response instead of a redirect,
+        // so petfeed.js can update the paw button/count in place without
+        // reloading the page (and without losing scroll position).
+        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        {
+            var currentPawCount = await _context.PetFeedPaws
+                .CountAsync(p => p.PetFeedId == id);
+
+            return Json(new
+            {
+                success = true,
+                petFeedId = id,
+                isPawed = false,
+                pawCount = currentPawCount
+            });
+        }
+
+        // Non-AJAX fallback: forward the current feedSeed so the redirect
+        // back to Feed keeps the same random order instead of generating
+        // a new one.
+        return RedirectToAction(
+            nameof(Feed),
+            new { feedSeed });
     }
 
 
@@ -860,12 +948,23 @@ public class PetFeedsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddComment(
         int id,
-        string content)
+        string content,
+        long? feedSeed)
     {
+        bool isAjax =
+            Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+
         // Reject empty comments.
         if (string.IsNullOrWhiteSpace(content))
         {
-            return RedirectToAction(nameof(Feed));
+            if (isAjax)
+            {
+                return Json(new { success = false });
+            }
+
+            return RedirectToAction(
+                nameof(Feed),
+                new { feedSeed });
         }
 
         // Get the current member's Identity ID.
@@ -886,7 +985,36 @@ public class PetFeedsController : Controller
         // Save the comment.
         await _context.SaveChangesAsync();
 
-        return RedirectToAction(nameof(Feed));
+        // AJAX requests get the new comment's data back as JSON so
+        // petfeed.js can append it to the comment list in place, instead
+        // of redirecting and reloading the whole page.
+        if (isAjax)
+        {
+            var member = await _userManager.FindByIdAsync(userId);
+
+            var commentCount = await _context.PetFeedComments
+                .CountAsync(c => c.PetFeedId == id);
+
+            return Json(new
+            {
+                success = true,
+                petFeedId = id,
+                commentId = comment.CommentId,
+                content = comment.Content,
+                datePosted = comment.DatePosted.ToString("MMM dd, yyyy"),
+                firstName = member?.FirstName,
+                lastName = member?.LastName,
+                profilePicturePath = member?.ProfilePicturePath,
+                canDelete = true,
+                commentCount
+            });
+        }
+
+        // Forward the current feedSeed so the redirect back to Feed keeps
+        // the same random order instead of generating a new one.
+        return RedirectToAction(
+            nameof(Feed),
+            new { feedSeed });
     }
 
 
@@ -894,7 +1022,9 @@ public class PetFeedsController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Member,Admin")]
-    public async Task<IActionResult> DeleteComment(int id)
+    public async Task<IActionResult> DeleteComment(
+        int id,
+        long? feedSeed)
     {
         // Get the current user's Identity ID.
         var userId = _userManager.GetUserId(User);
@@ -917,13 +1047,35 @@ public class PetFeedsController : Controller
             return Forbid();
         }
 
+        int petFeedId = comment.PetFeedId;
+
         // Remove the comment.
         _context.PetFeedComments.Remove(comment);
 
         // Save the deletion.
         await _context.SaveChangesAsync();
 
-        return RedirectToAction(nameof(Feed));
+        // AJAX requests get a small JSON response instead of a redirect,
+        // so petfeed.js can remove the comment from the DOM in place.
+        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        {
+            var commentCount = await _context.PetFeedComments
+                .CountAsync(c => c.PetFeedId == petFeedId);
+
+            return Json(new
+            {
+                success = true,
+                commentId = id,
+                petFeedId,
+                commentCount
+            });
+        }
+
+        // Forward the current feedSeed so the redirect back to Feed keeps
+        // the same random order instead of generating a new one.
+        return RedirectToAction(
+            nameof(Feed),
+            new { feedSeed });
     }
 
 
@@ -1783,4 +1935,5 @@ public class PetFeedsController : Controller
             "_FeedItems",
             result.Items);
     }
+
 }

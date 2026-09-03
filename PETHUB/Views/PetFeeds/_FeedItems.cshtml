@@ -2,45 +2,45 @@
 @using PETHUB.ViewModels
 @model IEnumerable<PETHUB.ViewModels.PetFeedFeedViewModel>
 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
 @foreach (var post in Model)
 {
     // ==========================================================
     // PETFEED
     // ==========================================================
-    // PetTip posts continue using the existing PetFeed card
-    // and its existing Paw/comment functionality.
-    // Announcements are rendered separately by _Announcements.cshtml.
+    // Regular PetFeed posts keep Paws and Comments for Members.
     @if (post.ContentType == PetFeedContentType.PetFeed)
     {
-        <div class="card mb-4 shadow-sm @(post.IsHighlighted ? "highlight-post" : "")"
-             id="post-@post.PetFeedId">
+        // Determine whether this post contains at least one image.
+        // This controls whether the card uses the image + text layout
+        // or allows the text to use the full card width.
+        var hasImages = post.Images != null && post.Images.Any();
 
-            <div class="card-body">
+        <article class="feed-card @(post.IsHighlighted ? "highlight-post" : "") @(hasImages ? "" : "feed-card-no-image")"
+                 id="post-@post.PetFeedId">
 
-                <!-- POST HEADER -->
+            <!-- ==================================================
+                 POST HEADER
+                 ================================================== -->
 
-                <div class="d-flex align-items-center mb-3">
+            <div class="feed-card-header">
 
+                <div class="feed-author">
+
+                    <!--
+                        PetFeed administrator posts use the PETHUB logo
+                        as the visible author identity.
+                    -->
                     <img src="~/images/PETHUB-LOGO.png"
-                         class="rounded-circle me-2"
-                         style="width:40px;height:40px;"
+                         class="feed-author-image"
                          alt="PETHUB" />
 
-                    <div>
+                    <div class="feed-author-info">
 
-                        <strong>
+                        <strong class="feed-author-name">
                             PETHUB
                         </strong>
 
-                        <br />
-
-                        <small class="text-muted">
+                        <small class="feed-post-date">
                             @post.DateCreated.ToString("MMM dd, yyyy")
                         </small>
 
@@ -48,68 +48,121 @@
 
                 </div>
 
-
-                <!-- POST CONTENT -->
-
-                <h4 class="fw-bold">
-                    @post.Title
-                </h4>
-
-                <p>
-                    @post.Content
-                </p>
+            </div>
 
 
-                <!-- IMAGES -->
-                @if (post.Images != null && post.Images.Any())
+            <!-- ==================================================
+                 POST CONTENT
+                 ================================================== -->
+
+            <div class="feed-card-content @(hasImages ? "" : "feed-card-content-no-image")">
+
+                @if (hasImages)
                 {
-                    // PetFeed images use the existing PetFeedImage
-                    // collection and its ImagePath property.
-                    var images = post.Images.ToList();
+                    <!--
+                        The media section only exists when the post has
+                        an image, preventing an empty image column.
+                    -->
+                    <div class="feed-media">
 
-                    @if (images.Count == 1)
-                    {
-                        <img src="@images[0].ImagePath"
-                             class="post-image w-100 rounded"
-                             alt="PetFeed image" />
-                    }
-                    else
-                    {
-                        <div class="image-grid">
+                        @{
+                            // Convert the PetFeed image collection into a list.
+                            // The list allows the view to check the number of
+                            // images and safely access each image.
+                            var images = post.Images!.ToList();
+                        }
 
-                            @foreach (var image in images.Take(4))
-                            {
-                                <img src="@image.ImagePath"
-                                     class="grid-image rounded"
-                                     alt="PetFeed image" />
-                            }
+                        @if (images.Count == 1)
+                        {
+                            <!--
+                                A single image is displayed as the main
+                                feed image.
+                            -->
+                            <img src="@images[0].ImagePath"
+                                 class="feed-main-image"
+                                 alt="PetFeed image" />
+                        }
+                        else
+                        {
+                            <!--
+                                Multiple images use the four-image preview.
+                                Any images beyond four are represented by +N.
+                            -->
+                            <div class="feed-image-grid">
 
-                            @if (images.Count > 4)
-                            {
-                                <div class="more-images">
-                                    +@(images.Count - 4)
-                                </div>
-                            }
+                                @foreach (var image in images.Take(4))
+                                {
+                                    <img src="@image.ImagePath"
+                                         class="feed-grid-image"
+                                         alt="PetFeed image" />
+                                }
 
-                        </div>
-                    }
+                                @if (images.Count > 4)
+                                {
+                                    <div class="feed-more-images">
+                                        +@(images.Count - 4)
+                                    </div>
+                                }
+
+                            </div>
+                        }
+
+                    </div>
                 }
 
 
-                <!-- PAW COUNT -->
+                <!-- ==================================================
+                     TEXT CONTENT
+                     ================================================== -->
 
-                <div class="mt-3">
-                    🐾 @post.PawCount paws
+                <div class="feed-text-content">
+
+                    <!--
+                        The CSS allows long titles to wrap instead of
+                        overflowing or being cut off.
+                    -->
+                    <h3 class="feed-title">
+                        @post.Title
+                    </h3>
+
+                    <p class="feed-description">
+                        @post.Content
+                    </p>
+
                 </div>
 
+            </div>
 
-                <!-- PAW / UNPAW -->
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    // Authenticated members can Paw or Unpaw the
-                    // administrator-created PetFeed post.
+
+            <!-- ==================================================
+                 PAW AREA
+                 ================================================== -->
+            @if (User.IsInRole("Member"))
+            {
+                <!--
+                    Only Members receive the actual Paw controls.
+                    This matches the Member-only Paw controller action.
+                -->
+                <div class="feed-engagement">
+
+                    <div class="feed-paw-count"
+                         data-paw-count-for="@post.PetFeedId">
+
+                        <span class="feed-paw-icon">
+                            🐾
+                        </span>
+
+                        <span data-paw-count-value>
+                            @post.PawCount
+                        </span>
+
+                    </div>
+
                     <form asp-action="@(post.IsPawed ? "Unpaw" : "Paw")"
-                          method="post">
+                          method="post"
+                          class="feed-action-form"
+                          data-paw-form
+                          data-is-pawed="@post.IsPawed.ToString().ToLower()">
 
                         @Html.AntiForgeryToken()
 
@@ -117,125 +170,164 @@
                                name="id"
                                value="@post.PetFeedId" />
 
-                        <button class="btn btn-primary mt-2">
+                        <!--
+                            Preserving the current feedSeed keeps the feed's
+                            random order stable if the AJAX request falls
+                            back to a normal form submit (e.g. JavaScript
+                            disabled or the fetch call fails).
+                        -->
+                        <input type="hidden"
+                               name="feedSeed"
+                               value="@ViewData["FeedSeed"]" />
+
+                        <button type="submit"
+                                class="feed-action-button"
+                                data-paw-button>
+
                             @(post.IsPawed ? "Remove Paw" : "Paw")
+
                         </button>
 
                     </form>
-                }
-                else
-                {
-                    // Anonymous visitors are sent to the existing
-                    // login modal when they attempt to Paw.
-                    <button class="btn btn-primary mt-2"
+
+                </div>
+            }
+            else if (User.Identity?.IsAuthenticated != true)
+            {
+                <!--
+                    Only anonymous visitors receive the login prompt.
+                    Authenticated Admins do not see this prompt.
+                -->
+                <div class="feed-engagement">
+
+                    <div class="feed-paw-count">
+
+                        <span class="feed-paw-icon">
+                            🐾
+                        </span>
+
+                        <span>
+                            @post.PawCount
+                        </span>
+
+                    </div>
+
+                    <button type="button"
+                            class="feed-action-button"
                             data-bs-toggle="modal"
                             data-bs-target="#loginModal">
 
                         Paw
 
                     </button>
-                }
+
+                </div>
+            }
 
 
-                <hr />
+            <!-- ==================================================
+                 COMMENTS
+                 ================================================== -->
 
+            <div class="feed-comments-section"
+                 data-comments-for="@post.PetFeedId">
 
-                <!-- COMMENTS -->
-
-                <h6 class="fw-bold">
+                <h6 class="feed-section-title">
                     Comments
                 </h6>
 
-
                 @if (post.Comments != null && post.Comments.Any())
                 {
-                    <div class="mt-3">
+                    <div class="feed-comments-list"
+                         data-comments-list>
 
                         @foreach (var comment in post.Comments)
                         {
-                            <div class="card mb-3 border-0 bg-light">
+                            <div class="feed-comment"
+                                 data-comment-id="@comment.CommentId">
 
-                                <div class="card-body p-3">
+                                <div class="feed-comment-header">
 
-                                    <div class="d-flex align-items-center">
+                                    <div class="feed-comment-author">
 
-                                        <div class="rounded-circle bg-success text-white
-                                            d-flex justify-content-center
-                                            align-items-center"
-                                             style="width:35px;height:35px;">
+                                        <div class="feed-comment-avatar">
 
                                             @if (!string.IsNullOrEmpty(
                                                 comment.Member?.ProfilePicturePath))
                                             {
-                                                // Display the commenter's actual
-                                                // profile picture when available.
+                                                <!--
+                                                    Display the member's profile
+                                                    picture when available.
+                                                -->
                                                 <img src="@comment.Member.ProfilePicturePath"
-                                                     class="rounded-circle border"
-                                                     style="width:35px;height:35px;object-fit:cover;"
                                                      alt="Profile picture" />
                                             }
                                             else
                                             {
-                                                // Use the commenter's first initial
-                                                // when no profile picture exists.
+                                                <!--
+                                                    Fall back to the member's
+                                                    first initial.
+                                                -->
                                                 @(comment.Member?.FirstName?.Substring(0, 1) ?? "?")
                                             }
 
                                         </div>
 
-
-                                        <div class="ms-2">
+                                        <div>
 
                                             <strong>
                                                 @comment.Member?.FirstName
                                                 @comment.Member?.LastName
                                             </strong>
 
-                                            <br />
-
-                                            <small class="text-muted">
+                                            <small>
                                                 @comment.DatePosted.ToString("MMM dd, yyyy")
                                             </small>
 
                                         </div>
 
-
-                                        @if (User.IsInRole("Admin") ||
-                                            comment.MemberId ==
-                                            User.FindFirst(
-                                                System.Security.Claims.ClaimTypes.NameIdentifier
-                                            )?.Value)
-                                        {
-                                            // Admins can delete any comment.
-                                            // Members can delete their own comments.
-                                            <form asp-action="DeleteComment"
-                                                  method="post"
-                                                  class="ms-auto">
-
-                                                @Html.AntiForgeryToken()
-
-                                                <input type="hidden"
-                                                       name="id"
-                                                       value="@comment.CommentId" />
-
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-danger">
-
-                                                    Delete
-
-                                                </button>
-
-                                            </form>
-                                        }
-
                                     </div>
 
 
-                                    <p class="mt-2 mb-0">
-                                        @comment.Content
-                                    </p>
+                                    @if (User.IsInRole("Admin") ||
+                                        comment.MemberId ==
+                                        User.FindFirst(
+                                            System.Security.Claims.ClaimTypes.NameIdentifier
+                                        )?.Value)
+                                    {
+                                        <!--
+                                            Admins can delete any comment.
+                                            Members can delete their own comments.
+                                        -->
+                                        <form asp-action="DeleteComment"
+                                              method="post"
+                                              data-delete-comment-form>
+
+                                            @Html.AntiForgeryToken()
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@comment.CommentId" />
+
+                                            <input type="hidden"
+                                                   name="feedSeed"
+                                                   value="@ViewData["FeedSeed"]" />
+
+                                            <button type="submit"
+                                                    class="feed-delete-comment">
+
+                                                Delete
+
+                                            </button>
+
+                                        </form>
+                                    }
 
                                 </div>
+
+                                <p class="feed-comment-content">
+                                    @comment.Content
+                                </p>
 
                             </div>
                         }
@@ -244,19 +336,25 @@
                 }
                 else
                 {
-                    <p class="text-muted">
+                    <p class="feed-empty-comments"
+                       data-empty-comments>
                         No comments yet. Be the first to comment!
                     </p>
                 }
 
 
-                <!-- ADD COMMENT -->
-                @if (User.Identity?.IsAuthenticated == true)
+                <!-- ==================================================
+                     ADD COMMENT
+                     ================================================== -->
+                @if (User.IsInRole("Member"))
                 {
-                    // Authenticated members can add comments to PetFeed posts.
+                    <!--
+                        Only Members can add comments.
+                    -->
                     <form asp-action="AddComment"
                           method="post"
-                          class="mt-3">
+                          class="feed-comment-form"
+                          data-add-comment-form>
 
                         @Html.AntiForgeryToken()
 
@@ -264,21 +362,32 @@
                                name="id"
                                value="@post.PetFeedId" />
 
-                        <textarea name="content"
-                                  class="form-control"
-                                  rows="2"
-                                  placeholder="Write a comment..."></textarea>
+                        <input type="hidden"
+                               name="feedSeed"
+                               value="@ViewData["FeedSeed"]" />
 
-                        <button class="btn btn-primary mt-2">
+                        <textarea name="content"
+                                  class="feed-comment-input"
+                                  rows="2"
+                                  placeholder="Write a comment..."
+                                  data-comment-input></textarea>
+
+                        <button type="submit"
+                                class="feed-comment-submit">
+
                             Comment
+
                         </button>
 
                     </form>
                 }
-                else
+                else if (User.Identity?.IsAuthenticated != true)
                 {
-                    // Anonymous visitors must log in before commenting.
-                    <button class="btn btn-secondary mt-3 w-100"
+                    <!--
+                        Only anonymous visitors receive the login prompt.
+                    -->
+                    <button type="button"
+                            class="feed-login-comment"
                             data-bs-toggle="modal"
                             data-bs-target="#loginModal">
 
@@ -289,53 +398,56 @@
 
             </div>
 
-        </div>
+        </article>
     }
 
 
     // ==========================================================
     // MARKETPLACE
     // ==========================================================
-    // Marketplace records use the actual member information
-    // supplied by the combined ViewModel.
     else if (post.ContentType == PetFeedContentType.Marketplace)
     {
-        <div class="card mb-4 shadow-sm">
+        // Check whether the Marketplace listing has images.
+        // If not, the text section expands to use the full card width.
+        var hasImages = post.ImagePaths != null && post.ImagePaths.Any();
 
-            <div class="card-body">
+        <article class="feed-card @(hasImages ? "" : "feed-card-no-image")"
+                 id="post-@post.ContentId">
 
-                <!-- MARKETPLACE POST HEADER -->
+            <!-- POST HEADER -->
 
-                <div class="d-flex align-items-center mb-3">
+            <div class="feed-card-header">
+
+                <div class="feed-author">
 
                     @if (!string.IsNullOrEmpty(post.OwnerProfileImage))
                     {
-                        // Display the actual member's profile picture.
+                        <!--
+                            Display the Marketplace member's profile picture.
+                        -->
                         <img src="@post.OwnerProfileImage"
-                             class="rounded-circle me-2"
-                             style="width:40px;height:40px;object-fit:cover;"
+                             class="feed-author-image"
                              alt="Post owner" />
                     }
                     else
                     {
+                        <!--
+                            Use the default profile picture when none exists.
+                        -->
                         <img src="~/images/default_profile.jpg"
-                             class="rounded-circle me-2"
-                             style="width:40px;height:40px;object-fit:cover;"
+                             class="feed-author-image"
                              alt="Post owner" />
                     }
 
+                    <div class="feed-author-info">
 
-                    <div>
-
-                        <strong>
+                        <strong class="feed-author-name">
                             @(string.IsNullOrWhiteSpace(post.OwnerName)
                                 ? "Unknown User"
                                 : post.OwnerName)
                         </strong>
 
-                        <br />
-
-                        <small class="text-muted">
+                        <small class="feed-post-date">
                             @post.DateCreated.ToString("MMM dd, yyyy")
                         </small>
 
@@ -343,111 +455,157 @@
 
                 </div>
 
-
-                <!-- MARKETPLACE LABEL -->
-
-                <div class="mb-2">
-
-                    <span class="badge bg-success">
-                        Marketplace
-                    </span>
-
-                </div>
+            </div>
 
 
-                <!-- MARKETPLACE TITLE -->
+            <!-- MAIN CONTENT -->
 
-                <h4 class="fw-bold">
-                    @post.Title
-                </h4>
+            <div class="feed-card-content @(hasImages ? "" : "feed-card-content-no-image")">
 
-
-                <!-- MARKETPLACE DESCRIPTION -->
-
-                <p>
-                    @post.Content
-                </p>
-
-                <!-- VIEW MORE DETAILS -->
-                <!-- DetailsUrl points to the existing Marketplace details page. -->
-                @if (!string.IsNullOrWhiteSpace(post.DetailsUrl))
+                @if (hasImages)
                 {
-                    <div class="mt-3">
+                    <!--
+                        Only create the media section when images exist.
+                    -->
+                    <div class="feed-media">
 
-                        <a href="@post.DetailsUrl"
-                           class="btn btn-outline-success">
-                            View more details
-                        </a>
+                        @{
+                            // Convert Marketplace image paths into a list.
+                            // The list is used to determine whether to show
+                            // one image or a multi-image preview.
+                            var images = post.ImagePaths!.ToList();
+                        }
+
+                        @if (images.Count == 1)
+                        {
+                            <img src="@images[0]"
+                                 class="feed-main-image"
+                                 alt="Marketplace listing image" />
+                        }
+                        else
+                        {
+                            <div class="feed-image-grid">
+
+                                @foreach (var image in images.Take(4))
+                                {
+                                    <img src="@image"
+                                         class="feed-grid-image"
+                                         alt="Marketplace listing image" />
+                                }
+
+                                @if (images.Count > 4)
+                                {
+                                    <div class="feed-more-images">
+                                        +@(images.Count - 4)
+                                    </div>
+                                }
+
+                            </div>
+                        }
 
                     </div>
                 }
 
-                <!-- LISTING TYPE -->
-                @if (post.ListingType.HasValue)
-                {
-                    // Shows whether the listing is for adoption or sale.
-                    <p class="mb-2">
 
-                        <strong>
-                            Type:
-                        </strong>
+                <!-- MARKETPLACE TEXT -->
 
-                        @post.ListingType
+                <div class="feed-text-content">
 
+                    <span class="feed-type-badge marketplace-badge">
+                        Marketplace
+                    </span>
+
+                    <h3 class="feed-title">
+                        @post.Title
+                    </h3>
+
+                    <p class="feed-description">
+                        @post.Content
                     </p>
-                }
 
+                    @if (post.ListingType.HasValue)
+                    {
+                        <!--
+                            Display the listing type when available.
+                        -->
+                        <p class="feed-meta-detail">
+
+                            <strong>
+                                Type:
+                            </strong>
+
+                            @post.ListingType
+
+                        </p>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(post.DetailsUrl))
+                    {
+                        <!--
+                            Use the existing Marketplace details URL.
+                        -->
+                        <a href="@post.DetailsUrl"
+                           class="feed-details-button">
+
+                            View details
+
+                        </a>
+                    }
+
+                </div>
 
             </div>
 
-        </div>
+        </article>
     }
 
 
     // ==========================================================
     // LOST & FOUND
     // ==========================================================
-    // Lost & Found records also use the actual member who created
-    // the report rather than the PETHUB administrator.
     else if (post.ContentType == PetFeedContentType.LostFound)
     {
-        <div class="card mb-4 shadow-sm">
+        // Check whether the Lost & Found report has images.
+        // If not, the text section expands to use the full card width.
+        var hasImages = post.ImagePaths != null && post.ImagePaths.Any();
 
-            <div class="card-body">
+        <article class="feed-card @(hasImages ? "" : "feed-card-no-image")"
+                 id="post-@post.ContentId">
 
-                <!-- LOST & FOUND POST HEADER -->
+            <!-- POST HEADER -->
 
-                <div class="d-flex align-items-center mb-3">
+            <div class="feed-card-header">
+
+                <div class="feed-author">
 
                     @if (!string.IsNullOrEmpty(post.OwnerProfileImage))
                     {
-                        // Display the actual report owner's profile picture.
+                        <!--
+                            Display the report owner's profile picture.
+                        -->
                         <img src="@post.OwnerProfileImage"
-                             class="rounded-circle me-2"
-                             style="width:40px;height:40px;object-fit:cover;"
+                             class="feed-author-image"
                              alt="Post owner" />
                     }
                     else
                     {
-                        // Display the actual report owner's profile picture.
+                        <!--
+                            Use the default profile picture when none exists.
+                        -->
                         <img src="~/images/default_profile.jpg"
-                             class="rounded-circle me-2"
-                             style="width:40px;height:40px;object-fit:cover;"
+                             class="feed-author-image"
                              alt="Post owner" />
                     }
 
+                    <div class="feed-author-info">
 
-                    <div>
-
-                        <strong>
+                        <strong class="feed-author-name">
                             @(string.IsNullOrWhiteSpace(post.OwnerName)
                                 ? "Unknown User"
                                 : post.OwnerName)
                         </strong>
 
-                        <br />
-
-                        <small class="text-muted">
+                        <small class="feed-post-date">
                             @post.DateCreated.ToString("MMM dd, yyyy")
                         </small>
 
@@ -455,102 +613,107 @@
 
                 </div>
 
-
-                <!-- LOST & FOUND LABEL -->
-
-                <div class="mb-2">
-
-                    <span class="badge bg-warning text-dark">
-                        Lost &amp; Found
-                    </span>
-
-                </div>
+            </div>
 
 
-                <!-- REPORT TITLE -->
+            <!-- MAIN CONTENT -->
 
-                <h4 class="fw-bold">
-                    @post.Title
-                </h4>
+            <div class="feed-card-content @(hasImages ? "" : "feed-card-content-no-image")">
 
-
-                <!-- REPORT DESCRIPTION -->
-
-                <p>
-                    @post.Content
-                </p>
-
-                <!-- VIEW MORE DETAILS -->
-                <!-- DetailsUrl points to the existing Lost & Found details page. -->
-                @if (!string.IsNullOrWhiteSpace(post.DetailsUrl))
+                @if (hasImages)
                 {
-                    <div class="mt-3">
+                    <!--
+                        Only create the media section when images exist.
+                    -->
+                    <div class="feed-media">
 
-                        <a href="@post.DetailsUrl"
-                           class="btn btn-outline-success">
-                            View more details
-                        </a>
+                        @{
+                            // Convert Lost & Found image paths into a list.
+                            // The list is used to determine whether to show
+                            // one image or a multi-image preview.
+                            var images = post.ImagePaths!.ToList();
+                        }
+
+                        @if (images.Count == 1)
+                        {
+                            <img src="@images[0]"
+                                 class="feed-main-image"
+                                 alt="Lost and Found image" />
+                        }
+                        else
+                        {
+                            <div class="feed-image-grid">
+
+                                @foreach (var image in images.Take(4))
+                                {
+                                    <img src="@image"
+                                         class="feed-grid-image"
+                                         alt="Lost and Found image" />
+                                }
+
+                                @if (images.Count > 4)
+                                {
+                                    <div class="feed-more-images">
+                                        +@(images.Count - 4)
+                                    </div>
+                                }
+
+                            </div>
+                        }
 
                     </div>
                 }
 
-                <!-- REPORT TYPE -->
-                @if (post.LostFoundType.HasValue)
-                {
-                    // Shows whether the report is classified as Lost
-                    // or Found.
-                    <p class="mb-2">
 
-                        <strong>
-                            Report:
-                        </strong>
+                <!-- LOST & FOUND TEXT -->
 
-                        @post.LostFoundType
+                <div class="feed-text-content">
 
+                    <span class="feed-type-badge lost-found-badge">
+                        Lost &amp; Found
+                    </span>
+
+                    <h3 class="feed-title">
+                        @post.Title
+                    </h3>
+
+                    <p class="feed-description">
+                        @post.Content
                     </p>
-                }
 
-
-                <!-- LOST & FOUND IMAGES -->
-                @if (post.ImagePaths != null && post.ImagePaths.Any())
-                {
-                    // Lost & Found images use the common ImagePaths
-                    // collection populated by GetFeedPageAsync().
-                    var images = post.ImagePaths.ToList();
-
-                    @if (images.Count == 1)
+                    @if (post.LostFoundType.HasValue)
                     {
-                        <img src="@images[0]"
-                             class="post-image w-100 rounded"
-                             alt="Lost and Found image" />
+                        <!--
+                            Display whether the report is Lost or Found.
+                        -->
+                        <p class="feed-meta-detail">
+
+                            <strong>
+                                Report:
+                            </strong>
+
+                            @post.LostFoundType
+
+                        </p>
                     }
-                    else
+
+                    @if (!string.IsNullOrWhiteSpace(post.DetailsUrl))
                     {
-                        <div class="image-grid">
+                        <!--
+                            Use the existing Lost & Found details URL.
+                        -->
+                        <a href="@post.DetailsUrl"
+                           class="feed-details-button">
 
-                            @foreach (var image in images.Take(4))
-                            {
-                                <img src="@image"
-                                     class="grid-image rounded"
-                                     alt="Lost and Found image" />
-                            }
+                            View details
 
-                            @if (images.Count > 4)
-                            {
-                                // Shows the number of additional images
-                                // beyond the four-image preview.
-                                <div class="more-images">
-                                    +@(images.Count - 4)
-                                </div>
-                            }
-
-                        </div>
+                        </a>
                     }
-                }
+
+                </div>
 
             </div>
 
-        </div>
+        </article>
     }
 }
-

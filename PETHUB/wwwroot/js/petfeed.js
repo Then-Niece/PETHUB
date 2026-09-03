@@ -36,6 +36,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let feedSeed =
         feedContainer.dataset.feedSeed || "";
 
+    // Identifies who this page was actually rendered for ("" for
+    // anonymous visitors). Used to make sure cached feed state is never
+    // restored for a different person than who saved it.
+    const currentUserId =
+        feedContainer.dataset.userId || "";
+
     // Used to prevent sessionStorage from being written on every single
     // scroll event. Scroll events can fire many times per second.
     let saveStateTimeout = null;
@@ -102,47 +108,63 @@ document.addEventListener("DOMContentLoaded", function () {
                 // into a JavaScript object.
                 const state = JSON.parse(savedState);
 
-                // Restore all feed cards that were already loaded.
-                // This prevents the server-rendered first page from replacing
-                // the feed the user previously built through pagination.
-                if (typeof state.feedHtml === "string") {
-                    feedContainer.innerHTML = state.feedHtml;
+                // Reject state saved under a different identity. Without
+                // this check, a Member's cached feed (their own Paw
+                // states, "Remove Paw" labels, etc.) could be restored
+                // for an anonymous visitor, or for a different Member,
+                // after a login/logout/account switch in the same tab.
+                const savedUserId =
+                    typeof state.userId === "string" ? state.userId : "";
+
+                if (savedUserId !== currentUserId) {
+
+                    sessionStorage.removeItem(feedStateKey);
                 }
+                else {
 
-                // Restore the last successfully loaded page.
-                // This allows the next pagination request to continue correctly.
-                if (Number.isInteger(state.currentPage)) {
-                    currentPage = state.currentPage;
-                }
+                    // Restore all feed cards that were already loaded.
+                    // This prevents the server-rendered first page from replacing
+                    // the feed the user previously built through pagination.
+                    if (typeof state.feedHtml === "string") {
+                        feedContainer.innerHTML = state.feedHtml;
+                    }
 
-                // Restore the original random feed seed.
-                // This is required so pagination after returning to PetFeed continues
-                // using the same ordering as the original session.
-                if (typeof state.feedSeed === "string" &&
-                    state.feedSeed.length > 0) {
+                    // Restore the last successfully loaded page.
+                    // This allows the next pagination request to continue correctly.
+                    if (Number.isInteger(state.currentPage)) {
+                        currentPage = state.currentPage;
+                    }
 
-                    feedSeed = state.feedSeed;
-                }
+                    // Restore the original random feed seed.
+                    // This is required so pagination after returning to PetFeed continues
+                    // using the same ordering as the original session.
+                    if (typeof state.feedSeed === "string" &&
+                        state.feedSeed.length > 0) {
 
-                // Restore whether additional posts are available.
-                if (typeof state.hasMorePosts === "boolean") {
-                    hasMorePosts = state.hasMorePosts;
-                }
+                        feedSeed = state.feedSeed;
+                    }
 
-                // Restore the user's previous scroll position.
-                if (typeof state.scrollPosition === "number") {
+                    // Restore whether additional posts are available.
+                    if (typeof state.hasMorePosts === "boolean") {
+                        hasMorePosts = state.hasMorePosts;
+                    }
 
-                    // requestAnimationFrame() waits for the browser to repaint
-                    // the restored feed before changing the scroll position.
-                    requestAnimationFrame(function () {
+                    // Restore the user's previous scroll position.
+                    if (typeof state.scrollPosition === "number") {
 
-                        // Return the user to exactly where they left PetFeed.
-                        window.scrollTo(
-                            0,
-                            state.scrollPosition
-                        );
+                        // requestAnimationFrame() waits for the browser to repaint
+                        // the restored feed before changing the scroll position.
+                        requestAnimationFrame(function () {
 
-                    });
+                            // Return the user to exactly where they left PetFeed.
+                            window.scrollTo(
+                                0,
+                                state.scrollPosition
+                            );
+
+                        });
+                    }
+
                 }
 
             }
@@ -190,7 +212,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Store the random seed used by the controller.
                 // This allows the restored feed to continue pagination using the
                 // same ordering as the original feed.
-                feedSeed: feedSeed
+                feedSeed: feedSeed,
+
+                // Store who this state belongs to ("" for anonymous), so
+                // it is never restored for a different visitor later.
+                userId: currentUserId
             };
 
             // Convert the state object to JSON and store it in the current
@@ -264,12 +290,12 @@ document.addEventListener("DOMContentLoaded", function () {
             // Request the next page while supplying the same feed seed.
             // The controller uses this seed to reproduce the same randomized ordering.
             const response = await fetch(
-                `/PetFeeds/LoadMore?page=${nextPage}&feedSeed=${encodeURIComponent(feedSeed)}`,                {
-                    method: "GET",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
+                `/PetFeeds/LoadMore?page=${nextPage}&feedSeed=${encodeURIComponent(feedSeed)}`, {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
                 }
+            }
             );
 
             // Throw an error when the server returns an unsuccessful
@@ -331,6 +357,328 @@ document.addEventListener("DOMContentLoaded", function () {
             isLoading = false;
         }
     }
+
+
+    // ==========================================================
+    // PAW / UNPAW (AJAX)
+    // ==========================================================
+
+    // Intercepts the Paw/Unpaw form submit and sends it via fetch instead
+    // of letting the browser navigate. The server responds with the new
+    // paw count and pawed state, which are used to update just this
+    // post's button and count — no page reload, no scroll jump, no
+    // interaction with the pagination cache at all.
+    feedContainer.addEventListener("submit", async function (event) {
+
+        const form = event.target;
+
+        if (!(form instanceof HTMLFormElement)) {
+            return;
+        }
+
+        if (form.hasAttribute("data-paw-form")) {
+
+            event.preventDefault();
+
+            const formData = new FormData(form);
+
+            try {
+
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(
+                        `Paw request failed: ${response.status}`
+                    );
+                }
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    return;
+                }
+
+                const countWrapper = feedContainer.querySelector(
+                    `[data-paw-count-for="${result.petFeedId}"]`
+                );
+
+                if (countWrapper) {
+
+                    const countValue = countWrapper.querySelector(
+                        "[data-paw-count-value]"
+                    );
+
+                    if (countValue) {
+                        countValue.textContent = result.pawCount;
+                    }
+                }
+
+                // Flip the form to the opposite action for next time, and
+                // update the button label + form's asp-action equivalent
+                // (the resolved action URL) to match the new state.
+                const newAction = result.isPawed ? "Unpaw" : "Paw";
+
+                form.action =
+                    form.action.replace(
+                        /\/(Paw|Unpaw)(\?|$)/i,
+                        `/${newAction}$2`
+                    );
+
+                form.setAttribute(
+                    "data-is-pawed",
+                    result.isPawed ? "true" : "false"
+                );
+
+                const button = form.querySelector("[data-paw-button]");
+
+                if (button) {
+                    button.textContent =
+                        result.isPawed ? "Remove Paw" : "Paw";
+                }
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Error submitting Paw/Unpaw:",
+                    error
+                );
+            }
+
+            return;
+        }
+
+
+        // ======================================================
+        // ADD COMMENT (AJAX)
+        // ======================================================
+
+        if (form.hasAttribute("data-add-comment-form")) {
+
+            event.preventDefault();
+
+            const textarea = form.querySelector("[data-comment-input]");
+
+            const content = textarea ? textarea.value.trim() : "";
+
+            if (!content) {
+                return;
+            }
+
+            const formData = new FormData(form);
+
+            try {
+
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(
+                        `AddComment request failed: ${response.status}`
+                    );
+                }
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    return;
+                }
+
+                const section = feedContainer.querySelector(
+                    `[data-comments-for="${result.petFeedId}"]`
+                );
+
+                if (!section) {
+                    return;
+                }
+
+                let list = section.querySelector("[data-comments-list]");
+
+                // If this is the post's first comment, the list wrapper
+                // does not exist yet in the DOM (it was never rendered by
+                // the server) and needs to be created before appending.
+                if (!list) {
+
+                    list = document.createElement("div");
+
+                    list.classList.add("feed-comments-list");
+
+                    list.setAttribute("data-comments-list", "");
+
+                    const emptyMessage = section.querySelector(
+                        "[data-empty-comments]"
+                    );
+
+                    if (emptyMessage) {
+                        emptyMessage.replaceWith(list);
+                    }
+                    else {
+
+                        const heading = section.querySelector(
+                            ".feed-section-title"
+                        );
+
+                        if (heading) {
+                            heading.insertAdjacentElement(
+                                "afterend",
+                                list
+                            );
+                        }
+                    }
+                }
+                else {
+
+                    const emptyMessage = section.querySelector(
+                        "[data-empty-comments]"
+                    );
+
+                    if (emptyMessage) {
+                        emptyMessage.remove();
+                    }
+                }
+
+                const initial =
+                    (result.firstName || "?").substring(0, 1);
+
+                const avatarHtml = result.profilePicturePath
+                    ? `<img src="${result.profilePicturePath}" alt="Profile picture" />`
+                    : initial;
+
+                const deleteButtonHtml = result.canDelete
+                    ? `
+                        <form asp-action="DeleteComment" method="post" data-delete-comment-form>
+                            <input type="hidden" name="id" value="${result.commentId}" />
+                            <input type="hidden" name="feedSeed" value="${feedSeed}" />
+                            <button type="submit" class="feed-delete-comment">Delete</button>
+                        </form>
+                      `
+                    : "";
+
+                const commentHtml = `
+                    <div class="feed-comment" data-comment-id="${result.commentId}">
+                        <div class="feed-comment-header">
+                            <div class="feed-comment-author">
+                                <div class="feed-comment-avatar">${avatarHtml}</div>
+                                <div>
+                                    <strong>${result.firstName ?? ""} ${result.lastName ?? ""}</strong>
+                                    <small>${result.datePosted}</small>
+                                </div>
+                            </div>
+                            ${deleteButtonHtml}
+                        </div>
+                        <p class="feed-comment-content">${result.content}</p>
+                    </div>
+                `;
+
+                list.insertAdjacentHTML("beforeend", commentHtml);
+
+                if (textarea) {
+                    textarea.value = "";
+                }
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Error submitting AddComment:",
+                    error
+                );
+            }
+
+            return;
+        }
+
+
+        // ======================================================
+        // DELETE COMMENT (AJAX)
+        // ======================================================
+
+        if (form.hasAttribute("data-delete-comment-form")) {
+
+            event.preventDefault();
+
+            const formData = new FormData(form);
+
+            const commentEl = form.closest("[data-comment-id]");
+
+            try {
+
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(
+                        `DeleteComment request failed: ${response.status}`
+                    );
+                }
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    return;
+                }
+
+                if (commentEl) {
+                    commentEl.remove();
+                }
+
+                // Show the "no comments yet" message again if that was the
+                // last comment on this post.
+                if (result.commentCount === 0) {
+
+                    const section = feedContainer.querySelector(
+                        `[data-comments-for="${result.petFeedId}"]`
+                    );
+
+                    const list = section?.querySelector(
+                        "[data-comments-list]"
+                    );
+
+                    if (list) {
+
+                        const emptyMessage = document.createElement("p");
+
+                        emptyMessage.classList.add("feed-empty-comments");
+
+                        emptyMessage.setAttribute(
+                            "data-empty-comments",
+                            ""
+                        );
+
+                        emptyMessage.textContent =
+                            "No comments yet. Be the first to comment!";
+
+                        list.replaceWith(emptyMessage);
+                    }
+                }
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Error submitting DeleteComment:",
+                    error
+                );
+            }
+        }
+
+    });
 
 
     // ==========================================================

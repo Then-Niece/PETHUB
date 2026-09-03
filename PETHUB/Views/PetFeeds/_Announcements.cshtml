@@ -1,82 +1,185 @@
-﻿@using PETHUB.Models
+﻿@using System.Linq
+@using PETHUB.Models
 @model IEnumerable<PetFeed>
 
 @{
-    // Convert the supplied announcements to a list so we can safely
-    // determine whether there are any announcements to display.
+    // Convert the incoming announcement collection to a List so the
+    // view can safely use Count, indexing, and Any() multiple times.
     var announcements = Model?.ToList() ?? new List<PetFeed>();
 }
 
 @if (announcements.Any())
 {
     <!--
-        This is the single container for all active announcements.
-        Bootstrap's carousel component handles moving between announcements.
-        Only one announcement is visible at a time.
+        The announcement remains a dedicated carousel.
+
+        The outer announcement styling stays separate from normal feed
+        cards, while the internal content structure now follows the same
+        Facebook-style layout used by the normal PetFeed cards.
     -->
     <div id="announcementCarousel"
-         class="carousel slide mb-4">
+         class="carousel slide announcement-carousel"
+         data-bs-ride="false">
 
-        <!--
-            Create navigation indicators only when there is more than
-            one announcement. Each button selects a specific carousel item.
-        -->
-        @if (announcements.Count > 1)
-        {
-            <div class="carousel-indicators">
+        <!-- ==========================================================
+             ANNOUNCEMENT HEADER
+             ========================================================== -->
 
-                @for (int i = 0; i < announcements.Count; i++)
-                {
-                    <!--
-                        Bootstrap uses data-bs-slide-to to select the
-                        corresponding carousel position.
-                    -->
-                    <button type="button"
-                            data-bs-target="#announcementCarousel"
-                            data-bs-slide-to="@i"
-                            class="@(i == 0 ? "active" : "")"
-                            aria-current="@(i == 0 ? "true" : "false")"
-                            aria-label="Announcement @(i + 1)">
-                    </button>
-                }
+        <div class="announcement-header">
 
-            </div>
-        }
+            <!--
+                This badge remains announcement-specific and is not
+                replaced by the normal feed type badges.
+            -->
+            <span class="announcement-badge">
+                <i class="bi bi-megaphone-fill"></i>
+                Announcement
+            </span>
 
-        <!-- Contains all announcement slides. -->
+            @if (announcements.Count > 1)
+            {
+                <!--
+                    Shows the current announcement position when more
+                    than one announcement is available.
+                -->
+                <span class="announcement-counter">
+
+                    <span id="announcementCurrent">
+                        1
+                    </span>
+
+                    /
+                    @announcements.Count
+
+                </span>
+            }
+
+        </div>
+
+
+        <!-- ==========================================================
+             CAROUSEL CONTENT
+             ========================================================== -->
+
         <div class="carousel-inner">
 
             @for (int i = 0; i < announcements.Count; i++)
             {
                 var announcement = announcements[i];
 
+                // Check whether the announcement has at least one image.
+                // This determines whether the normal two-column feed
+                // layout or the no-image single-column layout is used.
+                var hasImage =
+                    announcement.Images != null &&
+                    announcement.Images.Any();
+
                 <!--
-                    The first announcement receives Bootstrap's active class.
-                    Without an active slide, the carousel would have nothing
-                    visible when it first loads.
+                    Bootstrap requires the first carousel item to have
+                    the active class when the carousel initially loads.
                 -->
                 <div class="carousel-item @(i == 0 ? "active" : "")">
 
-                    <div class="card shadow-sm">
+                    <!--
+                        IMPORTANT:
 
-                        <div class="card-body">
+                        The announcement still uses its own announcement
+                        container so the green border and carousel remain
+                        unchanged.
 
-                            <!-- Announcement label -->
-                            <div class="mb-2">
-                                <span class="badge bg-success">
-                                    Announcement
-                                </span>
+                        Inside it, the normal PetFeed content classes are
+                        reused so the announcement follows the same
+                        Facebook-style image/text layout as other cards.
+                    -->
+                    <div class="announcement-content
+                        feed-card-content
+                        @(hasImage ? "" : "feed-card-content-no-image")">
+
+                        @if (hasImage)
+                        {
+                            <!--
+                                The media area now follows the same structure
+                                as a normal PetFeed card.
+
+                                Only the first announcement image is shown
+                                because the full image collection belongs
+                                on AnnouncementDetails.cshtml.
+                            -->
+                            <div class="feed-media announcement-media">
+
+                                @{
+                                    // Select only the first image for the
+                                    // announcement carousel preview.
+                                    var firstImage =
+                                        announcement.Images!.First();
+                                }
+
+                                <img src="@firstImage.ImagePath"
+                                     class="feed-main-image announcement-image"
+                                     alt="Announcement image" />
+
                             </div>
+                        }
 
-                            <!-- Announcement title -->
-                            <h4 class="fw-bold">
+
+                        <!-- ==================================================
+                             ANNOUNCEMENT TEXT
+                             ================================================== -->
+
+                        <div class="feed-text-content announcement-text">
+
+                            <!--
+                                Keep the announcement title using the same
+                                text container structure as normal feed cards.
+                            -->
+                            <h3 class="feed-title announcement-title">
                                 @announcement.Title
-                            </h4>
+                            </h3>
 
-                            <!-- Announcement content -->
-                            <p class="mb-0">
+                            <!--
+                                Keep the announcement description using the
+                                same normal feed description structure.
+                            -->
+                            <p class="feed-description announcement-description">
                                 @announcement.Content
                             </p>
+
+                            <!--
+                                Only this link is clickable.
+
+                                The surrounding announcement card is NOT
+                                wrapped in an <a>, so clicking the image,
+                                title, description, or empty card area will
+                                not open the details page.
+
+                                Anonymous visitors get a button that opens
+                                the shared login modal (defined in
+                                Feed.cshtml) instead of navigating directly,
+                                matching how Paw/Comment already behave for
+                                guests.
+                            -->
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <a asp-controller="PetFeeds"
+                                   asp-action="AnnouncementDetails"
+                                   asp-route-id="@announcement.PetFeedId"
+                                   class="announcement-details-button">
+
+                                    View announcement
+
+                                </a>
+                            }
+                            else
+                            {
+                                <button type="button"
+                                        class="announcement-details-button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#loginModal">
+
+                                    View announcement
+
+                                </button>
+                            }
 
                         </div>
 
@@ -87,16 +190,40 @@
 
         </div>
 
-        <!--
-            Previous button is only useful when there are multiple
-            announcements, so it is hidden for a single announcement.
-        -->
+
+        <!-- ==========================================================
+             CAROUSEL INDICATORS AND CONTROLS
+             ========================================================== -->
         @if (announcements.Count > 1)
         {
-            <button class="carousel-control-prev"
+            <!--
+                Each indicator represents one announcement.
+                Bootstrap changes the active indicator automatically.
+            -->
+            <div class="carousel-indicators announcement-indicators">
+
+                @for (int i = 0; i < announcements.Count; i++)
+                {
+                    <button type="button"
+                            data-bs-target="#announcementCarousel"
+                            data-bs-slide-to="@i"
+                            class="@(i == 0 ? "active" : "")"
+                            aria-current="@(i == 0 ? "true" : "false")"
+                            aria-label="Announcement @(i + 1)">
+                    </button>
+                }
+
+            </div>
+
+
+            <!--
+                Previous control moves to the previous announcement.
+            -->
+            <button class="carousel-control-prev announcement-control"
                     type="button"
                     data-bs-target="#announcementCarousel"
-                    data-bs-slide="prev">
+                    data-bs-slide="prev"
+                    aria-label="Previous announcement">
 
                 <span class="carousel-control-prev-icon"
                       aria-hidden="true">
@@ -108,10 +235,15 @@
 
             </button>
 
-            <button class="carousel-control-next"
+
+            <!--
+                Next control moves to the next announcement.
+            -->
+            <button class="carousel-control-next announcement-control"
                     type="button"
                     data-bs-target="#announcementCarousel"
-                    data-bs-slide="next">
+                    data-bs-slide="next"
+                    aria-label="Next announcement">
 
                 <span class="carousel-control-next-icon"
                       aria-hidden="true">
@@ -125,4 +257,40 @@
         }
 
     </div>
+
+
+    @if (announcements.Count > 1)
+    {
+        <script>
+            // Wait until the page has loaded so the carousel and its
+            // counter are available in the DOM.
+            document.addEventListener("DOMContentLoaded", function () {
+
+                // Locate the Bootstrap announcement carousel.
+                const carousel =
+                    document.getElementById("announcementCarousel");
+
+                // Locate the number showing the current announcement.
+                const currentCounter =
+                    document.getElementById("announcementCurrent");
+
+                // Stop safely if either element does not exist.
+                if (!carousel || !currentCounter) {
+                    return;
+                }
+
+                // Bootstrap fires "slid.bs.carousel" after a slide
+                // transition has completed.
+                carousel.addEventListener("slid.bs.carousel", function (event) {
+
+                    // Bootstrap uses a zero-based index, so add one
+                    // for the user-facing announcement number.
+                    currentCounter.textContent =
+                        event.to + 1;
+
+                });
+
+            });
+        </script>
+    }
 }

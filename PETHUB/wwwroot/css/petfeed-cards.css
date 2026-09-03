@@ -1,0 +1,1033 @@
+﻿/*
+    ==========================================================
+    PETHUB FEED CARD STYLES
+    ==========================================================
+
+    This stylesheet controls the normal PetFeed cards and the
+    administrator announcement carousel.
+
+    IMPORTANT:
+    The normal PetFeed cards and announcement carousel use
+    separate class names so changes to one do not affect the other.
+*/
+
+
+/*
+    ==========================================================
+    BASE FEED CARD
+    ==========================================================
+*/
+
+.feed-card {
+    width: 100%;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+
+    /*
+    Highlighted PetFeed posts keep their existing highlight class.
+*/
+
+    .feed-card.highlight-post {
+        border-width: 2px;
+    }
+
+
+/*
+    ==========================================================
+    POST HEADER
+    ==========================================================
+*/
+
+.feed-card-header {
+    display: flex;
+    align-items: center;
+    padding: 20px 22px 12px;
+}
+
+.feed-author {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.feed-author-image {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #e5e7eb;
+}
+
+.feed-author-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin-left: 12px;
+}
+
+.feed-author-name {
+    display: block;
+    max-width: 100%;
+    color: #1f2937;
+    font-size: 16px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.feed-post-date {
+    margin-top: 3px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+
+/*
+    ==========================================================
+    MAIN CARD CONTENT
+    ==========================================================
+
+    The normal PetFeed uses a Facebook-style vertical layout.
+
+    Instead of placing the image beside the text, the content
+    is arranged vertically so the post reads naturally:
+
+        Badge
+          ↓
+        Title
+          ↓
+        Description
+          ↓
+        Image
+
+    This only affects normal .feed-card elements.
+*/
+
+.feed-card-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 8px 0 0;
+}
+
+
+/*
+    ==========================================================
+    TEXT CONTENT
+    ==========================================================
+
+    The text is displayed before the image to follow the
+    traditional social-media / Facebook-style feed structure.
+*/
+
+.feed-text-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    width: 100%;
+    padding: 8px 22px 16px;
+}
+
+
+/*
+    ==========================================================
+    MEDIA
+    ==========================================================
+
+    Images occupy the full available card width.
+
+    object-fit: cover
+        Keeps the existing image presentation while preventing
+        distortion.
+
+    max-width: 100%
+        Prevents an image from extending outside the card.
+*/
+
+.feed-media {
+    width: 100%;
+    min-width: 0;
+    order: 2;
+}
+
+.feed-main-image {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: 420px;
+    border-radius: 0;
+    object-fit: cover;
+}
+
+
+/*
+    ==========================================================
+    MULTI-IMAGE GRID
+    ==========================================================
+*/
+
+.feed-image-grid {
+    position: relative;
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, 210px);
+    gap: 4px;
+    overflow: hidden;
+    border-radius: 0;
+}
+
+.feed-grid-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.feed-more-images {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    min-height: 36px;
+    padding: 6px 12px;
+    border-radius: 18px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/*
+    ==========================================================
+    FEED TITLE
+    ==========================================================
+*/
+
+.feed-title {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 12px;
+    color: #111827;
+    font-size: 25px;
+    line-height: 1.25;
+    font-weight: 700;
+    /*
+        Normal titles can wrap naturally.
+
+        overflow-wrap and word-break prevent unusually long
+        strings from forcing the card wider than its container.
+    */
+    white-space: normal;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+
+/*
+    ==========================================================
+    FEED DESCRIPTION
+    ==========================================================
+*/
+
+.feed-description {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    color: #374151;
+    font-size: 16px;
+    line-height: 1.7;
+    /*
+        Preserve line breaks entered by the user while still
+        allowing long text to wrap inside the card.
+    */
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+
+/*
+    ==========================================================
+    TYPE BADGES
+    ==========================================================
+
+    These are intentionally scoped to normal PetFeed cards.
+
+    width: fit-content
+        Prevents Marketplace / Lost & Found badges from stretching
+        across the entire card.
+*/
+
+.feed-type-badge {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    width: fit-content;
+    max-width: 100%;
+    flex-shrink: 0;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.marketplace-badge {
+    background: #eaf7e7;
+    color: #398f32;
+}
+
+.lost-found-badge {
+    background: #fff4d6;
+    color: #8a6500;
+}
+
+
+/*
+    ==========================================================
+    META INFORMATION
+    ==========================================================
+*/
+
+.feed-meta-detail {
+    margin: 16px 0 0;
+    color: #4b5563;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+
+/*
+    ==========================================================
+    DETAILS BUTTON
+    ==========================================================
+
+    The normal PetFeed details button remains compact.
+
+    It is aligned to the lower-right of the text section rather
+    than stretching across the entire card.
+*/
+
+.feed-details-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
+    width: fit-content;
+    max-width: 100%;
+    flex-shrink: 0;
+    margin-top: 18px;
+    padding: 9px 18px;
+    border: 1px solid #8ACE79;
+    border-radius: 22px;
+    background: #ffffff;
+    color: #398f32;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+    .feed-details-button:hover {
+        background: #eaf7e7;
+        color: #398f32;
+    }
+
+
+/*
+    ==========================================================
+    PAW / ENGAGEMENT
+    ==========================================================
+*/
+
+.feed-engagement {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 22px 20px;
+}
+
+.feed-paw-count {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #4b5563;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.feed-paw-icon {
+    font-size: 20px;
+}
+
+.feed-action-form {
+    margin: 0;
+}
+
+.feed-action-button {
+    border: 1px solid #8ACE79;
+    border-radius: 20px;
+    padding: 7px 16px;
+    background: #ffffff;
+    color: #398f32;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .feed-action-button:hover {
+        background: #eaf7e7;
+    }
+
+
+/*
+    ==========================================================
+    COMMENTS
+    ==========================================================
+*/
+
+.feed-comments-section {
+    margin: 0 22px 22px;
+    padding-top: 18px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.feed-section-title {
+    margin-bottom: 14px;
+    color: #1f2937;
+}
+
+.feed-comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.feed-comment {
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #f7f8f9;
+}
+
+.feed-comment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.feed-comment-author {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+    .feed-comment-author > div:last-child {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        margin-left: 10px;
+    }
+
+    .feed-comment-author strong,
+    .feed-comment-author small {
+        overflow-wrap: anywhere;
+    }
+
+    .feed-comment-author small {
+        margin-top: 2px;
+        color: #6b7280;
+    }
+
+.feed-comment-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #8ACE79;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+    .feed-comment-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.feed-comment-content {
+    margin: 10px 0 0;
+    color: #374151;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.feed-delete-comment {
+    flex-shrink: 0;
+    border: 0;
+    background: transparent;
+    color: #dc3545;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.feed-empty-comments {
+    margin-bottom: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+
+/*
+    ==========================================================
+    COMMENT FORM
+    ==========================================================
+*/
+
+.feed-comment-form {
+    margin-top: 16px;
+}
+
+.feed-comment-input {
+    width: 100%;
+    resize: vertical;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 14px;
+}
+
+    .feed-comment-input:focus {
+        outline: none;
+        border-color: #8ACE79;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.15);
+    }
+
+.feed-comment-submit {
+    margin-top: 8px;
+    border: 0;
+    border-radius: 20px;
+    padding: 8px 18px;
+    background: #8ACE79;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.feed-login-comment {
+    width: 100%;
+    margin-top: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 20px;
+    padding: 9px 16px;
+    background: #ffffff;
+    color: #4b5563;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+/*
+    ==========================================================
+    FEED CARD WITHOUT IMAGE
+    ==========================================================
+
+    No-image cards simply keep their text content at full width.
+*/
+
+.feed-card-content-no-image {
+    display: block;
+    width: 100%;
+}
+
+    .feed-card-content-no-image .feed-text-content {
+        width: 100%;
+        min-width: 0;
+    }
+
+.feed-card-no-image .feed-media {
+    display: none;
+}
+
+
+/*
+    ==========================================================
+    PETFEED NORMAL FEED CONTAINER
+    ==========================================================
+*/
+
+.feed-container {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+
+/*
+    ==========================================================
+    RESPONSIVE NORMAL FEED
+    ==========================================================
+*/
+
+@media (max-width: 768px) {
+
+    /*
+        Keep the Facebook-style vertical layout on mobile.
+    */
+
+    .feed-card,
+    .announcement-carousel {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .feed-card-header {
+        padding: 16px 16px 10px;
+    }
+
+    .feed-text-content {
+        padding: 8px 16px 14px;
+    }
+
+    .feed-main-image {
+        height: 240px;
+    }
+
+    .feed-image-grid {
+        grid-template-rows: repeat(2, 115px);
+    }
+
+    .feed-title {
+        font-size: 22px;
+    }
+
+    .feed-description {
+        font-size: 15px;
+    }
+
+    .feed-engagement {
+        padding: 14px 16px 18px;
+    }
+
+    .feed-comments-section {
+        margin: 0 16px 18px;
+    }
+}
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT CAROUSEL
+    ==========================================================
+
+    IMPORTANT:
+    Everything below this point belongs specifically to the
+    administrator announcement carousel.
+
+    Do not reuse these selectors for normal PetFeed cards.
+
+    The announcement keeps its own special appearance:
+
+    - Green border
+    - Carousel behavior
+    - Announcement badge
+    - Counter
+    - Previous / next controls
+    - Indicators
+
+    The CONTENT layout follows the normal Facebook-style feed:
+
+        Image
+          ↓
+        Title
+          ↓
+        Description
+          ↓
+        View announcement button
+
+    The announcement is centered and uses the same 700px maximum
+    width as the normal feed cards.
+*/
+
+.announcement-carousel {
+    width: 100%;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #8ACE79;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT HEADER
+    ==========================================================
+*/
+
+.announcement-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px 8px;
+}
+
+.announcement-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: #398f32;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.announcement-counter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 12px;
+    border-radius: 18px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT CONTENT
+    ==========================================================
+
+    IMPORTANT:
+
+    This is intentionally FLEX, not GRID.
+
+    The previous grid layout caused the image and text to appear
+    beside each other.
+
+    The required Facebook-style structure is vertical.
+*/
+
+.announcement-carousel .announcement-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    padding: 8px 22px 48px;
+}
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT IMAGE
+    ==========================================================
+*/
+
+.announcement-carousel .announcement-media {
+    /*
+        The announcement markup also carries the shared .feed-media
+        class, which sets order: 2 so normal feed cards show their
+        image last. The announcement needs the image FIRST, so this
+        overrides that order explicitly.
+    */
+    order: 0;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+.announcement-carousel .announcement-image {
+    display: block;
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 0;
+}
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT TEXT
+    ==========================================================
+*/
+
+.announcement-carousel .announcement-text {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    padding: 18px 0 0;
+}
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT TITLE
+    ==========================================================
+
+    The title is limited to two lines.
+
+    -webkit-line-clamp: 2 tells supported browsers to display
+    only two lines.
+
+    overflow: hidden hides anything beyond those two lines.
+
+    overflow-wrap / word-break prevent extremely long words
+    from forcing the card wider.
+*/
+
+.announcement-carousel .announcement-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 12px;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    color: #111827;
+    font-size: 27px;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT DESCRIPTION
+    ==========================================================
+
+    Limit the description to three lines.
+
+    This prevents very long announcement content from making
+    the carousel excessively tall.
+*/
+
+.announcement-carousel .announcement-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 18px;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: pre-line;
+    color: #374151;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT DETAILS BUTTON
+    ==========================================================
+
+    Only this link opens AnnouncementDetails.
+
+    It is positioned at the bottom-right of the announcement
+    text section and does NOT stretch across the card.
+*/
+
+.announcement-carousel .announcement-details-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: auto;
+    padding: 9px 18px;
+    border: 1px solid #8ACE79;
+    border-radius: 22px;
+    background: #ffffff;
+    color: #398f32;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+    .announcement-carousel .announcement-details-button:hover {
+        background: #eaf7e7;
+        color: #398f32;
+    }
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT WITHOUT IMAGE
+    ==========================================================
+
+    When no image exists, the text simply occupies the available
+    announcement content width.
+
+    There must NOT be an empty image column.
+*/
+
+.announcement-carousel .announcement-content-no-image {
+    display: block;
+    width: 100%;
+}
+
+    .announcement-carousel .announcement-content-no-image .announcement-text {
+        width: 100%;
+        padding-top: 8px;
+    }
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT INDICATORS
+    ==========================================================
+*/
+
+.announcement-indicators {
+    bottom: 8px;
+    margin-bottom: 0;
+}
+
+/*
+    Explicit flex sizing prevents Bootstrap from stretching
+    the indicators into elongated shapes.
+*/
+
+.announcement-carousel .announcement-indicators [data-bs-target] {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 12px;
+    flex-shrink: 0;
+    margin: 0 6px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: #adb5bd;
+    opacity: 1;
+}
+
+    /*
+    The active announcement indicator uses PetHub green.
+*/
+
+    .announcement-carousel .announcement-indicators [data-bs-target].active {
+        background-color: #398f32;
+    }
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT CONTROLS
+    ==========================================================
+*/
+
+.announcement-control {
+    /*
+        opacity: 1 keeps the control fully visible at rest and
+        on hover, so no separate :hover opacity rule is needed.
+    */
+    width: 48px;
+    height: 48px;
+    top: 50%;
+    transform: translateY(-35%);
+    margin: 0 8px;
+    border-radius: 50%;
+    background: #ffffff;
+    opacity: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+    .announcement-control .carousel-control-prev-icon,
+    .announcement-control .carousel-control-next-icon {
+        filter: invert(1);
+    }
+
+
+/*
+    ==========================================================
+    ANNOUNCEMENT ACTIVE SLIDE
+    ==========================================================
+*/
+
+.announcement-carousel .carousel-item.active {
+    background: #ffffff;
+    color: inherit;
+}
+
+
+/*
+    ==========================================================
+    MOBILE
+    ==========================================================
+*/
+
+@media (max-width: 768px) {
+
+    .announcement-carousel {
+        width: calc(100% - 20px);
+        max-width: none;
+    }
+
+    .announcement-header {
+        padding: 14px 16px 6px;
+    }
+
+    .announcement-carousel .announcement-content {
+        padding: 8px 16px 44px;
+    }
+
+    .announcement-carousel .announcement-image {
+        height: 220px;
+    }
+
+    .announcement-carousel .announcement-title {
+        font-size: 22px;
+    }
+
+    .announcement-carousel .announcement-description {
+        font-size: 15px;
+    }
+
+    .announcement-control {
+        width: 40px;
+        height: 40px;
+    }
+}
