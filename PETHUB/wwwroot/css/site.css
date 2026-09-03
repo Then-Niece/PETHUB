@@ -422,7 +422,7 @@ a {
 
 
 /* ==========================================================
-   PETHUB LOGO
+   PETHUB LOGO / BRAND
 ========================================================== */
 
 .navbar-logo {
@@ -431,6 +431,13 @@ a {
     max-height: 50px;
     min-height: 35px;
     object-fit: contain;
+}
+
+
+.navbar-brand {
+    color: #273142 !important;
+    font-size: 1.8rem;
+    font-weight: 800;
 }
 
 
@@ -489,6 +496,12 @@ a {
     min-height: calc(100vh - 72px);
     margin-top: 72px;
 }
+
+    .app.app-no-navbar {
+        margin-top: 0;
+        min-height: 100vh;
+    }
+
 
 #sidebar-wrapper {
     width: 250px;
@@ -3117,6 +3130,9 @@ a {
 
 .navbar-custom .navbar-nav .nav-link {
     color: #2D3748;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
     background-color: transparent;
     transition: color 0.2s ease;
 }

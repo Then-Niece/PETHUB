@@ -1,0 +1,359 @@
+﻿/* =========================================================
+   ADMIN SETUP PAGE
+========================================================= */
+
+.admin-setup-page {
+    min-height: 100vh;
+    width: 100%;
+    padding: 48px 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8faf7;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.admin-setup-card {
+    width: 100%;
+    max-width: 760px;
+    background: #ffffff;
+    border: 1px solid #e6ebe4;
+    border-radius: 22px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.admin-setup-header {
+    padding: 34px 38px 26px;
+    border-bottom: 1px solid #edf0ec;
+}
+
+
+.admin-setup-brand {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+}
+
+
+.admin-setup-logo {
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: #eaf5e7;
+    color: #68ad58;
+}
+
+
+    .admin-setup-logo svg {
+        width: 27px;
+        height: 27px;
+    }
+
+
+.admin-setup-header h1 {
+    margin: 0 0 8px;
+    color: #26352c;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+
+.admin-setup-header p {
+    margin: 0;
+    color: #6d776f;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.admin-setup-form {
+    padding: 30px 38px 34px;
+}
+
+
+.admin-setup-summary {
+    margin-bottom: 18px;
+    color: #c84d4d;
+    font-size: 0.88rem;
+}
+
+
+    .admin-setup-summary:empty {
+        display: none;
+    }
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.admin-setup-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+
+.admin-setup-field {
+    display: flex;
+    flex-direction: column;
+}
+
+
+    .admin-setup-field.full {
+        grid-column: 1 / -1;
+    }
+
+
+    /* =========================================================
+   LABEL
+========================================================= */
+
+    .admin-setup-field label {
+        margin-bottom: 8px;
+        color: #34413a;
+        font-size: 0.87rem;
+        font-weight: 600;
+    }
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.admin-setup-input {
+    width: 100%;
+    height: 52px;
+    padding: 0 15px;
+    border: 1px solid #dce2da;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #2b352f;
+    font-size: 0.94rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+    .admin-setup-input::placeholder {
+        color: #a1aaa3;
+    }
+
+
+    .admin-setup-input:focus {
+        border-color: #78bd67;
+        box-shadow: 0 0 0 3px rgba(120, 189, 103, 0.14);
+    }
+
+
+    .admin-setup-input.readonly {
+        background: #f3f5f2;
+        color: #707970;
+        cursor: default;
+    }
+
+
+/* =========================================================
+   PASSWORD
+========================================================= */
+
+.admin-password-wrapper {
+    position: relative;
+}
+
+
+.admin-setup-input.password-input {
+    padding-right: 52px;
+}
+
+
+.admin-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #7b857e;
+    cursor: pointer;
+}
+
+
+    .admin-password-toggle:hover {
+        background: #f0f4ef;
+        color: #5ca14c;
+    }
+
+
+    .admin-password-toggle svg {
+        width: 18px;
+        height: 18px;
+    }
+
+
+/* =========================================================
+   VALIDATION
+========================================================= */
+
+.admin-setup-error {
+    min-height: 18px;
+    margin-top: 6px;
+    color: #c84d4d;
+    font-size: 0.8rem;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.admin-setup-footer {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #edf0ec;
+    text-align: center;
+}
+
+
+.admin-setup-submit {
+    width: 100%;
+    height: 52px;
+    border: none;
+    border-radius: 12px;
+    background: #73b962;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+
+    .admin-setup-submit:hover {
+        background: #66ab56;
+        box-shadow: 0 8px 18px rgba(102, 171, 86, 0.22);
+    }
+
+
+    .admin-setup-submit:active {
+        transform: translateY(1px);
+    }
+
+
+.admin-setup-note {
+    margin: 14px 0 0;
+    color: #8a938d;
+    font-size: 0.8rem;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .admin-setup-page {
+        padding: 28px 18px;
+        align-items: flex-start;
+    }
+
+
+    .admin-setup-card {
+        max-width: 600px;
+        border-radius: 18px;
+    }
+
+
+    .admin-setup-header {
+        padding: 28px 24px 22px;
+    }
+
+
+    .admin-setup-form {
+        padding: 26px 24px 28px;
+    }
+
+
+    .admin-setup-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .admin-setup-field.full {
+        grid-column: auto;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+
+    .admin-setup-page {
+        padding: 18px 12px;
+    }
+
+
+    .admin-setup-card {
+        border-radius: 16px;
+    }
+
+
+    .admin-setup-brand {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+
+    .admin-setup-header h1 {
+        font-size: 1.35rem;
+    }
+
+
+    .admin-setup-header {
+        padding: 24px 20px 20px;
+    }
+
+
+    .admin-setup-form {
+        padding: 22px 20px 24px;
+    }
+
+
+    .admin-setup-grid {
+        gap: 18px;
+    }
+
+
+    .admin-setup-input,
+    .admin-setup-submit {
+        height: 50px;
+    }
+}

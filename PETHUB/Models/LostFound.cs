@@ -13,7 +13,8 @@ namespace PETHUB.Models
     public enum ReportStatus
     {
         Active,
-        Resolved
+        Resolved, 
+        Deleted
     }
     public enum LostFoundType
     {

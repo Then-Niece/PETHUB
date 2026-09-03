@@ -11,8 +11,9 @@
            value="@Model.IsArchiveView.ToString().ToLower()" />
 
     <div class="messages-layout @(Model.SelectedConversation != null
-                      ? "has-selected-conversation"
-                      : "")">
+                               ? "has-selected-conversation"
+                               : "")">
+
         <!-- =========================================================
              LEFT SIDE - CONVERSATION LIST
         ========================================================== -->
@@ -33,9 +34,6 @@
             </div>
 
 
-            <!-- Search UI for now.
-                 We can make this functional later. -->
-
             <div class="messages-search">
 
                 <i data-lucide="search"></i>
@@ -46,6 +44,7 @@
                        autocomplete="off" />
 
             </div>
+
 
             <!-- =========================================================
                  CONVERSATION FILTERS
@@ -122,32 +121,44 @@
                            asp-route-conversationId="@conversation.ConversationId"
                            asp-route-view="@(Model.IsArchiveView ? "archived" : null)"
                            class="conversation-item @(isActive ? "active" : "")"
-
                            data-conversation-id="@conversation.ConversationId"
-
                            data-search-name="@conversation.OtherUserName"
                            data-search-context="@conversation.ContextType"
                            data-search-title="@conversation.ContextTitle"
                            data-search-message="@conversation.LastMessage">
 
-                            <!-- Profile Picture -->
+                            <!-- =========================================================
+                                 POST IMAGE
+                                 Uses the first image of the Marketplace listing
+                                 or Lost & Found report instead of the member's
+                                 profile picture.
+                            ========================================================== -->
 
                             <div class="conversation-avatar">
 
                                 @if (!string.IsNullOrWhiteSpace(
-                                    conversation.OtherUserProfilePicture))
+                                    conversation.ContextImagePath))
                                 {
-                                    <img src="@conversation.OtherUserProfilePicture"
-                                         alt="@conversation.OtherUserName" />
+                                    <img src="@conversation.ContextImagePath"
+                                         alt="@conversation.ContextTitle" />
                                 }
                                 else
                                 {
-                                    <img src="~/images/default_profile.jpg"
-                                         alt="@conversation.OtherUserName" />
+                                    <div class="conversation-post-placeholder">
+
+                                        @if (conversation.ContextType == "Marketplace")
+                                        {
+                                            <i data-lucide="shopping-bag"></i>
+                                        }
+                                        else
+                                        {
+                                            <i data-lucide="search"></i>
+                                        }
+
+                                    </div>
                                 }
 
                             </div>
-
 
                             <!-- Conversation Details -->
 
@@ -156,7 +167,26 @@
                                 <div class="conversation-top-row">
 
                                     <span class="conversation-name">
-                                        @conversation.OtherUserName
+
+                                        <span class="conversation-first-name">
+                                            @conversation.OtherUserFirstName
+                                        </span>
+
+                                        <span class="conversation-name-dot">
+                                            ·
+                                        </span>
+
+                                        <span class="conversation-post-title">
+                                            @conversation.ContextTitle
+                                        </span>
+
+                                        @if (!conversation.IsOtherUserActive)
+                                        {
+                                            <span class="conversation-deactivated-label">
+                                                (Deactivated)
+                                            </span>
+                                        }
+
                                     </span>
 
                                     <div class="conversation-meta">
@@ -167,6 +197,7 @@
                                             @conversation.UnreadCount
 
                                         </span>
+
                                         <span class="conversation-time @(conversation.LastMessageAt.HasValue ? "" : "d-none")">
 
                                             @if (conversation.LastMessageAt.HasValue)
@@ -206,8 +237,8 @@
                                         ·
                                     </span>
 
-                                    <span class="conversation-context-title">
-                                        @conversation.ContextTitle
+                                    <span class="conversation-context-status">
+                                        @conversation.ContextStatus
                                     </span>
 
                                 </div>
@@ -249,10 +280,9 @@
 
         <section class="messages-chat">
 
-
             @if (Model.SelectedConversation != null)
             {
-                
+
                 <input type="hidden"
                        id="currentConversationId"
                        value="@Model.SelectedConversation.ConversationId" />
@@ -267,12 +297,6 @@
                 ================================================== -->
 
                 <div class="chat-header">
-
-                    <!-- =================================================
-                         MOBILE BACK BUTTON
-                         Only visible on mobile.
-                         Returns to the conversation list.
-                    ================================================== -->
 
                     <a asp-controller="Messages"
                        asp-action="Index"
@@ -289,7 +313,12 @@
 
                         <div class="chat-user-avatar">
 
-                            @if (!string.IsNullOrWhiteSpace(
+                            @if (!Model.SelectedConversation.IsOtherUserActive)
+                            {
+                                <img src="~/images/default_profile.jpg"
+                                     alt="@Model.SelectedConversation.OtherUserName" />
+                            }
+                            else if (!string.IsNullOrWhiteSpace(
                                 Model.SelectedConversation.OtherUserProfilePicture))
                             {
                                 <img src="@Model.SelectedConversation.OtherUserProfilePicture"
@@ -307,7 +336,16 @@
                         <div class="chat-user-details">
 
                             <h3>
+
                                 @Model.SelectedConversation.OtherUserName
+
+                                @if (!Model.SelectedConversation.IsOtherUserActive)
+                                {
+                                    <span class="chat-deactivated-label">
+                                        (Deactivated)
+                                    </span>
+                                }
+
                             </h3>
 
                             <div class="chat-context">
@@ -376,18 +414,26 @@
                         }
                         else
                         {
-                            <span class="chat-context-unavailable">
+                            <div class="chat-context-unavailable">
 
-                                @(Model.SelectedConversation.ContextType == "Marketplace"
-                                    ? "This listing is no longer available."
-                                    : "This report is no longer available.")
+                                <span class="chat-context-status">
+                                    @Model.SelectedConversation.ContextStatus
+                                </span>
 
-                            </span>
+                                <span class="chat-context-unavailable-text">
+
+                                    @(Model.SelectedConversation.ContextType == "Marketplace"
+                                        ? "This listing is no longer available."
+                                        : "This report is no longer available.")
+
+                                </span>
+
+                            </div>
                         }
 
 
                         <!-- =================================================
-                             ARCHIVE CONVERSATION
+                             ARCHIVE / UNARCHIVE
                         ================================================== -->
                         @if (!Model.IsArchiveView)
                         {
@@ -474,7 +520,8 @@
 
                                     @if (message.ImagePaths.Any())
                                     {
-                                        var imageCount = message.ImagePaths.Count;
+                                        var imageCount =
+                                            message.ImagePaths.Count;
 
                                         <div class="message-images image-count-@imageCount">
 
@@ -497,19 +544,15 @@
                                     }
 
                                     <div class="message-time">
+
                                         @(message.CreatedAt
                                             .ToLocalTime()
                                             .ToString("h:mm tt"))
+
                                     </div>
 
                                 </div>
 
-
-                                @* =====================================================
-                                   SENT / SEEN
-                                   Only show this on my latest outgoing message.
-                                   This is OUTSIDE the message bubble.
-                                   ===================================================== *@
 
                                 @if (message.IsMine &&
                                      latestOutgoingMessageId == message.MessageId)
@@ -555,23 +598,28 @@
                 </div>
 
 
+                <!-- =================================================
+                     TYPING INDICATOR
+                ================================================== -->
+                @if (Model.SelectedConversation.IsOtherUserActive)
+                {
+                    <div id="typingIndicator"
+                         class="typing-indicator d-none">
 
-                <div id="typingIndicator"
-                     class="typing-indicator d-none">
+                        <span id="typingUserName">
+                            @Model.SelectedConversation.OtherUserName
+                        </span>
 
-                    <span id="typingUserName">
-                        @Model.SelectedConversation.OtherUserName
-                    </span>
+                        <span> is typing</span>
 
-                    <span> is typing</span>
+                        <span class="typing-dots">
+                            <span>.</span>
+                            <span>.</span>
+                            <span>.</span>
+                        </span>
 
-                    <span class="typing-dots">
-                        <span>.</span>
-                        <span>.</span>
-                        <span>.</span>
-                    </span>
-
-                </div>
+                    </div>
+                }
 
 
                 <!-- =================================================
@@ -580,55 +628,71 @@
 
                 <div class="chat-input-area">
 
-                    <div id="messageImagePreview"
-                         class="message-image-preview">
-                    </div>
+                    @if (Model.SelectedConversation.IsOtherUserActive)
+                    {
+                        <div id="messageImagePreview"
+                             class="message-image-preview">
+                        </div>
 
-                    <form asp-controller="Messages"
-                          asp-action="SendMessage"
-                          method="post"
-                          enctype="multipart/form-data"
-                          class="chat-input-form"
-                          id="messageSendForm">
+                        <form asp-controller="Messages"
+                              asp-action="SendMessage"
+                              method="post"
+                              enctype="multipart/form-data"
+                              class="chat-input-form"
+                              id="messageSendForm">
 
-                        @Html.AntiForgeryToken()
+                            @Html.AntiForgeryToken()
 
-                        <input type="hidden"
-                               name="conversationId"
-                               value="@Model.SelectedConversation.ConversationId" />
+                            <input type="hidden"
+                                   name="conversationId"
+                                   value="@Model.SelectedConversation.ConversationId" />
 
-                        <input type="file"
-                               id="messageImageInput"
-                               name="imageFiles"
-                               accept=".jpg,.jpeg,.png,.webp"
-                               multiple
-                               hidden />
+                            <input type="file"
+                                   id="messageImageInput"
+                                   name="imageFiles"
+                                   accept=".jpg,.jpeg,.png,.webp"
+                                   multiple
+                                   hidden />
 
-                        <label for="messageImageInput"
-                               class="chat-image-button"
-                               aria-label="Send images">
+                            <label for="messageImageInput"
+                                   class="chat-image-button"
+                                   aria-label="Send images">
 
-                            <i data-lucide="image"></i>
+                                <i data-lucide="image"></i>
 
-                        </label>
+                            </label>
 
-                        <input type="text"
-                               name="content"
-                               class="chat-message-input"
-                               placeholder="Type a message..."
-                               autocomplete="off" />
+                            <input type="text"
+                                   name="content"
+                                   class="chat-message-input"
+                                   placeholder="Type a message..."
+                                   autocomplete="off" />
 
-                        <button type="submit"
-                                class="chat-send-button"
-                                aria-label="Send message">
+                            <button type="submit"
+                                    class="chat-send-button"
+                                    aria-label="Send message">
 
-                            <i data-lucide="send"></i>
+                                <i data-lucide="send"></i>
 
-                        </button>
+                            </button>
 
-                    </form>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="chat-disabled-message">
+
+                            <i data-lucide="user-x"></i>
+
+                            <span>
+                                This member's account is currently deactivated.
+                            </span>
+
+                        </div>
+                    }
 
                 </div>
+
             }
             else
             {
@@ -661,6 +725,10 @@
 
 </div>
 
+
+<!-- =========================================================
+     MESSAGE IMAGE LIGHTBOX
+========================================================== -->
 
 <div id="messageImageLightbox"
      class="message-lightbox">

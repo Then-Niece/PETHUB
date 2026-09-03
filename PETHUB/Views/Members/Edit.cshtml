@@ -1,4 +1,4 @@
-@model PETHUB.Models.ApplicationUser
+@model PETHUB.ViewModels.EditMemberViewModel
 
 @{
     ViewData["Title"] = "Edit Member";
@@ -61,10 +61,8 @@
                             </label>
 
                             <input asp-for="Email"
-                                   class="form-control custom-input" />
-
-                            <span asp-validation-for="Email"
-                                  class="text-danger"></span>
+                                   class="form-control custom-input readonly-input"
+                                   readonly />
 
                         </div>
 
@@ -175,23 +173,6 @@
                                    class="form-control custom-input" />
 
                             <span asp-validation-for="Birthdate"
-                                  class="text-danger"></span>
-
-                        </div>
-
-                        <!-- Status -->
-                        <div class="form-group">
-
-                            <label asp-for="Status">
-                                Status
-                            </label>
-
-                            <select asp-for="Status"
-                                    asp-items="Html.GetEnumSelectList<UserStatus>()"
-                                    class="form-select custom-input">
-                            </select>
-
-                            <span asp-validation-for="Status"
                                   class="text-danger"></span>
 
                         </div>

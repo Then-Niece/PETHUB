@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using PETHUB.ViewModels;
 
 namespace PETHUB.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -199,142 +201,231 @@ namespace PETHUB.Controllers
 
 
         // GET: Users/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null)
+            if (string.IsNullOrWhiteSpace(id))
             {
                 return NotFound();
             }
 
-            var applicationUser = await _context.Users.FindAsync(id);
-            if (applicationUser == null)
+            var admin = await _userManager.FindByIdAsync(id);
+
+            if (admin == null)
             {
                 return NotFound();
             }
-            return View(applicationUser);
+
+            var isAdmin = await _userManager.IsInRoleAsync(admin, "Admin");
+
+            if (!isAdmin)
+            {
+                return NotFound();
+            }
+
+            var model = new EditAdminViewModel
+            {
+                Id = admin.Id,
+                UserName = admin.UserName ?? string.Empty,
+                Email = admin.Email ?? string.Empty,
+                FirstName = admin.FirstName,
+                LastName = admin.LastName,
+                ContactNumber = admin.ContactNumber,
+                Status = admin.Status
+            };
+
+            return View(model);
         }
 
         // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, ApplicationUser model)
+        public async Task<IActionResult> Edit(string id, EditAdminViewModel model)
         {
             if (id != model.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var user = await _userManager.FindByIdAsync(id);
-                if (user == null)
-                {
-                    return NotFound();
-                }
+                return View(model);
+            }
 
-                // Update only allowed fields for Admins
-                user.UserName = model.UserName;
-                user.Email = model.Email;
-                user.FirstName = model.FirstName;
-                user.LastName = model.LastName;
-                user.ContactNumber = model.ContactNumber;
-                user.Status = model.Status;
+            var admin = await _userManager.FindByIdAsync(id);
 
-                var result = await _userManager.UpdateAsync(user);
+            if (admin == null)
+            {
+                return NotFound();
+            }
 
-                if (result.Succeeded)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
+            var isAdmin = await _userManager.IsInRoleAsync(admin, "Admin");
 
+            if (!isAdmin)
+            {
+                return NotFound();
+            }
+
+            // Check if another user already uses this username.
+            var existingUser =
+                await _userManager.FindByNameAsync(model.UserName);
+
+            if (existingUser != null &&
+                existingUser.Id != admin.Id)
+            {
+                ModelState.AddModelError(
+                    nameof(model.UserName),
+                    "This username is already in use."
+                );
+
+                return View(model);
+            }
+
+            // =====================================================
+            // UPDATE EDITABLE ADMIN INFORMATION
+            // =====================================================
+
+            admin.UserName = model.UserName;
+            admin.FirstName = model.FirstName;
+            admin.LastName = model.LastName;
+            admin.ContactNumber = model.ContactNumber;
+
+            // Email is intentionally NOT changed here.
+            // Status is intentionally NOT changed here.
+
+            var result =
+                await _userManager.UpdateAsync(admin);
+
+            if (!result.Succeeded)
+            {
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError("", error.Description);
+                    ModelState.AddModelError(
+                        string.Empty,
+                        error.Description
+                    );
                 }
+
+                return View(model);
             }
 
-            return View(model);
-        }
-
-
-        // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var applicationUser = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (applicationUser == null)
-            {
-                return NotFound();
-            }
-
-            return View(applicationUser);
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var applicationUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Id == id);
-
-            if (applicationUser == null)
-            {
-                return NotFound();
-            }
-
-            // ==========================================
-            // DELETE NOTIFICATIONS BELONGING TO USER
-            // ==========================================
-
-            var notifications = await _context.Notifications
-                .Where(n => n.UserId == id)
-                .ToListAsync();
-
-            _context.Notifications.RemoveRange(notifications);
-
-
-            // ==========================================
-            // DELETE REPORTS SUBMITTED BY USER
-            // ==========================================
-
-            var reports = await _context.UserReports
-                .Where(r => r.ReporterId == id)
-                .ToListAsync();
-
-            _context.UserReports.RemoveRange(reports);
-
-
-            // ==========================================
-            // DELETE USER
-            // ==========================================
-
-            _context.Users.Remove(applicationUser);
-
-
-            // ==========================================
-            // SAVE
-            // ==========================================
-
-            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Administrator account updated successfully.";
 
             return RedirectToAction(nameof(Index));
         }
 
 
+        // =========================================================
+        // DEACTIVATE ADMIN
+        // =========================================================
 
-
-
-        private bool ApplicationUserExists(string id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Deactivate(string id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return NotFound();
+            }
+
+            var currentUserId = _userManager.GetUserId(User);
+
+            if (id == currentUserId)
+            {
+                TempData["WarningMessage"] =
+                    "You cannot deactivate your own administrator account.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            var admin = await _userManager.FindByIdAsync(id);
+
+            if (admin == null)
+            {
+                return NotFound();
+            }
+
+            var isAdmin = await _userManager.IsInRoleAsync(admin, "Admin");
+
+            if (!isAdmin)
+            {
+                return NotFound();
+            }
+
+            if (admin.Status == UserStatus.Inactive)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            admin.Status = UserStatus.Inactive;
+
+            var result = await _userManager.UpdateAsync(admin);
+
+            if (!result.Succeeded)
+            {
+                TempData["ErrorMessage"] =
+                    "Unable to deactivate the administrator account.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            await _userManager.UpdateSecurityStampAsync(admin);
+
+            TempData["SuccessMessage"] =
+                "Administrator account has been deactivated.";
+
+            return RedirectToAction(nameof(Index));
         }
+
+        // =========================================================
+        // REACTIVATE ADMIN
+        // =========================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reactivate(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return NotFound();
+            }
+
+            var admin = await _userManager.FindByIdAsync(id);
+
+            if (admin == null)
+            {
+                return NotFound();
+            }
+
+            var isAdmin = await _userManager.IsInRoleAsync(admin, "Admin");
+
+            if (!isAdmin)
+            {
+                return NotFound();
+            }
+
+            if (admin.Status == UserStatus.Active)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            admin.Status = UserStatus.Active;
+
+            var result = await _userManager.UpdateAsync(admin);
+
+            if (!result.Succeeded)
+            {
+                TempData["ErrorMessage"] =
+                    "Unable to reactivate the administrator account.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["SuccessMessage"] =
+                "Administrator account has been reactivated.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

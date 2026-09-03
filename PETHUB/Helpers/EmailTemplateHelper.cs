@@ -63,16 +63,17 @@
         // ===========================
         // PASSWORD CHANGED
         // ===========================
-        public static string PasswordChanged(string firstName)
+        public static string PasswordChanged(string firstName, string loginLink)
         {
             return BuildTemplate(
                 title: "Password Successfully Changed",
                 heading: "Your Password Has Been Updated",
                 message:
                     $"Hello {firstName},<br><br>" +
-                    $"Your password was changed successfully.",
-                buttonText: "Login",
-                buttonLink: "https://localhost:7285/UserAccount/Login",
+                    "Your PETHUB password was changed successfully.<br><br>" +
+                    "If you made this change, no further action is required.",
+                buttonText: "Login to PETHUB",
+                buttonLink: loginLink,
                 footer:
                     "If you did not perform this action, please contact PETHUB Support immediately."
             );
@@ -98,7 +99,29 @@
             );
         }
 
+        // ===========================
+        // ADMIN-CREATED MEMBER
+        // EMAIL VERIFICATION
+        // ===========================
 
+        public static string AdminCreatedMemberVerification(
+            string firstName,
+            string verificationLink)
+        {
+            return BuildTemplate(
+                title: "Your PETHUB Account Has Been Created",
+                heading: $"Welcome to PETHUB, {firstName}!",
+                message:
+                    "A PETHUB administrator has created a member account for you.<br><br>" +
+                    "Please verify your email address by clicking the button below.<br><br>" +
+                    "<strong>This verification link will expire in 24 hours.</strong><br><br>" +
+                    "After verifying your email, we strongly recommend changing your password using the <strong>Forgot Password</strong> option on the PETHUB login page.",
+                buttonText: "Verify Email",
+                buttonLink: verificationLink,
+                footer:
+                    "If you were not expecting this account, please contact the PETHUB administrators."
+            );
+        }
 
         // ============================================================
         // MAIN TEMPLATE

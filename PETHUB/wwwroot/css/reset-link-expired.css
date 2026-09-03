@@ -1,0 +1,184 @@
+﻿/* =========================================================
+   RESET LINK EXPIRED PAGE
+========================================================= */
+
+.expired-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.expired-card {
+    width: 100%;
+    max-width: 470px;
+    padding: 44px 38px 36px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 24px;
+    box-shadow: 0 18px 45px rgba(31, 41, 55, .08);
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.expired-icon {
+    width: 78px;
+    height: 78px;
+    margin: 0 auto 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff7e8;
+    color: #d89a32;
+}
+
+
+    .expired-icon svg {
+        width: 34px;
+        height: 34px;
+        stroke-width: 2;
+    }
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+.expired-card h1 {
+    margin: 0 0 12px;
+    color: #273142;
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+
+.expired-message {
+    margin: 0 auto 14px;
+    max-width: 390px;
+    color: #77808d;
+    font-size: .93rem;
+    line-height: 1.65;
+}
+
+
+.expired-secondary {
+    margin: 0 auto 28px;
+    color: #9aa1ab;
+    font-size: .86rem;
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
+
+.expired-primary-btn {
+    width: 100%;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 14px;
+    background: #78c262;
+    color: #ffffff;
+    font-size: .96rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 8px 18px rgba(120, 194, 98, .20);
+    transition: background .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+
+
+    .expired-primary-btn:hover {
+        background: #6bb558;
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(120, 194, 98, .25);
+    }
+
+
+    .expired-primary-btn:active {
+        transform: translateY(0);
+    }
+
+
+/* =========================================================
+   BACK TO LOGIN
+========================================================= */
+
+.expired-back-link {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: #7b8491;
+    font-size: .88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color .15s ease, transform .15s ease;
+}
+
+
+    .expired-back-link:hover {
+        color: #273142;
+        transform: translateX(-2px);
+    }
+
+
+    .expired-back-link svg {
+        width: 15px;
+        height: 15px;
+    }
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .expired-page {
+        align-items: flex-start;
+        padding: 30px 16px;
+    }
+
+
+    .expired-card {
+        padding: 36px 24px 30px;
+        border-radius: 20px;
+    }
+
+
+    .expired-icon {
+        width: 70px;
+        height: 70px;
+    }
+
+
+        .expired-icon svg {
+            width: 30px;
+            height: 30px;
+        }
+
+
+    .expired-card h1 {
+        font-size: 1.55rem;
+    }
+}

@@ -1,0 +1,321 @@
+﻿/* =========================================================
+   TERMS & CONDITIONS MODAL
+========================================================= */
+
+.terms-modal {
+    border: none;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 25px 70px rgba(31, 41, 55, .18);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.terms-modal-header {
+    padding: 24px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #edf0f2;
+    background: #ffffff;
+}
+
+
+.terms-modal-heading {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+
+.terms-modal-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: #eff8ec;
+    color: #78bd65;
+}
+
+
+    .terms-modal-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+
+.terms-modal-heading h2 {
+    margin: 0 0 4px;
+    color: #273142;
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+
+.terms-modal-heading p {
+    margin: 0;
+    color: #8b95a2;
+    font-size: .82rem;
+}
+
+
+.terms-modal-close {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 10px;
+    background: #f5f6f7;
+    color: #68717e;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+}
+
+
+    .terms-modal-close:hover {
+        background: #edf0f2;
+        color: #273142;
+    }
+
+
+    .terms-modal-close svg {
+        width: 18px;
+        height: 18px;
+    }
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.terms-modal-body {
+    padding: 26px 30px 30px;
+    color: #596273;
+    font-size: .91rem;
+    line-height: 1.75;
+}
+
+
+    .terms-modal-body > p {
+        margin-bottom: 16px;
+    }
+
+
+/* =========================================================
+   EFFECTIVE DATE
+========================================================= */
+
+.terms-effective-date {
+    margin-bottom: 22px;
+    padding: 12px 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    background: #f3f9f1;
+    color: #657260;
+    font-size: .82rem;
+}
+
+
+    .terms-effective-date svg {
+        width: 16px;
+        height: 16px;
+        color: #78bd65;
+    }
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.terms-divider {
+    height: 1px;
+    margin: 26px 0;
+    background: #edf0f2;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.terms-section {
+    margin-bottom: 28px;
+}
+
+
+    .terms-section h3 {
+        margin: 0 0 10px;
+        color: #273142;
+        font-size: 1rem;
+        font-weight: 800;
+    }
+
+
+    .terms-section p {
+        margin: 0 0 12px;
+    }
+
+
+    .terms-section ul {
+        margin: 8px 0 14px;
+        padding-left: 22px;
+    }
+
+
+    .terms-section li {
+        margin-bottom: 7px;
+        padding-left: 3px;
+    }
+
+
+        .terms-section li::marker {
+            color: #78bd65;
+        }
+
+
+/* =========================================================
+   USER AGREEMENT
+========================================================= */
+
+.terms-agreement-box {
+    margin-top: 32px;
+    padding: 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    border: 1px solid #dcecd7;
+    border-radius: 15px;
+    background: #f6fbf4;
+}
+
+
+.terms-agreement-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #e7f5e2;
+    color: #72b961;
+}
+
+
+    .terms-agreement-icon svg {
+        width: 19px;
+        height: 19px;
+    }
+
+
+.terms-agreement-box strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #273142;
+    font-size: .9rem;
+}
+
+
+.terms-agreement-box p {
+    margin: 0;
+    color: #687383;
+    font-size: .82rem;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.terms-modal-footer {
+    padding: 16px 26px;
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid #edf0f2;
+    background: #ffffff;
+}
+
+
+.terms-close-button {
+    min-width: 130px;
+    height: 44px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 11px;
+    background: #78c262;
+    color: #ffffff;
+    font-size: .88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s ease, transform .15s ease;
+}
+
+
+    .terms-close-button:hover {
+        background: #69b657;
+        transform: translateY(-1px);
+    }
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .terms-modal {
+        border-radius: 20px;
+    }
+
+
+    .terms-modal-header {
+        padding: 18px;
+        align-items: flex-start;
+    }
+
+
+    .terms-modal-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+
+    .terms-modal-heading h2 {
+        font-size: 1.05rem;
+    }
+
+
+    .terms-modal-heading p {
+        display: none;
+    }
+
+
+    .terms-modal-body {
+        padding: 20px 18px 24px;
+        font-size: .87rem;
+    }
+
+
+    .terms-modal-footer {
+        padding: 14px 18px;
+    }
+
+
+    .terms-close-button {
+        width: 100%;
+    }
+}

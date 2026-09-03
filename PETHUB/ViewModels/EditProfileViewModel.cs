@@ -1,5 +1,6 @@
 ﻿using PETHUB.Models;
 using System.ComponentModel.DataAnnotations;
+using PETHUB.Validation;
 
 namespace PETHUB.ViewModels
 {
@@ -33,6 +34,9 @@ namespace PETHUB.ViewModels
         public string? Gender { get; set; }
 
         // Member's date of birth.
+        [Required(ErrorMessage = "Birthdate is required.")]
+        [DataType(DataType.Date)]
+        [MinimumAge(18, ErrorMessage = "You must be at least 18 years old.")]
         public DateTime? Birthdate { get; set; }
 
         // Province where the member currently resides.

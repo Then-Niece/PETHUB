@@ -1,0 +1,159 @@
+﻿/* =========================================================
+   PETHUB SYSTEM MODAL
+========================================================= */
+
+.system-modal {
+    border: none;
+    border-radius: 22px;
+    box-shadow: 0 24px 70px rgba(31, 41, 55, 0.18);
+    overflow: hidden;
+}
+
+
+    .system-modal .modal-body {
+        padding: 34px 32px 30px;
+        text-align: center;
+    }
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.system-modal-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+
+    .system-modal-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+
+    /* ERROR */
+
+    .system-modal-icon.error {
+        background: #fff1ef;
+        color: #ef7057;
+    }
+
+
+    /* SUCCESS */
+
+    .system-modal-icon.success {
+        background: #eff9ec;
+        color: #78bd65;
+    }
+
+
+    /* WARNING */
+
+    .system-modal-icon.warning {
+        background: #fff8e6;
+        color: #e6a823;
+    }
+
+
+    /* INFO */
+
+    .system-modal-icon.info {
+        background: #eef5ff;
+        color: #5b8def;
+    }
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+.system-modal-title {
+    margin: 0 0 10px;
+    color: #273142;
+    font-size: 1.3rem;
+    font-weight: 800;
+}
+
+
+.system-modal-message {
+    margin-bottom: 24px;
+    color: #6b7280;
+    font-size: .92rem;
+    line-height: 1.65;
+    white-space: pre-line;
+}
+
+
+    .system-modal-message p {
+        margin: 0 0 8px;
+    }
+
+
+        .system-modal-message p:last-child {
+            margin-bottom: 0;
+        }
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.system-modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+
+.system-modal-button {
+    min-width: 120px;
+    height: 44px;
+    padding: 0 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: .9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s ease, transform .15s ease;
+}
+
+
+    .system-modal-button.primary {
+        background: #8ace79;
+        color: #ffffff;
+    }
+
+
+        .system-modal-button.primary:hover {
+            background: #74bd64;
+            transform: translateY(-1px);
+        }
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .system-modal .modal-body {
+        padding: 28px 22px 24px;
+    }
+
+
+    .system-modal-title {
+        font-size: 1.15rem;
+    }
+
+
+    .system-modal-message {
+        font-size: .88rem;
+    }
+}

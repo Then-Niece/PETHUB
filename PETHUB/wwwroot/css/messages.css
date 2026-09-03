@@ -198,24 +198,51 @@
 
 
 /* =========================================================
-   7. CONVERSATION AVATAR
+   7. CONVERSATION POST IMAGE
 ========================================================= */
 
 .conversation-avatar {
-    width: 48px;
-    height: 48px;
+    width: 58px;
+    height: 58px;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f3f4f6;
 }
 
+
+    /* Actual Marketplace / Lost & Found image */
 
     .conversation-avatar img {
         width: 100%;
         height: 100%;
         display: block;
-        border-radius: 50%;
+        border-radius: 12px;
         object-fit: cover;
     }
 
+
+/* Placeholder when the post has no image
+   or its images were permanently deleted */
+
+.conversation-post-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+    color: #9ca3af;
+}
+
+
+    .conversation-post-placeholder svg {
+        width: 24px;
+        height: 24px;
+    }
 
 /* =========================================================
    8. CONVERSATION CONTENT
@@ -241,14 +268,39 @@
 
 
 .conversation-name {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
     min-width: 0;
-    font-weight: 600;
+    font-size: .9rem;
     color: #1f2937;
     overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
+
+.conversation-first-name {
+    flex-shrink: 0;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+
+.conversation-name-dot {
+    flex-shrink: 0;
+    color: #9ca3af;
+}
+
+
+.conversation-post-title {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 600;
+    color: #4b5563;
+}
 
 /* ---------------------------------------------------------
    Time + unread count
@@ -317,11 +369,13 @@
 }
 
 
-.conversation-context-title {
+.conversation-context-status {
     min-width: 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    font-weight: 600;
+    color: #6b7280;
 }
 
 
@@ -485,8 +539,25 @@
 
 
 .chat-context-unavailable {
+    max-width: 230px;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    text-align: right;
+}
+
+
+.chat-context-status {
     font-size: .8rem;
+    font-weight: 700;
+    color: #6b7280;
+}
+
+
+.chat-context-unavailable-text {
+    font-size: .72rem;
     color: #9ca3af;
 }
 
@@ -1393,14 +1464,27 @@
 
 
     .conversation-name {
-        display: block;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        min-width: 0;
         font-size: .9rem;
-        font-weight: 600;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+
+    .conversation-first-name {
+        flex-shrink: 0;
+    }
+
+
+    .conversation-post-title {
+        min-width: 0;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
     }
-
 
     /*
      * The phone conversation list is cleaner
@@ -1711,4 +1795,39 @@
     .chat-archive-button svg {
         width: 17px;
         height: 17px;
-    } 
+    }
+
+.conversation-deactivated-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    opacity: 0.65;
+    margin-left: 4px;
+}
+
+.chat-deactivated-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    opacity: 0.65;
+    margin-left: 6px;
+}
+
+.chat-disabled-message {
+    width: 100%;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+    .chat-disabled-message svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+    }

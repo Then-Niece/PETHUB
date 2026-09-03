@@ -41,9 +41,14 @@ namespace PETHUB.Controllers
 
             if (conversation == null)
             {
-                return BadRequest();
-            }
+                TempData["WarningMessage"] =
+                    "This member is currently unavailable for messaging.";
 
+                return RedirectToAction(
+                    "Marketplace",
+                    "Listings"
+                );
+            }
             return RedirectToAction(
                 nameof(Index),
                 new
@@ -102,19 +107,52 @@ namespace PETHUB.Controllers
                 return Unauthorized();
             }
 
-            var message = await _messagingService.SendMessageAsync(
-                conversationId,
-                currentUserId,
-                content,
-                imageFiles);
+
+            var message =
+                await _messagingService.SendMessageAsync(
+                    conversationId,
+                    currentUserId,
+                    content,
+                    imageFiles
+                );
+
+
+            // =========================================================
+            // MESSAGE COULD NOT BE SENT
+            // =========================================================
 
             if (message == null)
             {
-                return BadRequest();
+                // AJAX / JavaScript submission
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message =
+                            "This message could not be sent. The member may no longer be available."
+                    });
+                }
+
+
+                // Non-JavaScript fallback
+                TempData["WarningMessage"] =
+                    "This message could not be sent. The member may no longer be available.";
+
+                return RedirectToAction(
+                    nameof(Index),
+                    new
+                    {
+                        conversationId
+                    }
+                );
             }
 
-            // If JavaScript submitted the form,
-            // don't redirect/reload the page.
+
+            // =========================================================
+            // AJAX SUCCESS
+            // =========================================================
+
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 return Ok(new
@@ -124,15 +162,18 @@ namespace PETHUB.Controllers
             }
 
 
-            // Fallback if JavaScript is unavailable.
+            // =========================================================
+            // NON-JAVASCRIPT FALLBACK
+            // =========================================================
+
             return RedirectToAction(
                 nameof(Index),
                 new
                 {
                     conversationId
-                });
+                }
+            );
         }
-
 
 
         [HttpPost]
@@ -153,7 +194,13 @@ namespace PETHUB.Controllers
 
             if (conversation == null)
             {
-                return BadRequest();
+                TempData["WarningMessage"] =
+                    "This member is currently unavailable for messaging.";
+
+                return RedirectToAction(
+                    "Browse",
+                    "LostFounds"
+                );
             }
 
             return RedirectToAction(
@@ -187,6 +234,9 @@ namespace PETHUB.Controllers
                 return NotFound();
             }
 
+            TempData["SuccessMessage"] =
+                "Conversation archived successfully.";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -212,6 +262,9 @@ namespace PETHUB.Controllers
             {
                 return NotFound();
             }
+
+            TempData["SuccessMessage"] =
+                "Conversation restored successfully.";
 
             return RedirectToAction(nameof(Index));
         }

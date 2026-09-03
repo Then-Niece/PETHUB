@@ -157,6 +157,8 @@ namespace PETHUB.Controllers
 
             await _context.SaveChangesAsync();
 
+            TempData["SuccessMessage"] = "PetFeed post deleted successfully.";
+
             // Return to the administrator's personal My Posts page.
             return RedirectToAction(nameof(Index));
         }

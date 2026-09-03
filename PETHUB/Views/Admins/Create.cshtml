@@ -17,6 +17,8 @@
 
             <form asp-action="Create" method="post">
 
+                @Html.AntiForgeryToken()
+
                 <div class="crud-content-single">
 
                     <div class="form-group">

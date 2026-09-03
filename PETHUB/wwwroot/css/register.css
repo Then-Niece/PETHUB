@@ -1,0 +1,830 @@
+﻿/* =========================================================
+   REGISTER PAGE
+========================================================= */
+
+.register-page {
+    width: 100%;
+    min-height: calc(100vh - 72px);
+    padding: 48px 24px 70px;
+    background: #ffffff;
+}
+
+.register-wrapper {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.register-header {
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+
+.register-logo {
+    width: 58px;
+    height: 58px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+
+.register-header h1 {
+    margin: 0 0 6px;
+    color: #273142;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+}
+
+
+.register-header p {
+    max-width: 700px;
+    margin: 0;
+    color: #77808d;
+    font-size: .94rem;
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.register-card {
+    width: 100%;
+    padding: 38px 42px 42px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 26px;
+    box-shadow: 0 20px 50px rgba(31, 41, 55, .07);
+}
+
+
+.register-form {
+    width: 100%;
+}
+
+
+/* =========================================================
+   VALIDATION SUMMARY
+========================================================= */
+
+.register-validation-summary {
+    margin-bottom: 20px;
+    color: #dc2626;
+    font-size: .86rem;
+}
+
+
+    .register-validation-summary:empty {
+        display: none;
+    }
+
+
+    .register-validation-summary ul {
+        margin: 0;
+        padding-left: 18px;
+    }
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.register-section {
+    padding: 0 0 34px;
+    margin-bottom: 34px;
+    border-bottom: 1px solid #edf0f2;
+}
+
+
+.register-section-heading {
+    margin-bottom: 26px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+
+.register-section-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #f0f9ed;
+    color: #78bd65;
+}
+
+
+    .register-section-icon svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2;
+    }
+
+
+.register-section-heading h2 {
+    margin: 0 0 3px;
+    color: #273142;
+    font-size: 1.08rem;
+    font-weight: 800;
+}
+
+
+.register-section-heading p {
+    margin: 0;
+    color: #8a939f;
+    font-size: .82rem;
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.register-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 20px;
+}
+
+
+.register-full-width {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   FLOATING INPUTS
+========================================================= */
+
+.floating-field {
+    position: relative;
+}
+
+
+.floating-input {
+    width: 100%;
+    height: 64px;
+    padding: 24px 16px 8px;
+    box-sizing: border-box;
+    border: 1px solid #d9dee7;
+    border-radius: 14px;
+    outline: none;
+    background: #ffffff;
+    color: #273142;
+    font-size: .95rem;
+    transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+
+    .floating-input:hover {
+        border-color: #cbd2dc;
+    }
+
+
+    .floating-input:focus {
+        border-color: #84c96f;
+        box-shadow: 0 0 0 4px rgba(132, 201, 111, .12);
+    }
+
+
+/* =========================================================
+   FLOATING LABEL
+========================================================= */
+
+.floating-label {
+    position: absolute;
+    left: 16px;
+    top: 23px;
+    padding: 0;
+    background: transparent;
+    color: #8993a1;
+    font-size: .95rem;
+    line-height: 1;
+    pointer-events: none;
+    transition: top .16s ease, font-size .16s ease, color .16s ease;
+}
+
+
+.floating-input:focus + .floating-label,
+.floating-input:not(:placeholder-shown) + .floating-label {
+    top: 9px;
+    color: #75bb62;
+    font-size: .70rem;
+    font-weight: 600;
+}
+
+/* =========================================================
+   NORMAL FORM CONTROLS
+========================================================= */
+
+.register-field {
+    min-width: 0;
+}
+
+
+.register-field-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #4b5563;
+    font-size: .83rem;
+    font-weight: 600;
+}
+
+
+.register-control,
+.register-form .form-control,
+.register-form .form-select {
+    width: 100%;
+    min-height: 52px;
+    border: 1px solid #d9dee7;
+    border-radius: 13px;
+    background-color: #ffffff;
+    color: #273142;
+    font-size: .94rem;
+    box-shadow: none;
+    transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+
+.register-control {
+    padding: 0 14px;
+}
+
+
+    .register-form .form-control:focus,
+    .register-form .form-select:focus,
+    .register-control:focus {
+        border-color: #84c96f;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(132, 201, 111, .12);
+    }
+
+
+/* =========================================================
+   ADDRESS PARTIAL
+========================================================= */
+
+.register-address .form-label {
+    margin-bottom: 8px;
+    color: #4b5563;
+    font-size: .83rem;
+    font-weight: 600;
+}
+
+/* =========================================================
+   FIELD ERROR
+========================================================= */
+
+.field-error {
+    display: block;
+    margin-top: 6px;
+    color: #dc2626;
+    font-size: .78rem;
+}
+
+
+/* =========================================================
+   GENDER
+========================================================= */
+
+.gender-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+
+.gender-option {
+    margin: 0;
+    cursor: pointer;
+}
+
+
+    .gender-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+
+    .gender-option span {
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid #d9dee7;
+        border-radius: 13px;
+        background: #ffffff;
+        color: #667085;
+        font-size: .88rem;
+        font-weight: 600;
+        transition: border-color .16s ease, background .16s ease, color .16s ease, box-shadow .16s ease;
+    }
+
+
+        .gender-option span svg {
+            width: 17px;
+            height: 17px;
+        }
+
+
+    .gender-option:hover span {
+        border-color: #bcdab5;
+    }
+
+
+    .gender-option input:checked + span {
+        border-color: #84c96f;
+        background: #f1f9ee;
+        color: #68ad57;
+        box-shadow: 0 0 0 3px rgba(132, 201, 111, .10);
+    }
+
+
+/* =========================================================
+   PASSWORD
+========================================================= */
+
+.password-field .floating-input {
+    padding-right: 52px;
+}
+
+
+.register-password-toggle {
+    position: absolute;
+    top: 13px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important;
+    border-radius: 8px;
+    background: transparent !important;
+    color: #84c96f;
+    cursor: pointer;
+    z-index: 3;
+}
+
+
+    .register-password-toggle:hover {
+        background: #f1f8ef !important;
+        color: #68ac56;
+    }
+
+
+    .register-password-toggle svg {
+        width: 18px;
+        height: 18px;
+    }
+
+
+/* =========================================================
+   ID PHOTO UPLOAD
+========================================================= */
+
+.id-upload-field {
+    width: 100%;
+}
+
+
+.id-file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+.id-upload-box {
+    width: 100%;
+    min-height: 88px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1.5px dashed #cfd7df;
+    border-radius: 15px;
+    background: #fbfcfb;
+    cursor: pointer;
+    transition: border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+
+
+    .id-upload-box:hover {
+        border-color: #84c96f;
+        background: #f8fcf7;
+        box-shadow: 0 0 0 4px rgba(132, 201, 111, .08);
+    }
+
+
+.id-upload-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #eef8eb;
+    color: #78bd65;
+}
+
+
+    .id-upload-icon svg {
+        width: 21px;
+        height: 21px;
+    }
+
+
+.id-upload-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+
+    .id-upload-text strong {
+        color: #273142;
+        font-size: .88rem;
+        font-weight: 700;
+    }
+
+
+    .id-upload-text span {
+        color: #929ba7;
+        font-size: .77rem;
+    }
+
+
+.id-upload-action {
+    padding: 8px 13px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: #eef8eb;
+    color: #6eb45b;
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+
+.id-upload-help {
+    margin: 8px 0 0;
+    color: #929ba7;
+    font-size: .76rem;
+}
+
+
+/* =========================================================
+   ID PHOTO PREVIEW
+========================================================= */
+
+.id-photo-preview {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#idPhotoPreview .image-preview-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #dfe5e9;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(31, 41, 55, .08);
+}
+
+
+#idPhotoPreview .image-preview-img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+    background: #ffffff;
+}
+
+
+#idPhotoPreview .remove-image-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(39, 49, 66, .9);
+    color: #ffffff;
+    font-size: 21px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .15s ease, transform .15s ease;
+}
+
+
+    #idPhotoPreview .remove-image-btn:hover {
+        background: #273142;
+        transform: scale(1.05);
+    }
+
+/* =========================================================
+   TERMS
+========================================================= */
+
+.register-terms {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+
+    .register-terms .form-check-input {
+        width: 17px;
+        height: 17px;
+        margin: 3px 0 0;
+        flex-shrink: 0;
+        border-color: #ccd4dc;
+        box-shadow: none;
+    }
+
+
+        .register-terms .form-check-input:checked {
+            border-color: #84c96f;
+            background-color: #84c96f;
+        }
+
+
+    .register-terms label {
+        color: #667085;
+        font-size: .86rem;
+        line-height: 1.6;
+    }
+
+
+    .register-terms a {
+        color: #72b961;
+        font-weight: 600;
+        text-decoration: underline;
+    }
+
+
+        .register-terms a:hover {
+            color: #5fa34e;
+        }
+
+
+.terms-error {
+    margin-left: 27px;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.register-actions {
+    margin-top: 30px;
+    text-align: center;
+}
+
+
+.register-submit-btn {
+    width: 100%;
+    height: 54px;
+    border: none;
+    border-radius: 14px;
+    background: #78c262;
+    color: #ffffff;
+    font-size: .96rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(120, 194, 98, .20);
+    transition: background .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+
+
+    .register-submit-btn:hover {
+        background: #6bb558;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(120, 194, 98, .25);
+    }
+
+
+.register-login-link {
+    margin-top: 20px;
+    color: #7b8491;
+    font-size: .88rem;
+}
+
+
+    .register-login-link a {
+        margin-left: 4px;
+        color: #78bd65;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+
+        .register-login-link a:hover {
+            color: #5fa34e;
+            text-decoration: underline;
+        }
+
+
+.register-back-home {
+    margin-top: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #929aa5;
+    font-size: .83rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color .15s ease, transform .15s ease;
+}
+
+
+    .register-back-home:hover {
+        color: #273142;
+        transform: translateX(-2px);
+    }
+
+
+    .register-back-home svg {
+        width: 14px;
+        height: 14px;
+    }
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .register-page {
+        padding: 36px 18px 55px;
+    }
+
+
+    .register-card {
+        padding: 32px 28px 36px;
+    }
+
+
+    .register-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .register-full-width {
+        grid-column: auto;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .register-page {
+        padding: 28px 14px 45px;
+    }
+
+
+    .register-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 26px;
+        text-align: center;
+    }
+
+
+    .register-logo {
+        width: 52px;
+        height: 52px;
+    }
+
+
+    .register-header h1 {
+        font-size: 1.55rem;
+        line-height: 1.2;
+    }
+
+
+    .register-header p {
+        max-width: 430px;
+        margin: 0 auto;
+        font-size: .87rem;
+        line-height: 1.6;
+    }
+
+
+    .register-card {
+        padding: 26px 18px 30px;
+        border-radius: 20px;
+    }
+
+
+    .register-section {
+        padding-bottom: 28px;
+        margin-bottom: 28px;
+    }
+
+
+    .register-section-heading {
+        align-items: flex-start;
+        gap: 11px;
+    }
+
+
+    .gender-options {
+        grid-template-columns: 1fr;
+    }
+
+
+    .id-upload-box {
+        padding: 15px;
+    }
+
+    .id-upload-action {
+        display: none;
+    }
+
+}
+
+
+/* =========================================================
+   REGISTER PASSWORD TOGGLE OVERRIDE
+========================================================= */
+
+.register-password-toggle,
+.register-password-toggle:hover,
+.register-password-toggle:focus,
+.register-password-toggle:active {
+    background: transparent !important;
+    border: none !important;
+    color: #78c262 !important;
+    box-shadow: none !important;
+}
+
+
+    .register-password-toggle:hover {
+        background: #f1f8ef !important;
+    }
+
+
+    .register-password-toggle svg {
+        width: 18px;
+        height: 18px;
+        color: inherit !important;
+        stroke: currentColor !important;
+    }
+
+
+
+/* =========================================================
+   CHROME AUTOFILL
+========================================================= */
+
+.register-form input:-webkit-autofill,
+.register-form input:-webkit-autofill:hover,
+.register-form input:-webkit-autofill:focus,
+.register-form input:-webkit-autofill:active {
+    -webkit-text-fill-color: #273142 !important;
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    box-shadow: 0 0 0 1000px #ffffff inset !important;
+    transition: background-color 9999s ease-in-out 0s;
+}

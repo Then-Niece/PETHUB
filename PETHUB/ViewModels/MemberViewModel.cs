@@ -1,5 +1,6 @@
 ﻿using PETHUB.Models;
 using System.ComponentModel.DataAnnotations;
+using PETHUB.Validation;
 
 namespace PETHUB.ViewModels
 {
@@ -34,7 +35,10 @@ namespace PETHUB.ViewModels
         public string? StreetAddress { get; set; }
         public string Gender { get; set; }
 
-        public DateTime Birthdate { get; set; }
+        [Required(ErrorMessage = "Birthdate is required.")]
+        [DataType(DataType.Date)]
+        [MinimumAge(18, ErrorMessage = "Member must be at least 18 years old.")]
+        public DateTime? Birthdate { get; set; }
 
         public IFormFile? IdPhoto { get; set; } // for ID photo upload in form when admin tries to add a member
     }

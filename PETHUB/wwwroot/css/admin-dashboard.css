@@ -314,9 +314,60 @@
     background: #EEF2F7;
 }
 
-.delete-item {
-    color: #DC2626 !important;
+/* =========================================================
+   MEMBER STATUS ACTIONS
+========================================================= */
+
+.action-menu-form {
+    margin: 0;
+    padding: 0;
 }
+
+
+.deactivate-item,
+.reactivate-item {
+    width: 100%;
+    padding: 10px 14px;
+    display: block;
+    border: none;
+    background: transparent;
+    font: inherit;
+    font-size: .88rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+}
+
+
+.status-pill.pending {
+    background: #fff7e8;
+    color: #c68927;
+}
+
+/* Deactivate */
+
+.deactivate-item {
+    color: #d97706;
+}
+
+
+    .deactivate-item:hover {
+        background: #fff7ed;
+        color: #b45309;
+    }
+
+
+/* Reactivate */
+
+.reactivate-item {
+    color: #65a853;
+}
+
+
+    .reactivate-item:hover {
+        background: #f1f8ef;
+        color: #4f8d42;
+    }
 
 
 /* ===================================================

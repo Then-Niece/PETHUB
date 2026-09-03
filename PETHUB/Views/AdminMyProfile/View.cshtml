@@ -13,19 +13,7 @@
             <!-- ========================================================= -->
             <!-- PAGE HEADER                                                -->
             <!-- ========================================================= -->
-            @if (TempData["SuccessMessage"] != null) @* Shows Success Message After Saving Changes *@
-            {
-                <div class="alert alert-success alert-dismissible fade show">
 
-                    @TempData["SuccessMessage"] @* Call from TempData in MyProfileController *@
-
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert">
-                    </button>
-
-                </div>
-            }
 
             <div class="d-flex justify-content-between align-items-center mb-4">
 

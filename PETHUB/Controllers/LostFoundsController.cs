@@ -13,64 +13,93 @@ public class LostFoundsController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly NotificationService _notificationService;
 
-    public LostFoundsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationService notificationService)
+
+    public LostFoundsController(
+        ApplicationDbContext context,
+        UserManager<ApplicationUser> userManager,
+        NotificationService notificationService)
     {
         _context = context;
         _userManager = userManager;
         _notificationService = notificationService;
     }
 
-    // GET: LostFounds
-    // Supports approval status, Lost/Found report type, and pet type filters.
+
+    // =========================================================
+    // ADMIN - LOST & FOUND INDEX
+    // =========================================================
+
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index(
         string? status,
         string? lostFoundType,
         string? petType)
     {
-        // Start with all Lost & Found reports and load the related
-        // user and image data required by the existing approval view.
-        var lostfounds = _context.LostFounds
-            .Include(l => l.User)
-            .Include(l => l.Images)
-            .AsQueryable();
+        var lostFounds =
+            _context.LostFounds
+                .Include(l => l.User)
+                .Include(l => l.Images)
+                .AsQueryable();
 
-        // Apply the existing approval-status filter.
-        // Lost & Found uses its own ApprovalStatus enum.
+
+        // ---------------------------------------------------------
+        // APPROVAL STATUS FILTER
+        // ---------------------------------------------------------
+
         if (!string.IsNullOrWhiteSpace(status) &&
-            Enum.TryParse<ApprovalStatus>(status, out var selectedStatus))
+            Enum.TryParse<ApprovalStatus>(
+                status,
+                out var selectedStatus))
         {
-            // EF Core translates this comparison into a database WHERE condition.
-            lostfounds = lostfounds.Where(l => l.Status == selectedStatus);
+            lostFounds =
+                lostFounds.Where(
+                    l => l.Status == selectedStatus
+                );
         }
 
-        // Apply the Lost/Found report-type filter.
-        // LostFoundType separates Lost reports from Found reports.
+
+        // ---------------------------------------------------------
+        // LOST / FOUND FILTER
+        // ---------------------------------------------------------
+
         if (!string.IsNullOrWhiteSpace(lostFoundType) &&
             Enum.TryParse<LostFoundType>(
                 lostFoundType,
                 out var selectedReportType))
         {
-            // Filter the query using the LostFound.Type property.
-            lostfounds = lostfounds.Where(l => l.Type == selectedReportType);
+            lostFounds =
+                lostFounds.Where(
+                    l => l.Type == selectedReportType
+                );
         }
 
-        // Apply the Dog/Cat filter.
-        // Lost & Found uses its own PetType enum.
+
+        // ---------------------------------------------------------
+        // PET TYPE FILTER
+        // ---------------------------------------------------------
+
         if (!string.IsNullOrWhiteSpace(petType) &&
             Enum.TryParse<PetType>(
                 petType,
                 out var selectedPetType))
         {
-            // Filter the query using the LostFound.PetType property.
-            lostfounds = lostfounds.Where(l => l.PetType == selectedPetType);
+            lostFounds =
+                lostFounds.Where(
+                    l => l.PetType == selectedPetType
+                );
         }
 
-        // Execute the query after all selected filters have been applied.
-        return View(await lostfounds.ToListAsync());
+
+        return View(
+            await lostFounds.ToListAsync()
+        );
     }
 
-    // GET: LostFounds/Details/5
+
+    // =========================================================
+    // ADMIN - DETAILS
+    // =========================================================
+
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Details(int? id)
     {
@@ -79,122 +108,228 @@ public class LostFoundsController : Controller
             return NotFound();
         }
 
-        var lostfound = await _context.LostFounds
-            .Include(l => l.User)
-            .Include(l => l.Images)
-            .FirstOrDefaultAsync(m => m.LostFoundId == id);
 
-        if (lostfound == null)
+        var lostFound =
+            await _context.LostFounds
+                .Include(l => l.User)
+                .Include(l => l.Images)
+                .FirstOrDefaultAsync(
+                    l => l.LostFoundId == id
+                );
+
+
+        if (lostFound == null)
         {
             return NotFound();
         }
 
-        return View(lostfound);
+
+        return View(lostFound);
     }
 
-    // GET: LostFounds/Approve
+
+    // =========================================================
+    // ADMIN - APPROVE
+    // =========================================================
+
     [HttpPost]
+    [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Approve(int id)
     {
-        var report = await _context.LostFounds
-            .Include(r => r.Images)
-            .FirstOrDefaultAsync(r => r.LostFoundId == id);
+        var report =
+            await _context.LostFounds
+                .Include(r => r.Images)
+                .FirstOrDefaultAsync(
+                    r => r.LostFoundId == id
+                );
+
 
         if (report == null)
         {
             return NotFound();
         }
 
-        //Approve report
-        report.Status = ApprovalStatus.Approved;
+
+        // Prevent duplicate approval notifications.
+        if (report.Status == ApprovalStatus.Approved)
+        {
+            TempData["InfoMessage"] =
+                "This Lost & Found report is already approved.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        report.Status =
+            ApprovalStatus.Approved;
+
 
         await _context.SaveChangesAsync();
 
-        // Notify the report owner
+
+        // =====================================================
+        // NOTIFY REGISTERED REPORT OWNER
+        // =====================================================
+
         if (!string.IsNullOrEmpty(report.UserId))
         {
             string notificationTitle;
             string notificationMessage;
 
+
             if (report.Type == LostFoundType.Lost)
             {
-                notificationTitle = "Lost Report Approved";
-                notificationMessage = "Your Lost Report has been approved and is now visible in Lost & Found.";
+                notificationTitle =
+                    "Lost Report Approved";
+
+                notificationMessage =
+                    "Your Lost Report has been approved and is now visible in Lost & Found.";
             }
             else
             {
-                notificationTitle = "Found Report Approved";
-                notificationMessage = "Your Found Report has been approved and is now visible in Lost & Found.";
+                notificationTitle =
+                    "Found Report Approved";
+
+                notificationMessage =
+                    "Your Found Report has been approved and is now visible in Lost & Found.";
             }
 
-            await _notificationService.CreateNotificationAsync(
-                report.UserId,
-                NotificationType.LostFoundApproved,
-                notificationTitle,
-                notificationMessage,
-                report.Images.FirstOrDefault()?.ImagePath,
-                "/LostFounds/BrowseDetails/" + report.LostFoundId,
-                lostFoundId: report.LostFoundId
-            );
+
+            await _notificationService
+                .CreateNotificationAsync(
+                    report.UserId,
+                    NotificationType.LostFoundApproved,
+                    notificationTitle,
+                    notificationMessage,
+                    report.Images
+                        .FirstOrDefault()
+                        ?.ImagePath,
+                    "/LostFounds/BrowseDetails/" +
+                    report.LostFoundId,
+                    lostFoundId:
+                        report.LostFoundId
+                );
         }
 
-        // Notify members in the same city
-        await _notificationService.NotifyNearbyMembersAsync(report);
+
+        // =====================================================
+        // NOTIFY NEARBY MEMBERS
+        // =====================================================
+
+        await _notificationService
+            .NotifyNearbyMembersAsync(report);
+
+
+        TempData["SuccessMessage"] =
+            "Lost & Found report approved successfully.";
 
 
         return RedirectToAction(nameof(Index));
     }
 
-    // GET: LostFounds/Reject
+
+    // =========================================================
+    // ADMIN - REJECT
+    // =========================================================
+
     [HttpPost]
+    [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Reject(int id)
     {
-        //retrieve the report with its images to ensure we have all necessary data for notifications
-        var report = await _context.LostFounds
-            .Include(r => r.Images)
-            .FirstOrDefaultAsync(r => r.LostFoundId == id);
+        var report =
+            await _context.LostFounds
+                .Include(r => r.Images)
+                .FirstOrDefaultAsync(
+                    r => r.LostFoundId == id
+                );
 
-        // If the report doesn't exist, return a 404 Not Found response
+
         if (report == null)
         {
             return NotFound();
         }
 
-        report.Status = ApprovalStatus.Rejected;
+
+        // Prevent duplicate rejection notifications.
+        if (report.Status == ApprovalStatus.Rejected)
+        {
+            TempData["InfoMessage"] =
+                "This Lost & Found report is already rejected.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        report.Status =
+            ApprovalStatus.Rejected;
+
+
         await _context.SaveChangesAsync();
 
 
-        string notificationTitle;
-        string notificationMessage;
+        // =====================================================
+        // NOTIFY REGISTERED REPORT OWNER
+        // =====================================================
 
-        if (report.Type == LostFoundType.Lost)
+        /*
+         * Guest-created reports do not have a UserId,
+         * so only registered Members can receive an
+         * in-app account notification.
+         */
+        if (!string.IsNullOrEmpty(report.UserId))
         {
-            notificationTitle = "Lost Report Rejected";
-            notificationMessage = "Your Lost Report has been rejected because it does not meet our community standards.";
-        }
-        else
-        {
-            notificationTitle = "Found Report Rejected";
-            notificationMessage = "Your Found Report has been rejected because it does not meet our community standards.";
+            string notificationTitle;
+            string notificationMessage;
+
+
+            if (report.Type == LostFoundType.Lost)
+            {
+                notificationTitle =
+                    "Lost Report Rejected";
+
+                notificationMessage =
+                    "Your Lost Report has been rejected because it does not meet our community standards.";
+            }
+            else
+            {
+                notificationTitle =
+                    "Found Report Rejected";
+
+                notificationMessage =
+                    "Your Found Report has been rejected because it does not meet our community standards.";
+            }
+
+
+            await _notificationService
+                .CreateNotificationAsync(
+                    report.UserId,
+                    NotificationType.LostFoundRejected,
+                    notificationTitle,
+                    notificationMessage,
+                    report.Images
+                        .FirstOrDefault()
+                        ?.ImagePath,
+                    "/LostFounds/BrowseDetails/" +
+                    report.LostFoundId,
+                    lostFoundId:
+                        report.LostFoundId
+                );
         }
 
-        await _notificationService.CreateNotificationAsync(
-            report.UserId,
-            NotificationType.LostFoundRejected,
-            notificationTitle,
-            notificationMessage,
-            report.Images.FirstOrDefault()?.ImagePath,
-            "/LostFounds/BrowseDetails/" + report.LostFoundId,
-            lostFoundId: report.LostFoundId
-        );
+
+        TempData["SuccessMessage"] =
+            "Lost & Found report rejected successfully.";
 
 
         return RedirectToAction(nameof(Index));
     }
 
-    // GET: LostFounds/Edit/5
+
+    // =========================================================
+    // MEMBER - EDIT GET
+    // =========================================================
 
     [Authorize(Roles = "Member")]
     public async Task<IActionResult> Edit(int? id)
@@ -204,497 +339,665 @@ public class LostFoundsController : Controller
             return NotFound();
         }
 
-        var userId = _userManager.GetUserId(User);
 
-        var lostfound = await _context.LostFounds
-            .Include(l => l.Images)
-            .FirstOrDefaultAsync(l =>
-                l.LostFoundId == id &&
-                l.UserId == userId);
+        var userId =
+            _userManager.GetUserId(User);
 
-        // Only the owner can edit.
-        // Admins (if they ever use this action) bypass this check.
-        if (!User.IsInRole("Admin") && lostfound.UserId != userId)
+
+        if (string.IsNullOrEmpty(userId))
         {
-            return Forbid();
+            return Unauthorized();
         }
 
-        // Approved reports cannot be edited by members.
-        if (!User.IsInRole("Admin") &&
-            lostfound.Status == ApprovalStatus.Approved)
-        {
-            return Forbid();
-        }
 
-        if (lostfound == null)
+        var lostFound =
+            await _context.LostFounds
+                .Include(l => l.Images)
+                .FirstOrDefaultAsync(
+                    l =>
+                        l.LostFoundId == id &&
+                        l.UserId == userId
+                );
+
+
+        // The report does not exist or
+        // does not belong to this Member.
+        if (lostFound == null)
         {
             return NotFound();
         }
 
-        return View(lostfound);
+
+        // Approved reports cannot be edited
+        // by Members.
+        if (lostFound.Status ==
+            ApprovalStatus.Approved)
+        {
+            return Forbid();
+        }
+
+
+        return View(lostFound);
     }
 
-    // POST: LostFounds/Edit/5
+
+    // =========================================================
+    // MEMBER - EDIT POST
+    // =========================================================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Member")]
     public async Task<IActionResult> Edit(
-    int id,
-    LostFound lostFound,
-    List<IFormFile> Images,
-    List<int> DeletedImageIds)
+        int id,
+        LostFound lostFound,
+        List<IFormFile> Images,
+        List<int> DeletedImageIds)
     {
-        // Verify that the ID in the URL matches the ID submitted by the form.
-        // This prevents the form from accidentally updating a different report.
         if (id != lostFound.LostFoundId)
         {
             return NotFound();
         }
 
-        // Validate the submitted Lost & Found data before accessing the database.
-        // If validation fails, return the submitted model so the user can correct it.
-        if (!ModelState.IsValid)
+
+        var userId =
+            _userManager.GetUserId(User);
+
+
+        if (string.IsNullOrEmpty(userId))
         {
-            return View(lostFound);
+            return Unauthorized();
         }
 
-        // Get the Identity ID of the currently authenticated Member.
-        // This is used to ensure that Members can only edit their own reports.
-        var userId = _userManager.GetUserId(User);
 
-        // Retrieve the existing report from the database.
-        // Images are included because the Edit action can add new images.
-        var existing = await _context.LostFounds
-            .Include(l => l.Images)
-            .FirstOrDefaultAsync(l =>
-                l.LostFoundId == id &&
-                l.UserId == userId);
+        // =====================================================
+        // LOAD EXISTING REPORT
+        // =====================================================
 
-        // If the report does not exist or does not belong to the current Member,
-        // do not allow the update.
+        var existing =
+            await _context.LostFounds
+                .Include(l => l.Images)
+                .FirstOrDefaultAsync(
+                    l =>
+                        l.LostFoundId == id &&
+                        l.UserId == userId
+                );
+
+
         if (existing == null)
         {
             return NotFound();
         }
 
-        // Only the owner can save changes.
-        // Admins bypass this check, although this action currently only allows Members.
-        if (!User.IsInRole("Admin") && existing.UserId != userId)
+
+        // Members cannot edit approved reports.
+        if (existing.Status ==
+            ApprovalStatus.Approved)
         {
             return Forbid();
         }
 
-        // Members cannot edit an already approved report.
-        // Removed, Pending, and Rejected reports remain editable.
-        if (!User.IsInRole("Admin") &&
-            existing.Status == ApprovalStatus.Approved)
+
+        // =====================================================
+        // MODEL VALIDATION
+        // =====================================================
+
+        if (!ModelState.IsValid)
         {
-            return Forbid();
+            /*
+             * Restore important database values
+             * needed by the Edit view.
+             */
+            lostFound.Images =
+                existing.Images;
+
+            lostFound.UserId =
+                existing.UserId;
+
+            lostFound.Status =
+                existing.Status;
+
+
+            return View(lostFound);
         }
 
-        // Remember whether the report was Removed before editing.
-        // This allows us to distinguish a Removed report being resubmitted
-        // from a normal edit of a Pending or Rejected report.
-        bool wasRemoved = existing.Status == ApprovalStatus.Removed;
+
+        var wasRemoved =
+            existing.Status ==
+            ApprovalStatus.Removed;
 
 
-        // =========================================================
+        // =====================================================
         // UPDATE REPORT INFORMATION
-        // =========================================================
+        // =====================================================
 
-        // Copy the editable values from the submitted model into the
-        // existing database entity.
-        existing.Title = lostFound.Title;
-        existing.Description = lostFound.Description;
-        existing.Type = lostFound.Type;
-        existing.Breed = lostFound.Breed;
-        existing.PetType = lostFound.PetType;
-        existing.Sex = lostFound.Sex;
-        existing.LostDate = lostFound.LostDate;
-        existing.ClientName = lostFound.ClientName;
-        existing.ClientContact = lostFound.ClientContact;
-        existing.Province = lostFound.Province;
-        existing.City = lostFound.City;
-        existing.Barangay = lostFound.Barangay;
-        existing.StreetAddress = lostFound.StreetAddress;
+        existing.Title =
+            lostFound.Title;
 
-        // Preserve the existing behavior of updating the report date whenever
-        // the report is edited.
-        existing.DateReported = DateTime.Now;
+        existing.Description =
+            lostFound.Description;
 
-    
+        existing.Type =
+            lostFound.Type;
 
-        // DELETE MARKED EXISTING IMAGES
+        existing.Breed =
+            lostFound.Breed;
 
-        if (DeletedImageIds != null && DeletedImageIds.Any())
+        existing.PetType =
+            lostFound.PetType;
+
+        existing.Sex =
+            lostFound.Sex;
+
+        existing.LostDate =
+            lostFound.LostDate;
+
+        existing.ClientName =
+            lostFound.ClientName;
+
+        existing.ClientContact =
+            lostFound.ClientContact;
+
+        existing.Province =
+            lostFound.Province;
+
+        existing.City =
+            lostFound.City;
+
+        existing.Barangay =
+            lostFound.Barangay;
+
+        existing.StreetAddress =
+            lostFound.StreetAddress;
+
+
+        existing.DateReported =
+            DateTime.Now;
+
+
+        // =====================================================
+        // DELETE SELECTED EXISTING IMAGES
+        // =====================================================
+
+        if (DeletedImageIds != null &&
+            DeletedImageIds.Any())
         {
-            foreach (var imageId in DeletedImageIds)
+            foreach (var imageId
+                     in DeletedImageIds)
             {
-                var image = existing.Images
-                    .FirstOrDefault(i =>
-                        i.LostFoundImageId == imageId);
+                var image =
+                    existing.Images
+                        .FirstOrDefault(
+                            i =>
+                                i.LostFoundImageId ==
+                                imageId
+                        );
+
 
                 if (image == null)
                 {
                     continue;
                 }
 
-                var filePath = Path.Combine(
-                    Directory.GetCurrentDirectory(),
-                    "wwwroot",
-                    image.ImagePath.TrimStart('/')
-                );
 
-                if (System.IO.File.Exists(filePath))
+                var filePath =
+                    Path.Combine(
+                        Directory
+                            .GetCurrentDirectory(),
+                        "wwwroot",
+                        image.ImagePath
+                            .TrimStart('/')
+                    );
+
+
+                if (System.IO.File
+                    .Exists(filePath))
                 {
-                    System.IO.File.Delete(filePath);
+                    System.IO.File
+                        .Delete(filePath);
                 }
 
-                _context.LostFoundImages.Remove(image);
+
+                _context
+                    .LostFoundImages
+                    .Remove(image);
             }
         }
 
 
-    
+        // =====================================================
+        // REMOVED -> PENDING
+        // =====================================================
 
-        // =========================================================
-        // REMOVED → PENDING
-        // =========================================================
-
-        // A Removed report must return to Pending when its owner edits and
-        // resubmits it. This sends the corrected report back through the
-        // normal Admin approval process.
         if (wasRemoved)
         {
-            existing.Status = ApprovalStatus.Pending;
+            existing.Status =
+                ApprovalStatus.Pending;
         }
 
 
-        // =========================================================
+        // =====================================================
         // ADD NEW IMAGES
-        // =========================================================
+        // =====================================================
 
-        // Only process the image upload when the Member actually selected
-        // one or more non-empty files.
-        if (Images != null && Images.Any(i => i.Length > 0))
+        if (Images != null &&
+            Images.Any(
+                image =>
+                    image.Length > 0))
         {
-            // Save the uploaded files using the existing ImageHelper.
-            // The helper creates LostFoundImage entities using the report ID
-            // and stores them under the existing "lostfound" image location.
-            var savedImages = await ImageHelper.SaveImagesAsync(
-                Images,
-                existing.LostFoundId,
-                (imgId, path) => new LostFoundImage
-                {
-                    LostFoundId = imgId,
-                    ImagePath = path
-                },
-                "lostfound"
-            );
+            var savedImages =
+                await ImageHelper
+                    .SaveImagesAsync(
+                        Images,
+                        existing.LostFoundId,
 
-            // Add the newly created image entities to Entity Framework's
-            // change tracker so they are inserted when SaveChangesAsync runs.
-            _context.AddRange(savedImages);
+                        (lostFoundId, path) =>
+                            new LostFoundImage
+                            {
+                                LostFoundId =
+                                    lostFoundId,
+
+                                ImagePath =
+                                    path
+                            },
+
+                        "lostfound"
+                    );
+
+
+            _context.AddRange(
+                savedImages
+            );
         }
 
 
-        // =========================================================
+        // =====================================================
         // SAVE CHANGES
-        // =========================================================
+        // =====================================================
 
-        // Persist the edited report, its new status if it was Removed,
-        // and any newly uploaded images.
-        await _context.SaveChangesAsync();
+        await _context
+            .SaveChangesAsync();
 
 
-        // =========================================================
-        // ADMIN RESUBMISSION NOTIFICATION
-        // =========================================================
+        // =====================================================
+        // NOTIFY ADMINS WHEN REMOVED REPORT IS RESUBMITTED
+        // =====================================================
 
-        // Only notify Admins when a previously Removed report has been
-        // resubmitted. Normal Pending or Rejected edits do not trigger
-        // this notification.
         if (wasRemoved)
         {
-            // Retrieve all users assigned to the Admin role.
-            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+            var admins =
+                await _userManager
+                    .GetUsersInRoleAsync(
+                        "Admin"
+                    );
 
-            // Determine the notification text based on whether the report
-            // is a Lost or Found report.
+
             string notificationTitle;
             string notificationMessage;
 
-            if (existing.Type == LostFoundType.Lost)
+
+            if (existing.Type ==
+                LostFoundType.Lost)
             {
-                notificationTitle = "Lost Report Resubmitted";
+                notificationTitle =
+                    "Lost Report Resubmitted";
+
                 notificationMessage =
                     "A previously removed Lost Report has been edited and resubmitted for approval.";
             }
             else
             {
-                notificationTitle = "Found Report Resubmitted";
+                notificationTitle =
+                    "Found Report Resubmitted";
+
                 notificationMessage =
                     "A previously removed Found Report has been edited and resubmitted for approval.";
             }
 
-            // Notify every Admin that the corrected report is waiting
-            // for another moderation review.
-            foreach (var admin in admins)
+
+            foreach (var admin
+                     in admins)
             {
-                await _notificationService.CreateNotificationAsync(
-                    admin.Id,
-                    NotificationType.NewLostFoundSubmission,
-                    notificationTitle,
-                    notificationMessage,
-                    existing.Images.FirstOrDefault()?.ImagePath,
-                    "/LostFounds/Details/" + existing.LostFoundId,
-                    lostFoundId: existing.LostFoundId
-                );
+                await _notificationService
+                    .CreateNotificationAsync(
+                        admin.Id,
+                        NotificationType
+                            .NewLostFoundSubmission,
+                        notificationTitle,
+                        notificationMessage,
+                        existing.Images
+                            .FirstOrDefault()
+                            ?.ImagePath,
+                        "/LostFounds/Details/" +
+                        existing.LostFoundId,
+                        lostFoundId:
+                            existing.LostFoundId
+                    );
             }
+
+
+            TempData["SuccessMessage"] =
+                "Your Lost & Found report has been updated and resubmitted for approval.";
+        }
+        else
+        {
+            TempData["SuccessMessage"] =
+                "Lost & Found report updated successfully.";
         }
 
 
-        // Return the Member to the existing Lost & Found Details page
-        // after successfully saving the edited report.
         return RedirectToAction(
             "LostFoundDetails",
             "MyPosts",
-            new { id = existing.LostFoundId });
-    }
-
-    // GET: LostFounds/Delete/5
-    [Authorize(Roles = "Member")]
-    public async Task<IActionResult> Delete(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var userId = _userManager.GetUserId(User);
-
-        var lostfound = await _context.LostFounds
-            .Include(l => l.User)
-            .Include(l => l.Images)
-            .FirstOrDefaultAsync(l =>
-                l.LostFoundId == id &&
-                l.UserId == userId);
-
-        if (lostfound == null)
-        {
-            return NotFound();
-        }
-
-        return View(lostfound);
-    }
-
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Member")]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        var userId = _userManager.GetUserId(User);
-
-        var lostFound = await _context.LostFounds
-            .Include(l => l.Images)
-            .FirstOrDefaultAsync(l =>
-                l.LostFoundId == id &&
-                l.UserId == userId);
-
-        if (lostFound == null)
-        {
-            return NotFound();
-        }
-
-        if (!User.IsInRole("Admin") && lostFound.UserId != userId)
-        {
-            return Forbid();
-        }
-
-        if (lostFound.Images != null && lostFound.Images.Any())
-        {
-            foreach (var img in lostFound.Images)
+            new
             {
-                var filePath = Path.Combine(
-                    Directory.GetCurrentDirectory(),
-                    "wwwroot",
-                    img.ImagePath.TrimStart('/')
-                );
-
-                if (System.IO.File.Exists(filePath))
-                {
-                    System.IO.File.Delete(filePath);
-                }
-
-                _context.LostFoundImages.Remove(img);
+                id = existing.LostFoundId
             }
-        }
-
-        _context.LostFounds.Remove(lostFound);
-
-        await _context.SaveChangesAsync();
-
-        return RedirectToAction("Index", "MyPosts");
+        );
     }
 
+    // =========================================================
+    // MEMBER - REMOVE INDIVIDUAL IMAGE
+    // =========================================================
 
-    // POST: LostFounds/RemoveImage/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Member")]
-    public async Task<IActionResult> RemoveImage(int id)
+    public async Task<IActionResult> RemoveImage(
+        int id)
     {
-        var userId = _userManager.GetUserId(User);
+        var userId =
+            _userManager.GetUserId(User);
 
-        // Load image with LostFound included so we can check ownership
-        var image = await _context.LostFoundImages
-            .Include(i => i.LostFound)
-            .FirstOrDefaultAsync(i => i.LostFoundImageId == id);
 
-        if (image == null || image.LostFound.UserId != userId)
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+
+        var image =
+            await _context
+                .LostFoundImages
+                .Include(i => i.LostFound)
+                .FirstOrDefaultAsync(
+                    i =>
+                        i.LostFoundImageId == id
+                );
+
+
+        if (image == null ||
+            image.LostFound == null ||
+            image.LostFound.UserId != userId)
         {
             return NotFound();
         }
 
-        var lostFoundId = await ImageHelper.RemoveImageAsync(
-            _context,
-            _context.LostFoundImages,
-            id,
-            img => img.ImagePath,
-            img => img.LostFoundId
-        // no need to pass ownership check here, already done above
-        );
+
+        var lostFoundId =
+            await ImageHelper
+                .RemoveImageAsync(
+                    _context,
+                    _context.LostFoundImages,
+                    id,
+                    img => img.ImagePath,
+                    img => img.LostFoundId
+                );
+
 
         if (lostFoundId == null)
         {
             return NotFound();
         }
 
-        return RedirectToAction("Edit", new { id = lostFoundId });
+
+        return RedirectToAction(
+            nameof(Edit),
+            new
+            {
+                id = lostFoundId
+            }
+        );
     }
 
 
+    // =========================================================
+    // CREATE - GET
+    // =========================================================
 
-
-
-    // GET: LostFounds/Create
     [AllowAnonymous]
-    public IActionResult Create() => View();
+    public IActionResult Create()
+    {
+        return View();
+    }
 
-    // POST: LostFounds/Create
+
+    // =========================================================
+    // CREATE - POST
+    // =========================================================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     [AllowAnonymous]
-    public async Task<IActionResult> Create(LostFound lostFound, List<IFormFile> Images, IFormFile? ClientIdImage)
+    public async Task<IActionResult> Create(
+        LostFound lostFound,
+        List<IFormFile> Images,
+        IFormFile? ClientIdImage)
     {
+        // =====================================================
+        // REGISTERED MEMBER
+        // =====================================================
+
         if (User.Identity?.IsAuthenticated == true)
         {
-            lostFound.UserId = _userManager.GetUserId(User);
+            lostFound.UserId =
+                _userManager.GetUserId(User);
         }
+
+
+        // =====================================================
+        // GUEST SUBMISSION
+        // =====================================================
+
         else
         {
-            if (string.IsNullOrWhiteSpace(lostFound.ClientName))
+            if (string.IsNullOrWhiteSpace(
+                lostFound.ClientName))
             {
-                ModelState.AddModelError(nameof(LostFound.ClientName),
-                    "Name is required.");
+                ModelState.AddModelError(
+                    nameof(
+                        LostFound.ClientName),
+                    "Name is required."
+                );
             }
 
-            if (string.IsNullOrWhiteSpace(lostFound.ClientContact))
+
+            if (string.IsNullOrWhiteSpace(
+                lostFound.ClientContact))
             {
-                ModelState.AddModelError(nameof(LostFound.ClientContact),
-                    "Contact number is required.");
+                ModelState.AddModelError(
+                    nameof(
+                        LostFound.ClientContact),
+                    "Contact number is required."
+                );
             }
+
 
             if (ClientIdImage == null)
             {
-                ModelState.AddModelError("ClientIdImage",
-                    "A valid ID is required.");
+                ModelState.AddModelError(
+                    "ClientIdImage",
+                    "A valid ID is required."
+                );
             }
         }
+
 
         if (!ModelState.IsValid)
         {
             return View(lostFound);
         }
 
-        lostFound.DateReported = DateTime.Now;
-        lostFound.Status = ApprovalStatus.Pending;
 
-        if (User.Identity?.IsAuthenticated != true && ClientIdImage != null)
+        // =====================================================
+        // INITIAL REPORT VALUES
+        // =====================================================
+
+        lostFound.DateReported =
+            DateTime.Now;
+
+        lostFound.Status =
+            ApprovalStatus.Pending;
+
+
+        // =====================================================
+        // GUEST ID IMAGE
+        // =====================================================
+
+        if (User.Identity?.IsAuthenticated != true &&
+            ClientIdImage != null)
         {
-            lostFound.ClientIdImagePath = await ClientIdUploadHelper.SaveClientIdAsync(ClientIdImage);
+            lostFound.ClientIdImagePath =
+                await ClientIdUploadHelper
+                    .SaveClientIdAsync(
+                        ClientIdImage
+                    );
         }
 
+
+        // =====================================================
+        // SAVE REPORT FIRST
+        // =====================================================
+
         _context.Add(lostFound);
-        await _context.SaveChangesAsync();
+
+
+        await _context
+            .SaveChangesAsync();
+
 
         string? imagePath = null;
 
-        if (Images != null && Images.Count > 0)
+
+        // =====================================================
+        // SAVE REPORT IMAGES
+        // =====================================================
+
+        if (Images != null &&
+            Images.Count > 0)
         {
             try
             {
-                var savedImages = await ImageHelper.SaveImagesAsync(
-                    Images,
-                    lostFound.LostFoundId,
-                    (id, path) => new LostFoundImage { LostFoundId = id, ImagePath = path },
-                    "lostfound"
+                var savedImages =
+                    await ImageHelper
+                        .SaveImagesAsync(
+                            Images,
+                            lostFound.LostFoundId,
+
+                            (lostFoundId, path) =>
+                                new LostFoundImage
+                                {
+                                    LostFoundId =
+                                        lostFoundId,
+
+                                    ImagePath =
+                                        path
+                                },
+
+                            "lostfound"
+                        );
+
+
+                _context.AddRange(
+                    savedImages
                 );
 
-                _context.AddRange(savedImages);
-                await _context.SaveChangesAsync();
 
-                // Get the path of the first saved image for notification purposes
-                imagePath = savedImages
-                .FirstOrDefault()
-                ?.ImagePath;
+                await _context
+                    .SaveChangesAsync();
 
+
+                imagePath =
+                    savedImages
+                        .FirstOrDefault()
+                        ?.ImagePath;
             }
             catch (Exception)
             {
-                ModelState.AddModelError("", "Some images could not be uploaded.");
+                ModelState.AddModelError(
+                    "",
+                    "Some images could not be uploaded."
+                );
+
+
                 return View(lostFound);
             }
         }
 
-        //gets all of the admins
-        var admins = await _userManager.GetUsersInRoleAsync("Admin");
 
-        // Determine notification content based on listing type
+        // =====================================================
+        // NOTIFY ADMINS
+        // =====================================================
+
+        var admins =
+            await _userManager
+                .GetUsersInRoleAsync(
+                    "Admin"
+                );
+
+
         string notificationTitle;
         string notificationMessage;
 
-        if (lostFound.Type == LostFoundType.Lost)
+
+        if (lostFound.Type ==
+            LostFoundType.Lost)
         {
-            notificationTitle = "Lost Report Approval";
-            notificationMessage = "A new Lost Report is waiting for Approval.";
+            notificationTitle =
+                "Lost Report Approval";
+
+            notificationMessage =
+                "A new Lost Report is waiting for Approval.";
         }
         else
         {
-            notificationTitle = "Found Report Approval";
-            notificationMessage = "A new Found Report is waiting for Approval.";
+            notificationTitle =
+                "Found Report Approval";
+
+            notificationMessage =
+                "A new Found Report is waiting for Approval.";
         }
 
-        // Send notification to all admins
-        foreach (var admin in admins)
+
+        foreach (var admin
+                 in admins)
         {
-            await _notificationService.CreateNotificationAsync(
-                admin.Id,
-                NotificationType.NewLostFoundSubmission,
-                notificationTitle,
-                notificationMessage,
-                imagePath,
-                "/LostFounds/Details/" + lostFound.LostFoundId,
-                lostFoundId: lostFound.LostFoundId
-            );
+            await _notificationService
+                .CreateNotificationAsync(
+                    admin.Id,
+                    NotificationType
+                        .NewLostFoundSubmission,
+                    notificationTitle,
+                    notificationMessage,
+                    imagePath,
+                    "/LostFounds/Details/" +
+                    lostFound.LostFoundId,
+                    lostFoundId:
+                        lostFound.LostFoundId
+                );
         }
 
-        return RedirectToAction(nameof(SubmissionPending));
+
+        return RedirectToAction(
+            nameof(SubmissionPending)
+        );
     }
 
 
+    // =========================================================
+    // SUBMISSION PENDING
+    // =========================================================
 
-    // GET: LostFounds/SubmissionPending
     [AllowAnonymous]
     public IActionResult SubmissionPending()
     {
@@ -702,52 +1005,122 @@ public class LostFoundsController : Controller
     }
 
 
-    // GET: LostFounds/Browse.
-    // lostFoundType filters Lost/Found while petType filters Dog/Cat.
+    // =========================================================
+    // PUBLIC - BROWSE
+    // =========================================================
+
     [AllowAnonymous]
     public async Task<IActionResult> Browse(
         string? lostFoundType,
         string? petType)
     {
-        // Get the current user's ID so members do not see their own reports.
-        var userid = _userManager.GetUserId(User);
+        var userId =
+            _userManager.GetUserId(User);
 
-        // Start with the existing public Lost & Found rules.
-        // Only approved and active reports are displayed.
-        var lostfounds = _context.LostFounds
-            .Where(l =>
-                l.Status == ApprovalStatus.Approved &&
-                l.RStatus == ReportStatus.Active &&
-                l.UserId != userid)
-            .Include(l => l.User)
-            .Include(l => l.Images)
-            .AsQueryable();
 
-        // Apply the Lost/Found filter when a specific report type was selected.
-        // Enum.TryParse converts "Lost" or "Found" into LostFoundType.
-        if (!string.IsNullOrWhiteSpace(lostFoundType) &&
+        /*
+         * Public Lost & Found rules:
+         *
+         * 1. Report must be approved.
+         * 2. Report itself must still be active.
+         * 3. Logged-in Members do not see their own
+         *    reports in Browse.
+         * 4. Guest-created reports remain visible.
+         * 5. Reports belonging to Inactive Members
+         *    are hidden.
+         */
+        var lostFounds =
+            _context.LostFounds
+
+                .Include(l => l.User)
+                .Include(l => l.Images)
+
+                .Where(l =>
+
+                    l.Status ==
+                    ApprovalStatus.Approved
+
+                    &&
+
+                    l.RStatus ==
+                    ReportStatus.Active
+
+                    &&
+
+                    (
+                        userId == null ||
+                        l.UserId != userId
+                    )
+
+                    &&
+
+                    (
+                        // Guest-created report.
+                        l.UserId == null
+
+                        ||
+
+                        // Registered owner must
+                        // still be active.
+                        (
+                            l.User != null &&
+                            l.User.Status ==
+                            UserStatus.Active
+                        )
+                    )
+                )
+
+                .AsQueryable();
+
+
+        // ---------------------------------------------------------
+        // LOST / FOUND FILTER
+        // ---------------------------------------------------------
+
+        if (!string.IsNullOrWhiteSpace(
+                lostFoundType) &&
             Enum.TryParse<LostFoundType>(
                 lostFoundType,
                 out var selectedReportType))
         {
-            // EF Core filters the query to the selected Lost/Found type.
-            lostfounds = lostfounds.Where(l => l.Type == selectedReportType);
+            lostFounds =
+                lostFounds.Where(
+                    l =>
+                        l.Type ==
+                        selectedReportType
+                );
         }
 
-        // Apply the Dog/Cat filter when a specific pet type was selected.
-        // LostFound uses its own PetType enum, separate from Marketplace's ListPetType.
-        if (!string.IsNullOrWhiteSpace(petType) &&
-            Enum.TryParse<PetType>(petType, out var selectedPetType))
+
+        // ---------------------------------------------------------
+        // PET TYPE FILTER
+        // ---------------------------------------------------------
+
+        if (!string.IsNullOrWhiteSpace(
+                petType) &&
+            Enum.TryParse<PetType>(
+                petType,
+                out var selectedPetType))
         {
-            // Only reports matching the selected pet type are returned.
-            lostfounds = lostfounds.Where(l => l.PetType == selectedPetType);
+            lostFounds =
+                lostFounds.Where(
+                    l =>
+                        l.PetType ==
+                        selectedPetType
+                );
         }
 
-        // Execute the final query after all selected filters have been applied.
-        return View(await lostfounds.ToListAsync());
+
+        return View(
+            await lostFounds.ToListAsync()
+        );
     }
 
-    // GET: LOSTFOUNDS/Details/5
+
+    // =========================================================
+    // PUBLIC - BROWSE DETAILS
+    // =========================================================
+
     [AllowAnonymous]
     public async Task<IActionResult> BrowseDetails(int? id)
     {
@@ -756,22 +1129,94 @@ public class LostFoundsController : Controller
             return NotFound();
         }
 
-        var lostfound = await _context.LostFounds
+
+        // =====================================================
+        // LOAD REPORT
+        // =====================================================
+
+        var lostFound =
+            await _context.LostFounds
                 .Include(l => l.User)
                 .Include(l => l.Images)
-                .FirstOrDefaultAsync(m => m.LostFoundId == id);
+                .FirstOrDefaultAsync(l =>
+                    l.LostFoundId == id
+                );
 
 
-        if (lostfound == null)
+        if (lostFound == null)
         {
             return NotFound();
         }
 
-        return View(lostfound);
-    }
 
-    private bool LostFoundExists(int id)
-    {
-        return _context.LostFounds.Any(e => e.LostFoundId == id);
+        // =====================================================
+        // OWNER REDIRECT
+        // =====================================================
+        //
+        // Guest-created reports have no UserId, so they are
+        // unaffected by this check.
+        //
+        // If a logged-in Member owns this report, send them to
+        // the owner-specific My Posts details page.
+        // =====================================================
+
+        if (
+            User.Identity?.IsAuthenticated == true &&
+            lostFound.UserId != null
+        )
+        {
+            var currentUserId =
+                _userManager.GetUserId(User);
+
+            if (lostFound.UserId == currentUserId)
+            {
+                return RedirectToAction(
+                    "LostFoundDetails",
+                    "MyPosts",
+                    new
+                    {
+                        id = lostFound.LostFoundId
+                    }
+                );
+            }
+        }
+
+
+        // =====================================================
+        // PUBLIC AVAILABILITY CHECK
+        // =====================================================
+
+        if (
+            lostFound.Status != ApprovalStatus.Approved ||
+            lostFound.RStatus != ReportStatus.Active
+        )
+        {
+            return NotFound();
+        }
+
+
+        // =====================================================
+        // REGISTERED OWNER STATUS CHECK
+        // =====================================================
+        //
+        // Guest-created reports are allowed.
+        //
+        // Reports owned by a registered Member are publicly
+        // visible only when that Member is still Active.
+        // =====================================================
+
+        if (
+            lostFound.UserId != null &&
+            (
+                lostFound.User == null ||
+                lostFound.User.Status != UserStatus.Active
+            )
+        )
+        {
+            return NotFound();
+        }
+
+
+        return View(lostFound);
     }
 }
