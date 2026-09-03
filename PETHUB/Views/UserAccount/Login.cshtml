@@ -1,68 +1,275 @@
 ﻿@model PETHUB.ViewModels.LoginViewModel
 
-<div class="container mt-4">
-    <h2>Login</h2>
-    <hr />
+@{
+    ViewData["Title"] = "Login";
+    ViewData["HideSidebar"] = true;
+}
 
-    <form asp-action="Login" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
 
-        <div class="mb-3">
-            <label asp-for="UserNameOrEmail" class="form-label"></label>
-            <input asp-for="UserNameOrEmail" class="form-control" />
-            <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
-        </div>
+<div class="login-page">
 
-        <!-- password field with the see and unsee password -->
-        <div class="mb-3">
-            <label asp-for="Password" class="form-label"></label>
-            <div class="input-group">
+    <!-- =========================================================
+         LEFT SIDE - BRAND / PET VISUAL
+    ========================================================== -->
+    <div class="login-left">
 
-                <input asp-for="Password"
-                       type="password"
-                       class="form-control"
-                       id="loginPassword" />
+        <div class="login-left-overlay"></div>
 
-                <button type="button"
-                        class="password-toggle"
-                        data-password-target="loginPassword"
-                        aria-label="Show password">
+        <div class="login-left-content">
 
-                    <i data-lucide="eye"></i>
+            <div class="login-brand">
+                <img src="~/images/PETHUB-LOGO.png"
+                     alt="PetHub Logo"
+                     class="login-brand-logo" />
 
-                </button>
+                <span class="login-brand-text">
+                    PetHub
+                </span>
+            </div>
+
+            <div class="login-hero-text">
+                <h1>
+                    Find loving homes,
+                    reunite lost pets,
+                    and connect with the
+                    <span>PetHub community.</span>
+                </h1>
+
+                <p>
+                    A safe place to browse listings, report lost pets,
+                    and help animals find their people.
+                </p>
+            </div>
+
+            <div class="login-pet-gallery">
+
+                <div class="pet-card pet-card-large">
+                    <img src="~/images/login-pet-1.jpg" alt="Pet 1" />
+                </div>
+
+                <div class="pet-card pet-card-small top">
+                    <img src="~/images/login-pet-2.jpg" alt="Pet 2" />
+                </div>
+
+                <div class="pet-card pet-card-small bottom">
+                    <img src="~/images/login-pet-3.jpg" alt="Pet 3" />
+                </div>
 
             </div>
-            <span asp-validation-for="Password"
-                  class="text-danger"></span>
-        </div>
-
-        <div class="mb-3 d-flex justify-content-between align-items-center">
-
-        <div class="form-check">
-            <input asp-for="RememberMe" class="form-check-input" />
-            <label asp-for="RememberMe" class="form-check-label"></label>
-        </div>
-
-        <a asp-action="ForgotPassword"
-           class="text-primary text-decoration-underline">
-            Forgot your password?
-        </a>
 
         </div>
+    </div>
 
-        <button type="submit" class="btn btn-success">Login</button>
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
 
-        <div class="mb-3">
-            <p class="mt-3">
-                Don't have an account?
-                <a asp-controller="UserAccount"
-                   asp-action="Register"
-                   class="text-primary text-decoration-underline">
-                    Register here
+    <!-- =========================================================
+         RIGHT SIDE - LOGIN FORM
+    ========================================================== -->
+    <div class="login-right">
+
+        <div class="login-form-wrapper">
+
+            <div class="login-form-header">
+                <img src="~/images/PETHUB-LOGO.png"
+                     alt="PetHub Logo"
+                     class="login-form-logo" />
+
+                <h2>
+                    Log in to PetHub
+                </h2>
+
+                <p>
+                    Welcome back! Please enter your account details.
+                </p>
+            </div>
+
+
+            <form asp-action="Login" method="post" class="login-form">
+
+                @Html.AntiForgeryToken()
+
+                <div id="loginModelErrors"
+                     asp-validation-summary="ModelOnly"
+                     class="d-none">
+                </div>
+
+
+                <!-- =====================================================
+                     USERNAME / EMAIL
+                ====================================================== -->
+                <div class="floating-field">
+                    <input asp-for="UserNameOrEmail"
+                           class="floating-input"
+                           placeholder=" "
+                           autocomplete="username" />
+
+                    <label asp-for="UserNameOrEmail" class="floating-label">
+                        Username or Email
+                    </label>
+
+                    <span asp-validation-for="UserNameOrEmail"
+                          class="text-danger field-error">
+                    </span>
+                </div>
+
+
+                <!-- =====================================================
+                     PASSWORD
+                ====================================================== -->
+                <div class="floating-field password-field">
+
+                    <input asp-for="Password"
+                           type="password"
+                           class="floating-input password-input"
+                           id="loginPassword"
+                           placeholder=" "
+                           autocomplete="current-password" />
+
+                    <label asp-for="Password" class="floating-label">
+                        Password
+                    </label>
+
+                    <button type="button"
+                            class="password-toggle"
+                            data-password-target="loginPassword"
+                            aria-label="Show password">
+
+                        <i data-lucide="eye"></i>
+                    </button>
+
+                    <span asp-validation-for="Password"
+                          class="text-danger field-error">
+                    </span>
+                </div>
+
+
+                <!-- =====================================================
+                     OPTIONS
+                ====================================================== -->
+                <div class="login-options">
+
+                    <div class="form-check remember-me-wrap">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label">
+                            Remember Me
+                        </label>
+                    </div>
+
+                    <a asp-action="ForgotPassword" class="forgot-link">
+                        Forgot password?
+                    </a>
+
+                </div>
+
+
+                <!-- =====================================================
+                     BUTTONS
+                ====================================================== -->
+                <button type="submit" class="login-btn">
+                    Log in
+                </button>
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="back-home-link">
+
+                    <i data-lucide="arrow-left"></i>
+
+                    Back to Home
                 </a>
-            </p>
+
+
+                <!-- =====================================================
+                     REGISTER
+                ====================================================== -->
+                <div class="register-link-wrap">
+                    <span>Don't have an account?</span>
+                    <a asp-controller="UserAccount" asp-action="Register">
+                        Create new account
+                    </a>
+                </div>
+
+            </form>
+
         </div>
-    </form>
+
+    </div>
+
 </div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                // =============================================
+                // LOGIN MODEL ERRORS
+                // =============================================
+
+                const errorContainer =
+                    document.getElementById(
+                        "loginModelErrors"
+                    );
+
+
+                if (!errorContainer) {
+                    return;
+                }
+
+
+                const errorItems =
+                    errorContainer.querySelectorAll(
+                        "li"
+                    );
+
+
+                if (errorItems.length === 0) {
+                    return;
+                }
+
+
+                const messages =
+                    Array.from(errorItems)
+                        .map(function (item) {
+
+                            return item.textContent.trim();
+
+                        })
+                        .filter(function (message) {
+
+                            return message !== "";
+
+                        });
+
+
+                if (messages.length === 0) {
+                    return;
+                }
+
+
+                // =============================================
+                // SHOW SHARED PETHUB MODAL
+                // =============================================
+
+                if (
+                    typeof window.showSystemModal ===
+                    "function"
+                ) {
+
+                    window.showSystemModal({
+                        type: "error",
+                        title: "Unable to log in",
+                        message: messages.join("\n"),
+                        buttonText: "Okay"
+                    });
+
+                }
+
+            }
+        );
+    </script>
+}

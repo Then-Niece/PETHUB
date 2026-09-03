@@ -2,182 +2,234 @@
 
 @{
     ViewData["Title"] = "Administrator Account Setup";
-
+    ViewData["HideNavbar"] = true;
+    ViewData["HideSidebar"] = true;
 }
 
-<div class="container-fluid py-4">
+<link rel="stylesheet"
+      href="~/css/admin-setup.css"
+      asp-append-version="true" />
 
-    <div class="admin-crud-page">
+<div class="admin-setup-page">
 
-        <div class="crud-card">
+    <div class="admin-setup-card">
 
-            <div class="crud-header">
-                <h2>Complete Administrator Account</h2>
+        <div class="admin-setup-header">
 
-                <p>
-                    You've been invited to become a PETHUB administrator.
-                    Please enter your information below to complete your account.
-                </p>
+            <div class="admin-setup-brand">
+                <div class="admin-setup-logo">
+                    <i data-lucide="shield-check"></i>
+                </div>
+
+                <div>
+                    <h1>Complete administrator account</h1>
+
+                    <p>
+                        You've been invited to become a PETHUB administrator.
+                        Complete the details below to finish setting up your account.
+                    </p>
+                </div>
             </div>
 
-            <form asp-action="AdminSetup"
-                  asp-controller="UserAccount"
-                  method="post">
+        </div>
 
-                <div asp-validation-summary="ModelOnly"
-                     class="text-danger px-4 pt-3"></div>
+        <form asp-action="AdminSetup"
+              asp-controller="UserAccount"
+              method="post"
+              class="admin-setup-form">
 
-                <input type="hidden"
-                       name="userId"
-                       value="@ViewBag.UserId" />
+            @Html.AntiForgeryToken()
 
-                <input type="hidden"
-                       name="token"
-                       value="@ViewBag.Token" />
+            <input type="hidden"
+                   name="userId"
+                   value="@ViewBag.UserId" />
 
-                <div class="crud-content-single">
+            <input type="hidden"
+                   name="token"
+                   value="@ViewBag.Token" />
 
-                    <div class="form-grid">
+            <div asp-validation-summary="ModelOnly"
+                 class="admin-setup-summary">
+            </div>
 
-                        <!-- EMAIL -->
+            <div class="admin-setup-grid">
 
-                        <div class="form-group">
+                <!-- EMAIL -->
+                <div class="admin-setup-field full">
 
-                            <label asp-for="Email">
-                                Email Address
-                            </label>
+                    <label asp-for="Email">
+                        Email Address
+                    </label>
 
-                            <input asp-for="Email"
-                                   class="form-control custom-input readonly-input"
-                                   readonly />
+                    <input asp-for="Email"
+                           class="admin-setup-input readonly"
+                           readonly />
 
-                            <span asp-validation-for="Email"
-                                  class="text-danger"></span>
+                    <span asp-validation-for="Email"
+                          class="admin-setup-error">
+                    </span>
 
-                        </div>
-
-
-                        <!-- FIRST NAME -->
-
-                        <div class="form-group">
-
-                            <label asp-for="FirstName">
-                                First Name
-                            </label>
-
-                            <input asp-for="FirstName"
-                                   class="form-control custom-input"
-                                   placeholder="Enter your first name" />
-
-                            <span asp-validation-for="FirstName"
-                                  class="text-danger"></span>
-
-                        </div>
+                </div>
 
 
-                        <!-- LAST NAME -->
+                <!-- FIRST NAME -->
+                <div class="admin-setup-field">
 
-                        <div class="form-group">
+                    <label asp-for="FirstName">
+                        First Name
+                    </label>
 
-                            <label asp-for="LastName">
-                                Last Name
-                            </label>
+                    <input asp-for="FirstName"
+                           class="admin-setup-input"
+                           placeholder="Enter your first name" />
 
-                            <input asp-for="LastName"
-                                   class="form-control custom-input"
-                                   placeholder="Enter your last name" />
+                    <span asp-validation-for="FirstName"
+                          class="admin-setup-error">
+                    </span>
 
-                            <span asp-validation-for="LastName"
-                                  class="text-danger"></span>
-
-                        </div>
-
-
-                        <!-- USERNAME -->
-
-                        <div class="form-group">
-
-                            <label asp-for="UserName">
-                                Username
-                            </label>
-
-                            <input asp-for="UserName"
-                                   class="form-control custom-input"
-                                   placeholder="Choose a username" />
-
-                            <span asp-validation-for="UserName"
-                                  class="text-danger"></span>
-
-                        </div>
+                </div>
 
 
-                        <!-- CONTACT NUMBER -->
+                <!-- LAST NAME -->
+                <div class="admin-setup-field">
 
-                        <div class="form-group">
+                    <label asp-for="LastName">
+                        Last Name
+                    </label>
 
-                            <label asp-for="ContactNumber">
-                                Contact Number
-                            </label>
+                    <input asp-for="LastName"
+                           class="admin-setup-input"
+                           placeholder="Enter your last name" />
 
-                            <input asp-for="ContactNumber"
-                                   class="form-control custom-input"
-                                   placeholder="11-digit contact number"
-                                   maxlength="11" />
+                    <span asp-validation-for="LastName"
+                          class="admin-setup-error">
+                    </span>
 
-                            <span asp-validation-for="ContactNumber"
-                                  class="text-danger"></span>
-
-                        </div>
+                </div>
 
 
-                        <!-- PASSWORD -->
+                <!-- USERNAME -->
+                <div class="admin-setup-field">
 
-                        <div class="form-group">
+                    <label asp-for="UserName">
+                        Username
+                    </label>
 
-                            <label asp-for="Password">
-                                Password
-                            </label>
+                    <input asp-for="UserName"
+                           class="admin-setup-input"
+                           placeholder="Choose a username" />
 
-                            <div class="input-group">
+                    <span asp-validation-for="UserName"
+                          class="admin-setup-error">
+                    </span>
 
-                                <input asp-for="Password"
-                                       type="password"
-                                       class="form-control"
-                                       id="adminPassword"
-                                       placeholder="Create your password" />
+                </div>
 
-                                <button class="password-toggle"
-                                        type="button"
-                                        data-password-target="adminPassword"
-                                        aria-label="Show password">
 
-                                    <i data-lucide="eye"></i>
+                <!-- CONTACT NUMBER -->
+                <div class="admin-setup-field">
 
-                                </button>
+                    <label asp-for="ContactNumber">
+                        Contact Number
+                    </label>
 
-                            </div>
+                    <input asp-for="ContactNumber"
+                           class="admin-setup-input"
+                           placeholder="11-digit contact number"
+                           maxlength="11"
+                           inputmode="numeric" />
 
-                            <span asp-validation-for="Password"
-                                  class="text-danger"></span>
+                    <span asp-validation-for="ContactNumber"
+                          class="admin-setup-error">
+                    </span>
 
-                        </div>
+                </div>
+
+
+                <!-- PASSWORD -->
+                <div class="admin-setup-field full">
+
+                    <label asp-for="Password">
+                        Password
+                    </label>
+
+                    <div class="admin-password-wrapper">
+
+                        <input asp-for="Password"
+                               type="password"
+                               class="admin-setup-input password-input"
+                               id="adminPassword"
+                               placeholder="Create your password"
+                               autocomplete="new-password" />
+
+                        <button class="password-toggle admin-password-toggle"
+                                type="button"
+                                data-password-target="adminPassword"
+                                aria-label="Show password">
+
+                            <i data-lucide="eye"></i>
+
+                        </button>
 
                     </div>
 
-                </div>
-
-                <div class="crud-footer">
-
-                    <button type="submit"
-                            class="btn-primary-action">
-                        Create Administrator Account
-                    </button>
+                    <span asp-validation-for="Password"
+                          class="admin-setup-error">
+                    </span>
 
                 </div>
 
-            </form>
+                <div class="admin-setup-field full">
 
-        </div>
+                    <label asp-for="ConfirmPassword">
+                        Confirm Password
+                    </label>
+
+                    <div class="admin-password-wrapper">
+
+                        <input asp-for="ConfirmPassword"
+                               type="password"
+                               class="admin-setup-input password-input"
+                               id="adminConfirmPassword"
+                               placeholder="Re-enter your password"
+                               autocomplete="new-password" />
+
+                        <button class="password-toggle admin-password-toggle"
+                                type="button"
+                                data-password-target="adminConfirmPassword"
+                                aria-label="Show password">
+
+                            <i data-lucide="eye"></i>
+
+                        </button>
+
+                    </div>
+
+                    <span asp-validation-for="ConfirmPassword"
+                          class="admin-setup-error">
+                    </span>
+
+                </div>
+
+
+            </div>
+
+            <div class="admin-setup-footer">
+
+                <button type="submit"
+                        class="admin-setup-submit">
+
+                    Complete Account Setup
+
+                </button>
+
+                <p class="admin-setup-note">
+                    This invitation is intended only for the invited administrator.
+                </p>
+
+            </div>
+
+        </form>
 
     </div>
 

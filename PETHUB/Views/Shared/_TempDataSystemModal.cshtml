@@ -1,0 +1,70 @@
+﻿@using System.Text.Json
+
+@{
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
+    var warningMessage = TempData["WarningMessage"] as string;
+    var infoMessage = TempData["InfoMessage"] as string;
+}
+
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            window.showSystemModal({
+                type: "error",
+                title: "Something went wrong",
+                message: @Html.Raw(JsonSerializer.Serialize(errorMessage)),
+                buttonText: "Okay"
+            });
+
+        });
+    </script>
+}
+else if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            window.showSystemModal({
+                type: "success",
+                title: "Success",
+                message: @Html.Raw(JsonSerializer.Serialize(successMessage)),
+                buttonText: "Okay"
+            });
+
+        });
+    </script>
+}
+else if (!string.IsNullOrWhiteSpace(warningMessage))
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            window.showSystemModal({
+                type: "warning",
+                title: "Warning",
+                message: @Html.Raw(JsonSerializer.Serialize(warningMessage)),
+                buttonText: "Okay"
+            });
+
+        });
+    </script>
+}
+else if (!string.IsNullOrWhiteSpace(infoMessage))
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            window.showSystemModal({
+                type: "info",
+                title: "Notice",
+                message: @Html.Raw(JsonSerializer.Serialize(infoMessage)),
+                buttonText: "Okay"
+            });
+
+        });
+    </script>
+}

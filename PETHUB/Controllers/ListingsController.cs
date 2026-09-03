@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
 using PETHUB.Services;
-using System.Security.Claims;
 using PETHUB.ViewModels;
+using System.Security.Claims;
 
 namespace PETHUB.Controllers
 {
@@ -18,7 +17,24 @@ namespace PETHUB.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly NotificationService _notificationService;
         private readonly AuditLogService _auditLogService;
-        public ListingsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationService notificationService, AuditLogService auditLogService)
+
+
+        // =========================================================
+        // CONSTRUCTOR
+        // =========================================================
+        //
+        // Combines the services required by both branches:
+        // - Database access
+        // - ASP.NET Identity
+        // - Notifications
+        // - Audit logging
+        // =========================================================
+
+        public ListingsController(
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            NotificationService notificationService,
+            AuditLogService auditLogService)
         {
             _context = context;
             _userManager = userManager;
@@ -26,320 +42,368 @@ namespace PETHUB.Controllers
             _auditLogService = auditLogService;
         }
 
+
+        // =========================================================
+        // ADMIN - MARKETPLACE MANAGEMENT
+        // =========================================================
+
         // GET: Listings
-        // Supports approval status, Marketplace listing type, and pet type filters.
+        //
+        // Displays Marketplace listings for administrators.
+        // Supports:
+        // - Approval status
+        // - Listing type
+        // - Pet type
+        // - Pagination
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(
-         string? status,
-         string? listingType,
-         string? petType,
-         int page = 1)
+            string? status,
+            string? listingType,
+            string? petType,
+            int page = 1)
         {
-            // =========================================================
-            // PAGINATION SETTINGS
-            // =========================================================
-
             const int pageSize = 10;
 
-            // Prevent invalid page numbers.
             if (page < 1)
             {
                 page = 1;
             }
 
 
-            // =========================================================
-            // EXISTING MARKETPLACE QUERY
-            // =========================================================
-
-            // Start with all Marketplace listings and load the related
-            // member and image data required by the existing approval view.
+            // Start with all Marketplace listings.
             var listings = _context.Listings
                 .Include(l => l.Member)
                 .Include(l => l.Images)
                 .AsQueryable();
 
 
-            // =========================================================
-            // EXISTING APPROVAL-STATUS FILTER
-            // =========================================================
+            // -----------------------------------------------------
+            // APPROVAL STATUS FILTER
+            // -----------------------------------------------------
 
-            // Apply the existing approval-status filter.
-            // ListApprovalStatus is the enum used by Marketplace listings.
             if (!string.IsNullOrWhiteSpace(status) &&
-                Enum.TryParse<ListApprovalStatus>(status, out var selectedStatus))
+                Enum.TryParse<ListApprovalStatus>(
+                    status,
+                    out var selectedStatus))
             {
-                // EF Core translates this comparison into a database WHERE condition.
-                listings = listings.Where(l => l.Status == selectedStatus);
+                listings = listings.Where(
+                    l => l.Status == selectedStatus);
             }
 
 
-            // =========================================================
-            // EXISTING LISTING-TYPE FILTER
-            // =========================================================
+            // -----------------------------------------------------
+            // LISTING TYPE FILTER
+            // -----------------------------------------------------
 
-            // Apply the Marketplace listing-type filter.
-            // This separates For Adoption from For Sale listings.
             if (!string.IsNullOrWhiteSpace(listingType) &&
-                Enum.TryParse<ListType>(listingType, out var selectedListingType))
+                Enum.TryParse<ListType>(
+                    listingType,
+                    out var selectedListingType))
             {
-                // Filter the query using the Listing.Type property.
-                listings = listings.Where(l => l.Type == selectedListingType);
+                listings = listings.Where(
+                    l => l.Type == selectedListingType);
             }
 
 
-            // =========================================================
-            // EXISTING PET-TYPE FILTER
-            // =========================================================
+            // -----------------------------------------------------
+            // PET TYPE FILTER
+            // -----------------------------------------------------
 
-            // Apply the Dog/Cat filter.
-            // Marketplace Listing uses the ListPetType enum.
             if (!string.IsNullOrWhiteSpace(petType) &&
-                Enum.TryParse<ListPetType>(petType, out var selectedPetType))
+                Enum.TryParse<ListPetType>(
+                    petType,
+                    out var selectedPetType))
             {
-                // Filter the query using the Listing.PetType property.
-                listings = listings.Where(l => l.PetType == selectedPetType);
+                listings = listings.Where(
+                    l => l.PetType == selectedPetType);
             }
 
 
-            // =========================================================
+            // -----------------------------------------------------
             // PAGINATION
-            // =========================================================
+            // -----------------------------------------------------
 
-            // Count the listings AFTER all existing filters
-            // have been applied.
-            var totalItems = await listings.CountAsync();
+            var totalItems =
+                await listings.CountAsync();
 
+            var totalPages =
+                (int)Math.Ceiling(
+                    totalItems / (double)pageSize);
 
-            // Prevent the requested page from going beyond
-            // the available number of pages.
-            var totalPages = (int)Math.Ceiling(
-                totalItems / (double)pageSize);
-
-            if (totalPages > 0 && page > totalPages)
+            if (totalPages > 0 &&
+                page > totalPages)
             {
                 page = totalPages;
             }
 
 
-            // =========================================================
-            // GET CURRENT PAGE
-            // =========================================================
-
-            // Get only the 10 listings needed for the current page.
-            var pagedListings = await listings
-                .OrderByDescending(l => l.DatePosted)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var pagedListings =
+                await listings
+                    .OrderByDescending(
+                        l => l.DatePosted)
+                    .Skip(
+                        (page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
 
 
-            // =========================================================
-            // CREATE PAGED RESULT
-            // =========================================================
+            var result =
+                new PaginationViewModel<Listing>
+                {
+                    Items = pagedListings,
+                    CurrentPage = page,
+                    PageSize = pageSize,
+                    TotalItems = totalItems
+                };
 
-            var result = new PaginationViewModel<Listing>
-            {
-                Items = pagedListings,
-                CurrentPage = page,
-                PageSize = pageSize,
-                TotalItems = totalItems
-            };
-
-
-            // =========================================================
-            // RETURN VIEW
-            // =========================================================
 
             return View(result);
         }
 
-        // GET: Marketplace Listing for Client and Member.
-        // listingType filters Adoption/Sale while petType filters Dog/Cat.
+
+        // =========================================================
+        // PUBLIC / MEMBER - MARKETPLACE
+        // =========================================================
+
+        // GET: Listings/Marketplace
+        //
+        // Guests can browse available Marketplace listings.
+        //
+        // Logged-in Members do not see their own listings here
+        // because they manage those through My Posts.
+        //
+        // Listings owned by deactivated accounts are also hidden.
         [AllowAnonymous]
         public async Task<IActionResult> Marketplace(
             string? listingType,
             string? petType,
             int page = 1)
         {
-            // =========================================================
-            // PAGINATION SETTINGS
-            // =========================================================
-
             const int pageSize = 12;
 
-            // Prevent invalid page numbers.
             if (page < 1)
             {
                 page = 1;
             }
 
 
-            // =========================================================
-            // GET CURRENT USER
-            // =========================================================
-
-            // Get the current user's ID so members do not see their own listings.
-            // For guests, GetUserId returns null and all public listings remain available.
-            var memberid = _userManager.GetUserId(User);
+            var memberId =
+                _userManager.GetUserId(User);
 
 
-            // =========================================================
-            // EXISTING MARKETPLACE QUERY
-            // =========================================================
+            var listings =
+                _context.Listings
+                    .Include(l => l.Member)
+                    .Include(l => l.Images)
+                    .Where(l =>
+                        l.Status ==
+                            ListApprovalStatus.Approved
+                        &&
+                        l.ListStatus ==
+                            ListingStatus.Pending
+                        &&
+                        l.MemberId != memberId
+                        &&
+                        l.Member != null
+                        &&
+                        l.Member.Status ==
+                            UserStatus.Active)
+                    .AsQueryable();
 
-            // Start with the existing public Marketplace rules.
-            // Only approved and currently pending/available listings are shown.
-            var listings = _context.Listings
-                .Include(l => l.Member)
-                .Include(l => l.Images)
-                .Where(l =>
-                    l.Status == ListApprovalStatus.Approved &&
-                    l.ListStatus == ListingStatus.Pending &&
-                    l.MemberId != memberid)
-                .AsQueryable();
 
+            // -----------------------------------------------------
+            // LISTING TYPE FILTER
+            // -----------------------------------------------------
 
-            // =========================================================
-            // EXISTING LISTING TYPE FILTER
-            // =========================================================
-
-            // Apply the Listing Type filter when a specific type was selected.
-            // Enum.TryParse converts "For_Adoption" or "For_Sale" from the URL
-            // into the corresponding ListType enum value.
             if (!string.IsNullOrWhiteSpace(listingType) &&
                 Enum.TryParse<ListType>(
                     listingType,
                     out var selectedListingType))
             {
-                // EF Core translates this comparison into a database WHERE condition.
-                listings = listings.Where(
-                    l => l.Type == selectedListingType);
+                listings =
+                    listings.Where(
+                        l => l.Type ==
+                            selectedListingType);
             }
 
 
-            // =========================================================
-            // EXISTING PET TYPE FILTER
-            // =========================================================
+            // -----------------------------------------------------
+            // PET TYPE FILTER
+            // -----------------------------------------------------
 
-            // Apply the Pet Type filter when Dog or Cat was selected.
-            // The Marketplace Listing model uses the ListPetType enum.
             if (!string.IsNullOrWhiteSpace(petType) &&
                 Enum.TryParse<ListPetType>(
                     petType,
                     out var selectedPetType))
             {
-                // Only listings matching the selected Dog/Cat type are returned.
-                listings = listings.Where(
-                    l => l.PetType == selectedPetType);
+                listings =
+                    listings.Where(
+                        l => l.PetType ==
+                            selectedPetType);
             }
 
 
-            // =========================================================
+            // -----------------------------------------------------
             // PAGINATION
-            // =========================================================
+            // -----------------------------------------------------
 
-            // Count the results AFTER all selected filters have been applied.
-            // Example:
-            // 48 total listings
-            // → For Sale filter
-            // → 19 matching listings
-            //
-            // TotalItems will therefore be 19.
-            var totalItems = await listings.CountAsync();
+            var totalItems =
+                await listings.CountAsync();
 
+            var totalPages =
+                (int)Math.Ceiling(
+                    totalItems / (double)pageSize);
 
-            // Calculate the total number of pages.
-            var totalPages = (int)Math.Ceiling(
-                totalItems / (double)pageSize);
-
-
-            // Prevent the requested page from going beyond
-            // the available number of pages.
-            if (totalPages > 0 && page > totalPages)
+            if (totalPages > 0 &&
+                page > totalPages)
             {
                 page = totalPages;
             }
 
 
-            // =========================================================
-            // GET CURRENT PAGE
-            // =========================================================
-
-            // Retrieve only the listings needed for the current page.
-            // Marketplace displays 12 listings per page.
-            var pagedListings = await listings
-                .OrderByDescending(l => l.DatePosted)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var pagedListings =
+                await listings
+                    .OrderByDescending(
+                        l => l.DatePosted)
+                    .Skip(
+                        (page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
 
 
-            // =========================================================
-            // CREATE PAGED RESULT
-            // =========================================================
+            var result =
+                new PaginationViewModel<Listing>
+                {
+                    Items = pagedListings,
+                    CurrentPage = page,
+                    PageSize = pageSize,
+                    TotalItems = totalItems
+                };
 
-            var result = new PaginationViewModel<Listing>
-            {
-                Items = pagedListings,
-                CurrentPage = page,
-                PageSize = pageSize,
-                TotalItems = totalItems
-            };
-
-
-            // =========================================================
-            // RETURN TO MARKETPLACE VIEW
-            // =========================================================
 
             return View(result);
         }
 
-        // GET: Listings/Details/AdminView
+
+        // =========================================================
+        // ADMIN - LISTING DETAILS
+        // =========================================================
+
+        // GET: Listings/Details/5
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(
+            int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var listing = await _context.Listings
-                .Include(l => l.Member)    // keep user info
-                .Include(l => l.Images)  // load related images
-                .FirstOrDefaultAsync(m => m.ListingId == id);
+
+            var listing =
+                await _context.Listings
+                    .Include(l => l.Member)
+                    .Include(l => l.Images)
+                    .FirstOrDefaultAsync(
+                        l => l.ListingId == id);
+
+
             if (listing == null)
             {
                 return NotFound();
             }
 
+
             return View(listing);
         }
 
 
-        // GET: Listings/Details/For Client and Member
+        // =========================================================
+        // PUBLIC / MEMBER - MARKETPLACE DETAILS
+        // =========================================================
+
+        // GET: Listings/MarketplaceDetails/5
         [AllowAnonymous]
-        public async Task<IActionResult> MarketplaceDetails(int? id)
+        public async Task<IActionResult> MarketplaceDetails(
+            int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var listing = await _context.Listings
-                .Include(l => l.Member)    // keep user info
-                .Include(l => l.Images)  // load related images
-                .FirstOrDefaultAsync(m => m.ListingId == id);
+
+            var listing =
+                await _context.Listings
+                    .Include(l => l.Member)
+                    .Include(l => l.Images)
+                    .FirstOrDefaultAsync(
+                        l => l.ListingId == id);
+
 
             if (listing == null)
             {
                 return NotFound();
             }
 
+
+            // -----------------------------------------------------
+            // OWNER REDIRECT
+            // -----------------------------------------------------
+            //
+            // Owners should manage their listing through My Posts
+            // instead of viewing the public version.
+            // -----------------------------------------------------
+
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                var currentUserId =
+                    _userManager.GetUserId(User);
+
+                if (listing.MemberId ==
+                    currentUserId)
+                {
+                    return RedirectToAction(
+                        "MarketplaceDetails",
+                        "MyPosts",
+                        new
+                        {
+                            id = listing.ListingId
+                        });
+                }
+            }
+
+
+            // -----------------------------------------------------
+            // PUBLIC AVAILABILITY
+            // -----------------------------------------------------
+
+            if (
+                listing.Status !=
+                    ListApprovalStatus.Approved
+                ||
+                listing.ListStatus !=
+                    ListingStatus.Pending
+                ||
+                listing.Member == null
+                ||
+                listing.Member.Status !=
+                    UserStatus.Active)
+            {
+                return NotFound();
+            }
+
+
             return View(listing);
         }
+
+
+        // =========================================================
+        // MEMBER - CREATE LISTING
+        // =========================================================
 
         // GET: Listings/Create
+        [HttpGet]
         [Authorize(Roles = "Member")]
         public IActionResult Create()
         {
@@ -348,31 +412,93 @@ namespace PETHUB.Controllers
 
 
         // POST: Listings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Member")]
-        public async Task<IActionResult> Create(Listing listing, List<IFormFile> ImageFiles)
+        public async Task<IActionResult> Create(
+            Listing listing,
+            List<IFormFile> ImageFiles)
         {
             if (!ModelState.IsValid)
             {
                 return View(listing);
             }
 
-            listing.DatePosted = DateTime.Now;
-            listing.MemberId = _userManager.GetUserId(User);
 
-            _context.Add(listing);
+            // -----------------------------------------------------
+            // PREPARE AND SAVE LISTING
+            // -----------------------------------------------------
+
+            listing.DatePosted =
+                DateTime.Now;
+
+            listing.MemberId =
+                _userManager.GetUserId(User);
+
+            _context.Listings.Add(listing);
+
             await _context.SaveChangesAsync();
 
-            // Retrieve the Member who successfully created the Marketplace post.
-            // UserManager returns the authenticated ApplicationUser associated
-            // with the current login session.
-            var currentUser = await _userManager.GetUserAsync(User);
 
-            // Record the successful post creation only after the listing
-            // has been successfully saved to the database.
+            string? imagePath = null;
+
+
+            // -----------------------------------------------------
+            // SAVE IMAGES
+            // -----------------------------------------------------
+
+            if (ImageFiles != null &&
+                ImageFiles.Count > 0)
+            {
+                try
+                {
+                    var savedImages =
+                        await ImageHelper.SaveImagesAsync(
+                            ImageFiles,
+                            listing.ListingId,
+                            (id, path) =>
+                                new ListingImage
+                                {
+                                    ListingId = id,
+                                    ImagePath = path
+                                },
+                            "marketplace");
+
+
+                    _context.ListingImages
+                        .AddRange(savedImages);
+
+                    await _context.SaveChangesAsync();
+
+
+                    imagePath =
+                        savedImages
+                            .FirstOrDefault()
+                            ?.ImagePath;
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        "Some images could not be uploaded.");
+
+                    return View(listing);
+                }
+            }
+
+
+            // -----------------------------------------------------
+            // AUDIT LOG
+            // -----------------------------------------------------
+            //
+            // Log only after the listing and its images have
+            // successfully completed the normal save process.
+            // -----------------------------------------------------
+
+            var currentUser =
+                await _userManager
+                    .GetUserAsync(User);
+
             if (currentUser != null)
             {
                 await _auditLogService.LogAsync(
@@ -380,200 +506,263 @@ namespace PETHUB.Controllers
                     "Created Post");
             }
 
-            string? imagePath = null;
 
-            if (ImageFiles != null && ImageFiles.Count > 0)
-            {
-                try
-                {
-                    var savedImages = await ImageHelper.SaveImagesAsync(
-                        ImageFiles,
-                        listing.ListingId,
-                        (id, path) => new ListingImage { ListingId = id, ImagePath = path },
-                        "marketplace"
-                    );
+            // -----------------------------------------------------
+            // NOTIFY ADMINISTRATORS
+            // -----------------------------------------------------
 
-                    _context.AddRange(savedImages);
-                    await _context.SaveChangesAsync();
-
-                    // Get the path of the first saved image for notification purposes
-                    imagePath = savedImages
-                    .FirstOrDefault()
-                    ?.ImagePath;
-                }
-
-                catch (Exception)
-                {
-                    ModelState.AddModelError("", "Some images could not be uploaded.");
-                    return View(listing);
-                }
-
-            }
-
-            //Get all admins
-            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+            var admins =
+                await _userManager
+                    .GetUsersInRoleAsync("Admin");
 
 
-            // Determine notification content based on listing type
             string notificationTitle;
             string notificationMessage;
 
-            if (listing.Type == ListType.For_Adoption)
+
+            if (listing.Type ==
+                ListType.For_Adoption)
             {
-                notificationTitle = "Adoption Request";
-                notificationMessage = "A new Adoption Request is waiting for Approval.";
+                notificationTitle =
+                    "Adoption Request";
+
+                notificationMessage =
+                    "A new Adoption Request is waiting for Approval.";
             }
             else
             {
-                notificationTitle = "Marketplace Listing Request";
-                notificationMessage = "A new Marketplace Listing Request is waiting for Approval.";
+                notificationTitle =
+                    "Marketplace Listing Request";
+
+                notificationMessage =
+                    "A new Marketplace Listing Request is waiting for Approval.";
             }
 
-            // Send notification to all admins
+
             foreach (var admin in admins)
             {
-                await _notificationService.CreateNotificationAsync(
-                    admin.Id,
-                    NotificationType.NewMarketplaceSubmission,
-                    notificationTitle,
-                    notificationMessage,
-                    imagePath,
-                    "/Listings/Details/" + listing.ListingId,
-                    listingId: listing.ListingId
-                );
+                await _notificationService
+                    .CreateNotificationAsync(
+                        admin.Id,
+                        NotificationType
+                            .NewMarketplaceSubmission,
+                        notificationTitle,
+                        notificationMessage,
+                        imagePath,
+                        "/Listings/Details/" +
+                            listing.ListingId,
+                        listingId:
+                            listing.ListingId);
             }
 
-            return RedirectToAction(nameof(Marketplace));
+
+            TempData["SuccessMessage"] =
+                "Your Marketplace listing has been submitted for approval.";
+
+
+            return RedirectToAction(
+                nameof(Marketplace));
         }
 
 
-
-
+        // =========================================================
+        // MEMBER - EDIT LISTING
+        // =========================================================
 
         // GET: Listings/Edit/5
+        [HttpGet]
         [Authorize(Roles = "Member")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(
+            int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var listing = await _context.Listings
-                .Include(l => l.Images)
-                .Include(l => l.Member)
-                .FirstOrDefaultAsync(l => l.ListingId == id);
+
+            var listing =
+                await _context.Listings
+                    .Include(l => l.Images)
+                    .Include(l => l.Member)
+                    .FirstOrDefaultAsync(
+                        l => l.ListingId == id);
+
 
             if (listing == null)
             {
                 return NotFound();
             }
 
-            // Get the ID of the currently logged-in user.
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Only the owner (or an admin) is allowed to edit this listing.
-            if (!User.IsInRole("Admin") && listing.MemberId != userId)
+            var userId =
+                User.FindFirstValue(
+                    ClaimTypes.NameIdentifier);
+
+
+            // Members may edit only their own listings.
+            if (listing.MemberId != userId)
             {
                 return Forbid();
             }
 
-            // Members are NOT allowed to edit an approved listing.
-            // Pending and Rejected listings may still be edited.
-            // Admins are exempt from this restriction.
-            if (!User.IsInRole("Admin") &&
-                listing.Status == ListApprovalStatus.Approved)
+
+            // Approved listings cannot be edited.
+            if (listing.Status ==
+                ListApprovalStatus.Approved)
             {
                 return Forbid();
             }
+
 
             return View(listing);
         }
 
 
         // POST: Listings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Member")]
-        public async Task<IActionResult> Edit(int id, Listing listing, List<IFormFile> ImageFiles, List<int> DeletedImageIds)
+        public async Task<IActionResult> Edit(
+            int id,
+            Listing listing,
+            List<IFormFile> ImageFiles,
+            List<int> DeletedImageIds)
         {
             if (id != listing.ListingId)
             {
                 return NotFound();
             }
 
-            var existingListing = await _context.Listings
-                .Include(l => l.Images)
-                .FirstOrDefaultAsync(l => l.ListingId == id);
+
+            var existingListing =
+                await _context.Listings
+                    .Include(l => l.Images)
+                    .FirstOrDefaultAsync(
+                        l => l.ListingId == id);
+
 
             if (existingListing == null)
             {
                 return NotFound();
             }
 
-            // Remember whether this listing was Removed before the edit.
-            // This allows the save process to distinguish a Removed post being
-            // resubmitted from a normal Pending or Rejected post edit.
-            bool wasRemoved = existingListing.Status == ListApprovalStatus.Removed;
 
-            // Get the currently logged-in user's ID
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId =
+                User.FindFirstValue(
+                    ClaimTypes.NameIdentifier);
 
-            // Admin can edit any listing.
-            // Members can only edit their own listing.
-            if (!User.IsInRole("Admin") && existingListing.MemberId != userId)
+
+            // Members may edit only their own listing.
+            if (existingListing.MemberId !=
+                userId)
             {
                 return Forbid();
             }
 
-            // Even if someone manually submits the Edit form,
-            // approved listings are locked and cannot be modified.
-            // Admins are exempt.
-            if (!User.IsInRole("Admin") &&
-                existingListing.Status == ListApprovalStatus.Approved)
+
+            // Approved listings cannot be edited.
+            if (existingListing.Status ==
+                ListApprovalStatus.Approved)
             {
                 return Forbid();
             }
+
+
+            // Remember whether this post was removed.
+            // Editing a Removed listing resubmits it.
+            var wasRemoved =
+                existingListing.Status ==
+                    ListApprovalStatus.Removed;
+
+
+            // -----------------------------------------------------
+            // FORM VALIDATION
+            // -----------------------------------------------------
 
             if (!ModelState.IsValid)
             {
-                ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", existingListing.MemberId);
-                return View(existingListing);
+                listing.Images =
+                    existingListing.Images;
+
+                listing.MemberId =
+                    existingListing.MemberId;
+
+                listing.Status =
+                    existingListing.Status;
+
+                return View(listing);
             }
 
-            // Update fields
-            existingListing.Title = listing.Title;
-            existingListing.Description = listing.Description;
-            existingListing.Price = listing.Price;
-            existingListing.Province = listing.Province;
-            existingListing.City = listing.City;
-            existingListing.Barangay = listing.Barangay;
-            existingListing.StreetAddress = listing.StreetAddress;
-            existingListing.DatePosted = DateTime.Now;
-            existingListing.Breed = listing.Breed;
-            existingListing.PetType = listing.PetType;
-            existingListing.PetSex = listing.PetSex;
-            existingListing.Type = listing.Type;
 
-            // A previously Removed listing must return to Pending when the owner
-            // edits and resubmits it. This sends the corrected listing back through
-            // the normal Admin approval process.
+            // -----------------------------------------------------
+            // UPDATE LISTING INFORMATION
+            // -----------------------------------------------------
+
+            existingListing.Title =
+                listing.Title;
+
+            existingListing.Description =
+                listing.Description;
+
+            existingListing.Price =
+                listing.Price;
+
+            existingListing.Province =
+                listing.Province;
+
+            existingListing.City =
+                listing.City;
+
+            existingListing.Barangay =
+                listing.Barangay;
+
+            existingListing.StreetAddress =
+                listing.StreetAddress;
+
+            existingListing.Breed =
+                listing.Breed;
+
+            existingListing.PetType =
+                listing.PetType;
+
+            existingListing.PetSex =
+                listing.PetSex;
+
+            existingListing.Type =
+                listing.Type;
+
+            existingListing.DatePosted =
+                DateTime.Now;
+
+
+            // -----------------------------------------------------
+            // REMOVED → PENDING
+            // -----------------------------------------------------
+
             if (wasRemoved)
             {
-                existingListing.Status = ListApprovalStatus.Pending;
+                existingListing.Status =
+                    ListApprovalStatus.Pending;
             }
 
-            // DELETE MARKED EXISTING IMAGES
-            if (DeletedImageIds != null && DeletedImageIds.Any())
+
+            // -----------------------------------------------------
+            // DELETE SELECTED EXISTING IMAGES
+            // -----------------------------------------------------
+
+            if (DeletedImageIds != null &&
+                DeletedImageIds.Any())
             {
-                foreach (var imageId in DeletedImageIds)
+                foreach (var imageId in
+                    DeletedImageIds)
                 {
-                    var image = existingListing.Images
-                        .FirstOrDefault(i =>
-                            i.ListingImageId == imageId);
+                    var image =
+                        existingListing.Images
+                            .FirstOrDefault(i =>
+                                i.ListingImageId ==
+                                imageId);
+
 
                     if (image == null)
                     {
@@ -581,52 +770,68 @@ namespace PETHUB.Controllers
                     }
 
 
-                    // Delete physical image file.
-                    var filePath = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot",
-                        image.ImagePath.TrimStart('/')
-                    );
+                    var filePath =
+                        Path.Combine(
+                            Directory
+                                .GetCurrentDirectory(),
+                            "wwwroot",
+                            image.ImagePath
+                                .TrimStart('/'));
 
 
-                    if (System.IO.File.Exists(filePath))
+                    if (System.IO.File.Exists(
+                        filePath))
                     {
-                        System.IO.File.Delete(filePath);
+                        System.IO.File.Delete(
+                            filePath);
                     }
 
 
-                    // Delete image from database.
-                    _context.ListingImages.Remove(image);
+                    _context.ListingImages
+                        .Remove(image);
                 }
             }
 
-            // Handle new images
-            if (ImageFiles != null && ImageFiles.Count > 0)
-            {
-                var savedImages = await ImageHelper.SaveImagesAsync(
-                    ImageFiles,
-                    existingListing.ListingId,
-                    (listingId, path) => new ListingImage
-                    {
-                        ListingId = listingId,
-                        ImagePath = path
-                    },
-                    "marketplace"
-                );
 
-                _context.AddRange(savedImages);
+            // -----------------------------------------------------
+            // ADD NEW IMAGES
+            // -----------------------------------------------------
+
+            if (ImageFiles != null &&
+                ImageFiles.Count > 0)
+            {
+                var savedImages =
+                    await ImageHelper.SaveImagesAsync(
+                        ImageFiles,
+                        existingListing.ListingId,
+                        (listingId, path) =>
+                            new ListingImage
+                            {
+                                ListingId =
+                                    listingId,
+
+                                ImagePath =
+                                    path
+                            },
+                        "marketplace");
+
+
+                _context.ListingImages
+                    .AddRange(savedImages);
             }
 
-            // Save the edited listing and any image changes to the database.
-            // If the listing was previously Removed, its status is now Pending.
+
             await _context.SaveChangesAsync();
 
-            // Retrieve the Member who successfully edited the Marketplace post.
-            // UserManager gets the ApplicationUser associated with the current login.
-            var currentUser = await _userManager.GetUserAsync(User);
 
-            // Record the edit only after the listing and its image changes
-            // have been successfully saved to the database.
+            // -----------------------------------------------------
+            // AUDIT LOG
+            // -----------------------------------------------------
+
+            var currentUser =
+                await _userManager
+                    .GetUserAsync(User);
+
             if (currentUser != null)
             {
                 await _auditLogService.LogAsync(
@@ -634,197 +839,187 @@ namespace PETHUB.Controllers
                     "Edited Post");
             }
 
-            // Notify Admins only when a Removed listing has been resubmitted.
-            // Normal edits to Pending or Rejected listings do not trigger this notification.
+
+            // -----------------------------------------------------
+            // REMOVED LISTING RESUBMISSION NOTIFICATION
+            // -----------------------------------------------------
+
             if (wasRemoved)
             {
-                // Get all users assigned to the Admin role.
-                var admins = await _userManager.GetUsersInRoleAsync("Admin");
+                var admins =
+                    await _userManager
+                        .GetUsersInRoleAsync(
+                            "Admin");
 
-                // Determine the notification text based on the Marketplace listing type.
+
                 string notificationTitle;
                 string notificationMessage;
 
-                if (existingListing.Type == ListType.For_Adoption)
+
+                if (existingListing.Type ==
+                    ListType.For_Adoption)
                 {
-                    notificationTitle = "Adoption Listing Resubmitted";
+                    notificationTitle =
+                        "Adoption Listing Resubmitted";
+
                     notificationMessage =
                         "A previously removed adoption listing has been edited and resubmitted for approval.";
                 }
                 else
                 {
-                    notificationTitle = "Marketplace Listing Resubmitted";
+                    notificationTitle =
+                        "Marketplace Listing Resubmitted";
+
                     notificationMessage =
                         "A previously removed Marketplace listing has been edited and resubmitted for approval.";
                 }
 
-                // Send the resubmission notification to every Admin.
+
                 foreach (var admin in admins)
                 {
-                    await _notificationService.CreateNotificationAsync(
-                        admin.Id,
-                        NotificationType.NewMarketplaceSubmission,
-                        notificationTitle,
-                        notificationMessage,
-                        existingListing.Images.FirstOrDefault()?.ImagePath,
-                        "/Listings/Details/" + existingListing.ListingId,
-                        listingId: existingListing.ListingId
-                    );
+                    await _notificationService
+                        .CreateNotificationAsync(
+                            admin.Id,
+                            NotificationType
+                                .NewMarketplaceSubmission,
+                            notificationTitle,
+                            notificationMessage,
+                            existingListing.Images
+                                .FirstOrDefault()
+                                ?.ImagePath,
+                            "/Listings/Details/" +
+                                existingListing.ListingId,
+                            listingId:
+                                existingListing.ListingId);
                 }
+
+
+                TempData["SuccessMessage"] =
+                    "Your listing has been updated and resubmitted for approval.";
+            }
+            else
+            {
+                TempData["SuccessMessage"] =
+                    "Marketplace listing updated successfully.";
             }
 
 
-            // Return the owner to the existing Marketplace Details page.
             return RedirectToAction(
                 "MarketplaceDetails",
                 "MyPosts",
-                new { id = existingListing.ListingId });
-        }
-
-
-        // GET: Listings/Delete/5
-
-        [Authorize(Roles = "Member")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var listing = await _context.Listings
-                .Include(l => l.Member)
-                .Include(l => l.Images)
-                .FirstOrDefaultAsync(m => m.ListingId == id);
-            if (listing == null)
-            {
-                return NotFound();
-            }
-            //I added this to ensure that only the owner of the listing or an admin can delete it
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (!User.IsInRole("Admin") && listing.MemberId != userId)
-            {
-                return Forbid();
-            }
-
-            return View(listing);
-        }
-
-        // POST: Listings/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Member")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var listing = await _context.Listings
-                .Include(l => l.Images) // include related images
-                .FirstOrDefaultAsync(l => l.ListingId == id);
-
-            if (listing == null)
-            {
-                return NotFound();
-            }
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            // Admin can delete any listing.
-            // Member can only delete their own listing.
-            if (!User.IsInRole("Admin") && listing.MemberId != userId)
-            {
-                return Forbid();
-            }
-
-            // Delete image files from wwwroot/images
-            if (listing.Images != null && listing.Images.Any())
-            {
-                foreach (var img in listing.Images)
+                new
                 {
-                    var filePath = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot",
-                        img.ImagePath.TrimStart('/'));
-
-                    if (System.IO.File.Exists(filePath))
-                    {
-                        System.IO.File.Delete(filePath);
-                    }
-
-                    _context.ListingImages.Remove(img);
-                }
-            }
-
-            _context.Listings.Remove(listing);
-            await _context.SaveChangesAsync();
-
-            // Retrieve the Member who successfully deleted the Marketplace post.
-            var currentUser = await _userManager.GetUserAsync(User);
-
-            // Record the deletion only after the listing has been successfully
-            // removed from the database.
-            if (currentUser != null)
-            {
-                await _auditLogService.LogAsync(
-                    currentUser,
-                    "Deleted Post");
-            }
-
-            return RedirectToAction(nameof(Index));
+                    id =
+                        existingListing.ListingId
+                });
         }
 
-        // POST: Listings/EDIT/REMOVEIMAGE/5
+
+        // =========================================================
+        // MEMBER - REMOVE SINGLE IMAGE
+        // =========================================================
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Member")]
-        public async Task<IActionResult> RemoveImage(int id)
+        public async Task<IActionResult> RemoveImage(
+            int id)
         {
-            var image = await _context.ListingImages
-                .Include(i => i.Listing)
-                .FirstOrDefaultAsync(i => i.ListingImageId == id);
+            var image =
+                await _context.ListingImages
+                    .Include(i => i.Listing)
+                    .FirstOrDefaultAsync(
+                        i => i.ListingImageId ==
+                            id);
 
-            if (image == null || image.Listing.MemberId != _userManager.GetUserId(User))
+
+            if (image == null)
             {
                 return NotFound();
             }
 
-            var listingId = await ImageHelper.RemoveImageAsync(
-                _context,
-                _context.ListingImages,
-                id,
-                img => img.ImagePath,
-                img => img.ListingId
-            );
-            return RedirectToAction("Edit", new { id = listingId });
 
+            var userId =
+                _userManager.GetUserId(User);
+
+
+            // Only the listing owner may remove images.
+            if (image.Listing.MemberId !=
+                userId)
+            {
+                return Forbid();
+            }
+
+
+            var listingId =
+                await ImageHelper
+                    .RemoveImageAsync(
+                        _context,
+                        _context.ListingImages,
+                        id,
+                        img => img.ImagePath,
+                        img => img.ListingId);
+
+
+            return RedirectToAction(
+                nameof(Edit),
+                new
+                {
+                    id = listingId
+                });
         }
 
 
-        // POST: Listings/Approve
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Approve(int id)
-        {
+        // =========================================================
+        // ADMIN - APPROVE LISTING
+        // =========================================================
 
-            // Retrieve the listing along with its images
-            var listing = await _context.Listings
-                .Include(l => l.Images)
-                .FirstOrDefaultAsync(l => l.ListingId == id);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Approve(
+            int id)
+        {
+            var listing =
+                await _context.Listings
+                    .Include(l => l.Images)
+                    .FirstOrDefaultAsync(
+                        l => l.ListingId == id);
+
 
             if (listing == null)
             {
                 return NotFound();
             }
 
-            listing.Status = ListApprovalStatus.Approved;
-            // Save changes to the database
+
+            // Prevent repeated approval from creating
+            // duplicate notifications and audit entries.
+            if (listing.Status ==
+                ListApprovalStatus.Approved)
+            {
+                TempData["InfoMessage"] =
+                    "This Marketplace listing is already approved.";
+
+                return RedirectToAction(
+                    nameof(Index));
+            }
+
+
+            listing.Status =
+                ListApprovalStatus.Approved;
+
             await _context.SaveChangesAsync();
 
-            // Retrieves the Admin who successfully approved the Marketplace post.
-            // UserManager gets the ApplicationUser associated with the current login.
-            var currentUser = await _userManager.GetUserAsync(User);
 
-            // Records the approval only after the listing status has been
-            // successfully saved as Approved in the database.
+            // -----------------------------------------------------
+            // AUDIT LOG
+            // -----------------------------------------------------
+
+            var currentUser =
+                await _userManager
+                    .GetUserAsync(User);
+
             if (currentUser != null)
             {
                 await _auditLogService.LogAsync(
@@ -832,60 +1027,109 @@ namespace PETHUB.Controllers
                     "Approved Post");
             }
 
-            // Determine notification content based on listing type
+
+            // -----------------------------------------------------
+            // MEMBER NOTIFICATION
+            // -----------------------------------------------------
+
             string notificationTitle;
             string notificationMessage;
 
-            if (listing.Type == ListType.For_Adoption)
+
+            if (listing.Type ==
+                ListType.For_Adoption)
             {
-                notificationTitle = "Adoption Request Approved";
-                notificationMessage = "Your adoption listing is now visible in the Marketplace.";
+                notificationTitle =
+                    "Adoption Request Approved";
+
+                notificationMessage =
+                    "Your adoption listing is now visible in the Marketplace.";
             }
             else
             {
-                notificationTitle = "Marketplace Listing Approved";
-                notificationMessage = "Your listing is now visible in the Marketplace.";
+                notificationTitle =
+                    "Marketplace Listing Approved";
+
+                notificationMessage =
+                    "Your listing is now visible in the Marketplace.";
             }
 
-            // Send notification to the member
-            await _notificationService.CreateNotificationAsync(
-                listing.MemberId,
-                NotificationType.MarketplaceApproved,
-                notificationTitle,
-                notificationMessage,
-                listing.Images.FirstOrDefault()?.ImagePath,
-                "/Listings/MarketplaceDetails/" + listing.ListingId,
-                listingId: listing.ListingId
-            );
 
-            return RedirectToAction(nameof(Index));
+            await _notificationService
+                .CreateNotificationAsync(
+                    listing.MemberId,
+                    NotificationType
+                        .MarketplaceApproved,
+                    notificationTitle,
+                    notificationMessage,
+                    listing.Images
+                        .FirstOrDefault()
+                        ?.ImagePath,
+                    "/Listings/MarketplaceDetails/" +
+                        listing.ListingId,
+                    listingId:
+                        listing.ListingId);
+
+
+            TempData["SuccessMessage"] =
+                "Marketplace listing approved successfully.";
+
+
+            return RedirectToAction(
+                nameof(Index));
         }
 
 
-        // POST: Listings/Reject
+        // =========================================================
+        // ADMIN - REJECT LISTING
+        // =========================================================
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Reject(int id)
+        public async Task<IActionResult> Reject(
+            int id)
         {
-            var listing = await _context.Listings
-                .Include(l => l.Images)
-                .FirstOrDefaultAsync(l => l.ListingId == id);
+            var listing =
+                await _context.Listings
+                    .Include(l => l.Images)
+                    .FirstOrDefaultAsync(
+                        l => l.ListingId == id);
+
 
             if (listing == null)
             {
                 return NotFound();
             }
 
-            listing.Status = ListApprovalStatus.Rejected;
+
+            // Prevent repeated rejection from creating
+            // duplicate notifications and audit entries.
+            if (listing.Status ==
+                ListApprovalStatus.Rejected)
+            {
+                TempData["InfoMessage"] =
+                    "This Marketplace listing is already rejected.";
+
+                return RedirectToAction(
+                    nameof(Index));
+            }
+
+
+            listing.Status =
+                ListApprovalStatus.Rejected;
 
             await _context.SaveChangesAsync();
 
-            // Retrieves the Admin who successfully rejected the Marketplace post.
-            // UserManager gets the ApplicationUser associated with the current login.
-            var currentUser = await _userManager.GetUserAsync(User);
 
-            // Records the rejection only after the listing status has been
-            // successfully saved as Rejected in the database.
+            // -----------------------------------------------------
+            // AUDIT LOG
+            // -----------------------------------------------------
+
+            var currentUser =
+                await _userManager
+                    .GetUserAsync(User);
+
             if (currentUser != null)
             {
                 await _auditLogService.LogAsync(
@@ -893,37 +1137,56 @@ namespace PETHUB.Controllers
                     "Rejected Post");
             }
 
-            // Determine notification content based on listing type
+
+            // -----------------------------------------------------
+            // MEMBER NOTIFICATION
+            // -----------------------------------------------------
+
             string notificationTitle;
             string notificationMessage;
 
-            if (listing.Type == ListType.For_Adoption)
+
+            if (listing.Type ==
+                ListType.For_Adoption)
             {
-                notificationTitle = "Adoption Request Rejected";
-                notificationMessage = "Your adoption listing was rejected because it does not meet our community standards.";
+                notificationTitle =
+                    "Adoption Request Rejected";
+
+                notificationMessage =
+                    "Your adoption listing was rejected because it does not meet our community standards.";
             }
             else
             {
-                notificationTitle = "Marketplace Listing Request Rejected";
-                notificationMessage = "Your Marketplace listing was rejected because it does not meet our community standards.";
+                notificationTitle =
+                    "Marketplace Listing Request Rejected";
+
+                notificationMessage =
+                    "Your Marketplace listing was rejected because it does not meet our community standards.";
             }
 
-            await _notificationService.CreateNotificationAsync(
-                listing.MemberId,
-                NotificationType.MarketplaceRejected,
-                notificationTitle,
-                notificationMessage,
-                listing.Images.FirstOrDefault()?.ImagePath,
-                "/Listings/MarketplaceDetails/" + listing.ListingId,
-                listingId: listing.ListingId
-            );
+
+            await _notificationService
+                .CreateNotificationAsync(
+                    listing.MemberId,
+                    NotificationType
+                        .MarketplaceRejected,
+                    notificationTitle,
+                    notificationMessage,
+                    listing.Images
+                        .FirstOrDefault()
+                        ?.ImagePath,
+                    "/Listings/MarketplaceDetails/" +
+                        listing.ListingId,
+                    listingId:
+                        listing.ListingId);
 
 
-            return RedirectToAction(nameof(Index));
-        }
-        private bool ListingExists(int id)
-        {
-            return _context.Listings.Any(e => e.ListingId == id);
+            TempData["SuccessMessage"] =
+                "Marketplace listing rejected successfully.";
+
+
+            return RedirectToAction(
+                nameof(Index));
         }
     }
 }

@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Verification Email Sent";
+    ViewData["HideSidebar"] = true;
+    ViewData["HideNavbar"] = true;
+}
+
+<link rel="stylesheet"
+      href="~/css/email-confirmation.css"
+      asp-append-version="true" />
+
+
+<div class="email-confirmation-page">
+
+    <div class="email-confirmation-card">
+
+        <div class="email-confirmation-icon">
+            <i data-lucide="send"></i>
+        </div>
+
+
+        <h1>Verification email sent</h1>
+
+
+        <p class="email-confirmation-message">
+            If an unverified PetHub account exists for the email
+            address you entered, we've sent a new verification link.
+        </p>
+
+
+        <p class="email-confirmation-secondary">
+            Please check your inbox and spam folder.
+            The verification link is valid for 24 hours.
+        </p>
+
+
+        <a asp-controller="UserAccount"
+           asp-action="Login"
+           class="email-confirmation-btn">
+
+            Go to login
+
+        </a>
+
+
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="email-confirmation-home">
+
+            <i data-lucide="arrow-left"></i>
+
+            Back to home
+
+        </a>
+
+    </div>
+
+</div>

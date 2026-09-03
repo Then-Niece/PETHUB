@@ -1,0 +1,226 @@
+﻿/* =========================================================
+   PETHUB CUSTOM SELECT
+   Reusable dropdown component
+========================================================= */
+
+.pethub-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+
+/* =========================================================
+   REAL SELECT
+
+   Kept in the HTML because:
+   - it stores the actual selected value
+   - forms submit its value
+   - other JavaScript can interact with it
+========================================================= */
+
+.pethub-select-native {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+
+/* =========================================================
+   TRIGGER
+========================================================= */
+
+.pethub-select-trigger {
+    width: 100%;
+    height: 58px;
+    padding: 0 16px 0 17px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border: 1px solid #d9dee7;
+    border-radius: 14px;
+    background: #ffffff;
+    color: #273142;
+    font-family: inherit;
+    font-size: .94rem;
+    font-weight: 400;
+    line-height: 1;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: none;
+    transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+
+
+    .pethub-select-trigger:hover:not(:disabled) {
+        border-color: #c5cdd7;
+    }
+
+
+    .pethub-select-trigger:focus,
+    .pethub-select-trigger.open {
+        outline: none;
+        border-color: #84c96f;
+        box-shadow: 0 0 0 4px rgba(132, 201, 111, .12);
+    }
+
+
+    /* =========================================================
+   PLACEHOLDER
+========================================================= */
+
+    .pethub-select-trigger.placeholder {
+        color: #929ba7;
+    }
+
+
+    /* =========================================================
+   DISABLED
+========================================================= */
+
+    .pethub-select-trigger:disabled,
+    .pethub-select-trigger.disabled {
+        background: #f7f8f9;
+        border-color: #e1e5ea;
+        color: #a5adb7;
+        cursor: not-allowed;
+    }
+
+
+/* =========================================================
+   SELECTED TEXT
+========================================================= */
+
+.pethub-select-text {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   CHEVRON
+========================================================= */
+
+.pethub-select-trigger svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    color: #667085;
+    stroke-width: 2;
+    transition: transform .18s ease, color .18s ease;
+}
+
+
+.pethub-select-trigger.open svg {
+    transform: rotate(180deg);
+    color: #78bd65;
+}
+
+
+.pethub-select-trigger:disabled svg {
+    color: #a5adb7;
+}
+
+
+/* =========================================================
+   DROPDOWN MENU
+========================================================= */
+
+.pethub-select-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    max-height: 260px;
+    padding: 8px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: none;
+    background: #ffffff;
+    border: 1px solid #e8ebef;
+    border-radius: 16px;
+    box-shadow: 0 16px 40px rgba(31, 41, 55, .14);
+}
+
+
+    .pethub-select-menu.show {
+        display: block;
+    }
+
+
+/* =========================================================
+   OPTIONS
+========================================================= */
+
+.pethub-select-option {
+    width: 100%;
+    padding: 12px 13px;
+    display: flex;
+    align-items: center;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #475467;
+    font-family: inherit;
+    font-size: .9rem;
+    font-weight: 500;
+    line-height: 1.35;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color .14s ease, color .14s ease;
+}
+
+
+    .pethub-select-option:hover {
+        background: #f3f8f1;
+        color: #273142;
+    }
+
+
+    /* =========================================================
+   CURRENTLY SELECTED OPTION
+========================================================= */
+
+    .pethub-select-option.active {
+        background: #eef8eb;
+        color: #69ae58;
+        font-weight: 700;
+    }
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.pethub-select-menu {
+    scrollbar-width: thin;
+    scrollbar-color: #d6ddd3 transparent;
+}
+
+
+    .pethub-select-menu::-webkit-scrollbar {
+        width: 6px;
+    }
+
+
+    .pethub-select-menu::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+
+    .pethub-select-menu::-webkit-scrollbar-thumb {
+        background: #d6ddd3;
+        border-radius: 999px;
+    }

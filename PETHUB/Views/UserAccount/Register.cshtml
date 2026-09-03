@@ -2,173 +2,531 @@
 
 @{
     ViewData["Title"] = "Register";
+    ViewData["HideSidebar"] = true;
+
     ViewData["Province"] = "";
     ViewData["City"] = "";
     ViewData["Barangay"] = "";
 }
 
-<div class="container mt-4">
-    <h2>Register</h2>
-    <hr />
+<link rel="stylesheet"
+      href="~/css/register.css"
+      asp-append-version="true" />
 
-    <form asp-action="Register" method="post" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<link rel="stylesheet"
+      href="~/css/terms-modal.css"
+      asp-append-version="true" />
 
-        <!-- Common fields -->
+<div class="register-page">
 
+    <div class="register-wrapper">
 
-        <div class="mb-3">
-            <label asp-for="FirstName" class="form-label"></label>
-            <input asp-for="FirstName" class="form-control" />
-            <span asp-validation-for="FirstName" class="text-danger"></span>
-        </div>
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
 
-        <div class="mb-3">
-            <label asp-for="LastName" class="form-label"></label>
-            <input asp-for="LastName" class="form-control" />
-            <span asp-validation-for="LastName" class="text-danger"></span>
-        </div>
+        <div class="register-header">
 
-        <div class="mb-3">
-            <label asp-for="Email" class="form-label"></label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
+            <img src="~/images/PETHUB-LOGO.png"
+                 alt="PetHub Logo"
+                 class="register-logo" />
 
-        <div class="mb-3">
-            <label asp-for="ContactNumber" class="form-label"></label>
-            <input asp-for="ContactNumber" class="form-control" />
-            <span asp-validation-for="ContactNumber" class="text-danger"></span>
-        </div>
+            <div>
+                <h1>Create your PetHub account</h1>
 
-        <!-- Address Fields -->
-        <partial name="Components/_AddressFields" />
-
-        <!-- Gender radio buttons -->
-        <div class="mb-3">
-            <label class="form-label">Gender</label><br />
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" asp-for="Gender" value="Male" id="genderMale" />
-                <label class="form-check-label" for="genderMale">Male</label>
+                <p>
+                    Join the community and help pets find loving homes,
+                    reconnect with their families, and meet responsible owners.
+                </p>
             </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" asp-for="Gender" value="Female" id="genderFemale" />
-                <label class="form-check-label" for="genderFemale">Female</label>
-            </div>
-            <span asp-validation-for="Gender" class="text-danger"></span>
-        </div>
 
-        <div class="mb-3">
-            <label asp-for="Birthdate" class="form-label"></label>
-            <input asp-for="Birthdate" type="date" class="form-control" />
-            <span asp-validation-for="Birthdate" class="text-danger"></span>
         </div>
 
 
+        <!-- =====================================================
+             FORM CARD
+        ====================================================== -->
 
-        <div class="mb-3">
-            <label asp-for="UserName" class="form-label"></label>
-            <input asp-for="UserName" class="form-control" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
+        <div class="register-card">
+
+            <form asp-action="Register"
+                  method="post"
+                  enctype="multipart/form-data"
+                  class="register-form">
+
+                @Html.AntiForgeryToken()
+
+
+                <div asp-validation-summary="ModelOnly"
+                     class="register-validation-summary text-danger">
+                </div>
+
+
+                <!-- =================================================
+                     PERSONAL INFORMATION
+                ================================================== -->
+
+                <section class="register-section">
+
+                    <div class="register-section-heading">
+
+                        <div class="register-section-icon">
+                            <i data-lucide="user-round"></i>
+                        </div>
+
+                        <div>
+                            <h2>Personal information</h2>
+                            <p>Tell us a little about yourself.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="register-grid">
+
+                        <div class="floating-field">
+
+                            <input asp-for="FirstName"
+                                   class="floating-input"
+                                   placeholder=" "
+                                   autocomplete="given-name" />
+
+                            <label asp-for="FirstName"
+                                   class="floating-label">
+                                First Name
+                            </label>
+
+                            <span asp-validation-for="FirstName"
+                                  class="field-error">
+                            </span>
+
+                        </div>
+
+
+                        <div class="floating-field">
+
+                            <input asp-for="LastName"
+                                   class="floating-input"
+                                   placeholder=" "
+                                   autocomplete="family-name" />
+
+                            <label asp-for="LastName"
+                                   class="floating-label">
+                                Last Name
+                            </label>
+
+                            <span asp-validation-for="LastName"
+                                  class="field-error">
+                            </span>
+
+                        </div>
+
+
+                        <div class="floating-field">
+
+                            <input asp-for="Email"
+                                   class="floating-input"
+                                   placeholder=" "
+                                   autocomplete="email" />
+
+                            <label asp-for="Email"
+                                   class="floating-label">
+                                Email Address
+                            </label>
+
+                            <span asp-validation-for="Email"
+                                  class="field-error">
+                            </span>
+
+                        </div>
+
+
+                        <div class="floating-field">
+
+                            <input asp-for="ContactNumber"
+                                   class="floating-input"
+                                   placeholder=" "
+                                   autocomplete="tel" />
+
+                            <label asp-for="ContactNumber"
+                                   class="floating-label">
+                                Contact Number
+                            </label>
+
+                            <span asp-validation-for="ContactNumber"
+                                  class="field-error">
+                            </span>
+
+                        </div>
+
+
+                        <div class="register-field">
+
+                            <label asp-for="Birthdate"
+                                   class="register-field-label">
+                                Birthdate
+                            </label>
+
+                            <input asp-for="Birthdate"
+                                   type="date"
+                                   class="register-control" />
+
+                            <span asp-validation-for="Birthdate"
+                                  class="field-error">
+                            </span>
+
+                        </div>
+
+
+                        <div class="register-field">
+
+                            <label class="register-field-label">
+                                Gender
+                            </label>
+
+                            <div class="gender-options">
+
+                                <label class="gender-option">
+
+                                    <input type="radio"
+                                           asp-for="Gender"
+                                           value="Male" />
+
+                                    <span>
+                                        <i data-lucide="user"></i>
+                                        Male
+                                    </span>
+
+                                </label>
+
+
+                                <label class="gender-option">
+
+                                    <input type="radio"
+                                           asp-for="Gender"
+                                           value="Female" />
+
+                                    <span>
+                                        <i data-lucide="user"></i>
+                                        Female
+                                    </span>
+
+                                </label>
+
+                            </div>
+
+                            <span asp-validation-for="Gender"
+                                  class="field-error">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ADDRESS
+                ================================================== -->
+
+                <section class="register-section">
+
+                    <div class="register-section-heading">
+
+                        <div class="register-section-icon">
+                            <i data-lucide="map-pin"></i>
+                        </div>
+
+                        <div>
+                            <h2>Address</h2>
+                            <p>Provide your current location information.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="register-address">
+
+                        <partial name="Components/_AddressFields" />
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ACCOUNT INFORMATION
+                ================================================== -->
+
+                <section class="register-section">
+
+                    <div class="register-section-heading">
+
+                        <div class="register-section-icon">
+                            <i data-lucide="shield-check"></i>
+                        </div>
+
+                        <div>
+                            <h2>Account information</h2>
+                            <p>Choose your username and secure your account.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="register-grid">
+
+                        <div class="floating-field register-full-width">
+
+                            <input asp-for="UserName"
+                                   class="floating-input"
+                                   placeholder=" "
+                                   autocomplete="username" />
+
+                            <label asp-for="UserName"
+                                   class="floating-label">
+                                Username
+                            </label>
+
+                            <span asp-validation-for="UserName"
+                                  class="field-error">
+                            </span>
+
+                        </div>
+
+
+                        <div class="floating-field password-field">
+
+                            <input asp-for="Password"
+                                   type="password"
+                                   class="floating-input"
+                                   id="registerPassword"
+                                   placeholder=" "
+                                   autocomplete="new-password" />
+
+                            <label asp-for="Password"
+                                   class="floating-label">
+                                Password
+                            </label>
+
+                            <button type="button"
+                                    class="register-password-toggle password-toggle"
+                                    data-password-target="registerPassword"
+                                    aria-label="Show password">
+
+                                <i data-lucide="eye"></i>
+
+                            </button>
+
+                            <span asp-validation-for="Password"
+                                  class="field-error">
+                            </span>
+
+                        </div>
+
+
+                        <div class="floating-field password-field">
+
+                            <input asp-for="ConfirmPassword"
+                                   type="password"
+                                   class="floating-input"
+                                   id="confirmPassword"
+                                   placeholder=" "
+                                   autocomplete="new-password" />
+
+                            <label asp-for="ConfirmPassword"
+                                   class="floating-label">
+                                Confirm Password
+                            </label>
+
+                            <button type="button"
+                                    class="register-password-toggle password-toggle"
+                                    data-password-target="confirmPassword"
+                                    aria-label="Show password">
+
+                                <i data-lucide="eye"></i>
+
+                            </button>
+
+                            <span asp-validation-for="ConfirmPassword"
+                                  class="field-error">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ID VERIFICATION
+                ================================================== -->
+
+                <section class="register-section">
+
+                    <div class="register-section-heading">
+
+                        <div class="register-section-icon">
+                            <i data-lucide="badge-check"></i>
+                        </div>
+
+                        <div>
+                            <h2>Identity verification</h2>
+                            <p>
+                                Upload a valid ID photo to help us maintain
+                                a safer PetHub community.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="id-upload-field">
+
+                        <label asp-for="IdPhoto"
+                               class="register-field-label">
+                            ID Photo
+                        </label>
+
+                        <label for="IdPhotoInput"
+                               class="id-upload-box">
+
+                            <div class="id-upload-icon">
+                                <i data-lucide="upload-cloud"></i>
+                            </div>
+
+                            <div class="id-upload-text">
+                                <strong>Choose an ID photo</strong>
+                                <span>Click here to select an image</span>
+                            </div>
+
+                        </label>
+
+
+                        <input asp-for="IdPhoto"
+                               type="file"
+                               id="IdPhotoInput"
+                               class="id-file-input"
+                               accept="image/*" />
+
+                        <span asp-validation-for="IdPhoto"
+                              class="field-error">
+                        </span>
+
+
+                        <div id="idPhotoPreview"
+                             class="id-photo-preview">
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     TERMS
+                ================================================== -->
+
+                <div class="register-terms">
+
+                    <input asp-for="AcceptTerms"
+                           class="form-check-input" />
+
+                    <label asp-for="AcceptTerms">
+
+                        I have read, understood, and agree to the
+
+                        <a href="#"
+                           data-bs-toggle="modal"
+                           data-bs-target="#termsModal">
+                            PetHub Terms and Conditions
+                        </a>.
+
+                    </label>
+
+                </div>
+
+                <span asp-validation-for="AcceptTerms"
+                      class="field-error terms-error">
+                </span>
+
+
+                <!-- =================================================
+                     ACTIONS
+                ================================================== -->
+
+                <div class="register-actions">
+
+                    <button type="submit"
+                            class="register-submit-btn">
+
+                        Create account
+
+                    </button>
+
+
+                    <div class="register-login-link">
+
+                        <span>Already have an account?</span>
+
+                        <a asp-controller="UserAccount"
+                           asp-action="Login">
+                            Log in
+                        </a>
+
+                    </div>
+
+
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="register-back-home">
+
+                        <i data-lucide="arrow-left"></i>
+
+                        Back to Home
+
+                    </a>
+
+                </div>
+
+            </form>
+
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Password" class="form-label"></label>
-            <div class="input-group">
+    </div>
 
-                <input asp-for="Password"
-                       type="password"
-                       class="form-control"
-                       id="registerPassword" />
-
-                <button type="button"
-                        class="password-toggle"
-                        data-password-target="registerPassword"
-                        aria-label="Show password">
-
-                    <i data-lucide="eye"></i>
-
-                </button>
-
-            </div>
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="ConfirmPassword" class="form-label"></label>
-            <div class="input-group">
-
-                <input asp-for="ConfirmPassword"
-                       type="password"
-                       class="form-control"
-                       id="confirmPassword" />
-
-                <button type="button"
-                        class="password-toggle"
-                        data-password-target="confirmPassword"
-                        aria-label="Show password">
-
-                    <i data-lucide="eye"></i>
-
-                </button>
-
-            </div>
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="IdPhoto" class="form-label"></label>
-            <input asp-for="IdPhoto" type="file" class="form-control" id="IdPhotoInput" />
-            <span asp-validation-for="IdPhoto" class="text-danger"></span>
-
-            <!-- Preview container for the ID Photo -->
-            <div id="idPhotoPreview"
-                 class="d-flex flex-wrap gap-2 mt-2">
-            </div>
-        </div>
-
-        <div class="mb-3 form-check">
-            <input asp-for="AcceptTerms" class="form-check-input" />
-
-            <label asp-for="AcceptTerms" class="form-check-label">
-                I have read, understood, and agree to the
-                <a href="#"
-                   class="text-primary text-decoration-underline"
-                   data-bs-toggle="modal"
-                   data-bs-target="#termsModal">
-                    PetHub Terms and Conditions
-                </a>
-            </label>
-
-            <span asp-validation-for="AcceptTerms" class="text-danger"></span>
-        </div>
-
-
-
-        <button type="submit" class="btn btn-success">Register</button>
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
-
-
-    </form>
 </div>
 
 
 <partial name="_TermsAndConditionsModal" />
 
+
 @section Scripts {
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script src="~/js/imagePreviewHelper.js"></script>
+    <script src="~/js/imagePreviewHelper.js"
+            asp-append-version="true">
+    </script>
 
     <script>
-
-        setupImagePreview("IdPhotoInput", "idPhotoPreview", {
-        multiple: false
-        });
-
+        setupImagePreview(
+            "IdPhotoInput",
+            "idPhotoPreview",
+            {
+                multiple: false,
+                previewWidth: 240,
+                previewHeight: 150
+            }
+        );
     </script>
 
     <script src="~/js/address-helper.js" asp-append-version="true"></script>
+
+   
+
 }

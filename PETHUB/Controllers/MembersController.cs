@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
+using PETHUB.Services;
 using PETHUB.ViewModels;
 
 namespace PETHUB.Controllers
@@ -12,11 +13,14 @@ namespace PETHUB.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly EmailSender _emailSender;
 
-        public MembersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public MembersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, EmailSender emailSender)
         {
             _context = context;
             _userManager = userManager;
+            _emailSender = emailSender;
+
         }
 
 
@@ -126,234 +130,476 @@ namespace PETHUB.Controllers
             return View();
         }
 
-        // POST: Members/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // =========================================================
+        // CREATE MEMBER - POST
+        // =========================================================
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MemberViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return View(model);
+            }
 
-
-            // Identity already checks if the email is already taken
-           
-
+            // =====================================================
+            // CREATE MEMBER OBJECT
+            // =====================================================
 
             var member = new ApplicationUser
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    ContactNumber = model.ContactNumber,
+
+                    Province = model.Province,
+                    City = model.City,
+                    Barangay = model.Barangay,
+                    StreetAddress = model.StreetAddress,
+
+                    Gender = model.Gender,
+                    Birthdate = model.Birthdate,
+
+                    Status = UserStatus.Pending
+                };
+
+
+            // =====================================================
+            // CREATE IDENTITY ACCOUNT
+            // =====================================================
+
+            var result =
+                await _userManager.CreateAsync(
+                    member,
+                    model.Password
+                );
+
+
+            if (!result.Succeeded)
             {
-                UserName = model.UserName,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                ContactNumber = model.ContactNumber,
-                Status = UserStatus.Active,
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        error.Description
+                    );
+                }
 
-                // Member-only fields
-                Province = model.Province,
-                City = model.City,
-                Barangay = model.Barangay,
-                StreetAddress = model.StreetAddress,
-                Gender = model.Gender,
-                Birthdate = model.Birthdate
-            };
-
-            member.IdPhotoPath = await IdPhotoUploadHelper.SaveIdPhotoAsync(model.IdPhoto);
-
-            // Create user with password
-            var result = await _userManager.CreateAsync(member, model.Password);
-
-            if (result.Succeeded)
-            {
-                // Always assign Member role here
-                await _userManager.AddToRoleAsync(member, "Member");
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
 
-            // Handle errors
-            foreach (var error in result.Errors)
+
+            // =====================================================
+            // ASSIGN MEMBER ROLE
+            // =====================================================
+
+            var roleResult =
+                await _userManager.AddToRoleAsync(
+                    member,
+                    "Member"
+                );
+
+
+            if (!roleResult.Succeeded)
             {
-                ModelState.AddModelError("", error.Description);
+                await _userManager.DeleteAsync(member);
+
+                foreach (var error in roleResult.Errors)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        error.Description
+                    );
+                }
+
+                return View(model);
             }
+
+
+            // =====================================================
+            // SAVE VALID ID
+            // =====================================================
+
+            if (model.IdPhoto != null)
+            {
+                member.IdPhotoPath =
+                    await IdPhotoUploadHelper
+                        .SaveIdPhotoAsync(model.IdPhoto);
+
+
+                var updateResult =
+                    await _userManager.UpdateAsync(member);
+
+
+                if (!updateResult.Succeeded)
+                {
+                    foreach (var error in updateResult.Errors)
+                    {
+                        ModelState.AddModelError(
+                            string.Empty,
+                            error.Description
+                        );
+                    }
+
+                    return View(model);
+                }
+            }
+
+
+            // =====================================================
+            // GENERATE EMAIL VERIFICATION TOKEN
+            // =====================================================
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(member);
+
+
+            var confirmationLink =
+                Url.Action(
+                    "ConfirmEmail",
+                    "UserAccount",
+                    new
+                    {
+                        userId = member.Id,
+                        token
+                    },
+                    Request.Scheme
+                );
+
+
+            // =====================================================
+            // SEND VERIFICATION EMAIL
+            // =====================================================
+
+            try
+            {
+                var body =
+                    EmailTemplateHelper
+                        .AdminCreatedMemberVerification(
+                            member.FirstName,
+                            confirmationLink!
+                        );
+
+                await _emailSender.SendEmailAsync(
+                    member.Email!,
+                    "Your PETHUB Member Account Has Been Created",
+                    body
+                );
+
+                TempData["SuccessMessage"] =
+                    "Member account created. A verification email has been sent.";
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] =
+                    "The member account was created, but the verification email could not be sent.";
+            }
+
+            return RedirectToAction(
+                nameof(Index)
+            );
+        }
+
+
+        // =========================================================
+        // EDIT MEMBER - GET
+        // =========================================================
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return NotFound();
+            }
+
+
+            var member =
+                await _userManager.FindByIdAsync(id);
+
+
+            if (member == null)
+            {
+                return NotFound();
+            }
+
+
+            var isMember =
+                await _userManager.IsInRoleAsync(
+                    member,
+                    "Member"
+                );
+
+
+            if (!isMember)
+            {
+                return NotFound();
+            }
+
+
+            var model =
+                new EditMemberViewModel
+                {
+                    Id = member.Id,
+
+                    UserName = member.UserName!,
+                    Email = member.Email!,
+
+                    FirstName = member.FirstName,
+                    LastName = member.LastName,
+                    ContactNumber = member.ContactNumber,
+
+                    Gender = member.Gender,
+                    Birthdate = member.Birthdate,
+
+                    Province = member.Province,
+                    City = member.City,
+                    Barangay = member.Barangay,
+                    StreetAddress = member.StreetAddress,
+
+                    Status = member.Status,
+                    IdPhotoPath = member.IdPhotoPath
+                };
+
+
             return View(model);
         }
 
+        // =========================================================
+        // EDIT MEMBER - POST
+        // =========================================================
 
-        // GET: Members/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var applicationUser = await _context.Users.FindAsync(id);
-            if (applicationUser == null)
-            {
-                return NotFound();
-            }
-            return View(applicationUser);
-        }
-
-        // POST: Members/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, ApplicationUser model)
+        public async Task<IActionResult> Edit(
+            string id,
+            EditMemberViewModel model)
         {
             if (id != model.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+
+            if (!ModelState.IsValid)
             {
-                var member = await _userManager.FindByIdAsync(id);
-                if (member == null)
-                {
-                    return NotFound();
-                }
+                return View(model);
+            }
 
-                // Update only allowed fields for Members
-                member.UserName = model.UserName;
-                member.Email = model.Email;
-                member.FirstName = model.FirstName;
-                member.LastName = model.LastName;
-                member.ContactNumber = model.ContactNumber;
-                member.Province = model.Province;
-                member.City = model.City;
-                member.Barangay = model.Barangay;
-                member.StreetAddress = model.StreetAddress;
-                member.Gender = model.Gender;
-                member.Birthdate = model.Birthdate;
-                member.Status = model.Status;
 
-                var result = await _userManager.UpdateAsync(member);
+            var member =
+                await _userManager.FindByIdAsync(id);
 
-                if (result.Succeeded)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
 
+            if (member == null)
+            {
+                return NotFound();
+            }
+
+
+            var isMember =
+                await _userManager.IsInRoleAsync(
+                    member,
+                    "Member"
+                );
+
+
+            if (!isMember)
+            {
+                return NotFound();
+            }
+
+
+            // =====================================================
+            // CHECK USERNAME
+            // =====================================================
+
+            var existingUsername =
+                await _userManager.FindByNameAsync(
+                    model.UserName
+                );
+
+
+            if (existingUsername != null &&
+                existingUsername.Id != member.Id)
+            {
+                ModelState.AddModelError(
+                    nameof(model.UserName),
+                    "This username is already taken."
+                );
+
+                return View(model);
+            }
+
+            // =====================================================
+            // UPDATE ALLOWED FIELDS ONLY
+            // =====================================================
+
+            member.UserName = model.UserName;
+
+            member.FirstName = model.FirstName;
+            member.LastName = model.LastName;
+            member.ContactNumber = model.ContactNumber;
+
+            member.Gender = model.Gender;
+            member.Birthdate = model.Birthdate;
+
+            member.Province = model.Province;
+            member.City = model.City;
+            member.Barangay = model.Barangay;
+            member.StreetAddress = model.StreetAddress;
+
+
+            // Status is intentionally NOT changed here.
+
+
+            var result =
+                await _userManager.UpdateAsync(member);
+
+
+            if (!result.Succeeded)
+            {
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError("", error.Description);
+                    ModelState.AddModelError(
+                        string.Empty,
+                        error.Description
+                    );
                 }
+
+                return View(model);
             }
 
-            return View(model);
+
+            return RedirectToAction(
+                nameof(Index)
+            );
         }
 
+        // =========================================================
+        // DEACTIVATE MEMBER
+        // =========================================================
 
-        // GET: Members/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var applicationUser = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (applicationUser == null)
-            {
-                return NotFound();
-            }
-
-            return View(applicationUser);
-        }
-
-
-        // POST: Members/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> Deactivate(string id)
         {
-            var applicationUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Id == id);
-
-            if (applicationUser == null)
+            if (string.IsNullOrWhiteSpace(id))
             {
                 return NotFound();
             }
 
-            // Get IDs of the member's listings
-            var listingIds = await _context.Listings
-                .Where(l => l.MemberId == id)
-                .Select(l => l.ListingId)
-                .ToListAsync();
+            var member =
+                await _userManager.FindByIdAsync(id);
 
-            // Get IDs of the member's Lost & Found posts
-            var lostFoundIds = await _context.LostFounds
-                .Where(l => l.UserId == id)
-                .Select(l => l.LostFoundId)
-                .ToListAsync();
+            if (member == null)
+            {
+                return NotFound();
+            }
 
+            var isMember =
+                await _userManager.IsInRoleAsync(
+                    member,
+                    "Member"
+                );
 
-            // ==========================================
-            // DELETE REPORTS
-            // ==========================================
-            // Delete:
-            // 1. Reports submitted by the member
-            // 2. Reports targeting the member's Listings
-            // 3. Reports targeting the member's Lost & Found posts
+            if (!isMember)
+            {
+                return NotFound();
+            }
 
-            var reports = await _context.UserReports
-                .Where(r =>
-                    r.ReporterId == id ||
-                    (r.ListingId.HasValue &&
-                     listingIds.Contains(r.ListingId.Value)) ||
-                    (r.LostFoundId.HasValue &&
-                     lostFoundIds.Contains(r.LostFoundId.Value)))
-                .ToListAsync();
+            if (member.Status == UserStatus.Inactive)
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
-            _context.UserReports.RemoveRange(reports);
+            member.Status = UserStatus.Inactive;
 
+            var result =
+                await _userManager.UpdateAsync(member);
 
-            // ==========================================
-            // DELETE NOTIFICATIONS
-            // ==========================================
-            // Delete:
-            // 1. Notifications belonging to the member
-            // 2. Notifications related to the member's Listings
-            // 3. Notifications related to the member's Lost & Found posts
+            if (!result.Succeeded)
+            {
+                TempData["ErrorMessage"] =
+                    "Unable to deactivate the member account.";
 
-            var notifications = await _context.Notifications
-                .Where(n =>
-                    n.UserId == id ||
-                    (n.ListingId.HasValue &&
-                     listingIds.Contains(n.ListingId.Value)) ||
-                    (n.LostFoundId.HasValue &&
-                     lostFoundIds.Contains(n.LostFoundId.Value)))
-                .ToListAsync();
+                return RedirectToAction(nameof(Index));
+            }
 
-            _context.Notifications.RemoveRange(notifications);
+            await _userManager.UpdateSecurityStampAsync(member);
 
-
-
-
-            // ==========================================
-            // DELETE THE MEMBER
-            // ==========================================
-
-            _context.Users.Remove(applicationUser);
-
-
-            // ==========================================
-            // SAVE EVERYTHING  
-            // ==========================================
-
-            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] =
+                "Member account has been deactivated.";
 
             return RedirectToAction(nameof(Index));
         }
 
 
-        private bool ApplicationUserExists(string id)
+        // =========================================================
+        // REACTIVATE MEMBER
+        // =========================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reactivate(string id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return NotFound();
+            }
+
+
+            var member =
+                await _userManager.FindByIdAsync(id);
+
+
+            if (member == null)
+            {
+                return NotFound();
+            }
+
+
+            var isMember =
+                await _userManager.IsInRoleAsync(
+                    member,
+                    "Member"
+                );
+
+
+            if (!isMember)
+            {
+                return NotFound();
+            }
+
+
+            member.Status = UserStatus.Active;
+
+
+            var result =
+                await _userManager.UpdateAsync(member);
+
+
+            if (!result.Succeeded)
+            {
+                TempData["ErrorMessage"] =
+                    "Unable to reactivate the member.";
+
+                return RedirectToAction(
+                    nameof(Index)
+                );
+            }
+
+
+            TempData["SuccessMessage"] =
+                "Member account has been reactivated.";
+
+
+            return RedirectToAction(
+                nameof(Index)
+            );
         }
     }
 }

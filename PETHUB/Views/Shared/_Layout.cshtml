@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="~/css/messages.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Marketplace.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Lost&Found.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/PetFeed.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom-select.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/system-modal.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/MemberProfile.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Logs.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/image-gallery.css" asp-append-version="true" />
@@ -51,9 +54,13 @@
 </head>
 <body>
 @*     Run the Navigation View Component and render its view. *@    
-       @await Component.InvokeAsync("Navigation")
 
-    <div class="app">
+    @if (!(ViewData["HideNavbar"] as bool? ?? false))
+    {
+        @await Component.InvokeAsync("Navigation")
+    }
+
+    <div class="app @(ViewData["HideNavbar"] as bool? == true ? "app-no-navbar" : "")">
 
         @if (!(ViewData["HideSidebar"] as bool? ?? false)
      && User.Identity?.IsAuthenticated == true)
@@ -91,12 +98,17 @@
      the rendered views can open this single reusable modal. -->
     <partial name="_ReportModal" />
 
+    <!-- Shared system modal -->
+    <partial name="_SystemModal" />
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/report-modal.js" asp-append-version="true"></script>
     <!-- Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <script src="~/js/custom-select.js" asp-append-version="true"></script>
+    <script src="~/js/system-modal.js" asp-append-version="true"></script>
     <script src="~/js/Price.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/sidebar.js" asp-append-version="true"></script>
@@ -107,6 +119,8 @@
     <script src="~/js/global-messaging.js" asp-append-version="true"></script>
 
     <script src="~/js/petfeed.js" asp-append-version="true"></script>
+    @await Html.PartialAsync("_TempDataSystemModal")
+
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

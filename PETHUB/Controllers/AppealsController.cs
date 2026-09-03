@@ -72,6 +72,9 @@ namespace PETHUB.Controllers
 
                 if (existingAppeal)
                 {
+
+                    TempData["InfoMessage"] = "You already have a pending appeal for this post.";
+
                     // The Member already has an appeal waiting for Admin review.
                     // Return them to the existing Removed Post Details page.
                     return RedirectToAction(
@@ -233,6 +236,8 @@ namespace PETHUB.Controllers
 
                 await _context.SaveChangesAsync();
 
+                TempData["SuccessMessage"] = "Your appeal has been submitted successfully.";
+
                 // Return to the same Removed Post Details page after submission.
                 return RedirectToAction(
                     "Details",
@@ -272,6 +277,8 @@ namespace PETHUB.Controllers
 
                 if (existingAppeal)
                 {
+                    TempData["InfoMessage"] = "You already have a pending appeal for this post.";
+
                     return RedirectToAction(
                         "Details",
                         "RemovedPosts",
@@ -296,6 +303,9 @@ namespace PETHUB.Controllers
                 _context.Appeals.Add(appeal);
 
                 await _context.SaveChangesAsync();
+
+
+                TempData["SuccessMessage"] = "Your appeal has been submitted successfully.";
 
                 // Return to the same Removed Post Details page after submission.
                 return RedirectToAction(

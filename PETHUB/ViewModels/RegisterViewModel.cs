@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PETHUB.Validation;
 
 namespace PETHUB.ViewModels
 {
-    public class RegisterViewModel
+    public class RegisterViewModel 
     {
         [Required]
         public string UserName { get; set; }
@@ -31,7 +32,9 @@ namespace PETHUB.ViewModels
 
         public string Gender { get; set; }
 
+        [Required(ErrorMessage = "Birthdate is required.")]
         [DataType(DataType.Date)]
+        [MinimumAge(18, ErrorMessage = "You must be at least 18 years old to register.")]
         public DateTime? Birthdate { get; set; }
 
         [Required]

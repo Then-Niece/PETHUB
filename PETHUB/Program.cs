@@ -95,6 +95,37 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication(); //Added to identify the user and redirect appropriately to the guest page if not authenticated
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity?.IsAuthenticated == true)
+    {
+        var userManager =
+            context.RequestServices
+                .GetRequiredService<UserManager<ApplicationUser>>();
+
+        var signInManager =
+            context.RequestServices
+                .GetRequiredService<SignInManager<ApplicationUser>>();
+
+        var user =
+            await userManager.GetUserAsync(context.User);
+
+        if (user != null &&
+            user.Status == UserStatus.Inactive)
+        {
+            await signInManager.SignOutAsync();
+
+            context.Response.Redirect(
+                "/UserAccount/Login?deactivated=true"
+            );
+
+            return;
+        }
+    }
+
+    await next();
+});
+
 app.UseAuthorization();
 
 app.MapStaticAssets();

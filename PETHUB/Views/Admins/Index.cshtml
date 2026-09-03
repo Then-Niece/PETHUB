@@ -106,15 +106,15 @@
 
                             @if (item.Status == UserStatus.Active)
                             {
-                                <span class="status-pill active">
-                                    Active
-                                </span>
+                                <span class="status-pill active">Active</span>
+                            }
+                            else if (item.Status == UserStatus.Inactive)
+                            {
+                                <span class="status-pill inactive">Inactive</span>
                             }
                             else
                             {
-                                <span class="status-pill inactive">
-                                    Inactive
-                                </span>
+                                <span class="status-pill pending">Pending</span>
                             }
 
                         </td>
@@ -141,11 +141,36 @@
 
                                     <div class="menu-divider"></div>
 
-                                    <a asp-action="Delete"
-                                       asp-route-id="@item.Id"
-                                       class="delete-item">
-                                        Delete
-                                    </a>
+                                    @if (item.Status == UserStatus.Active)
+                                    {
+                                        <form asp-action="Deactivate"
+                                              asp-route-id="@item.Id"
+                                              method="post"
+                                              class="d-inline">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit"
+                                                    class="dropdown-item deactivate-item">
+                                                Deactivate
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (item.Status == UserStatus.Inactive)
+                                    {
+                                        <form asp-action="Reactivate"
+                                              asp-route-id="@item.Id"
+                                              method="post"
+                                              class="d-inline">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit"
+                                                    class="dropdown-item reactivate-item">
+                                                Reactivate
+                                            </button>
+                                        </form>
+                                    }
 
                                 </div>
 

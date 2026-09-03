@@ -1821,9 +1821,49 @@
 
                     if (!response.ok) {
 
-                        console.error(
-                            "Failed to send message."
-                        );
+                        let errorMessage =
+                            "The message could not be sent. Please try again.";
+
+
+                        try {
+
+                            const errorData =
+                                await response.json();
+
+
+                            if (errorData?.message) {
+
+                                errorMessage =
+                                    errorData.message;
+                            }
+
+                        }
+                        catch (error) {
+
+                            console.error(
+                                "Could not read message error response:",
+                                error
+                            );
+                        }
+
+
+                        if (typeof window.showSystemModal === "function") {
+
+                            window.showSystemModal({
+                                type: "warning",
+                                title: "Message Not Sent",
+                                message: errorMessage,
+                                buttonText: "Okay"
+                            });
+
+                        }
+                        else {
+
+                            console.error(
+                                errorMessage
+                            );
+                        }
+
 
                         return;
                     }

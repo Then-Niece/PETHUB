@@ -6,7 +6,8 @@ namespace PETHUB.Models
     {
         Pending,
         Adopted,
-        Sold
+        Sold,
+        Deleted
     }
 
     public enum ListApprovalStatus

@@ -1,0 +1,94 @@
+﻿@model PETHUB.ViewModels.ForgotPasswordViewModel
+
+@{
+    ViewData["Title"] = "Resend Verification Email";
+    ViewData["HideSidebar"] = true;
+    ViewData["HideNavbar"] = true;
+}
+
+<link rel="stylesheet"
+      href="~/css/forgot-password.css"
+      asp-append-version="true" />
+
+
+<div class="forgot-page">
+
+    <div class="forgot-card">
+
+        <div class="forgot-header">
+
+            <div class="auth-confirmation-icon">
+                <i data-lucide="mail-plus"></i>
+            </div>
+
+            <h1>Resend verification email</h1>
+
+            <p>
+                Enter the email address connected to your PetHub account
+                and we'll send you a new verification link.
+            </p>
+
+        </div>
+
+
+        <form asp-action="ResendEmailConfirmation"
+              method="post"
+              class="forgot-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="forgot-validation-summary">
+            </div>
+
+
+            <div class="floating-field">
+
+                <input asp-for="Email"
+                       class="floating-input"
+                       placeholder=" "
+                       autocomplete="email" />
+
+                <label asp-for="Email"
+                       class="floating-label">
+                    Email Address
+                </label>
+
+                <span asp-validation-for="Email"
+                      class="field-error">
+                </span>
+
+            </div>
+
+
+            <button type="submit"
+                    class="forgot-submit-btn">
+
+                Send verification link
+
+            </button>
+
+
+            <a asp-controller="UserAccount"
+               asp-action="Login"
+               class="back-login-link">
+
+                <i data-lucide="arrow-left"></i>
+
+                Back to login
+
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

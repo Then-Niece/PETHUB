@@ -23,7 +23,7 @@ namespace PETHUB.Services
         public PasswordResetTokenProviderOptions()
         {
             Name = "PETHUBPasswordResetTokenProvider";
-            TokenLifespan = TimeSpan.FromSeconds(30);
+            TokenLifespan = TimeSpan.FromMinutes(10);
         }
     }
 }
