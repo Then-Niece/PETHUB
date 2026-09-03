@@ -1,30 +1,11 @@
 ﻿@model PETHUB.ViewModels.AdminEditProfileViewModel
 
 @{
-    ViewData["Title"] = "View my Profile";
+    ViewData["Title"] = "View My Profile";
 }
 
+
 <div class="container-fluid py-4 admin-profile-page-container">
-
-    @* =========================================================
-       SUCCESS MESSAGE
-       ========================================================= *@
-
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show mb-4"
-             role="alert">
-
-            @TempData["SuccessMessage"]
-
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-            </button>
-
-        </div>
-    }
-
 
     @* =========================================================
        MAIN ADMIN PROFILE LAYOUT
@@ -100,8 +81,10 @@
 
 
                     <p class="admin-profile-joined">
+
                         Joined
                         @Model.CreatedAt.ToString("MMMM dd, yyyy")
+
                     </p>
 
 
@@ -132,7 +115,7 @@
                     </h4>
 
                     <p>
-                        Overview of your activity
+                        Overview of your activity.
                     </p>
 
                 </div>
@@ -221,7 +204,7 @@
                         </h3>
 
                         <p>
-                            A little about yourself
+                            A little about yourself.
                         </p>
 
                     </div>
@@ -257,7 +240,7 @@
                     </h3>
 
                     <p>
-                        Your profile details
+                        Your profile details.
                     </p>
 
                 </div>
@@ -399,7 +382,7 @@
                     </h3>
 
                     <p>
-                        Membership and account status
+                        Administrator account information and status.
                     </p>
 
                 </div>
@@ -473,8 +456,46 @@
             </div>
 
 
-         
+            @* =================================================
+               ACTIONS
+               ================================================= *@
 
+            <div class="admin-profile-information-card">
+
+                <div class="admin-profile-section-header">
+
+                    <h3>
+                        Actions
+                    </h3>
+
+                    <p>
+                        Manage your administrator profile.
+                    </p>
+
+                </div>
+
+
+                <div class="admin-profile-actions">
+
+                    <a asp-controller="AdminMyPosts"
+                       asp-action="Index"
+                       class="admin-profile-secondary-button">
+
+                        Back
+
+                    </a>
+
+
+                    <a asp-action="Edit"
+                       class="admin-profile-edit-button">
+
+                        Edit Profile
+
+                    </a>
+
+                </div>
+
+            </div>
 
         </div>
 
