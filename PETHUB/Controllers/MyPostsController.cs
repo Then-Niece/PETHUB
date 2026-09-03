@@ -74,8 +74,28 @@ namespace PETHUB.Controllers
 
 
         // Displays the logged-in member's posts and applies optional status/type filters.
-        public async Task<IActionResult> Index(string? status, string? type)
+        public async Task<IActionResult> Index(
+           string? status,
+           string? type,
+           int page = 1)
         {
+            // =========================================================
+            // PAGINATION SETTINGS
+            // =========================================================
+
+            const int pageSize = 12;
+
+            // Prevent invalid page numbers.
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+
+            // =========================================================
+            // EXISTING MY POSTS LOGIC
+            // =========================================================
+
             // Get the current logged-in member's ID.
             // This ensures MyPosts only ever retrieves posts owned by this member.
             var userId = _userManager.GetUserId(User);
@@ -88,6 +108,7 @@ namespace PETHUB.Controllers
                 StatusFilter = status,
                 TypeFilter = type
             };
+
             // Start with the logged-in member's Marketplace listings.
             // Include Images because the MyPosts view displays the first image.
             var listingsQuery = _context.Listings
@@ -109,7 +130,6 @@ namespace PETHUB.Controllers
             // Marketplace means that only Marketplace listings should be included.
             if (string.Equals(type, "LostFound", StringComparison.OrdinalIgnoreCase))
             {
-                // The user selected Lost & Found, so no Marketplace listings are needed.
                 listingsQuery = listingsQuery.Where(l => false);
             }
 
@@ -172,7 +192,39 @@ namespace PETHUB.Controllers
                         : post.Report!.DateReported)
                 .ToList();
 
-            // Return the filtered combined posts to the existing MyPosts view.
+
+            // =========================================================
+            // PAGINATION
+            // =========================================================
+
+            // Count the combined posts AFTER all existing filters
+            // and the existing newest-first sorting have been applied.
+            var totalItems = model.Posts.Count;
+
+            // Calculate the total number of pages.
+            var totalPages = (int)Math.Ceiling(
+                totalItems / (double)pageSize);
+
+            // Prevent the requested page from exceeding the available pages.
+            if (totalPages > 0 && page > totalPages)
+            {
+                page = totalPages;
+            }
+
+            // Keep only the posts for the current page.
+            // The existing sorting above remains unchanged.
+            model.Posts = model.Posts
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Store pagination information in the existing MyPostsViewModel.
+            model.CurrentPage = page;
+            model.PageSize = pageSize;
+            model.TotalItems = totalItems;
+
+
+            // Return the existing MyPosts view.
             return View(model);
         }
 

@@ -4999,7 +4999,7 @@
     min-height: 44px;
     padding: 0 13px;
     border: 1px solid #dfe5e2;
-    border-radius: 11px;
+    border-radius: 999px;
     background: #ffffff;
     color: #344054;
     font-family: inherit;
@@ -5193,14 +5193,14 @@
 
 /* ==========================================================
    ACTIVE DROPDOWN ITEM
-
-   No check mark.
 ========================================================== */
 
 .marketplace-dropdown-item.active {
-    color: #344054;
-    background: transparent;
+    color: #4f8d42;
+    background: #eaf8e6;
+    font-weight: 600;
 }
+
 
 
     .marketplace-dropdown-item.active:hover {

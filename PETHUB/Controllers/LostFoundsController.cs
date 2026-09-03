@@ -6,18 +6,20 @@ using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
 using PETHUB.Services;
+using PETHUB.ViewModels;
 
 public class LostFoundsController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly NotificationService _notificationService;
-
-    public LostFoundsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationService notificationService)
+    private readonly AuditLogService _auditLogService;
+    public LostFoundsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationService notificationService, AuditLogService auditLogService)
     {
         _context = context;
         _userManager = userManager;
         _notificationService = notificationService;
+        _auditLogService = auditLogService;
     }
 
     // GET: LostFounds
@@ -26,14 +28,37 @@ public class LostFoundsController : Controller
     public async Task<IActionResult> Index(
         string? status,
         string? lostFoundType,
-        string? petType)
+        string? petType,
+        int page = 1)
     {
+        // =========================================================
+        // PAGINATION SETTINGS
+        // =========================================================
+
+        const int pageSize = 10;
+
+        // Prevent invalid page numbers.
+        if (page < 1)
+        {
+            page = 1;
+        }
+
+
+        // =========================================================
+        // EXISTING LOST & FOUND QUERY
+        // =========================================================
+
         // Start with all Lost & Found reports and load the related
         // user and image data required by the existing approval view.
         var lostfounds = _context.LostFounds
             .Include(l => l.User)
             .Include(l => l.Images)
             .AsQueryable();
+
+
+        // =========================================================
+        // EXISTING APPROVAL-STATUS FILTER
+        // =========================================================
 
         // Apply the existing approval-status filter.
         // Lost & Found uses its own ApprovalStatus enum.
@@ -43,6 +68,11 @@ public class LostFoundsController : Controller
             // EF Core translates this comparison into a database WHERE condition.
             lostfounds = lostfounds.Where(l => l.Status == selectedStatus);
         }
+
+
+        // =========================================================
+        // EXISTING LOST / FOUND FILTER
+        // =========================================================
 
         // Apply the Lost/Found report-type filter.
         // LostFoundType separates Lost reports from Found reports.
@@ -55,6 +85,11 @@ public class LostFoundsController : Controller
             lostfounds = lostfounds.Where(l => l.Type == selectedReportType);
         }
 
+
+        // =========================================================
+        // EXISTING PET TYPE FILTER
+        // =========================================================
+
         // Apply the Dog/Cat filter.
         // Lost & Found uses its own PetType enum.
         if (!string.IsNullOrWhiteSpace(petType) &&
@@ -66,10 +101,59 @@ public class LostFoundsController : Controller
             lostfounds = lostfounds.Where(l => l.PetType == selectedPetType);
         }
 
-        // Execute the query after all selected filters have been applied.
-        return View(await lostfounds.ToListAsync());
-    }
 
+        // =========================================================
+        // PAGINATION
+        // =========================================================
+
+        // Count the reports AFTER all selected filters have been applied.
+        var totalItems = await lostfounds.CountAsync();
+
+        // Calculate the total number of pages.
+        var totalPages = (int)Math.Ceiling(
+            totalItems / (double)pageSize
+        );
+
+        // Prevent the requested page from going beyond
+        // the available number of pages.
+        if (totalPages > 0 && page > totalPages)
+        {
+            page = totalPages;
+        }
+
+
+        // =========================================================
+        // GET CURRENT PAGE
+        // =========================================================
+
+        // Retrieve only the reports needed for the current page.
+        // Lost & Found displays 10 reports per page.
+        var pagedLostFounds = await lostfounds
+            .OrderByDescending(l => l.DateReported)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+
+        // =========================================================
+        // CREATE PAGED RESULT
+        // =========================================================
+
+        var result = new PaginationViewModel<LostFound>
+        {
+            Items = pagedLostFounds,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalItems
+        };
+
+
+        // =========================================================
+        // RETURN VIEW
+        // =========================================================
+
+        return View(result);
+    }
     // GET: LostFounds/Details/5
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Details(int? id)
@@ -110,6 +194,19 @@ public class LostFoundsController : Controller
         report.Status = ApprovalStatus.Approved;
 
         await _context.SaveChangesAsync();
+
+        // Retrieves the Admin who successfully approved the Lost & Found report.
+        // UserManager gets the ApplicationUser associated with the current login.
+        var currentUser = await _userManager.GetUserAsync(User);
+
+        // Records the approval only after the report status has been
+        // successfully saved as Approved in the database.
+        if (currentUser != null)
+        {
+            await _auditLogService.LogAsync(
+                currentUser,
+                "Approved Post");
+        }
 
         // Notify the report owner
         if (!string.IsNullOrEmpty(report.UserId))
@@ -322,7 +419,7 @@ public class LostFoundsController : Controller
         // the report is edited.
         existing.DateReported = DateTime.Now;
 
-    
+
 
         // DELETE MARKED EXISTING IMAGES
 
@@ -355,7 +452,7 @@ public class LostFoundsController : Controller
         }
 
 
-    
+
 
         // =========================================================
         // REMOVED → PENDING
@@ -406,6 +503,18 @@ public class LostFoundsController : Controller
         // and any newly uploaded images.
         await _context.SaveChangesAsync();
 
+        // Retrieve the Member who successfully edited the Lost & Found post.
+        // UserManager gets the ApplicationUser associated with the current login.
+        var currentUser = await _userManager.GetUserAsync(User);
+
+        // Record the edit only after the report and its image changes
+        // have been successfully saved to the database.
+        if (currentUser != null)
+        {
+            await _auditLogService.LogAsync(
+                currentUser,
+                "Edited Post");
+        }
 
         // =========================================================
         // ADMIN RESUBMISSION NOTIFICATION
@@ -534,6 +643,18 @@ public class LostFoundsController : Controller
 
         await _context.SaveChangesAsync();
 
+        // Retrieve the Member who successfully deleted the Lost & Found post.
+        var currentUser = await _userManager.GetUserAsync(User);
+
+        // Record the deletion only after the report has been successfully
+        // removed from the database.
+        if (currentUser != null)
+        {
+            await _auditLogService.LogAsync(
+                currentUser,
+                "Deleted Post");
+        }
+
         return RedirectToAction("Index", "MyPosts");
     }
 
@@ -628,8 +749,21 @@ public class LostFoundsController : Controller
         _context.Add(lostFound);
         await _context.SaveChangesAsync();
 
-        string? imagePath = null;
+        // Only authenticated users have an Identity account that can be
+        // associated with an audit record. Anonymous Lost & Found submissions
+        // therefore do not create a Member audit log.
+        var currentUser = await _userManager.GetUserAsync(User);
 
+        // Record the successful creation of the Lost & Found post.
+        // This happens only after the report has been saved successfully.
+        if (currentUser != null)
+        {
+            await _auditLogService.LogAsync(
+                currentUser,
+                "Created Post");
+        }
+
+        string? imagePath = null;
         if (Images != null && Images.Count > 0)
         {
             try
@@ -706,11 +840,35 @@ public class LostFoundsController : Controller
     // lostFoundType filters Lost/Found while petType filters Dog/Cat.
     [AllowAnonymous]
     public async Task<IActionResult> Browse(
-        string? lostFoundType,
-        string? petType)
+       string? lostFoundType,
+       string? petType,
+       int page = 1)
     {
+        // =========================================================
+        // PAGINATION SETTINGS
+        // =========================================================
+
+        const int pageSize = 12;
+
+        // Prevent invalid page numbers.
+        if (page < 1)
+        {
+            page = 1;
+        }
+
+
+        // =========================================================
+        // GET CURRENT USER
+        // =========================================================
+
         // Get the current user's ID so members do not see their own reports.
+        // For guests, GetUserId returns null and all public reports remain available.
         var userid = _userManager.GetUserId(User);
+
+
+        // =========================================================
+        // EXISTING LOST & FOUND QUERY
+        // =========================================================
 
         // Start with the existing public Lost & Found rules.
         // Only approved and active reports are displayed.
@@ -723,6 +881,11 @@ public class LostFoundsController : Controller
             .Include(l => l.Images)
             .AsQueryable();
 
+
+        // =========================================================
+        // EXISTING LOST / FOUND FILTER
+        // =========================================================
+
         // Apply the Lost/Found filter when a specific report type was selected.
         // Enum.TryParse converts "Lost" or "Found" into LostFoundType.
         if (!string.IsNullOrWhiteSpace(lostFoundType) &&
@@ -731,20 +894,80 @@ public class LostFoundsController : Controller
                 out var selectedReportType))
         {
             // EF Core filters the query to the selected Lost/Found type.
-            lostfounds = lostfounds.Where(l => l.Type == selectedReportType);
+            lostfounds = lostfounds.Where(
+                l => l.Type == selectedReportType);
         }
+
+
+        // =========================================================
+        // EXISTING PET TYPE FILTER
+        // =========================================================
 
         // Apply the Dog/Cat filter when a specific pet type was selected.
-        // LostFound uses its own PetType enum, separate from Marketplace's ListPetType.
+        // Lost & Found uses its own PetType enum.
         if (!string.IsNullOrWhiteSpace(petType) &&
-            Enum.TryParse<PetType>(petType, out var selectedPetType))
+            Enum.TryParse<PetType>(
+                petType,
+                out var selectedPetType))
         {
-            // Only reports matching the selected pet type are returned.
-            lostfounds = lostfounds.Where(l => l.PetType == selectedPetType);
+            // EF Core filters the query to the selected pet type.
+            lostfounds = lostfounds.Where(
+                l => l.PetType == selectedPetType);
         }
 
-        // Execute the final query after all selected filters have been applied.
-        return View(await lostfounds.ToListAsync());
+
+        // =========================================================
+        // PAGINATION
+        // =========================================================
+
+        // Count the results AFTER all selected filters have been applied.
+        var totalItems = await lostfounds.CountAsync();
+
+
+        // Calculate the total number of pages.
+        var totalPages = (int)Math.Ceiling(
+            totalItems / (double)pageSize);
+
+
+        // Prevent the requested page from going beyond
+        // the available number of pages.
+        if (totalPages > 0 && page > totalPages)
+        {
+            page = totalPages;
+        }
+
+
+        // =========================================================
+        // GET CURRENT PAGE
+        // =========================================================
+
+        // Retrieve only the reports needed for the current page.
+        // Lost & Found displays 12 reports per page.
+        var pagedLostFounds = await lostfounds
+            .OrderByDescending(l => l.DateReported)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+
+        // =========================================================
+        // CREATE PAGED RESULT
+        // =========================================================
+
+        var result = new PaginationViewModel<LostFound>
+        {
+            Items = pagedLostFounds,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalItems
+        };
+
+
+        // =========================================================
+        // RETURN TO LOST & FOUND VIEW
+        // =========================================================
+
+        return View(result);
     }
 
     // GET: LOSTFOUNDS/Details/5

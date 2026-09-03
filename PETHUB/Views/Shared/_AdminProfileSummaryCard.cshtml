@@ -1,114 +1,136 @@
 ﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+    Admin Profile Summary Card
 *@
-@{
-}
-<!-- ========================================================= -->
-<!-- PROFILE CARD                                               -->
-<!-- ========================================================= -->
 
-<div class="card shadow-sm mb-4 mt-4">
+<div class="admin-profile-card">
 
-    <div class="card-body text-center">
+    <!-- =========================================================
+         PROFILE INFORMATION
+    ========================================================== -->
+
+    <div class="admin-profile-info">
 
         <!-- Profile Picture -->
         @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
         {
             <img id="profilePicturePreview"
-                    src="@Model.ProfilePicturePath"
-                    class="rounded-circle border mb-3"
-                    width="180"
-                    height="180"
-                    style="object-fit:cover;" />
+                 src="@Model.ProfilePicturePath"
+                 class="admin-profile-picture"
+                 alt="Profile Picture" />
         }
         else
         {
             <img id="profilePicturePreview"
-                    src="~/images/default_profile.jpg"
-                    class="rounded-circle border mb-3"
-                    width="180"
-                    height="180"
-                    style="object-fit:cover;" />
+                 src="~/images/default_profile.jpg"
+                 class="admin-profile-picture"
+                 alt="Default Profile Picture" />
         }
-        <!-- Name -->
 
-        <h3 class="mb-1">
+        <!-- Name + Administrator Since -->
+        <div class="admin-profile-details">
 
-            @Model.FirstName
+            <h3>
+                @Model.FirstName
 
-            @if (!string.IsNullOrWhiteSpace(Model.MiddleName))
-            {
-                @Model.MiddleName
-            }
+                @if (!string.IsNullOrWhiteSpace(Model.MiddleName))
+                {
+                    @Model.MiddleName
+                }
 
-            @Model.LastName
+                @Model.LastName
+            </h3>
 
-        </h3>
+            <p>
+                Administrator since @Model.CreatedAt.ToString("MMM dd, yyyy")
+            </p>
 
-        <!-- User Type -->
+        </div>
 
-        <p class="text-muted mb-2">
+        <!-- Three-Dot Menu -->
+        <div class="dropdown admin-profile-dropdown">
 
-            Administrator
+            <button class="admin-profile-menu"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    aria-label="Profile options">
 
-        </p>
+                <i data-lucide="ellipsis"></i>
 
-        <!-- Joined Date -->
+            </button>
 
-        <p class="text-secondary">
+            <ul class="dropdown-menu dropdown-menu-end">
 
-            <strong>Joined:</strong>
+                <li>
+                    <a asp-controller="AdminMyProfile"
+                       asp-action="View"
+                       class="dropdown-item">
+                        Personal Details
+                    </a>
+                </li>
 
-            @Model.CreatedAt.ToString("MMMM dd, yyyy")
+                <li>
+                    <a href="#"
+                       class="dropdown-item">
+                        Archive
+                    </a>
+                </li>
 
-        </p>
+                <li>
+                    <a href="#"
+                       class="dropdown-item">
+                        Settings
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
 
 
-        <div class="border-top mt-4 pt-4">
+    <!-- =========================================================
+         ADMIN ACTIVITY SUMMARY
+    ========================================================== -->
 
-                <!-- ========================================================= -->
-                <!-- ADMIN ACTIVITY SUMMARY                                    -->
-                <!-- ========================================================= -->
+    <div class="admin-profile-stats">
 
-                <div class="row g-0 text-center">
+        <div class="admin-profile-stat">
 
-                    <div class="col">
+            <strong>
+                @Model.PetFeedPostsCount
+            </strong>
 
-                        <small class="text-muted d-block">
-                            PetFeed Posts
-                        </small>
+            <span>
+                PetFeed Posts
+            </span>
 
-                        <h3 class="fw-bold mt-2 mb-0">
-                            @Model.PetFeedPostsCount
-                        </h3>
+        </div>
 
-                    </div>
 
-                    <div class="col border-start">
+        <div class="admin-profile-stat">
 
-                        <small class="text-muted d-block">
-                            Announcements
-                        </small>
+            <strong>
+                @Model.AnnouncementsCount
+            </strong>
 
-                        <h3 class="fw-bold mt-2 mb-0">
-                            @Model.AnnouncementsCount
-                        </h3>
+            <span>
+                Announcements
+            </span>
 
-                    </div>
+        </div>
 
-                    <div class="col border-start">
 
-                        <small class="text-muted d-block">
-                            Pet Tips
-                        </small>
+        <div class="admin-profile-stat">
 
-                        <h3 class="fw-bold mt-2 mb-0">
-                            @Model.PetTipsCount
-                        </h3>
+            <strong>
+                @Model.PetTipsCount
+            </strong>
 
-                    </div>
-
-                </div>
+            <span>
+                Pet Tips
+            </span>
 
         </div>
 

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
+using PETHUB.Hubs;
 using PETHUB.Models;
 using PETHUB.Services;
-using PETHUB.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +60,10 @@ builder.Services.AddScoped<NotificationService>();
 
 // Register MessagingService here
 builder.Services.AddScoped<MessagingService>();
+
+// Register the AuditLogService so controllers can use the centralized
+//Logs user actions to the database for auditing purposes
+builder.Services.AddScoped<AuditLogService>();
 
 // Register SignalR here
 builder.Services.AddSignalR();

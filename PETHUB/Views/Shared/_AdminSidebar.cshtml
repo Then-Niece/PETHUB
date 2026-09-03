@@ -246,6 +246,27 @@
 
         </div>
 
+        <hr class="sidebar-divider" />
+
+        <!-- My Content -->
+        <div class="sidebar-section">
+
+            <h6 class="sidebar-section-title">
+                My Content
+            </h6>
+
+            <a asp-controller="MyLogs"
+               asp-action="Index"
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "MyLogs" ? "active" : "")">
+
+                <i data-lucide="file-text"></i>
+
+                <span class="sidebar-text">
+                    My Logs
+                </span>
+
+            </a>
+
     </div>
 
 </nav>

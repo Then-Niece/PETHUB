@@ -261,13 +261,32 @@
                             <ul class="dropdown-menu dropdown-menu-end lostfound-post-dropdown">
 
                                 <li>
-                                    <button type="button"
-                                            class="dropdown-item">
-                                        <i data-lucide="flag"></i>
-                                        <span>Report</span>
-                                    </button>
-                                </li>
+                                    @if (User.IsInRole("Member") &&
+                                         Model.UserId != User.FindFirst(
+                                             System.Security.Claims.ClaimTypes.NameIdentifier
+                                         )?.Value)
+                                        {
+                                            <!-- Opens the shared Report modal for this Marketplace listing.
+                                             The server-side controller still verifies ownership before accepting
+                                             the submitted report. -->
 
+                                            <button type="button"
+                                                    class="danger-action"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#reportModal"
+                                                    data-report-type="LostFound"
+                                                    data-report-id="@Model.LostFoundId"
+                                                    data-report-title="@Model.Title">
+
+                                                <i data-lucide="flag"></i>
+
+                                                <span>
+                                                    Report Listing
+                                                </span>
+
+                                            </button>
+                                        }
+                                </li>
                             </ul>
 
                         </div>

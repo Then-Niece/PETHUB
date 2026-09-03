@@ -4,671 +4,693 @@
     ViewData["Title"] = "View my Profile";
 }
 
-<div class="container py-4">
+<div class="container-fluid py-4">
 
-    <div class="row justify-content-center">
+    @* =========================================================
+       SUCCESS MESSAGE
+       ========================================================= *@
 
-        <div class="col-lg-9">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-4"
+             role="alert">
 
-            <!-- ========================================================= -->
-            <!-- PAGE HEADER                                                -->
-            <!-- ========================================================= -->
-            @if (TempData["SuccessMessage"] != null) @* Shows Success Message After Saving Changes *@
-            {
-                <div class="alert alert-success alert-dismissible fade show">
+            @TempData["SuccessMessage"]
 
-                    @TempData["SuccessMessage"] @* Call from TempData in MyProfileController *@
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
 
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert">
-                    </button>
+        </div>
+    }
 
+
+
+
+
+    @* =========================================================
+       MAIN PROFILE LAYOUT
+       ========================================================= *@
+
+    <div class="profile-page-layout">
+
+
+        @* =====================================================
+           LEFT COLUMN
+           ===================================================== *@
+
+        <div class="profile-left-column">
+
+
+            @* =================================================
+               PROFILE CARD
+               ================================================= *@
+
+            <div class="profile-member-card">
+
+                @* Profile Header / Cover *@
+
+                <div class="profile-card-cover">
                 </div>
-            }
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
 
-                <div>
+                @* Profile Picture *@
 
-                    <h2 class="mb-1">View My Profile</h2>
+                <div class="profile-picture-wrapper">
 
-                    <p class="text-muted mb-0">
-                        View your personal information and account details.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <!-- ========================================================= -->
-            <!-- PROFILE CARD                                               -->
-            <!-- ========================================================= -->
-
-            <div class="card shadow-sm mb-4 mt-4">
-
-                <div class="card-body text-center">
-
-                    <!-- Profile Picture -->
                     @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
                     {
                         <img id="profilePicturePreview"
                              src="@Model.ProfilePicturePath"
-                             class="rounded-circle border mb-3"
-                             width="180"
-                             height="180"
-                             style="object-fit:cover;" />
+                             class="profile-picture"
+                             alt="Profile Picture" />
                     }
                     else
                     {
                         <img id="profilePicturePreview"
                              src="~/images/default_profile.jpg"
-                             class="rounded-circle border mb-3"
-                             width="180"
-                             height="180"
-                             style="object-fit:cover;" />
+                             class="profile-picture"
+                             alt="Default Profile Picture" />
                     }
-                    <!-- Name -->
 
-                    <h3 class="mb-1">
+                </div>
+
+
+                @* Member Information *@
+
+                <div class="profile-member-info">
+
+                    <h3 class="profile-member-name">
 
                         @Model.FirstName
 
                         @if (!string.IsNullOrWhiteSpace(Model.MiddleName))
                         {
-                            @Model.MiddleName
+                            <span>
+                                @Model.MiddleName
+                            </span>
                         }
 
                         @Model.LastName
 
                     </h3>
 
-                    <!-- User Type -->
 
-                    <p class="text-muted mb-2">
-
+                    <div class="profile-member-role">
                         Member
+                    </div>
 
-                    </p>
 
-                    <!-- Joined Date -->
-
-                    <p class="text-secondary">
-
-                        <strong>Joined:</strong>
-
+                    <p class="profile-member-joined">
+                        Joined
                         @Model.CreatedAt.ToString("MMMM dd, yyyy")
-
                     </p>
 
 
-                    <div class="border-top mt-4 pt-4">
+                    @* Edit Profile *@
 
-                        <!-- ========================================================= -->
-                        <!-- ACTIVITY SUMMARY                                          -->
-                        <!-- ========================================================= -->
+                    <a asp-action="Edit"
+                       class="profile-edit-button">
 
-                        <div class="row g-0 text-center">
+                        Edit Profile
 
-                            <div class="col">
+                    </a>
 
-                                <small class="text-muted d-block">
-                                    Marketplace Listings
-                                </small>
+                </div>
 
-                                <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.MarketplaceListingsCount
-                                </h3>
+            </div>
 
-                            </div>
 
-                            <div class="col border-start">
+            @* =================================================
+               ACTIVITY CARD
+               ================================================= *@
 
-                                <small class="text-muted d-block">
-                                    Lost &amp; Found Reports
-                                </small>
+            <div class="profile-activity-card">
 
-                                <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.LostFoundReportsCount
-                                </h3>
+                <div class="profile-section-header">
 
-                            </div>
+                    <h4>
+                        Activity
+                    </h4>
 
-                            <div class="col border-start">
+                    <p>
+                        Overview of your activity
+                    </p>
 
-                                <small class="text-muted d-block">
-                                    Pets Sold
-                                </small>
+                </div>
 
-                                <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.PetsSoldCount
-                                </h3>
 
-                            </div>
+                @* Marketplace Listings *@
 
-                            <div class="col border-start">
+                <div class="profile-activity-item">
 
-                                <small class="text-muted d-block">
-                                    Pets Adopted
-                                </small>
+                    <div class="profile-activity-content">
 
-                                <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.PetsAdoptedCount
-                                </h3>
+                        <strong>
+                            @Model.MarketplaceListingsCount
+                        </strong>
 
-                            </div>
-
-                            <div class="col border-start">
-
-                                <small class="text-muted d-block">
-                                    Resolved Reports
-                                </small>
-
-                                <h3 class="fw-bold mt-2 mb-0">
-                                    @Model.ResolvedReportsCount
-                                </h3>
-
-                            </div>
-
-                        </div>
+                        <span>
+                            Marketplace Listings
+                        </span>
 
                     </div>
 
-                    @* ========================================================= *@
-                    @* ABOUT ME                                                  *@
-                    @* ========================================================= *@
+                </div>
 
-                    <div class="card shadow-sm mb-4 mt-4">
 
-                        @if(Model.Bio != null)
-                        {
-                            <div class="card-body text-start">
+                @* Lost & Found Reports *@
 
-                                <h4 class="mb-1">
-                                    About Me
-                                </h4>
+                <div class="profile-activity-item">
 
-                                <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
-                                    Biography
-                                </h6>
+                    <div class="profile-activity-content">
 
-                                <p class="form-control">
-                                    @Model.Bio
-                                </p>
-                            </div>
-                        }
-                        else
-                        {
-                            
-                        }
+                        <strong>
+                            @Model.LostFoundReportsCount
+                        </strong>
+
+                        <span>
+                            Lost &amp; Found Reports
+                        </span>
 
                     </div>
 
-                    @* ========================================================= *@
-                    @* PERSONAL INFORMATION                                      *@
-                    @* ========================================================= *@
+                </div>
 
-                    <div class="card shadow-sm mb-4 mt-4">
 
-                        <div class="card-body">
+                @* Pets Sold *@
 
-                            <h4 class="mb-1 text-start">
-                                Personal Information
-                            </h4>
+                <div class="profile-activity-item">
 
-                            <p class="text-muted mb-4 text-start">
-                                 Below are your personal details.
-                            </p>
+                    <div class="profile-activity-content">
 
-                            @* ------------------------------------------------- *@
-                            @* NAME                                              *@
-                            @* ------------------------------------------------- *@
+                        <strong>
+                            @Model.PetsSoldCount
+                        </strong>
 
-                            <h6 class="fw-bold text-success border-bottom pb-2 mb-4 text-start">
-                                Name
-                            </h6>
-
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-                                    <label asp-for="FirstName" class="fw-semibold"></label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.FirstName
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <div class="row align-items-center mb-3">
-                                
-                                @if(Model.MiddleName != null)
-                                {
-                                    <div class="col-md-4">
-                                        <label asp-for="MiddleName" class="fw-semibold"></label>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <p class="form-control">
-                                            @Model.MiddleName
-                                        </p>
-                                    </div>
-                                }
-                                else
-                                {
-                                    
-                                }
-
-                            </div>
-
-                            <div class="row align-items-center">
-
-                                <div class="col-md-4">
-                                    <label asp-for="LastName" class="fw-semibold"></label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.LastName
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            @* ------------------------------------------------- *@
-                            @* CONTACT DETAILS                                   *@
-                            @* ------------------------------------------------- *@
-
-                            <h6 class="fw-bold text-success border-bottom pb-2 mt-5 mb-4 text-start">
-                                Contact Details
-                            </h6>
-
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-
-                                    <label class="fw-semibold">
-                                        Email Address
-                                    </label>
-
-                                </div>
-
-                                <div class="col-md-8">
-
-                                    <p class="form-control">
-                                        @Model.Email
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-                            <div class="row align-items-center">
-
-                                <div class="col-md-4">
-
-                                    <label asp-for="ContactNumber"
-                                           class="fw-semibold">
-                                    </label>
-
-                                </div>
-
-                                <div class="col-md-8">
-
-                                    <p class="form-control">
-                                        @Model.ContactNumber
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-                            @* ------------------------------------------------- *@
-                            @* PERSONAL DETAILS                                  *@
-                            @* ------------------------------------------------- *@
-
-                            <h6 class="fw-bold text-success border-bottom pb-2 mt-5 mb-4 text-start">
-                                Personal Details
-                            </h6>
-
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-
-                                    <label asp-for="Gender"
-                                           class="fw-semibold">
-                                    </label>
-
-                                </div>
-
-                                <div class="col-md-8">
-
-                                    <p class="form-control">
-                                        @Model.Gender
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <div class="row align-items-center">
-
-                                <div class="col-md-4">
-
-                                    <label asp-for="Birthdate"
-                                           class="fw-semibold">
-                                    </label>
-
-                                </div>
-
-                                <div class="col-md-8">
-
-                                    <p class="form-control">
-                                        @Model.Birthdate?.ToString("MMMM dd, yyyy")
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
+                        <span>
+                            Pets Sold
+                        </span>
 
                     </div>
-                    @* ========================================================= *@
-                    @* ADDRESS                                                   *@
-                    @* ========================================================= *@
 
-                    <div class="card shadow-sm mb-4 mt-4">
+                </div>
 
-                        <div class="card-body text-start">
 
-                            <h4 class="mb-1">
-                                Address
-                            </h4>
+                @* Pets Adopted *@
 
-                            <p class="text-muted mb-4">
-                                Below is your residential address.
-                            </p>
+                <div class="profile-activity-item">
 
-                            @* ------------------------------------------------- *@
-                            @* LOCATION                                          *@
-                            @* ------------------------------------------------- *@
+                    <div class="profile-activity-content">
 
-                            <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
-                                Location
-                            </h6>
+                        <strong>
+                            @Model.PetsAdoptedCount
+                        </strong>
 
-                            <!-- Province -->
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-                                    <label asp-for="Province" class="fw-semibold"></label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.Province
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <!-- City -->
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-                                    <label asp-for="City" class="fw-semibold">
-                                        City / Municipality
-                                    </label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.City
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <!-- Barangay -->
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-                                    <label asp-for="Barangay" class="fw-semibold"></label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.Barangay
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <!-- Street Address -->
-                            <div class="row align-items-center">
-
-                                <div class="col-md-4">
-                                    <label asp-for="StreetAddress" class="fw-semibold"></label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.StreetAddress
-                                    </p>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                    @* ========================================================= *@
-                    @* VERIFICATION                                              *@
-                    @* ========================================================= *@
-
-                    <div class="card shadow-sm mb-4">
-
-                        <div class="card-body text-start">
-
-                            <h4 class="mb-1">
-                                Verification
-                            </h4>
-
-                            <p class="text-muted mb-4">
-                                View your identity verification document.
-                            </p>
-
-                            @* ------------------------------------------------- *@
-                            @* VERIFICATION DOCUMENT                            *@
-                            @* ------------------------------------------------- *@
-
-                            <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
-                                Verification Document
-                            </h6>
-
-                            <div class="row align-items-start">
-
-                                <div class="col-md-4">
-
-                                    <label class="fw-semibold">
-                                        Current Valid ID
-                                    </label>
-
-                                </div>
-
-                                <div class="col-md-8">
-
-                                    @* Only Members have a Valid ID on file *@
-                                    @if (User.IsInRole("Member"))
-                                    {
-                                        @* Display the currently uploaded Valid ID if one exists *@
-                                        @if (!string.IsNullOrEmpty(Model.IdPhotoPath))
-                                        {
-                                            <img src="@Model.IdPhotoPath"
-                                                 class="img-thumbnail mb-3"
-                                                 style="max-width:350px; max-height:220px; object-fit:contain;" />
-                                        }
-                                        else
-                                        {
-                                            @* Placeholder shown when no Valid ID has been uploaded *@
-                                            <div class="border rounded d-flex justify-content-center align-items-center mb-3"
-                                                 style="width:350px; height:220px;">
-
-                                                <span class="text-muted">
-                                                    No Valid ID Uploaded
-                                                </span>
-
-                                            </div>
-                                        }
-                                    }
-
-                                </div>
-
-                            </div>
-
-                        </div>
+                        <span>
+                            Pets Adopted
+                        </span>
 
                     </div>
 
-                    @* ========================================================= *@
-                    @* ACCOUNT INFORMATION                                       *@
-                    @* ========================================================= *@
+                </div>
 
-                    <div class="card shadow-sm mb-4">
 
-                        <div class="card-body text-start">
+                @* Resolved Reports *@
 
-                            <h4 class="mb-1">
-                                Account Information
-                            </h4>
+                <div class="profile-activity-item">
 
-                            <p class="text-muted mb-4">
-                                View your account information and membership details.
-                            </p>
+                    <div class="profile-activity-content">
 
-                            @* ------------------------------------------------- *@
-                            @* ACCOUNT                                           *@
-                            @* ------------------------------------------------- *@
+                        <strong>
+                            @Model.ResolvedReportsCount
+                        </strong>
 
-                            <h6 class="fw-bold text-success border-bottom pb-2 mb-4">
-                                Account
-                            </h6>
-
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-                                    <label class="fw-semibold">
-                                        Email Address
-                                    </label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.Email
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <div class="row align-items-center">
-
-                                <div class="col-md-4">
-                                    <label class="fw-semibold">
-                                        Member Since
-                                    </label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.CreatedAt.ToString("MMMM dd, yyyy")
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            @* ------------------------------------------------- *@
-                            @* ACCOUNT STATUS                                    *@
-                            @* ------------------------------------------------- *@
-
-                            <h6 class="fw-bold text-success border-bottom pb-2 mt-5 mb-4">
-                                Account Status
-                            </h6>
-
-                            <div class="row align-items-center mb-3">
-
-                                <div class="col-md-4">
-                                    <label class="fw-semibold">
-                                        Status
-                                    </label>
-                                </div>
-
-                                <div class="col-md-8">
-                                    <p class="form-control">
-                                        @Model.Status
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <div class="row align-items-center">
-
-                                <div class="col-md-4">
-                                    <label class="fw-semibold">
-                                        Accepted Terms
-                                    </label>
-                                </div>
-
-                                <div class="col-md-8">
-
-                                    <p class="form-control">
-                                        @(Model.AcceptedTermsDate?.ToString("MMMM dd, yyyy") ?? "Not Accepted Terms and Agreement")
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                    @* ========================================================= *@
-                    @* ACTIONS                                                   *@
-                    @* ========================================================= *@
-
-                    <div class="card shadow-sm mb-4">
-
-                        <div class="card-body">
-
-                            <h4 class="mb-1 text-start">
-                                Actions
-                            </h4>
-
-                            <div class="d-flex justify-content-end gap-2">
-
-                                <a asp-controller="MyPosts"
-                                   asp-action="Index"
-                                   class="btn btn-outline-secondary">
-
-                                    Back
-
-                                </a>
-
-                                <a asp-action="Edit"
-                                   class="btn btn-outline-secondary">
-
-                                    Edit Profile
-
-                                </a>
-
-                            </div>
-
-                        </div>
+                        <span>
+                            Resolved Reports
+                        </span>
 
                     </div>
 
                 </div>
 
             </div>
+
+        </div>
+
+
+        @* =====================================================
+           RIGHT COLUMN
+           ===================================================== *@
+
+        <div class="profile-right-column">
+
+
+            @* =================================================
+               PERSONAL INFORMATION
+               ================================================= *@
+
+            <div class="profile-information-card">
+
+                <div class="profile-section-header">
+
+                    <h3>
+                        Personal Information
+                    </h3>
+
+                    <p>
+                        Your profile details
+                    </p>
+
+                </div>
+
+
+                @* NAME *@
+
+                <h6 class="profile-subsection-title">
+                    Name
+                </h6>
+
+
+                <div class="profile-information-grid">
+
+
+                    @* First Name *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            First Name
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.FirstName
+                        </span>
+
+                    </div>
+
+
+                    @* Middle Name *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Middle Name
+                        </span>
+
+                        <span class="profile-information-value">
+
+                            @if (!string.IsNullOrWhiteSpace(Model.MiddleName))
+                            {
+                                @Model.MiddleName
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    Not specified
+                                </span>
+                            }
+
+                        </span>
+
+                    </div>
+
+
+                    @* Last Name *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Last Name
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.LastName
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                @* CONTACT DETAILS *@
+
+                <h6 class="profile-subsection-title">
+                    Contact Details
+                </h6>
+
+
+                <div class="profile-information-grid">
+
+
+                    @* Email *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Email Address
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.Email
+                        </span>
+
+                    </div>
+
+
+                    @* Contact Number *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Contact Number
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.ContactNumber
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                @* PERSONAL DETAILS *@
+
+                <h6 class="profile-subsection-title">
+                    Personal Details
+                </h6>
+
+
+                <div class="profile-information-grid">
+
+
+                    @* Gender *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Gender
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.Gender
+                        </span>
+
+                    </div>
+
+
+                    @* Birthdate *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Birthdate
+                        </span>
+
+                        <span class="profile-information-value">
+
+                            @if (Model.Birthdate.HasValue)
+                            {
+                                @Model.Birthdate.Value.ToString("MMMM dd, yyyy")
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    Not specified
+                                </span>
+                            }
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            @* =================================================
+               ADDRESS
+               ================================================= *@
+
+            <div class="profile-information-card">
+
+                <div class="profile-section-header">
+
+                    <h3>
+                        Address
+                    </h3>
+
+                    <p>
+                        Your residential address
+                    </p>
+
+                </div>
+
+
+                <h6 class="profile-subsection-title">
+                    Location
+                </h6>
+
+
+                <div class="profile-information-grid">
+
+
+                    @* Province *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Province
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.Province
+                        </span>
+
+                    </div>
+
+
+                    @* City *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            City / Municipality
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.City
+                        </span>
+
+                    </div>
+
+
+                    @* Barangay *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Barangay
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.Barangay
+                        </span>
+
+                    </div>
+
+
+                    @* Street Address *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Street Address
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.StreetAddress
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            @* =================================================
+               VERIFICATION
+               ================================================= *@
+
+            <div class="profile-information-card">
+
+                <div class="profile-section-header">
+
+                    <h3>
+                        Verification
+                    </h3>
+
+                    <p>
+                        Your identity verification document
+                    </p>
+
+                </div>
+
+
+                <h6 class="profile-subsection-title">
+                    Verification Document
+                </h6>
+
+
+                <div class="profile-verification-container">
+
+                    <span class="profile-information-label">
+                        Current Valid ID
+                    </span>
+
+
+                    @if (User.IsInRole("Member"))
+                    {
+
+                        @if (!string.IsNullOrEmpty(Model.IdPhotoPath))
+                        {
+                            <img src="@Model.IdPhotoPath"
+                                 class="profile-id-image"
+                                 alt="Current Valid ID" />
+                        }
+                        else
+                        {
+                            <div class="profile-id-placeholder">
+
+                                <strong>
+                                    No Valid ID Uploaded
+                                </strong>
+
+                                <span>
+                                    Upload one in Edit Profile to verify your account.
+                                </span>
+
+                            </div>
+                        }
+
+                    }
+
+                </div>
+
+            </div>
+
+
+            @* =================================================
+               ACCOUNT INFORMATION
+               ================================================= *@
+
+            <div class="profile-information-card">
+
+                <div class="profile-section-header">
+
+                    <h3>
+                        Account Information
+                    </h3>
+
+                    <p>
+                        Membership and account status
+                    </p>
+
+                </div>
+
+
+                @* ACCOUNT *@
+
+                <h6 class="profile-subsection-title">
+                    Account
+                </h6>
+
+
+                <div class="profile-information-grid">
+
+
+                    @* Email Address *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Email Address
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.Email
+                        </span>
+
+                    </div>
+
+
+                    @* Member Since *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Member Since
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.CreatedAt.ToString("MMMM dd, yyyy")
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                @* ACCOUNT STATUS *@
+
+                <h6 class="profile-subsection-title">
+                    Account Status
+                </h6>
+
+
+                <div class="profile-information-grid">
+
+
+                    @* Status *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Status
+                        </span>
+
+                        <span class="profile-information-value">
+                            @Model.Status
+                        </span>
+
+                    </div>
+
+
+                    @* Accepted Terms *@
+
+                    <div class="profile-information-item">
+
+                        <span class="profile-information-label">
+                            Accepted Terms
+                        </span>
+
+                        <span class="profile-information-value">
+
+                            @(Model.AcceptedTermsDate?.ToString("MMMM dd, yyyy")
+                                ?? "Not Accepted Terms and Agreement")
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
 
         </div>
 

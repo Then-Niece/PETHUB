@@ -4,58 +4,181 @@
     ViewData["Title"] = "Create PetFeed Post";
 }
 
-<h1>Create PetFeed Post</h1>
+<div class="create-page">
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    @Html.AntiForgeryToken()
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="create-card">
 
-    <!-- Title -->
-    <div class="form-group mb-3">
-        <label asp-for="Title" class="control-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+        <!-- ==================================================
+             HEADER
+        ================================================== -->
+
+        <div class="create-header">
+            <h2>Create Pet Feed Post</h2>
+
+            <p>
+                Share an announcement or helpful pet tip with the community.
+            </p>
+        </div>
+
+
+        <form asp-action="Create"
+              method="post"
+              enctype="multipart/form-data">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+
+            <!-- ==================================================
+                 FORM
+            ================================================== -->
+
+            <div class="create-form">
+
+                <!-- LEFT SIDE -->
+
+                <div class="create-fields">
+
+                    <!-- Title -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Title"
+                               class="form-label">
+                            Title
+                        </label>
+
+                        <input asp-for="Title"
+                               class="form-control"
+                               placeholder="Enter post title" />
+
+                        <span asp-validation-for="Title"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Content -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Content"
+                               class="form-label">
+                            Content
+                        </label>
+
+                        <textarea asp-for="Content"
+                                  rows="4"
+                                  class="form-control"
+                                  placeholder="Write something about your post..."></textarea>
+
+                        <span asp-validation-for="Content"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Post Type -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Type"
+                               class="form-label">
+                            Post Type
+                        </label>
+
+                        <select asp-for="Type"
+                                class="form-select"
+                                asp-items="Html.GetEnumSelectList<PETHUB.Models.PetFeedType>()">
+                        </select>
+
+                        <span asp-validation-for="Type"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RIGHT SIDE - PHOTOS -->
+
+                <div class="create-photos">
+
+                    <h5>Photos</h5>
+
+                    <div class="mb-3">
+
+                        <input type="file"
+                               id="imageInput"
+                               name="Images"
+                               multiple
+                               class="form-control"
+                               accept="image/*" />
+
+                        <small class="text-muted">
+                            You can upload multiple images.
+                        </small>
+
+                    </div>
+
+
+                    <!-- IMAGE PREVIEW -->
+
+                    <div id="imagePreviewContainer"
+                         class="image-preview-grid">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 FORM ACTIONS
+            ================================================== -->
+
+            <hr class="my-4" />
+
+            <div class="create-footer">
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="btn btn-success">
+                    Create Post
+                </button>
+
+            </div>
+
+        </form>
+
     </div>
 
-    <!-- Content -->
-    <div class="form-group mb-3">
-        <label asp-for="Content" class="control-label"></label>
-        <textarea asp-for="Content" class="form-control" rows="4"></textarea>
-        <span asp-validation-for="Content" class="text-danger"></span>
-    </div>
+</div>
 
-    <!-- Type (Announcement vs Pet Tip) -->
-    <div class="form-group mb-3">
-        <label asp-for="Type" class="control-label"></label>
-        <select asp-for="Type" class="form-select"
-                asp-items="Html.GetEnumSelectList<PETHUB.Models.PetFeedType>()"></select>
-        <span asp-validation-for="Type" class="text-danger"></span>
-    </div>
-
-    <!-- File upload for images -->
-    <div class="form-group mb-3">
-        <label>Upload Images</label>
-        <input type="file" id="imageInput" name="Images" multiple class="form-control" />
-        <small class="form-text text-muted">You can select multiple files.</small>
-    </div>
-
-    <!-- Preview container -->
-    <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2 mt-3"></div>
-
-    <!-- Submit + Back -->
-    <div class="form-group d-flex gap-2 mt-3">
-        <button type="submit" class="btn btn-primary">Create Post</button>
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </div>
-</form>
 
 @section Scripts {
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-
-        <script src="~/js/imagePreviewHelper.js"></script>
-        <script>
-            setupImagePreview("imageInput", "imagePreviewContainer");
-        </script>
     }
+
+    <script src="~/js/imagePreviewHelper.js"></script>
+
+    <script>
+        setupImagePreview(
+            "imageInput",
+            "imagePreviewContainer"
+        );
+    </script>
+
 }

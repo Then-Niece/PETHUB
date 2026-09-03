@@ -26,16 +26,20 @@ namespace PETHUB.Controllers
         // Provides Member profile-building logic.
         private readonly IProfileService _profileService;
 
+        // Provides centralized audit logging for Member activities.
+        // The service saves the event to the AuditLogs table.
+        private readonly AuditLogService _auditLogService;
 
         // ==========================================================
         // CONSTRUCTOR
         // ==========================================================
 
-        public MyProfileController(UserManager<ApplicationUser> userManager, IWebHostEnvironment environment, IProfileService profileService)
+        public MyProfileController(UserManager<ApplicationUser> userManager, IWebHostEnvironment environment, IProfileService profileService, AuditLogService auditLogService)
         {
             _userManager = userManager;
             _environment = environment;
             _profileService = profileService;
+            _auditLogService = auditLogService;
         }
 
         // ==========================================================
@@ -333,7 +337,7 @@ namespace PETHUB.Controllers
             user.ContactNumber = model.ContactNumber;
 
             // Member-specific information.
-            user.Gender =model.Gender;
+            user.Gender = model.Gender;
             user.Birthdate = model.Birthdate;
 
             // Member address.
@@ -354,36 +358,47 @@ namespace PETHUB.Controllers
             // Save the Valid ID path.
             user.IdPhotoPath = newIdPhotoPath;
 
+
             // ======================================================
             // SAVE THROUGH ASP.NET IDENTITY
             // ======================================================
 
+            // Saves the updated Member profile through ASP.NET Identity.
+            // UpdateAsync returns a result indicating whether the database update succeeded.
             var result = await _userManager.UpdateAsync(user);
 
-
             // Check whether Identity successfully saved the user.
+            // If the update failed, the audit log is NOT created because the profile
+            // change did not actually succeed.
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
                 {
+                    // Adds each Identity error back to ModelState so the Razor View
+                    // can display the reason why the update failed.
                     ModelState.AddModelError(
                         string.Empty,
                         error.Description
                     );
                 }
 
+                // Returns the user to the edit form instead of recording a false
+                // "Profile Updated" event.
                 return View(model);
             }
 
+            // Records the successful profile update in the AuditLogs table.
+            // LogAsync determines the user's current role and stores the exact UTC time.
+            await _auditLogService.LogAsync(
+                user,
+                "Profile Updated"
+            );
 
-            // ======================================================
-            // SUCCESS
-            // ======================================================
+            // Stores a one-time success message that can be displayed after redirect.
+            TempData["SuccessMessage"] =
+                "Your profile has been updated successfully.";
 
-            // Store a one-time success message.
-            TempData["SuccessMessage"] ="Your profile has been updated successfully.";
-
-            // Redirect back to the profile page.
+            // Redirects back to the Member's profile page after a successful update.
             return RedirectToAction(
                 nameof(View)
             );

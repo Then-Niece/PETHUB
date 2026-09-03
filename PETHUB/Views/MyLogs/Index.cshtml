@@ -1,0 +1,300 @@
+﻿@model IEnumerable<PETHUB.Models.AuditLog>
+
+@{
+    ViewData["Title"] = User.IsInRole("Admin") ? "Admin Logs" : "My Logs";
+
+    // Gets the Admin user dictionary supplied by MyLogsController.
+    // It is only needed when the current viewer is an Admin.
+    var adminUsers = ViewBag.AdminUsers
+        as Dictionary<string, PETHUB.Models.ApplicationUser>;
+}
+
+<div class="logs-page">
+
+    <!-- ========================================================= -->
+    <!-- PAGE HEADER                                                -->
+    <!-- ========================================================= -->
+
+    <div class="logs-header">
+
+        @if (User.IsInRole("Admin"))
+        {
+            <h1>Admin Logs</h1>
+
+            <p>
+                View and review administrator activity.
+            </p>
+        }
+        else
+        {
+            <h1>My Logs</h1>
+
+            <p>
+                View your account activity and actions.
+            </p>
+        }
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- SEARCH / FILTER / TOTAL                                    -->
+    <!-- ========================================================= -->
+
+    <div class="logs-toolbar">
+
+        <div class="logs-toolbar-left">
+
+            <!-- Search UI only.
+                 Search functionality is not currently implemented. -->
+
+            <div class="logs-search">
+
+                <i data-lucide="search"
+                   class="logs-search-icon"></i>
+
+                <input type="text"
+                       class="logs-search-input"
+                       placeholder="Search logs..."
+                       disabled />
+
+            </div>
+
+
+            <!-- Filter UI only.
+                 Filter functionality is not currently implemented. -->
+
+            <button type="button"
+                    class="logs-filter-button"
+                    disabled>
+
+                <span>
+                    Filter
+                </span>
+
+                <span class="logs-filter-arrow">
+                    &#9662;
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- Total log count -->
+
+        <div class="logs-total">
+
+            <span class="logs-total-number">
+                @Model.Count()
+            </span>
+
+            <span class="logs-total-label">
+                total
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- FUTURE SEARCH / FILTER LOGIC                               -->
+    <!-- ========================================================= -->
+    @*
+        ===========================================================
+        FUTURE SEARCH / FILTER IMPLEMENTATION
+        ===========================================================
+
+        Search and filter functionality is not currently
+        implemented by the programmer.
+
+        The controls above are intentionally visual only.
+
+        When the programmer adds the actual functionality,
+        the following can be implemented here:
+
+        SEARCH
+        - Search by Admin
+        - Search by Action
+
+        FILTER
+        - Filter by Admin
+        - Filter by Action
+        - Filter by Date
+
+        Do not add filtering logic until it is implemented
+        in the controller/programmer code.
+    *@
+
+
+    <!-- ========================================================= -->
+    <!-- LOG TABLE                                                  -->
+    <!-- ========================================================= -->
+    @if (!Model.Any())
+    {
+        <!-- Displays a message when there are no recorded activities. -->
+
+        <div class="logs-empty-card">
+
+            <p>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    @:There are no administrator activity logs yet.
+                }
+                else
+                {
+                    @:You don't have any activity logs yet.
+                }
+
+            </p>
+
+        </div>
+    }
+    else
+    {
+        <!-- Makes the table responsive on smaller screens. -->
+
+        <div class="logs-card">
+
+            <div class="logs-table-wrapper">
+
+                <table class="logs-table">
+
+                    <thead>
+
+                        <tr>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <!-- Displays which Admin performed the activity. -->
+
+                                <th class="logs-admin-column">
+                                    Admin
+                                </th>
+                            }
+
+                            <!-- Displays the general activity that occurred. -->
+
+                            <th class="logs-action-column">
+                                Action
+                            </th>
+
+                            <!-- Displays the date when the activity occurred. -->
+
+                            <th class="logs-date-column">
+                                Date
+                            </th>
+
+                            <!-- Displays the time when the activity occurred. -->
+
+                            <th class="logs-time-column">
+                                Time
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var log in Model)
+                        {
+                            <tr>
+
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <!-- ================================================= -->
+                                    <!-- ADMIN                                           -->
+                                    <!-- ================================================= -->
+
+                                    <td class="logs-admin-cell">
+
+                                        <div class="logs-admin">
+
+                                            <div class="logs-avatar">
+
+                                                @if (adminUsers != null &&
+                                                     adminUsers.TryGetValue(log.UserId, out var avatarAdmin))
+                                                {
+                                                    @(
+                                                        $"{avatarAdmin.FirstName?.FirstOrDefault()}{avatarAdmin.LastName?.FirstOrDefault()}"
+                                                    )
+                                                }
+                                                else
+                                                {
+                                                    @("?")
+                                                }
+
+                                            </div>
+
+
+                                            <div class="logs-admin-name">
+
+                                                @if (adminUsers != null &&
+                                                     adminUsers.TryGetValue(log.UserId, out var adminUser))
+                                                {
+                                                    @($"{adminUser.FirstName} {adminUser.MiddleName} {adminUser.LastName}")
+                                                }
+                                                else
+                                                {
+                                                    @("Unknown Admin")
+                                                }
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+                                }
+
+
+                                <!-- ===================================================== -->
+                                <!-- ACTION                                              -->
+                                <!-- ===================================================== -->
+
+                                <td class="logs-action-cell">
+
+                                    <span class="logs-action">
+                                        @log.Action
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ===================================================== -->
+                                <!-- DATE                                                -->
+                                <!-- ===================================================== -->
+
+                                <td class="logs-date-cell">
+
+                                    @(log.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy"))
+
+                                </td>
+
+
+                                <!-- ===================================================== -->
+                                <!-- TIME                                                -->
+                                <!-- ===================================================== -->
+
+                                <td class="logs-time-cell">
+
+                                    @(log.CreatedAt.ToLocalTime().ToString("hh:mm tt"))
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    }
+
+</div>

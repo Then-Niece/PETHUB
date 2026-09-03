@@ -1,0 +1,139 @@
+﻿@model PETHUB.ViewModels.PaginationViewModel
+@{
+    // Keep all existing query parameters
+    // so filters remain selected while changing pages.
+    var query = Context.Request.Query
+        .ToDictionary(
+            x => x.Key,
+            x => x.Value.ToString()
+        );
+}
+
+@if (Model.TotalPages > 1)
+{
+    <div class="pagination-container">
+
+        <!-- Showing count -->
+        <div class="pagination-summary">
+            Showing
+            <strong>
+                @Math.Min(
+                    Model.PageSize,
+                    Model.TotalItems - ((Model.CurrentPage - 1) * Model.PageSize)
+                )
+            </strong>
+            of
+            <strong>@Model.TotalItems</strong>
+        </div>
+
+
+        <!-- Pagination buttons -->
+        <div class="pagination-controls">
+
+            @* =====================================================
+               PREVIOUS
+               ===================================================== *@
+
+            @if (Model.HasPreviousPage)
+            {
+                var previousQuery = new Dictionary<string, string>(query)
+                {
+                    ["page"] = (Model.CurrentPage - 1).ToString()
+                };
+
+                var previousUrl = Context.Request.Path +
+                    "?" +
+                    string.Join(
+                        "&",
+                        previousQuery.Select(
+                            x => $"{x.Key}={Uri.EscapeDataString(x.Value)}"
+                        )
+                    );
+
+                <a href="@previousUrl"
+                   class="pagination-button">
+                    &lsaquo;
+                </a>
+            }
+            else
+            {
+                <span class="pagination-button disabled">
+                    &lsaquo;
+                </span>
+            }
+
+
+            @* =====================================================
+               PAGE NUMBERS
+               ===================================================== *@
+
+            @for (var pageNumber = 1;
+                  pageNumber <= Model.TotalPages;
+                  pageNumber++)
+            {
+                var pageQuery = new Dictionary<string, string>(query)
+                {
+                    ["page"] = pageNumber.ToString()
+                };
+
+                var pageUrl = Context.Request.Path +
+                    "?" +
+                    string.Join(
+                        "&",
+                        pageQuery.Select(
+                            x => $"{x.Key}={Uri.EscapeDataString(x.Value)}"
+                        )
+                    );
+
+                if (pageNumber == Model.CurrentPage)
+                {
+                    <span class="pagination-button active">
+                        @pageNumber
+                    </span>
+                }
+                else
+                {
+                    <a href="@pageUrl"
+                       class="pagination-button">
+                        @pageNumber
+                    </a>
+                }
+            }
+
+
+            @* =====================================================
+               NEXT
+               ===================================================== *@
+
+            @if (Model.HasNextPage)
+            {
+                var nextQuery = new Dictionary<string, string>(query)
+                {
+                    ["page"] = (Model.CurrentPage + 1).ToString()
+                };
+
+                var nextUrl = Context.Request.Path +
+                    "?" +
+                    string.Join(
+                        "&",
+                        nextQuery.Select(
+                            x => $"{x.Key}={Uri.EscapeDataString(x.Value)}"
+                        )
+                    );
+
+                <a href="@nextUrl"
+                   class="pagination-button">
+                    &rsaquo;
+                </a>
+            }
+            else
+            {   
+                <span class="pagination-button disabled">
+                    &rsaquo;
+                </span>
+            }
+
+        </div>
+
+    </div>
+}

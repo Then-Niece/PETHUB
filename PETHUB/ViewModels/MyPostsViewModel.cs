@@ -2,7 +2,7 @@
 
 namespace PETHUB.ViewModels
 {
-    public class MyPostsViewModel
+    public class MyPostsViewModel : PaginationViewModel
     {
         // Logged-in user's profile information displayed at the top of the page.
         public EditProfileViewModel Profile { get; set; } = new();

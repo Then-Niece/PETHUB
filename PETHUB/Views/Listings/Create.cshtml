@@ -298,12 +298,18 @@
     }
 
     <script src="~/js/imagePreviewHelper.js"></script>
+   
 
     <script>
         setupImagePreview(
             "imageInput",
             "imagePreviewContainer"
+
         );
+
+        setupImageGallery(
+    document.getElementById("imagePreviewContainer")
+
     </script>
 
     <script>
@@ -343,6 +349,9 @@
             });
 
         });
+
+
+});
     </script>
 
     <script src="~/js/address-helper.js"

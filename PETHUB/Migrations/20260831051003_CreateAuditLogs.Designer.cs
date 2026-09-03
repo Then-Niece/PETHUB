@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PETHUB.Data;
 
@@ -11,9 +12,11 @@ using PETHUB.Data;
 namespace PETHUB.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260831051003_CreateAuditLogs")]
+    partial class CreateAuditLogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,7 +196,7 @@ namespace PETHUB.Migrations
 
                     b.HasKey("AppealId");
 
-                    b.ToTable("Appeals", (string)null);
+                    b.ToTable("Appeals");
                 });
 
             modelBuilder.Entity("PETHUB.Models.ApplicationUser", b =>
@@ -339,7 +342,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("LostFoundId");
 
-                    b.ToTable("Conversations", (string)null);
+                    b.ToTable("Conversations");
                 });
 
             modelBuilder.Entity("PETHUB.Models.ConversationParticipant", b =>
@@ -373,7 +376,7 @@ namespace PETHUB.Migrations
                     b.HasIndex("ConversationId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("ConversationParticipants", (string)null);
+                    b.ToTable("ConversationParticipants");
                 });
 
             modelBuilder.Entity("PETHUB.Models.Listing", b =>
@@ -439,7 +442,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Listings", (string)null);
+                    b.ToTable("Listings");
                 });
 
             modelBuilder.Entity("PETHUB.Models.ListingImage", b =>
@@ -461,7 +464,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("ListingId");
 
-                    b.ToTable("ListingImages", (string)null);
+                    b.ToTable("ListingImages");
                 });
 
             modelBuilder.Entity("PETHUB.Models.LostFound", b =>
@@ -538,7 +541,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("LostFounds", (string)null);
+                    b.ToTable("LostFounds");
                 });
 
             modelBuilder.Entity("PETHUB.Models.LostFoundImage", b =>
@@ -560,7 +563,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("LostFoundId");
 
-                    b.ToTable("LostFoundImages", (string)null);
+                    b.ToTable("LostFoundImages");
                 });
 
             modelBuilder.Entity("PETHUB.Models.Message", b =>
@@ -593,7 +596,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("ConversationId", "CreatedAt");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("PETHUB.Models.MessageImage", b =>
@@ -615,7 +618,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("MessageId");
 
-                    b.ToTable("MessageImages", (string)null);
+                    b.ToTable("MessageImages");
                 });
 
             modelBuilder.Entity("PETHUB.Models.Notification", b =>
@@ -669,7 +672,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("PETHUB.Models.PetFeed", b =>
@@ -701,7 +704,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("AdminId");
 
-                    b.ToTable("PetFeeds", (string)null);
+                    b.ToTable("PetFeeds");
                 });
 
             modelBuilder.Entity("PETHUB.Models.PetFeedComment", b =>
@@ -732,7 +735,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("PetFeedId");
 
-                    b.ToTable("PetFeedComments", (string)null);
+                    b.ToTable("PetFeedComments");
                 });
 
             modelBuilder.Entity("PETHUB.Models.PetFeedImage", b =>
@@ -754,7 +757,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("PetFeedId");
 
-                    b.ToTable("PetFeedImages", (string)null);
+                    b.ToTable("PetFeedImages");
                 });
 
             modelBuilder.Entity("PETHUB.Models.PetFeedPaw", b =>
@@ -781,7 +784,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("PetFeedId");
 
-                    b.ToTable("PetFeedPaws", (string)null);
+                    b.ToTable("PetFeedPaws");
                 });
 
             modelBuilder.Entity("PETHUB.Models.SavedPetFeed", b =>
@@ -805,7 +808,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("PetFeedId");
 
-                    b.ToTable("SavedPetFeeds", (string)null);
+                    b.ToTable("SavedPetFeeds");
                 });
 
             modelBuilder.Entity("PETHUB.Models.UserReport", b =>
@@ -855,7 +858,7 @@ namespace PETHUB.Migrations
 
                     b.HasIndex("ReporterId");
 
-                    b.ToTable("UserReports", (string)null);
+                    b.ToTable("UserReports");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

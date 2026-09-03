@@ -1,0 +1,232 @@
+﻿/* ==========================================================
+   PETHUB - SHARED IMAGE GALLERY
+   ========================================================== */
+
+
+/* ==========================================================
+   GALLERY OVERLAY
+   ========================================================== */
+
+.shared-image-gallery {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ==========================================================
+   BACKDROP
+   ========================================================== */
+
+.shared-gallery-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+}
+
+
+/* ==========================================================
+   GALLERY CONTENT
+   ========================================================== */
+
+.shared-gallery-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 90px;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================================
+   MAIN IMAGE
+   ========================================================== */
+
+.shared-gallery-image {
+    display: block;
+    max-width: 90%;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    user-select: none;
+}
+
+
+/* ==========================================================
+   CLOSE BUTTON
+   ========================================================== */
+
+.shared-gallery-close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #222;
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+    .shared-gallery-close:hover {
+        background: #ffffff;
+        transform: scale(1.05);
+    }
+
+
+/* ==========================================================
+   PREVIOUS / NEXT BUTTONS
+   ========================================================== */
+
+.shared-gallery-prev,
+.shared-gallery-next {
+    position: absolute;
+    top: 50%;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #222;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.shared-gallery-prev {
+    left: 25px;
+}
+
+.shared-gallery-next {
+    right: 25px;
+}
+
+    .shared-gallery-prev:hover,
+    .shared-gallery-next:hover {
+        background: #ffffff;
+    }
+
+.shared-gallery-prev:hover {
+    transform: translateY(-50%) translateX(-2px);
+}
+
+.shared-gallery-next:hover {
+    transform: translateY(-50%) translateX(2px);
+}
+
+
+/* ==========================================================
+   IMAGE COUNTER
+   ========================================================== */
+
+.shared-gallery-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.65);
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 500;
+    user-select: none;
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media (max-width: 767.98px) {
+
+    .shared-gallery-content {
+        padding: 55px 55px;
+    }
+
+    .shared-gallery-image {
+        max-width: 100%;
+        max-height: 80vh;
+    }
+
+    .shared-gallery-close {
+        top: 15px;
+        right: 15px;
+        width: 38px;
+        height: 38px;
+        font-size: 27px;
+    }
+
+    .shared-gallery-prev,
+    .shared-gallery-next {
+        width: 38px;
+        height: 38px;
+        font-size: 20px;
+    }
+
+    .shared-gallery-prev {
+        left: 10px;
+    }
+
+    .shared-gallery-next {
+        right: 10px;
+    }
+
+    .shared-gallery-counter {
+        bottom: 15px;
+    }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+   ========================================================== */
+
+@media (max-width: 480px) {
+
+    .shared-gallery-content {
+        padding: 50px 45px;
+    }
+
+    .shared-gallery-image {
+        max-height: 75vh;
+    }
+
+    .shared-gallery-prev,
+    .shared-gallery-next {
+        width: 34px;
+        height: 34px;
+        font-size: 18px;
+    }
+
+    .shared-gallery-prev {
+        left: 7px;
+    }
+
+    .shared-gallery-next {
+        right: 7px;
+    }
+}

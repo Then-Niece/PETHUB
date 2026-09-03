@@ -1,10 +1,10 @@
-@model IEnumerable<PETHUB.Models.Listing>
+@model PETHUB.ViewModels.PaginationViewModel<PETHUB.Models.Listing>
 @using PETHUB.Helpers
 
 @{
     ViewData["Title"] = "Marketplace Approval";
-    // Combine the existing Status filter with Marketplace-specific
-    // Listing Type and Pet Type filters.
+
+    // Create the existing Marketplace approval filters.
     var marketplaceApprovalFilters = PETHUB.Helpers.FilterBarHelper.Create(
         PETHUB.Helpers.FilterBarHelper.Status(
             Context.Request.Query["status"].ToString()
@@ -18,71 +18,297 @@
     );
 }
 
-<h1>Marketplace Approval</h1>
 
-<partial name="Components/_FilterBar"
-         model="marketplaceApprovalFilters" />
+<div class="admin-marketplace-page">
 
-<div class="container">
-        @foreach (var item in Model)
+
+    <!-- ==========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="admin-marketplace-header">
+
+        <div class="admin-marketplace-header-text">
+
+            <h1>
+                Marketplace Approval
+            </h1>
+
+            <p>
+                Review and manage marketplace listings
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================================
+         FILTERS + TOTAL COUNT
+    ========================================================== -->
+
+    <div class="admin-marketplace-filter-card">
+
+        <div class="admin-marketplace-filters">
+
+            @foreach (var filter in marketplaceApprovalFilters.Filters)
+            {
+                var selectedValue = filter.SelectedValue ?? filter.DefaultValue;
+
+                <div class="admin-marketplace-filter"
+                     data-filter-dropdown>
+
+                    <span class="admin-marketplace-filter-label">
+                        @filter.Label
+                    </span>
+
+
+                    <!-- FILTER BUTTON -->
+
+                    <button type="button"
+                            class="admin-marketplace-filter-button"
+                            data-dropdown-button
+                            aria-expanded="false">
+
+                        <span>
+                            @(filter.Options.FirstOrDefault(x => x.Value == selectedValue)?.Label
+                                ?? filter.Options.FirstOrDefault()?.Label)
+                        </span>
+
+                        <i data-lucide="chevron-down"></i>
+
+                    </button>
+
+
+                    <!-- FILTER MENU -->
+
+                    <div class="admin-marketplace-filter-menu"
+                         data-dropdown-menu>
+
+                        @foreach (var option in filter.Options)
+                        {
+                            var query = Context.Request.Query
+                                .ToDictionary(
+                                    item => item.Key,
+                                    item => item.Value.ToString()
+                                );
+
+                            if (string.IsNullOrEmpty(option.Value))
+                            {
+                                query.Remove(filter.ParameterName);
+                            }
+                            else
+                            {
+                                query[filter.ParameterName] = option.Value;
+                            }
+
+                            var queryString = string.Join(
+                                "&",
+                                query.Select(
+                                    item => $"{item.Key}={Uri.EscapeDataString(item.Value)}"
+                                )
+                            );
+
+                            var baseUrl = Context.Request.Path.ToString();
+
+                            var optionUrl = string.IsNullOrEmpty(queryString)
+                                ? baseUrl
+                                : $"{baseUrl}?{queryString}";
+
+                            var isSelected = option.Value == selectedValue;
+
+                            <a href="@optionUrl"
+                               class="admin-marketplace-filter-option @(isSelected ? "selected" : "")">
+
+                                @option.Label
+
+                            </a>
+                        }
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+
+        <!-- TOTAL COUNT -->
+
+        <span class="admin-marketplace-total">
+
+            @Model.TotalItems
+            @(Model.TotalItems == 1 ? "post" : "posts")
+
+        </span>
+
+    </div>
+
+
+    <!-- ==========================================================
+         MARKETPLACE RESULTS
+    ========================================================== -->
+
+    <div class="admin-marketplace-posts">
+
+        @foreach (var item in Model.Items)
         {
-            string borderColor = "#6c757d"; //
 
-            if (item.Status == ListApprovalStatus.Pending)
-            {
-                borderColor = "#ffc107"; //yellow
-            }
-            else if (item.Status == ListApprovalStatus.Approved)
-            {
-                borderColor = "#198754"; //green
-            }
-            else if (item.Status == ListApprovalStatus.Rejected)
-            {
-                borderColor = "#dc3545"; //red
-            }
+            <div class="admin-marketplace-card">
 
-            <div class="card mb-2 shadow-sm"
-                 style="border-left:5px solid @borderColor;">
-            <div class="row g-0 align-items-center">
 
-                <!-- Thumbnail -->
-                <div class="col-auto">
-                    @if (item.Images != null && item.Images.Any())
+                <!-- ==================================================
+                     LISTING IMAGE
+                ================================================== -->
+
+                <a asp-action="Details"
+                   asp-route-id="@item.ListingId"
+                   class="admin-marketplace-image-container">
+
+                    @if (item.Images != null &&
+                         item.Images.Any())
                     {
                         <img src="@Url.Content(item.Images.First().ImagePath)"
-                             alt="Listing image"
-                             class="img-thumbnail"
-                             style="width:100px;height:100px;object-fit:cover;">
+                             class="admin-marketplace-image"
+                             alt="Listing image" />
                     }
                     else
                     {
                         <img src="@Url.Content("~/images/no-image.png")"
-                             alt="No image"
-                             class="img-thumbnail"
-                             style="width:100px;height:100px;object-fit:cover;">
+                             class="admin-marketplace-image"
+                             alt="No image" />
                     }
-                </div>
 
-                <!-- Details -->
-                <div class="col-md-10 d-flex">
-                    <div class="card-body py-2">
-                        <h6 class="card-title mb-1">@item.Title</h6>
-                        <p class="mb-1 text-muted small">@item.Description</p>
+                </a>
 
-                        <p class="mb-0">
-                            <span class="badge bg-@(item.Type == ListType.For_Adoption ? "primary" : "warning text-dark")">@item.Type</span>
-                            <small class="text-muted"> | @item.DatePosted.ToString("MMM dd, yyyy")</small>
-                            <small class="text-muted"> | @(string.IsNullOrEmpty(item.City) ? "No location" : item.City + ", " + item.Province)</small>
-                        </p>
+
+                <!-- ==================================================
+                     LISTING INFORMATION
+                ================================================== -->
+
+                <a asp-action="Details"
+                   asp-route-id="@item.ListingId"
+                   class="admin-marketplace-content">
+
+                    <h3 class="admin-marketplace-title">
+                        @item.Title
+                    </h3>
+
+
+                    <p class="admin-marketplace-date">
+
+                        Created @item.DatePosted.ToString("MMM dd, yyyy")
+
+                    </p>
+
+
+                    <p class="admin-marketplace-location">
+
+                        @(string.IsNullOrEmpty(item.City)
+                            ? "No location"
+                            : item.City + ", " + item.Province)
+
+                    </p>
+
+                </a>
+
+
+                <!-- ==================================================
+                     RIGHT SIDE ACTIONS
+                ================================================== -->
+
+                <div class="admin-marketplace-actions">
+
+
+                    <!-- ==================================================
+                         THREE-DOT MENU
+                    ================================================== -->
+
+                    <div class="dropdown">
+
+                        <button class="admin-marketplace-more-button"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                aria-label="Listing options">
+
+                            <i data-lucide="ellipsis"></i>
+
+                        </button>
+
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+
+                            <li>
+
+                                <a asp-action="Details"
+                                   asp-route-id="@item.ListingId"
+                                   class="dropdown-item">
+
+                                    View
+
+                                </a>
+
+                            </li>
+
+                        </ul>
+
                     </div>
-                </div>
 
-                <!-- Actions -->
-                <div class="col-auto pe-3">
-                    <a asp-action="Details" asp-route-id="@item.ListingId" class="btn btn-sm btn-outline-primary">View</a>
+
+                    <!-- ==================================================
+                         APPROVAL STATUS
+                    ================================================== -->
+                    @if (item.Status == ListApprovalStatus.Pending)
+                    {
+                        <span class="admin-marketplace-status admin-marketplace-status-pending">
+
+                            Pending
+
+                        </span>
+                    }
+                    else if (item.Status == ListApprovalStatus.Approved)
+                    {
+                        <span class="admin-marketplace-status admin-marketplace-status-approved">
+
+                            Approved
+
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="admin-marketplace-status admin-marketplace-status-rejected">
+
+                            Rejected
+
+                        </span>
+                    }
+
                 </div>
 
             </div>
-        </div>
-    }
+
+        }
+
+    </div>
+
+    <partial name="_Pagination" model="Model" />
+
 </div>
+
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            if (typeof lucide !== "undefined") {
+                lucide.createIcons();
+            }
+
+        });
+
+    </script>
+
+}

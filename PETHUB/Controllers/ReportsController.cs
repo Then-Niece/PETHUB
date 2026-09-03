@@ -15,6 +15,7 @@ namespace PETHUB.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly NotificationService _notificationService;
+        private readonly AuditLogService _auditLogService;
 
         // Dependency Injection provides the database context and Identity UserManager.
         // ApplicationDbContext handles UserReport, Listing, LostFound, and Appeal operations.
@@ -22,7 +23,8 @@ namespace PETHUB.Controllers
         public ReportsController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            NotificationService notificationService)
+            NotificationService notificationService,
+            AuditLogService auditLogService)
         {
             // Provides database access for reports, posts, and appeals.
             _context = context;
@@ -32,6 +34,9 @@ namespace PETHUB.Controllers
 
             // Provides the existing PETHUB notification functionality.
             _notificationService = notificationService;
+
+            // Provides the audit logging functionality.
+            _auditLogService = auditLogService;
         }
 
 
@@ -183,6 +188,18 @@ namespace PETHUB.Controllers
             // Saves the report before updating the Admin notification.
             await _context.SaveChangesAsync();
 
+            // Retrieve the Member who successfully submitted the report.
+            // UserManager gets the ApplicationUser associated with the current login.
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Record the report only after it has been successfully saved
+            // to the database.
+            if (currentUser != null)
+            {
+                await _auditLogService.LogAsync(
+                    currentUser,
+                    "Reported");
+            }
 
             // Retrieves all Admin accounts.
             var admins = await _userManager.GetUsersInRoleAsync("Admin");
@@ -615,6 +632,18 @@ namespace PETHUB.Controllers
 
             await _context.SaveChangesAsync();
 
+            // Retrieve the Admin who successfully dismissed the reports.
+            // UserManager gets the ApplicationUser associated with the current login.
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Record the dismissal only after all related reports have been
+            // successfully marked as dismissed in the database.
+            if (currentUser != null)
+            {
+                await _auditLogService.LogAsync(
+                    currentUser,
+                    "Dismissed Report");
+            }
 
             // Notifies each Reporter.
             foreach (var relatedReport in relatedReports)
@@ -755,6 +784,18 @@ namespace PETHUB.Controllers
             // Saves the resolved reports and Removed post status.
             await _context.SaveChangesAsync();
 
+            // Retrieves the Admin who successfully confirmed the violation.
+            // UserManager gets the ApplicationUser associated with the current login.
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Records the successful moderation action after the reports and
+            // reported post have been saved as resolved/removed.
+            if (currentUser != null)
+            {
+                await _auditLogService.LogAsync(
+                    currentUser,
+                    "Removed Post");
+            }
 
             // Notifies every Reporter that the report was accepted.
             foreach (var relatedReport in relatedReports)
@@ -974,6 +1015,18 @@ namespace PETHUB.Controllers
             // they were never loaded or modified by this action.
             await _context.SaveChangesAsync();
 
+            // Retrieves the Admin who successfully confirmed the appeal.
+            // UserManager gets the ApplicationUser associated with the current login.
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Records the successful appeal confirmation only after the Appeal
+            // and the associated post restoration have been saved successfully.
+            if (currentUser != null)
+            {
+                await _auditLogService.LogAsync(
+                    currentUser,
+                    "Confirmed Appeal");
+            }
 
             // Returns to the same Admin Report Details page where the
             // appeal was reviewed.
@@ -1069,6 +1122,18 @@ namespace PETHUB.Controllers
             // Other Pending posts remain completely untouched.
             await _context.SaveChangesAsync();
 
+            // Retrieves the Admin who successfully rejected the appeal.
+            // UserManager gets the ApplicationUser associated with the current login.
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Records the successful appeal rejection only after the Appeal
+            // has been saved as Rejected in the database.
+            if (currentUser != null)
+            {
+                await _auditLogService.LogAsync(
+                    currentUser,
+                    "Rejected Appeal");
+            }
 
             // Return to the original Admin Report Details page.
             var reportId = await GetReportIdForAppealAsync(appeal);

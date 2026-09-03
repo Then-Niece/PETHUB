@@ -23,7 +23,7 @@ namespace PETHUB.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             // get the current logged-in user's ID to exclude them from the list
             var currentUserId = _userManager.GetUserId(User);
@@ -35,15 +35,69 @@ namespace PETHUB.Controllers
                 .ToList();
 
 
-            // Build dictionary of user roles (optional if you want to show role column)
+            // =========================================================
+            // PAGINATION
+            // =========================================================
+
+            const int pageSize = 10;
+
+            // Prevent invalid page numbers.
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            // Get the total number of admins before pagination.
+            var totalItems = users.Count;
+
+            // Prevent the requested page from going beyond
+            // the available number of pages.
+            var totalPages = (int)Math.Ceiling(
+                totalItems / (double)pageSize
+            );
+
+            if (totalPages > 0 && page > totalPages)
+            {
+                page = totalPages;
+            }
+
+            // Get only the admins for the current page.
+            var pagedUsers = users
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+
+            // =========================================================
+            // EXISTING ROLE DICTIONARY
+            // =========================================================
+
+            // Build dictionary of user roles
             var userRoles = new Dictionary<string, string>();
-            foreach (var user in users)
+
+            foreach (var user in pagedUsers)
             {
                 var roles = await _userManager.GetRolesAsync(user);
                 userRoles[user.Id] = roles.FirstOrDefault() ?? "No Role";
             }
+
             ViewBag.UserRoles = userRoles;
-            return View(users); // return the actual list of ApplicationUser, not just the dictionary
+
+
+            // =========================================================
+            // PAGINATION VIEWMODEL
+            // =========================================================
+
+            var model = new PaginationViewModel<ApplicationUser>
+            {
+                Items = pagedUsers,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalItems = totalItems
+            };
+
+
+            return View(model);
         }
 
         // GET: Users/Details/5

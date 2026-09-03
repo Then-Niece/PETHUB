@@ -1,80 +1,351 @@
-@model IEnumerable<PETHUB.Models.PetFeed>
-
+@model PETHUB.ViewModels.PaginationViewModel<PETHUB.Models.PetFeed>
 @{
     ViewData["Title"] = "PetFeed Management";
+
     var petFeedFilters = PETHUB.Helpers.FilterBarHelper.Create(
-       PETHUB.Helpers.FilterBarHelper.PetFeedType(
-           Context.Request.Query["petFeedType"].ToString()
-       )
-   );
+        PETHUB.Helpers.FilterBarHelper.PetFeedType(
+            Context.Request.Query["petFeedType"].ToString()
+        )
+    );
 }
 
-<h1 class="mb-3">PetFeed Posts</h1>
 
-<div class="mb-3">
-    <a asp-action="Create" class="btn btn-primary">+ Create Post</a>
-</div>
+<div class="admin-petfeed-page">
 
-@* Render the reusable Announcement/Pet Tip filter. *@
-<partial name="Components/_FilterBar"
-         model="petFeedFilters" />
 
-<div class="container">
-    @foreach (var item in Model)
-    {
-        string borderColor = "#6c757d"; // default gray
+    @* =========================================================
+       HEADER
+       ========================================================= *@
 
-        if (item.Type == PetFeedType.Announcement)
+    <div class="admin-petfeed-header">
+
+        <div class="admin-petfeed-header-text">
+
+            <h1>
+                Pet Feed Management
+            </h1>
+
+            <p>
+                Manage announcements and pet tips
+            </p>
+
+        </div>
+
+
+        <div class="admin-petfeed-header-action">
+
+            <a asp-action="Create"
+               class="admin-petfeed-create-button">
+
+                + Create Post
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    @* =========================================================
+   FILTERS + TOTAL POST COUNT
+   ========================================================= *@
+
+    <div class="admin-petfeed-filter-card">
+
+        <div class="admin-petfeed-filters">
+
+            @foreach (var filter in petFeedFilters.Filters)
+            {
+                var selectedValue = filter.SelectedValue ?? filter.DefaultValue;
+
+                <div class="admin-petfeed-filter"
+                     data-filter-dropdown>
+
+                    <span class="admin-petfeed-filter-label">
+                        Type
+                    </span>
+
+                    <button type="button"
+                            class="admin-petfeed-filter-button"
+                            data-dropdown-button
+                            aria-expanded="false">
+
+                        <span>
+                            @(filter.Options.FirstOrDefault(x => x.Value == selectedValue)?.Label
+                                ?? filter.Options.FirstOrDefault()?.Label)
+                        </span>
+
+                        <i data-lucide="chevron-down"></i>
+
+                    </button>
+
+
+                    <div class="admin-petfeed-filter-menu"
+                         data-dropdown-menu>
+
+                        @foreach (var option in filter.Options)
+                        {
+                            var query = Context.Request.Query
+                                .ToDictionary(
+                                    item => item.Key,
+                                    item => item.Value.ToString()
+                                );
+
+                            if (string.IsNullOrEmpty(option.Value))
+                            {
+                                query.Remove(filter.ParameterName);
+                            }
+                            else
+                            {
+                                query[filter.ParameterName] = option.Value;
+                            }
+
+                            var queryString = string.Join(
+                                "&",
+                                query.Select(
+                                    item => $"{item.Key}={Uri.EscapeDataString(item.Value)}"
+                                )
+                            );
+
+                            var baseUrl = Context.Request.Path.ToString();
+
+                            var optionUrl = string.IsNullOrEmpty(queryString)
+                                ? baseUrl
+                                : $"{baseUrl}?{queryString}";
+
+                            var isSelected = option.Value == selectedValue;
+
+                            <a href="@optionUrl"
+                               class="admin-petfeed-filter-option @(isSelected ? "selected" : "")">
+
+                                @option.Label
+
+                            </a>
+                        }
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+
+        <span class="admin-petfeed-total">
+
+            @Model.TotalItems
+            @(Model.TotalItems == 1 ? "post" : "posts")
+
+        </span>
+
+    </div>
+
+
+
+    @* =========================================================
+   PETFEED POSTS
+   ========================================================= *@
+
+    <div class="admin-petfeed-posts">
+
+        @foreach (var item in Model.Items)
         {
-            borderColor = "#0d6efd"; // blue for announcements
-        }
-        else if (item.Type == PetFeedType.PetTip)
-        {
-            borderColor = "#20c997"; // teal for tips
-        }
 
-        <div class="card mb-3 shadow-sm" style="border-left:5px solid @borderColor;">
-            <div class="row g-0 align-items-center">
+            <div class="admin-petfeed-card">
 
-                <!-- Thumbnail -->
-                <div class="col-auto">
+
+                @* =================================================
+               IMAGE
+               ================================================= *@
+
+                <div class="admin-petfeed-image-container">
+
                     @if (item.Images != null && item.Images.Any())
                     {
                         <img src="@Url.Content(item.Images.First().ImagePath)"
                              alt="PetFeed image"
-                             class="img-thumbnail"
-                             style="width:100px;height:100px;object-fit:cover;">
+                             class="admin-petfeed-image" />
                     }
                     else
                     {
                         <img src="@Url.Content("~/images/no-image.png")"
                              alt="No image"
-                             class="img-thumbnail"
-                             style="width:100px;height:100px;object-fit:cover;">
+                             class="admin-petfeed-image" />
                     }
+
                 </div>
 
-                <!-- Details -->
-                <div class="col">
-                    <div class="card-body py-2">
-                        <h6 class="card-title mb-1">@item.Title</h6>
-                        <p class="mb-1 text-muted small">@item.Content</p>
 
-                        <p class="mb-0">
-                            <span class="badge bg-@(item.Type == PetFeedType.Announcement ? "primary" : "success")">
-                                @item.Type
-                            </span>
-                            <small class="text-muted"> | @item.DateCreated.ToString("MMM dd, yyyy")</small>
-                            <small class="text-muted"> | Posted by: @item.Admin?.FirstName @item.Admin?.LastName</small>
+
+                @* =================================================
+               POST INFORMATION
+               ================================================= *@
+
+                <div class="admin-petfeed-content">
+
+                    <h3 class="admin-petfeed-title">
+                        @item.Title
+                    </h3>
+
+
+                    <p class="admin-petfeed-date">
+                        Created @item.DateCreated.ToString("MMM dd, yyyy")
+                    </p>
+
+
+                    @* =================================================
+                   ADMIN NAME
+                   ================================================= *@
+
+                    @if (item.Admin != null)
+                    {
+                        <p class="admin-petfeed-author">
+
+                            By: 
+                            @item.Admin.FirstName
+                            @if (!string.IsNullOrWhiteSpace(item.Admin.MiddleName))
+                            {
+                                @($" {item.Admin.MiddleName}")
+                            }
+                            @($" {item.Admin.LastName}")
+
                         </p>
+                    }
+
+
+                    @* =================================================
+                   ENGAGEMENT
+                   ================================================= *@
+
+                    <div class="admin-petfeed-engagement">
+
+                        <span>
+                            <i data-lucide="paw-print"></i>
+                            @(item.Paws?.Count() ?? 0)
+                        </span>
+
+                        <span>
+                            <i data-lucide="message-circle"></i>
+                            @(item.Comments?.Count() ?? 0)
+                        </span>
+
                     </div>
+
                 </div>
 
-                <!-- Actions -->
-                <div class="col-auto pe-3">
-                    <a asp-action="Details" asp-route-id="@item.PetFeedId" class="btn btn-sm btn-outline-primary">View</a>
+
+
+                @* =================================================
+               RIGHT SIDE ACTIONS
+               ================================================= *@
+
+                <div class="admin-petfeed-actions">
+
+
+                    @* =================================================
+                   THREE-DOT MENU
+                   ================================================= *@
+
+                    <div class="dropdown">
+
+                        <button class="admin-petfeed-more-button"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                aria-label="PetFeed options">
+
+                            <i data-lucide="ellipsis"></i>
+
+                        </button>
+
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+
+                            <li>
+
+                                <a asp-action="Details"
+                                   asp-route-id="@item.PetFeedId"
+                                   class="dropdown-item">
+
+                                    View
+
+                                </a>
+
+                            </li>
+
+
+                        </ul>
+
+                    </div>
+
+
+
+                    @* =================================================
+                   PETFEED TYPE
+                   ================================================= *@
+
+                    @if (item.Type == PetFeedType.Announcement)
+                    {
+                        <span class="admin-petfeed-type-status admin-petfeed-type-announcement">
+                            Announcement
+                        </span>
+                    }
+                    else if (item.Type == PetFeedType.PetTip)
+                    {
+                        <span class="admin-petfeed-type-status admin-petfeed-type-tip">
+                            Pet Tip
+                        </span>
+                    }
+
                 </div>
+
             </div>
-        </div>
-    }
+
+        }
+
+
+        @* =========================================================
+       EMPTY STATE
+       ========================================================= *@
+
+        @if (!Model.Items.Any())
+        {
+            <div class="admin-petfeed-empty">
+
+                <h3>
+                    No Pet Feed Posts Found
+                </h3>
+
+                <p>
+                    There are currently no announcements or pet tips to display.
+                </p>
+
+            </div>
+        }
+
+    </div>
+
+    <partial name="_Pagination" model="Model" />
+
 </div>
+
+
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            if (typeof lucide !== "undefined") {
+
+                lucide.createIcons();
+
+            }
+
+        });
+
+    </script>
+
+}
