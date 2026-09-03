@@ -1,366 +1,440 @@
 ﻿@model PETHUB.ViewModels.AdminDashboardViewModel
 
 @{
-    // Set the page title used by the shared layout.
-    // This helps identify the current page in the browser/tab title.
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<div class="container-fluid py-4">
 
-    <!-- =========================================================
-         WELCOME HEADER
-         =========================================================
-         This section gives the administrator a simple introduction
-         before showing the dashboard information.
-         ========================================================= -->
-    <div class="mb-4">
-        <h2 class="fw-bold mb-1">Welcome back, Admin!</h2>
-        <p class="text-muted mb-0">
-            Here's an overview of what's happening in PETHUB.
-        </p>
+<div class="admin-dashboard-page">
+
+
+    <!-- ==========================================================
+         ADMIN DASHBOARD HEADER
+         ========================================================== -->
+
+    <div class="admin-dashboard-heading">
+
+        <div>
+
+            <h2>
+                Admin Dashboard
+            </h2>
+
+            <p>
+                Overview of the PETHUB platform
+            </p>
+
+        </div>
+
     </div>
 
 
-    <!-- =========================================================
-         MAIN DASHBOARD ROW
-         =========================================================
-         Bootstrap's grid system divides the dashboard into two
-         columns:
-         - col-lg-4 = approximately 30% of the row
-         - col-lg-8 = approximately 70% of the row
+    <!-- ==========================================================
+         PLATFORM STATISTICS
+         ========================================================== -->
 
-         On smaller screens, the columns automatically stack.
-         ========================================================= -->
-    <div class="row g-4">
+    <div class="admin-dashboard-statistics">
 
-        <!-- =====================================================
-             LEFT COLUMN - STATISTICS
-             =====================================================
-             This column contains the five platform-wide statistics.
-             ===================================================== -->
-        <div class="col-lg-4">
 
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
+        <!-- ======================================================
+             TOTAL MEMBERS
+             ====================================================== -->
 
-                    <h5 class="fw-bold mb-4">
-                        <i class="bi bi-bar-chart-fill me-2"></i>
-                        Statistics
-                    </h5>
+        <div class="admin-dashboard-stat-card">
 
-                    <!-- Total Members -->
-                    <div class="d-flex justify-content-between align-items-center
-                        border-bottom py-3">
-                        <div>
-                            <small class="text-muted d-block">
-                                Total Members
-                            </small>
-                            <span class="fs-4 fw-bold">
-                                @Model.TotalMembers
-                            </span>
-                        </div>
+            <div class="admin-dashboard-stat-icon members">
+                <i data-lucide="users"></i>
+            </div>
 
-                        <i class="bi bi-people-fill fs-3 text-primary"></i>
-                    </div>
+            <div class="admin-dashboard-stat-content">
 
-                    <!-- Total Administrators -->
-                    <div class="d-flex justify-content-between align-items-center
-                        border-bottom py-3">
-                        <div>
-                            <small class="text-muted d-block">
-                                Total Admins
-                            </small>
-                            <span class="fs-4 fw-bold">
-                                @Model.TotalAdmins
-                            </span>
-                        </div>
+                <span class="admin-dashboard-stat-label">
+                    Total Members
+                </span>
 
-                        <i class="bi bi-shield-fill-check fs-3 text-success"></i>
-                    </div>
+                <strong class="admin-dashboard-stat-value">
+                    @Model.TotalMembers
+                </strong>
 
-                    <!-- Total Marketplace Listings -->
-                    <div class="d-flex justify-content-between align-items-center
-                        border-bottom py-3">
-                        <div>
-                            <small class="text-muted d-block">
-                                Marketplace Listings
-                            </small>
-                            <span class="fs-4 fw-bold">
-                                @Model.TotalMarketplaceListings
-                            </span>
-                        </div>
-
-                        <i class="bi bi-shop fs-3 text-warning"></i>
-                    </div>
-
-                    <!-- Total Lost & Found Reports -->
-                    <div class="d-flex justify-content-between align-items-center
-                        border-bottom py-3">
-                        <div>
-                            <small class="text-muted d-block">
-                                Lost &amp; Found Reports
-                            </small>
-                            <span class="fs-4 fw-bold">
-                                @Model.TotalLostFoundReports
-                            </span>
-                        </div>
-
-                        <i class="bi bi-search-heart fs-3 text-danger"></i>
-                    </div>
-
-                    <!-- Total PetFeed Posts -->
-                    <div class="d-flex justify-content-between align-items-center
-                        pt-3">
-                        <div>
-                            <small class="text-muted d-block">
-                                PetFeed Posts
-                            </small>
-                            <span class="fs-4 fw-bold">
-                                @Model.TotalPetFeedPosts
-                            </span>
-                        </div>
-
-                        <i class="bi bi-newspaper fs-3 text-info"></i>
-                    </div>
-
-                </div>
             </div>
 
         </div>
 
 
-        <!-- =====================================================
-             RIGHT COLUMN - PLATFORM SUMMARY + APPROVAL QUEUE
-             ===================================================== -->
-        <div class="col-lg-8">
+        <!-- ======================================================
+             TOTAL ADMINS
+             ====================================================== -->
 
-            <!-- =================================================
-                 PLATFORM SUMMARY
-                 ================================================= -->
-            <div class="card shadow-sm mb-4">
+        <div class="admin-dashboard-stat-card">
 
-                <div class="card-body">
+            <div class="admin-dashboard-stat-icon admins">
+                <i data-lucide="shield-check"></i>
+            </div>
 
-                    <h5 class="fw-bold mb-4">
-                        <i class="bi bi-pie-chart-fill me-2"></i>
+            <div class="admin-dashboard-stat-content">
+
+                <span class="admin-dashboard-stat-label">
+                    Total Admins
+                </span>
+
+                <strong class="admin-dashboard-stat-value">
+                    @Model.TotalAdmins
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================================
+             MARKETPLACE LISTINGS
+             ====================================================== -->
+
+        <div class="admin-dashboard-stat-card">
+
+            <div class="admin-dashboard-stat-icon marketplace">
+                <i data-lucide="store"></i>
+            </div>
+
+            <div class="admin-dashboard-stat-content">
+
+                <span class="admin-dashboard-stat-label">
+                    Marketplace Listings
+                </span>
+
+                <strong class="admin-dashboard-stat-value">
+                    @Model.TotalMarketplaceListings
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================================
+             LOST & FOUND REPORTS
+             ====================================================== -->
+
+        <div class="admin-dashboard-stat-card">
+
+            <div class="admin-dashboard-stat-icon lost-found">
+                <i data-lucide="search"></i>
+            </div>
+
+            <div class="admin-dashboard-stat-content">
+
+                <span class="admin-dashboard-stat-label">
+                    Lost &amp; Found Reports
+                </span>
+
+                <strong class="admin-dashboard-stat-value">
+                    @Model.TotalLostFoundReports
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================================
+             PETFEED POSTS
+             ====================================================== -->
+
+        <div class="admin-dashboard-stat-card">
+
+            <div class="admin-dashboard-stat-icon petfeed">
+                <i data-lucide="newspaper"></i>
+            </div>
+
+            <div class="admin-dashboard-stat-content">
+
+                <span class="admin-dashboard-stat-label">
+                    PetFeed Posts
+                </span>
+
+                <strong class="admin-dashboard-stat-value">
+                    @Model.TotalPetFeedPosts
+                </strong>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ==========================================================
+         MAIN DASHBOARD CONTENT
+         ========================================================== -->
+
+    <div class="admin-dashboard-main">
+
+
+        <!-- ======================================================
+             PLATFORM SUMMARY
+             ====================================================== -->
+
+        <div class="admin-dashboard-summary-card">
+
+            <div class="admin-dashboard-card-header">
+
+                <div>
+
+                    <h3>
+                       
                         Platform Summary
-                    </h5>
+                    </h3>
 
-                    <div class="row">
-
-                        <!-- Marketplace Pie Chart -->
-                        <div class="col-md-6 text-center">
-
-                            <h6 class="fw-semibold mb-3">
-                                Marketplace
-                            </h6>
-                            <!--
-                                This canvas will later be used by the
-                                chart library to render the Marketplace
-                                approval-status pie chart.
-                            -->
-                            <div class="position-relative mx-auto"
-                                 style="max-width: 280px;">
-                                <canvas id="marketplaceChart"
-                                        data-approved="@Model.MarketplaceApproved"
-                                        data-pending="@Model.MarketplacePending"
-                                        data-rejected="@Model.MarketplaceRejected">
-                                </canvas>
-                            </div>
-
-                            <div class="mt-3 small text-muted">
-                                <span class="me-3">
-                                    Approved:
-                                    <strong>@Model.MarketplaceApproved</strong>
-                                </span>
-
-                                <span class="me-3">
-                                    Pending:
-                                    <strong>@Model.MarketplacePending</strong>
-                                </span>
-
-                                <span>
-                                    Rejected:
-                                    <strong>@Model.MarketplaceRejected</strong>
-                                </span>
-                            </div>
-
-                        </div>
-
-
-                        <!-- Lost & Found Pie Chart -->
-                        <div class="col-md-6 text-center">
-
-                            <h6 class="fw-semibold mb-3">
-                                Lost &amp; Found
-                            </h6>
-
-                            <!--
-                                This canvas will later be used by the
-                                chart library to render the Lost & Found
-                                approval-status pie chart.
-                            -->
-                            <div class="position-relative mx-auto"
-                                 style="max-width: 280px;">
-                                <canvas id="lostFoundChart"
-                                        data-approved="@Model.LostFoundApproved"
-                                        data-pending="@Model.LostFoundPending"
-                                        data-rejected="@Model.LostFoundRejected">
-                                </canvas>
-                            </div>
-
-                            <div class="mt-3 small text-muted">
-                                <span class="me-3">
-                                    Approved:
-                                    <strong>@Model.LostFoundApproved</strong>
-                                </span>
-
-                                <span class="me-3">
-                                    Pending:
-                                    <strong>@Model.LostFoundPending</strong>
-                                </span>
-
-                                <span>
-                                    Rejected:
-                                    <strong>@Model.LostFoundRejected</strong>
-                                </span>
-                            </div>
-
-                        </div>
-
-                    </div>
+                    <p>
+                        Overview of Marketplace and Lost &amp; Found status
+                    </p>
 
                 </div>
+
             </div>
 
 
-            <!-- =================================================
-                 APPROVAL QUEUE
-                 ================================================= -->
-            <div class="card shadow-sm">
-
-                <div class="card-body">
-
-                    <h5 class="fw-bold mb-4">
-                        <i class="bi bi-clock-history me-2"></i>
-                        Approval Queue
-                    </h5>
-
-                    <div class="row g-3">
-
-                        <!-- Marketplace Approval -->
-                        <div class="col-md-6">
-
-                            <div class="border rounded p-4 h-100">
-
-                                <div class="d-flex justify-content-between
-                                    align-items-start">
-
-                                    <div>
-                                        <h6 class="fw-bold mb-1">
-                                            Marketplace
-                                        </h6>
-
-                                        <p class="text-muted small mb-3">
-                                            Listings waiting for administrator
-                                            approval.
-                                        </p>
-                                    </div>
-
-                                    <span class="badge bg-warning text-dark fs-6">
-                                        @Model.MarketplacePending
-                                    </span>
-
-                                </div>
-
-                                <!--
-                                    This button does NOT approve or reject
-                                    anything. It simply redirects the
-                                    administrator to the existing Marketplace
-                                    approval/management page.
-                                -->
-                                <a asp-controller="Listings"
-                                   asp-action="Index"
-                                   class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-arrow-right-circle me-1"></i>
-                                    Review Listings
-                                </a>
-
-                            </div>
-
-                        </div>
+            <div class="admin-dashboard-charts">
 
 
-                        <!-- Lost & Found Approval -->
-                        <div class="col-md-6">
+                <!-- ==================================================
+                     MARKETPLACE
+                     ================================================== -->
 
-                            <div class="border rounded p-4 h-100">
+                <div class="admin-dashboard-chart">
 
-                                <div class="d-flex justify-content-between
-                                    align-items-start">
+                    <h4>
+                        Marketplace
+                    </h4>
 
-                                    <div>
-                                        <h6 class="fw-bold mb-1">
-                                            Lost &amp; Found
-                                        </h6>
 
-                                        <p class="text-muted small mb-3">
-                                            Reports waiting for administrator
-                                            approval.
-                                        </p>
-                                    </div>
+                    <div class="admin-dashboard-chart-container">
 
-                                    <span class="badge bg-warning text-dark fs-6">
-                                        @Model.LostFoundPending
-                                    </span>
-
-                                </div>
-
-                                <!--
-                                    This button only redirects the admin to
-                                    the existing Lost & Found approval page.
-                                    The actual Approve and Reject actions
-                                    remain inside LostFoundsController.
-                                -->
-                                <a asp-controller="LostFounds"
-                                   asp-action="Index"
-                                   class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-arrow-right-circle me-1"></i>
-                                    Review Reports
-                                </a>
-
-                            </div>
-
-                        </div>
+                        <canvas id="marketplaceChart"
+                                data-approved="@Model.MarketplaceApproved"
+                                data-pending="@Model.MarketplacePending"
+                                data-rejected="@Model.MarketplaceRejected">
+                        </canvas>
 
                     </div>
 
+
+                    <!-- ==================================================
+                         CUSTOM HORIZONTAL LEGEND
+                         ================================================== -->
+
+                    <div class="admin-dashboard-chart-legend">
+
+                        <span class="approved">
+                            <i></i>
+                            Approved: @Model.MarketplaceApproved
+                        </span>
+
+                        <span class="pending">
+                            <i></i>
+                            Pending: @Model.MarketplacePending
+                        </span>
+
+                        <span class="rejected">
+                            <i></i>
+                            Rejected: @Model.MarketplaceRejected
+                        </span>
+
+                    </div>
+
+
                 </div>
+
+
+                <!-- ==================================================
+                     LOST & FOUND
+                     ================================================== -->
+
+                <div class="admin-dashboard-chart">
+
+                    <h4>
+                        Lost &amp; Found
+                    </h4>
+
+
+                    <div class="admin-dashboard-chart-container">
+
+                        <canvas id="lostFoundChart"
+                                data-approved="@Model.LostFoundApproved"
+                                data-pending="@Model.LostFoundPending"
+                                data-rejected="@Model.LostFoundRejected">
+                        </canvas>
+
+                    </div>
+
+
+                    <!-- ==================================================
+                         CUSTOM HORIZONTAL LEGEND
+                         ================================================== -->
+
+                    <div class="admin-dashboard-chart-legend">
+
+                        <span class="approved">
+                            <i></i>
+                            Approved: @Model.LostFoundApproved
+                        </span>
+
+                        <span class="pending">
+                            <i></i>
+                            Pending: @Model.LostFoundPending
+                        </span>
+
+                        <span class="rejected">
+                            <i></i>
+                            Rejected: @Model.LostFoundRejected
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
             </div>
 
         </div>
 
+
+        <!-- ======================================================
+             APPROVAL QUEUE
+             ====================================================== -->
+
+        <div class="admin-dashboard-queue-card">
+
+            <div class="admin-dashboard-card-header">
+
+                <div>
+
+                    <h3>
+                        
+                        Approval Queue
+                    </h3>
+
+                    <p>
+                        Posts waiting for administrator approval
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-dashboard-queue">
+
+
+                <!-- ==================================================
+                     MARKETPLACE APPROVAL
+                     ================================================== -->
+
+                <div class="admin-dashboard-queue-item">
+
+                    <div class="admin-dashboard-queue-top">
+
+                        <div>
+
+                            <h4>
+                                Marketplace
+                            </h4>
+
+                            <p>
+                                Listings waiting for administrator approval.
+                            </p>
+
+                        </div>
+
+                        <span class="admin-dashboard-pending-count">
+                            @Model.MarketplacePending
+                        </span>
+
+                    </div>
+
+
+                    <a asp-controller="Listings"
+                       asp-action="Index"
+                       class="admin-dashboard-review-button">
+
+                     
+
+                        Review Listings
+
+                    </a>
+
+                </div>
+
+
+                <!-- ==================================================
+                     LOST & FOUND APPROVAL
+                     ================================================== -->
+
+                <div class="admin-dashboard-queue-item">
+
+                    <div class="admin-dashboard-queue-top">
+
+                        <div>
+
+                            <h4>
+                                Lost &amp; Found
+                            </h4>
+
+                            <p>
+                                Reports waiting for administrator approval.
+                            </p>
+
+                        </div>
+
+                        <span class="admin-dashboard-pending-count">
+                            @Model.LostFoundPending
+                        </span>
+
+                    </div>
+
+
+                    <a asp-controller="LostFounds"
+                       asp-action="Index"
+                       class="admin-dashboard-review-button">
+
+                      
+
+                        Review Reports
+
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
     </div>
+
 
 </div>
 
 
-<!-- =============================================================
-     CHART SCRIPT
-     =============================================================
-     Chart.js will be used to render the two pie graphs.
-
-     The values are taken directly from the ViewModel, so the charts
-     automatically reflect the current database values.
-     ============================================================= -->
 @section Scripts {
 
-    <!--
-        Chart.js provides the built-in Chart object used below.
-        If the project already loads Chart.js globally, this script
-        reference should not be duplicated.
-    -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script src="~/js/admin-dashboard.js"></script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            if (typeof lucide !== "undefined") {
+                lucide.createIcons();
+            }
+
+        });
+
+    </script>
+
 }

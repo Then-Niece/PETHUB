@@ -21,23 +21,77 @@ namespace PETHUB.Controllers
 
 
         // GET: Members
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             // Only get users in the Member role
             var members = (await _userManager.GetUsersInRoleAsync("Member"))
                 .OrderByDescending(m => m.CreatedAt) // Newest first
                 .ToList();
 
+
+            // =========================================================
+            // PAGINATION
+            // =========================================================
+
+            const int pageSize = 10;
+
+            // Prevent invalid page numbers.
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            // Get the total number of members before pagination.
+            var totalItems = members.Count;
+
+            // Prevent the requested page from going beyond
+            // the available number of pages.
+            var totalPages = (int)Math.Ceiling(
+                totalItems / (double)pageSize
+            );
+
+            if (totalPages > 0 && page > totalPages)
+            {
+                page = totalPages;
+            }
+
+            // Get only the members for the current page.
+            var pagedMembers = members
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+
+            // =========================================================
+            // EXISTING ROLE DICTIONARY
+            // =========================================================
+
             // Optional: build dictionary of roles if you want to display them
             var memberRoles = new Dictionary<string, string>();
-            foreach (var member in members)
+
+            foreach (var member in pagedMembers)
             {
                 var roles = await _userManager.GetRolesAsync(member);
                 memberRoles[member.Id] = roles.FirstOrDefault() ?? "No Role";
             }
 
             ViewBag.MemberRoles = memberRoles;
-            return View(members);
+
+
+            // =========================================================
+            // PAGINATION VIEWMODEL
+            // =========================================================
+
+            var model = new PaginationViewModel<ApplicationUser>
+            {
+                Items = pagedMembers,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalItems = totalItems
+            };
+
+
+            return View(model);
         }
 
 

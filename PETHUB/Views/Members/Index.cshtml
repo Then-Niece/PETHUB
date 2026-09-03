@@ -1,5 +1,4 @@
-﻿@model IEnumerable<PETHUB.Models.ApplicationUser>
-
+﻿@model PETHUB.ViewModels.PaginationViewModel<PETHUB.Models.ApplicationUser>
 @{
     ViewData["Title"] = "Members";
 }
@@ -33,7 +32,8 @@
             </div>
 
             <span class="member-count">
-                @Model.Count() Members
+                @Model.TotalItems
+                @(Model.TotalItems == 1 ? "Member" : "Members")
             </span>
 
         </div>
@@ -70,7 +70,7 @@
 
                 <tbody>
 
-                    @foreach (var item in Model)
+                @foreach (var item in Model.Items)
                     {
                         <tr>
 
@@ -155,28 +155,8 @@
 
     </div>
 
-    <div class="admin-pagination">
+    <partial name="_Pagination" model="Model" />
 
-        <div class="pagination-info">
-            Showing 1–10 of @Model.Count() members
-        </div>
 
-        <div class="pagination-links">
-
-            <a href="#" class="page-btn disabled">
-                &lt;
-            </a>
-
-            <a href="#" class="page-btn active">
-                1
-            </a>
-
-            <a href="#" class="page-btn disabled">
-                &gt;
-            </a>
-
-        </div>
-
-    </div>
 
 </div>
