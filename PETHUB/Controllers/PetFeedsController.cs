@@ -34,36 +34,59 @@ public class PetFeedsController : Controller
     // Displays administrator-created PetFeed posts.
     // The optional petFeedType parameter filters Announcements or Pet Tips.
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Index(string? petFeedType)
+    public async Task<IActionResult> Index(string? petFeedType, int page = 1)
     {
-        // Get the currently logged-in administrator's ID.
-        // This preserves the existing behavior of identifying the current admin.
-        var userId = _userManager.GetUserId(User);
-
-        // Start with PetFeed records and load the admin and images.
-        // AsQueryable allows the optional filter to be applied before execution.
         var query = _context.PetFeeds
             .Include(p => p.Admin)
             .Include(p => p.Images)
+            .Include(p => p.Paws)
+            .Include(p => p.Comments)
             .AsQueryable();
 
-        // Apply the type filter only when a valid PetFeedType was supplied.
-        if (!string.IsNullOrWhiteSpace(petFeedType) &&
-            Enum.TryParse<PetFeedType>(
-                petFeedType,
-                out var selectedFeedType))
+        // Filter by PetFeed type when selected.
+        if (!string.IsNullOrEmpty(petFeedType) &&
+            Enum.TryParse<PetFeedType>(petFeedType, out var selectedType))
         {
-            // EF Core translates this into a SQL WHERE condition.
-            query = query.Where(p => p.Type == selectedFeedType);
+            query = query.Where(p => p.Type == selectedType);
         }
 
         // Keep the existing newest-first ordering.
         query = query.OrderByDescending(p => p.DateCreated);
 
-        // Execute the query and load the administrator's PetFeed records.
-        var posts = await query.ToListAsync();
 
-        return View(posts);
+        // ==========================================================
+        // PAGINATION
+        // ==========================================================
+
+        const int pageSize = 10;
+
+        // Prevent an invalid page number.
+        page = Math.Max(page, 1);
+
+        // Count all matching posts before Skip/Take.
+        var totalItems = await query.CountAsync();
+
+        // Get only the posts for the current page.
+        var posts = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+
+        // ==========================================================
+        // PAGINATION VIEWMODEL
+        // ==========================================================
+
+        var model = new PaginationViewModel<PetFeed>
+        {
+            Items = posts,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalItems
+        };
+
+
+        return View(model);
     }
 
 
@@ -79,9 +102,13 @@ public class PetFeedsController : Controller
 
         // Retrieve the selected PetFeed and its related administrator/images.
         var petfeed = await _context.PetFeeds
-            .Include(p => p.Admin)
-            .Include(p => p.Images)
-            .FirstOrDefaultAsync(m => m.PetFeedId == id);
+          .Include(p => p.Admin)
+          .Include(p => p.Images)
+          .Include(p => p.Paws)
+          .Include(p => p.Comments)
+              .ThenInclude(c => c.Member)
+          .Include(p => p.SavedByMembers)
+          .FirstOrDefaultAsync(m => m.PetFeedId == id);
 
         // Return 404 if the PetFeed does not exist.
         if (petfeed == null)

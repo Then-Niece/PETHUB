@@ -2,78 +2,353 @@
 
 @{
     ViewData["Title"] = "PetFeed Details";
+
+    var adminName = Model.Admin == null
+        ? "Administrator"
+        : $"{Model.Admin.FirstName} " +
+          $"{(string.IsNullOrWhiteSpace(Model.Admin.MiddleName) ? "" : Model.Admin.MiddleName + " ")}" +
+          $"{Model.Admin.LastName}".Trim();
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
+<div class="admin-petfeed-details-page">
 
-        <!-- ========================= -->
-        <!-- Left Side: Image Gallery -->
-        <!-- ========================= -->
-        <div class="col-md-6">
+    <div class="mb-3">
+        <a asp-action="Index"
+           class="text-decoration-none">
+            ← Back to Pet Feed
+        </a>
+    </div>
+
+    <div class="admin-petfeed-details-layout">
+
+        @* =========================================================
+           LEFT SIDE - IMAGE GALLERY
+           ========================================================= *@
+
+        <div class="admin-petfeed-details-gallery">
+
             @if (Model.Images != null && Model.Images.Any())
             {
-                <div id="petFeedCarousel" class="carousel slide shadow-sm" data-bs-ride="carousel">
-                    <div class="carousel-inner rounded">
+                <div id="petFeedCarousel"
+                     class="carousel slide admin-petfeed-details-carousel"
+                     data-bs-ride="carousel">
+
+                    <div class="carousel-inner">
+
                         @for (int i = 0; i < Model.Images.Count; i++)
                         {
                             var img = Model.Images.ElementAt(i);
+
                             <div class="carousel-item @(i == 0 ? "active" : "")">
-                                <img src="@img.ImagePath"
-                                     class="d-block w-100"
-                                     alt="PetFeed Image"
-                                     style="height:400px; object-fit:cover;">
+
+                                <img src="@Url.Content(img.ImagePath)"
+                                     class="admin-petfeed-details-main-image"
+                                     alt="PetFeed Image" />
+
                             </div>
                         }
+
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#petFeedCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#petFeedCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+
+                    @if (Model.Images.Count > 1)
+                    {
+                        <button class="carousel-control-prev"
+                                type="button"
+                                data-bs-target="#petFeedCarousel"
+                                data-bs-slide="prev">
+
+                            <span class="carousel-control-prev-icon"></span>
+
+                            <span class="visually-hidden">
+                                Previous
+                            </span>
+
+                        </button>
+
+                        <button class="carousel-control-next"
+                                type="button"
+                                data-bs-target="#petFeedCarousel"
+                                data-bs-slide="next">
+
+                            <span class="carousel-control-next-icon"></span>
+
+                            <span class="visually-hidden">
+                                Next
+                            </span>
+
+                        </button>
+                    }
+
                 </div>
             }
             else
             {
-                <div class="bg-light d-flex justify-content-center align-items-center rounded shadow-sm" style="height:400px;">
-                    <p class="text-muted mb-0">No images uploaded.</p>
+                <div class="admin-petfeed-details-no-image">
+
+                    <span>
+                        No images uploaded.
+                    </span>
+
                 </div>
             }
+
         </div>
 
-        <!-- ========================= -->
-        <!-- Right Side: Post Details -->
-        <!-- ========================= -->
-        <div class="col-md-5">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <h2 class="fw-bold">@Model.Title</h2>
-                    <p class="text-muted">Created on @Model.DateCreated.ToString("MMMM dd, yyyy")</p>
-                    <hr />
 
-                    <h5>Content</h5>
-                    <p>@(string.IsNullOrWhiteSpace(Model.Content) ? "No content provided." : Model.Content)</p>
-                    <hr />
+        @* =========================================================
+           RIGHT SIDE - SCROLLABLE DETAILS PANEL
+           ========================================================= *@
 
-                    <h5>Post Information</h5>
-                    <p><strong>Type:</strong> @Model.Type</p>
-                    <p><strong>Admin:</strong> @Model.Admin?.FirstName @Model.Admin?.LastName</p>
-                    <p><strong>Paws:</strong> @(Model.Paws?.Count() ?? 0)</p>
-                    <p><strong>Comments:</strong> @(Model.Comments?.Count() ?? 0)</p>
-                    <p><strong>Saved By Members:</strong> @(Model.SavedByMembers?.Count() ?? 0)</p>
+        <div class="admin-petfeed-details-panel">
+
+            <div class="admin-petfeed-details-panel-content">
+
+
+                @* =================================================
+                   POST HEADER
+                   ================================================= *@
+
+                <div class="admin-petfeed-details-header">
+
+                    <div class="admin-petfeed-details-author">
+
+                        @if (!string.IsNullOrEmpty(Model.Admin?.ProfilePicturePath))
+                        {
+                            <img src="@Url.Content(Model.Admin.ProfilePicturePath)"
+                                 class="admin-petfeed-details-profile-picture"
+                                 alt="Admin Profile Picture" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/images/default_profile.jpg")"
+                                 class="admin-petfeed-details-profile-picture"
+                                 alt="Admin Profile Picture" />
+                        }
+
+                        <div class="admin-petfeed-details-author-info">
+
+                            <h4>
+                                @adminName
+                            </h4>
+
+                            <div class="admin-petfeed-details-meta">
+
+                                <span>
+                                    @Model.DateCreated.ToString("MMMM dd, yyyy")
+                                </span>
+
+                                <span class="admin-petfeed-details-meta-dot">
+                                    ·
+                                </span>
+
+                                @if (Model.Type == PETHUB.Models.PetFeedType.Announcement)
+                                {
+                                    <span class="admin-petfeed-type-status admin-petfeed-type-announcement">
+                                        Announcement
+                                    </span>
+                                }
+                                else if (Model.Type == PETHUB.Models.PetFeedType.PetTip)
+                                {
+                                    <span class="admin-petfeed-type-status admin-petfeed-type-tip">
+                                        Pet Tip
+                                    </span>
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+     
+
                 </div>
 
-                <!-- ========================= -->
-                <!-- Action Buttons -->
-                <!-- ========================= -->
 
-                <div class="card-footer d-flex justify-content-center gap-3">
-                    <a asp-action="Index" class="btn btn-secondary px-4">← Back to List</a>
+                @* =================================================
+                   TITLE
+                   ================================================= *@
+
+                <h1 class="admin-petfeed-details-title">
+                    @Model.Title
+                </h1>
+
+
+                @* =================================================
+                   CONTENT
+                   ================================================= *@
+
+                <div class="admin-petfeed-details-section">
+
+                    <h3>
+                        About This Post
+                    </h3>
+
+                    <p class="admin-petfeed-details-content">
+
+                        @(string.IsNullOrWhiteSpace(Model.Content)
+                            ? "No content provided."
+                            : Model.Content)
+
+                    </p>
+
                 </div>
+
+
+                @* =================================================
+                   POST ACTIVITY
+                   ================================================= *@
+
+                <div class="admin-petfeed-details-section">
+
+                    <h3>
+                        Post Activity
+                    </h3>
+
+                    <div class="admin-petfeed-details-stats">
+
+                        <div class="admin-petfeed-details-stat">
+
+                            <strong>
+                                @(Model.Paws?.Count() ?? 0)
+                            </strong>
+
+                            <span>
+                                Paws
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-petfeed-details-stat">
+
+                            <strong>
+                                @(Model.SavedByMembers?.Count() ?? 0)
+                            </strong>
+
+                            <span>
+                                Saved
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-petfeed-details-stat">
+
+                            <strong>
+                                @(Model.Comments?.Count() ?? 0)
+                            </strong>
+
+                            <span>
+                                Comments
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                @* =================================================
+                   COMMENTS
+                   Separate scrollable area
+                   ================================================= *@
+
+                <div class="admin-petfeed-details-comments-section">
+
+                    <div class="admin-petfeed-details-comments-header">
+
+                        <h3>
+                            Comments
+                        </h3>
+
+                    </div>
+            
+
+                    <div class="admin-petfeed-details-comments-scroll">
+
+                        @if (Model.Comments != null && Model.Comments.Any())
+                        {
+                            @foreach (var comment in Model.Comments.OrderByDescending(c => c.DatePosted))
+                            {
+                                <div class="admin-petfeed-comment">
+
+                                    <div class="admin-petfeed-comment-header">
+
+                                        @if (!string.IsNullOrEmpty(comment.Member?.ProfilePicturePath))
+                                        {
+                                            <img src="@Url.Content(comment.Member.ProfilePicturePath)"
+                                                 class="admin-petfeed-comment-profile"
+                                                 alt="Member Profile Picture" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Content("~/images/default_profile.jpg")"
+                                                 class="admin-petfeed-comment-profile"
+                                                 alt="Member Profile Picture" />
+                                        }
+
+                                        <div class="admin-petfeed-comment-member">
+
+                                            <strong>
+                                                @comment.Member?.FirstName
+                                                @comment.Member?.LastName
+                                            </strong>
+
+                                            <span>
+                                                @comment.DatePosted.ToString("MMM dd, yyyy")
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                    <p class="admin-petfeed-comment-content">
+                                        @comment.Content
+                                    </p>
+
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="admin-petfeed-details-no-comments">
+                                No comments yet.
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+
+               
+
             </div>
+
         </div>
+
     </div>
+
 </div>
+
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            if (typeof lucide !== "undefined") {
+
+                lucide.createIcons();
+
+            }
+
+        });
+
+    </script>
+
+}

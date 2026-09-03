@@ -28,14 +28,37 @@ public class LostFoundsController : Controller
     public async Task<IActionResult> Index(
         string? status,
         string? lostFoundType,
-        string? petType)
+        string? petType,
+        int page = 1)
     {
+        // =========================================================
+        // PAGINATION SETTINGS
+        // =========================================================
+
+        const int pageSize = 10;
+
+        // Prevent invalid page numbers.
+        if (page < 1)
+        {
+            page = 1;
+        }
+
+
+        // =========================================================
+        // EXISTING LOST & FOUND QUERY
+        // =========================================================
+
         // Start with all Lost & Found reports and load the related
         // user and image data required by the existing approval view.
         var lostfounds = _context.LostFounds
             .Include(l => l.User)
             .Include(l => l.Images)
             .AsQueryable();
+
+
+        // =========================================================
+        // EXISTING APPROVAL-STATUS FILTER
+        // =========================================================
 
         // Apply the existing approval-status filter.
         // Lost & Found uses its own ApprovalStatus enum.
@@ -45,6 +68,11 @@ public class LostFoundsController : Controller
             // EF Core translates this comparison into a database WHERE condition.
             lostfounds = lostfounds.Where(l => l.Status == selectedStatus);
         }
+
+
+        // =========================================================
+        // EXISTING LOST / FOUND FILTER
+        // =========================================================
 
         // Apply the Lost/Found report-type filter.
         // LostFoundType separates Lost reports from Found reports.
@@ -57,6 +85,11 @@ public class LostFoundsController : Controller
             lostfounds = lostfounds.Where(l => l.Type == selectedReportType);
         }
 
+
+        // =========================================================
+        // EXISTING PET TYPE FILTER
+        // =========================================================
+
         // Apply the Dog/Cat filter.
         // Lost & Found uses its own PetType enum.
         if (!string.IsNullOrWhiteSpace(petType) &&
@@ -68,10 +101,59 @@ public class LostFoundsController : Controller
             lostfounds = lostfounds.Where(l => l.PetType == selectedPetType);
         }
 
-        // Execute the query after all selected filters have been applied.
-        return View(await lostfounds.ToListAsync());
-    }
 
+        // =========================================================
+        // PAGINATION
+        // =========================================================
+
+        // Count the reports AFTER all selected filters have been applied.
+        var totalItems = await lostfounds.CountAsync();
+
+        // Calculate the total number of pages.
+        var totalPages = (int)Math.Ceiling(
+            totalItems / (double)pageSize
+        );
+
+        // Prevent the requested page from going beyond
+        // the available number of pages.
+        if (totalPages > 0 && page > totalPages)
+        {
+            page = totalPages;
+        }
+
+
+        // =========================================================
+        // GET CURRENT PAGE
+        // =========================================================
+
+        // Retrieve only the reports needed for the current page.
+        // Lost & Found displays 10 reports per page.
+        var pagedLostFounds = await lostfounds
+            .OrderByDescending(l => l.DateReported)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+
+        // =========================================================
+        // CREATE PAGED RESULT
+        // =========================================================
+
+        var result = new PaginationViewModel<LostFound>
+        {
+            Items = pagedLostFounds,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalItems = totalItems
+        };
+
+
+        // =========================================================
+        // RETURN VIEW
+        // =========================================================
+
+        return View(result);
+    }
     // GET: LostFounds/Details/5
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Details(int? id)

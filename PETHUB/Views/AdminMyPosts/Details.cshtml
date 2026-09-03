@@ -2,104 +2,456 @@
 
 @{
     ViewData["Title"] = "Post Details";
+
+    var adminName = Model.Admin == null
+        ? "Administrator"
+        : $"{Model.Admin.FirstName} " +
+          $"{(string.IsNullOrWhiteSpace(Model.Admin.MiddleName) ? "" : Model.Admin.MiddleName + " ")}" +
+          $"{Model.Admin.LastName}".Trim();
 }
 
-<h2>Post Details</h2>
 
-<!-- Displays the complete information of the selected PetFeed post. -->
-<div class="card shadow-sm">
+<div class="admin-my-post-details-page">
 
-    <div class="card-body">
 
-        <h3>@Model.Title</h3>
+    @* ==========================================================
+       BACK TO MY POSTS
+       ========================================================== *@
 
-        <p class="text-muted">
-            @Model.Type
-        </p>
+    <div class="mb-3">
 
-        <p>
-            @Model.Content
-        </p>
+        <a asp-action="Index"
+           class="text-decoration-none">
 
-        <hr />
+            ← Back to My Posts
 
-        <p>
-            <strong>Date Posted:</strong>
-            @Model.DateCreated.ToString("MMMM dd, yyyy")
-        </p>
-
-        <p>
-            <strong>Paws:</strong>
-            @Model.Paws.Count()
-        </p>
-
-        <p>
-            <strong>Comments:</strong>
-            @Model.Comments.Count()
-        </p>
+        </a>
 
     </div>
 
-</div>
 
-@if (Model.Images != null && Model.Images.Any())
-{
-    <div class="row mt-4">
 
-        @foreach (var image in Model.Images)
-        {
-            <div class="col-md-4 mb-3">
+    @* ==========================================================
+       MAIN TWO-COLUMN LAYOUT
+       ========================================================== *@
 
-                <!-- Displays every uploaded image attached to this PetFeed post. -->
-                <img src="@image.ImagePath"
-                     class="img-fluid rounded border" />
+    <div class="admin-my-post-details-layout">
+
+
+        @* ======================================================
+           LEFT SIDE - IMAGE GALLERY
+           ====================================================== *@
+
+        <div class="admin-my-post-details-gallery">
+
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                <div id="myPostCarousel"
+                     class="carousel slide admin-my-post-details-carousel"
+                     data-bs-ride="carousel">
+
+                    <div class="carousel-inner">
+
+                        @for (int i = 0; i < Model.Images.Count; i++)
+                        {
+                            var image = Model.Images.ElementAt(i);
+
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+
+                                <img src="@Url.Content(image.ImagePath)"
+                                     class="admin-my-post-details-main-image"
+                                     alt="PetFeed Image" />
+
+                            </div>
+                        }
+
+                    </div>
+
+
+                    @if (Model.Images.Count > 1)
+                    {
+                        <button class="carousel-control-prev"
+                                type="button"
+                                data-bs-target="#myPostCarousel"
+                                data-bs-slide="prev">
+
+                            <span class="carousel-control-prev-icon"></span>
+
+                            <span class="visually-hidden">
+                                Previous
+                            </span>
+
+                        </button>
+
+
+                        <button class="carousel-control-next"
+                                type="button"
+                                data-bs-target="#myPostCarousel"
+                                data-bs-slide="next">
+
+                            <span class="carousel-control-next-icon"></span>
+
+                            <span class="visually-hidden">
+                                Next
+                            </span>
+
+                        </button>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="admin-my-post-details-no-image">
+
+                    <span>
+                        No images uploaded.
+                    </span>
+
+                </div>
+            }
+
+        </div>
+
+
+
+        @* ======================================================
+           RIGHT SIDE - SCROLLABLE DETAILS PANEL
+           ====================================================== *@
+
+        <div class="admin-my-post-details-panel">
+
+            <div class="admin-my-post-details-panel-content">
+
+
+                @* ==================================================
+                   POST HEADER
+                   ================================================== *@
+
+                <div class="admin-my-post-details-header">
+
+
+                    <div class="admin-my-post-details-author">
+
+
+                        @if (!string.IsNullOrEmpty(Model.Admin?.ProfilePicturePath))
+                        {
+                            <img src="@Url.Content(Model.Admin.ProfilePicturePath)"
+                                 class="admin-my-post-details-profile-picture"
+                                 alt="Admin Profile Picture" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/images/default_profile.jpg")"
+                                 class="admin-my-post-details-profile-picture"
+                                 alt="Admin Profile Picture" />
+                        }
+
+
+                        <div class="admin-my-post-details-author-info">
+
+                            <h4>
+                                @adminName
+                            </h4>
+
+
+                            <div class="admin-my-post-details-meta">
+
+                                <span>
+                                    @Model.DateCreated.ToString("MMMM dd, yyyy")
+                                </span>
+
+                                <span class="admin-my-post-details-meta-dot">
+                                    ·
+                                </span>
+
+
+                                @if (Model.Type == PETHUB.Models.PetFeedType.Announcement)
+                                {
+                                    <span class="admin-petfeed-type-status admin-petfeed-type-announcement">
+                                        Announcement
+                                    </span>
+                                }
+                                else if (Model.Type == PETHUB.Models.PetFeedType.PetTip)
+                                {
+                                    <span class="admin-petfeed-type-status admin-petfeed-type-tip">
+                                        Pet Tip
+                                    </span>
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    @* ==================================================
+                       THREE-DOT MENU
+                       ================================================== *@
+
+                    <div class="dropdown">
+
+                        <button class="admin-my-post-details-more-button"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                aria-label="Post options">
+
+                            <i data-lucide="ellipsis"></i>
+
+                        </button>
+
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+
+                            <li>
+
+                                <a asp-controller="PetFeeds"
+                                   asp-action="Edit"
+                                   asp-route-id="@Model.PetFeedId"
+                                   class="dropdown-item">
+
+                                    Edit
+
+                                </a>
+
+                            </li>
+
+
+                            <li>
+
+                                <form asp-action="Delete"
+                                      method="post">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@Model.PetFeedId" />
+
+                                    <button type="submit"
+                                            class="dropdown-item"
+                                            onclick="return confirm('Are you sure you want to delete this post?');">
+
+                                        Delete
+
+                                    </button>
+
+                                </form>
+
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+
+
+                @* ==================================================
+                   POST TITLE
+                   ================================================== *@
+
+                <h1 class="admin-my-post-details-title">
+
+                    @Model.Title
+
+                </h1>
+
+
+
+                @* ==================================================
+                   ABOUT THIS POST
+                   ================================================== *@
+
+                <div class="admin-my-post-details-section">
+
+                    <h3>
+                        About This Post
+                    </h3>
+
+
+                    <p class="admin-my-post-details-content">
+
+                        @(string.IsNullOrWhiteSpace(Model.Content)
+                            ? "No content provided."
+                            : Model.Content)
+
+                    </p>
+
+                </div>
+
+
+
+                @* ==================================================
+                   POST ACTIVITY
+                   ================================================== *@
+
+                <div class="admin-my-post-details-section">
+
+                    <h3>
+                        Post Activity
+                    </h3>
+
+
+                    <div class="admin-my-post-details-stats">
+
+
+                        <div class="admin-my-post-details-stat">
+
+                            <strong>
+                                @(Model.Paws?.Count() ?? 0)
+                            </strong>
+
+                            <span>
+                                Paws
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-my-post-details-stat">
+
+                            <strong>
+                                @(Model.SavedByMembers?.Count() ?? 0)
+                            </strong>
+
+                            <span>
+                                Saved
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-my-post-details-stat">
+
+                            <strong>
+                                @(Model.Comments?.Count() ?? 0)
+                            </strong>
+
+                            <span>
+                                Comments
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                @* ==================================================
+                   COMMENTS
+                   ================================================== *@
+
+                <div class="admin-my-post-details-comments-section">
+
+
+                    <div class="admin-my-post-details-comments-header">
+
+                        <h3>
+                            Comments
+                        </h3>
+
+
+            
+
+                    </div>
+
+
+                    <div class="admin-my-post-details-comments-scroll">
+
+                        @if (Model.Comments != null && Model.Comments.Any())
+                        {
+                            @foreach (var comment in Model.Comments.OrderByDescending(c => c.DatePosted))
+                            {
+                                <div class="admin-my-post-details-comment">
+
+
+                                    <div class="admin-my-post-details-comment-header">
+
+
+                                        @if (!string.IsNullOrEmpty(comment.Member?.ProfilePicturePath))
+                                        {
+                                            <img src="@Url.Content(comment.Member.ProfilePicturePath)"
+                                                 class="admin-my-post-details-comment-profile"
+                                                 alt="Member Profile Picture" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Content("~/images/default_profile.jpg")"
+                                                 class="admin-my-post-details-comment-profile"
+                                                 alt="Member Profile Picture" />
+                                        }
+
+
+                                        <div class="admin-my-post-details-comment-member">
+
+                                            <strong>
+                                                @comment.Member?.FirstName
+                                                @comment.Member?.LastName
+                                            </strong>
+
+                                            <span>
+                                                @comment.DatePosted.ToString("MMM dd, yyyy")
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <p class="admin-my-post-details-comment-content">
+
+                                        @comment.Content
+
+                                    </p>
+
+
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="admin-my-post-details-no-comments">
+
+                                No comments yet.
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
 
             </div>
-        }
+
+        </div>
 
     </div>
-}
-
-<div class="mt-4">
-
-<!-- Redirects to the existing PetFeeds Edit page.
-        The PetFeedsController performs another ownership check
-        before allowing any modifications. -->
-    <a asp-controller="PetFeeds"
-        asp-action="Edit"
-        asp-route-id="@Model.PetFeedId"
-        class="btn btn-success">
-
-        Edit
-
-    </a>
-
-<!-- Deletes the selected PetFeed and returns to My Posts.
-     Ownership is verified again inside the controller. -->
-    <form asp-action="Delete"
-        method="post"
-        class="d-inline">
-
-    @Html.AntiForgeryToken()
-
-    <input type="hidden"
-            name="id"
-            value="@Model.PetFeedId" />
-
-    <button type="submit"
-            class="btn btn-danger"
-            onclick="return confirm('Are you sure you want to delete this post?');">
-
-        Delete
-
-    </button>
-
-</form>
-    <a asp-action="Index"
-       class="btn btn-secondary">
-
-        Back
-
-    </a>
 
 </div>
+
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            if (typeof lucide !== "undefined") {
+
+                lucide.createIcons();
+
+            }
+
+        });
+
+    </script>
+
+}

@@ -3,98 +3,267 @@
 @{
     ViewData["Title"] = "My Posts";
 }
-<div>
-@* Profile Summary Card is displayed here *@
-    <a asp-controller="AdminMyProfile"
-       asp-action="View"
-       class="text-decoration-none text-reset d-block">
 
-        <partial name="_AdminProfileSummaryCard"
-                 model="Model.Profile" />
-    </a>
+
+<div class="admin-my-posts-page">
+
+
+    @* =========================================================
+       PROFILE SUMMARY CARD
+       ========================================================= *@
+
+    <partial name="_AdminProfileSummaryCard"
+             model="Model.Profile" />
+
+
+
+    @* =========================================================
+       PAGE HEADER
+       ========================================================= *@
+
+    <div class="admin-my-posts-header">
+
+        <div class="admin-my-posts-header-text">
+
+            <h1>
+                My Posts
+            </h1>
+
+            <p>
+                Manage the PetFeed posts you have created
+            </p>
+
+        </div>
+
     </div>
 
 
-<h2>My Posts</h2>
 
-@if (!Model.Posts.Any())
-{
-    <div class="alert alert-info">
-        You haven't created any PetFeed posts yet.
+    @* =========================================================
+       FILTER AREA
+       Reserved for programmer implementation.
+       Do not add filter logic here yet.
+       ========================================================= *@
+
+    <div class="admin-my-posts-filter-card">
+
+        <div class="admin-my-posts-filter-placeholder">
+
+            @* Filters will be implemented here later. *@
+
+        </div>
+
+        <span class="admin-my-posts-total">
+
+            @Model.Posts.Count()
+            @(Model.Posts.Count() == 1 ? "post" : "posts")
+
+        </span>
+
     </div>
-}
-else
-{
-    <div class="row">
 
-        @foreach (var post in Model.Posts)
-        {
-            <div class="col-md-4 mb-4">
 
-                <!-- Each card represents one PetFeed post created by the logged-in admin. -->
-                <div class="card h-100 shadow-sm">
 
-                    <!-- Display the first uploaded image if one exists. -->
-                    @if (post.Images != null && post.Images.Any())
-                    {
-                        <img src="@post.Images.First().ImagePath"
-                             class="card-img-top"
-                             style="height:220px; object-fit:cover;" />
-                    }
+    @* =========================================================
+       POSTS
+       ========================================================= *@
 
-                    <div class="card-body">
+    @if (!Model.Posts.Any())
+    {
+        <div class="admin-my-posts-empty">
 
-                        <h5 class="card-title">
+            <h3>
+                No PetFeed Posts Found
+            </h3>
+
+            <p>
+                You haven't created any PetFeed posts yet.
+            </p>
+
+        </div>
+    }
+    else
+    {
+        <div class="admin-my-posts-list">
+
+
+            @foreach (var post in Model.Posts)
+            {
+
+                <div class="admin-my-posts-card">
+
+
+                    @* =================================================
+                       IMAGE
+                       ================================================= *@
+
+                    <div class="admin-my-posts-image-container">
+
+                        @if (post.Images != null && post.Images.Any())
+                        {
+                            <img src="@Url.Content(post.Images.First().ImagePath)"
+                                 alt="PetFeed image"
+                                 class="admin-my-posts-image" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/images/no-image.png")"
+                                 alt="No image"
+                                 class="admin-my-posts-image" />
+                        }
+
+                    </div>
+
+
+
+                    @* =================================================
+                       POST INFORMATION
+                       ================================================= *@
+
+                    <div class="admin-my-posts-content">
+
+                        <h3 class="admin-my-posts-title">
+
                             @post.Title
-                        </h5>
 
-                        <p class="text-muted mb-2">
-                            @post.Type
+                        </h3>
+
+
+                        <p class="admin-my-posts-date">
+
+                            Created @post.DateCreated.ToString("MMM dd, yyyy")
+
                         </p>
 
-                        <small class="text-muted">
-                            Posted:
-                            @post.DateCreated.ToString("MMMM dd, yyyy")
-                        </small>
 
-                        <hr />
+                        @* =================================================
+                           ENGAGEMENT
+                           ================================================= *@
 
-                        <!-- Display quick statistics so the admin
-                             can immediately see engagement. -->
-
-                        <div class="d-flex justify-content-between">
+                        <div class="admin-my-posts-engagement">
 
                             <span>
-                                🐾 @post.Paws.Count()
+
+                                <i data-lucide="paw-print"></i>
+
+                                @post.Paws.Count()
+
                             </span>
 
+
                             <span>
-                                💬 @post.Comments.Count()
+
+                                <i data-lucide="message-circle"></i>
+
+                                @post.Comments.Count()
+
                             </span>
+
+
+
+
+
 
                         </div>
 
-                    </div>
-
-                    <div class="card-footer bg-white">
-
-                        <!-- Opens the owner-specific Details page.
-                             Ownership will be verified again inside the controller. -->
-                        <a asp-action="Details"
-                           asp-route-id="@post.PetFeedId"
-                           class="btn btn-success w-100">
-
-                            View Details
-
-                        </a>
 
                     </div>
+
+
+
+                    @* =================================================
+                       RIGHT SIDE ACTIONS
+                       ================================================= *@
+
+                    <div class="admin-my-posts-actions">
+
+
+                        @* =================================================
+                           THREE-DOT MENU
+                           ================================================= *@
+
+                        <div class="dropdown">
+
+                            <button class="admin-my-posts-more-button"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    aria-label="PetFeed options">
+
+                                <i data-lucide="ellipsis"></i>
+
+                            </button>
+
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+
+                                <li>
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@post.PetFeedId"
+                                       class="dropdown-item">
+
+                                        View Details
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+
+                        @* =================================================
+                           PETFEED TYPE
+                           Uses existing Admin PetFeed pill styles.
+                           ================================================= *@
+
+                        @if (post.Type == PETHUB.Models.PetFeedType.Announcement)
+                        {
+                            <span class="admin-my-posts-type-status admin-my-posts-type-announcement">
+                                Announcement
+                            </span>
+                        }
+                        else if (post.Type == PETHUB.Models.PetFeedType.PetTip)
+                        {
+                            <span class="admin-my-posts-type-status admin-my-posts-type-tip">
+                                Pet Tip
+                            </span>
+                        }
+
+
+                 
+
+                    </div>
+
+
 
                 </div>
 
-            </div>
-        }
+            }
 
-    </div>
-}
+
+        </div>
+    }
+
 </div>
+
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            if (typeof lucide !== "undefined") {
+
+                lucide.createIcons();
+
+            }
+
+        });
+
+    </script>
+
+}

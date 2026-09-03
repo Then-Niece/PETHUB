@@ -30,16 +30,39 @@ namespace PETHUB.Controllers
         // Supports approval status, Marketplace listing type, and pet type filters.
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(
-            string? status,
-            string? listingType,
-            string? petType)
+         string? status,
+         string? listingType,
+         string? petType,
+         int page = 1)
         {
+            // =========================================================
+            // PAGINATION SETTINGS
+            // =========================================================
+
+            const int pageSize = 10;
+
+            // Prevent invalid page numbers.
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+
+            // =========================================================
+            // EXISTING MARKETPLACE QUERY
+            // =========================================================
+
             // Start with all Marketplace listings and load the related
             // member and image data required by the existing approval view.
             var listings = _context.Listings
                 .Include(l => l.Member)
                 .Include(l => l.Images)
                 .AsQueryable();
+
+
+            // =========================================================
+            // EXISTING APPROVAL-STATUS FILTER
+            // =========================================================
 
             // Apply the existing approval-status filter.
             // ListApprovalStatus is the enum used by Marketplace listings.
@@ -50,6 +73,11 @@ namespace PETHUB.Controllers
                 listings = listings.Where(l => l.Status == selectedStatus);
             }
 
+
+            // =========================================================
+            // EXISTING LISTING-TYPE FILTER
+            // =========================================================
+
             // Apply the Marketplace listing-type filter.
             // This separates For Adoption from For Sale listings.
             if (!string.IsNullOrWhiteSpace(listingType) &&
@@ -58,6 +86,11 @@ namespace PETHUB.Controllers
                 // Filter the query using the Listing.Type property.
                 listings = listings.Where(l => l.Type == selectedListingType);
             }
+
+
+            // =========================================================
+            // EXISTING PET-TYPE FILTER
+            // =========================================================
 
             // Apply the Dog/Cat filter.
             // Marketplace Listing uses the ListPetType enum.
@@ -68,8 +101,57 @@ namespace PETHUB.Controllers
                 listings = listings.Where(l => l.PetType == selectedPetType);
             }
 
-            // Execute the query after all selected filters have been applied.
-            return View(await listings.ToListAsync());
+
+            // =========================================================
+            // PAGINATION
+            // =========================================================
+
+            // Count the listings AFTER all existing filters
+            // have been applied.
+            var totalItems = await listings.CountAsync();
+
+
+            // Prevent the requested page from going beyond
+            // the available number of pages.
+            var totalPages = (int)Math.Ceiling(
+                totalItems / (double)pageSize);
+
+            if (totalPages > 0 && page > totalPages)
+            {
+                page = totalPages;
+            }
+
+
+            // =========================================================
+            // GET CURRENT PAGE
+            // =========================================================
+
+            // Get only the 10 listings needed for the current page.
+            var pagedListings = await listings
+                .OrderByDescending(l => l.DatePosted)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+
+            // =========================================================
+            // CREATE PAGED RESULT
+            // =========================================================
+
+            var result = new PaginationViewModel<Listing>
+            {
+                Items = pagedListings,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalItems = totalItems
+            };
+
+
+            // =========================================================
+            // RETURN VIEW
+            // =========================================================
+
+            return View(result);
         }
 
         // GET: Marketplace Listing for Client and Member.
