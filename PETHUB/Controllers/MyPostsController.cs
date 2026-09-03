@@ -13,27 +13,24 @@ namespace PETHUB.Controllers
     // MY POSTS CONTROLLER
     // =========================================================
     //
-    // This controller handles posts owned by the currently
-    // logged-in Member.
+    // Handles Marketplace and Lost & Found posts owned by
+    // the currently authenticated Member.
     //
     // Responsibilities:
-    // - Display the Member's Marketplace and Lost & Found posts
-    // - Display owner-specific post details
+    // - Display Member-owned posts
+    // - Filter and paginate posts
+    // - Display owner-specific details
     // - Soft delete posts
-    // - Permanently delete uploaded post images
-    // - Mark Marketplace listings as Sold / Adopted
+    // - Permanently remove uploaded images during deletion
+    // - Mark listings as Sold / Adopted
     // - Mark Lost & Found reports as Resolved
     //
-    // Only users with the Member role may access this controller.
+    // Only Members may access this controller.
     // =========================================================
 
     [Authorize(Roles = "Member")]
     public class MyPostsController : Controller
     {
-        // =========================================================
-        // DEPENDENCIES
-        // =========================================================
-
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IProfileService _profileService;
@@ -61,30 +58,36 @@ namespace PETHUB.Controllers
         // Displays a Marketplace listing owned by the currently
         // logged-in Member.
         //
-        // Deleted listings cannot be opened anymore.
+        // Soft-deleted listings cannot be opened.
         // =========================================================
 
         public async Task<IActionResult> MarketplaceDetails(int id)
         {
-            var userId = _userManager.GetUserId(User);
+            var userId =
+                _userManager.GetUserId(User);
 
-            var listing = await _context.Listings
-                .Include(l => l.Member)
-                .Include(l => l.Images)
-                .FirstOrDefaultAsync(l =>
-                    l.ListingId == id &&
-                    l.ListStatus != ListingStatus.Deleted);
+
+            var listing =
+                await _context.Listings
+                    .Include(l => l.Member)
+                    .Include(l => l.Images)
+                    .FirstOrDefaultAsync(l =>
+                        l.ListingId == id &&
+                        l.ListStatus != ListingStatus.Deleted);
+
 
             if (listing == null)
             {
                 return NotFound();
             }
 
+
             // Only the owner may access this owner-specific page.
             if (listing.MemberId != userId)
             {
                 return Forbid();
             }
+
 
             return View(listing);
         }
@@ -97,24 +100,29 @@ namespace PETHUB.Controllers
         // Displays a Lost & Found report owned by the currently
         // logged-in Member.
         //
-        // Deleted reports cannot be opened anymore.
+        // Soft-deleted reports cannot be opened.
         // =========================================================
 
         public async Task<IActionResult> LostFoundDetails(int id)
         {
-            var userId = _userManager.GetUserId(User);
+            var userId =
+                _userManager.GetUserId(User);
 
-            var report = await _context.LostFounds
-                .Include(r => r.User)
-                .Include(r => r.Images)
-                .FirstOrDefaultAsync(r =>
-                    r.LostFoundId == id &&
-                    r.RStatus != ReportStatus.Deleted);
+
+            var report =
+                await _context.LostFounds
+                    .Include(r => r.User)
+                    .Include(r => r.Images)
+                    .FirstOrDefaultAsync(r =>
+                        r.LostFoundId == id &&
+                        r.RStatus != ReportStatus.Deleted);
+
 
             if (report == null)
             {
                 return NotFound();
             }
+
 
             // Only the owner may access this owner-specific page.
             if (report.UserId != userId)
@@ -122,21 +130,32 @@ namespace PETHUB.Controllers
                 return Forbid();
             }
 
+
             return View(report);
         }
 
 
-        // Displays the logged-in member's posts and applies optional status/type filters.
-        public async Task<IActionResult> Index(
-           string? status,
-           string? type,
-           int page = 1)
-        {
-            // =========================================================
-            // PAGINATION SETTINGS
-            // =========================================================
+        // =========================================================
+        // MY POSTS INDEX
+        // =========================================================
+        //
+        // Displays all non-deleted Marketplace and Lost & Found
+        // posts belonging to the currently authenticated Member.
+        //
+        // Supports:
+        // - Approval Status filter
+        // - Marketplace / Lost & Found filter
+        // - Combined newest-first sorting
+        // - Pagination
+        // =========================================================
 
+        public async Task<IActionResult> Index(
+            string? status,
+            string? type,
+            int page = 1)
+        {
             const int pageSize = 12;
+
 
             // Prevent invalid page numbers.
             if (page < 1)
@@ -145,37 +164,47 @@ namespace PETHUB.Controllers
             }
 
 
-            // =========================================================
-            // EXISTING MY POSTS LOGIC
-            // =========================================================
+            var userId =
+                _userManager.GetUserId(User);
 
-            // Get the current logged-in member's ID.
-            // This ensures MyPosts only ever retrieves posts owned by this member.
-            var userId = _userManager.GetUserId(User);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
 
 
             // =====================================================
             // BUILD VIEW MODEL
             // =====================================================
 
-            var model = new MyPostsViewModel
-            {
-                StatusFilter = status,
-                TypeFilter = type
-            };
+            var model =
+                new MyPostsViewModel
+                {
+                    StatusFilter = status,
+                    TypeFilter = type
+                };
 
-            // Start with the logged-in member's Marketplace listings.
-            // Include Images because the MyPosts view displays the first image.
-            var listingsQuery = _context.Listings
-                .Include(l => l.Images)
-                .Where(l =>
-                    l.MemberId == userId &&
-                    l.ListStatus != ListingStatus.Deleted)
-                .AsQueryable();
+
+            // =====================================================
+            // MARKETPLACE POSTS
+            // =====================================================
+            //
+            // Deleted Marketplace listings remain in the database
+            // for historical relationships, but are hidden here.
+            // =====================================================
+
+            var listingsQuery =
+                _context.Listings
+                    .Include(l => l.Images)
+                    .Where(l =>
+                        l.MemberId == userId &&
+                        l.ListStatus != ListingStatus.Deleted)
+                    .AsQueryable();
 
 
             // -----------------------------------------------------
-            // Marketplace Approval Status Filter
+            // MARKETPLACE APPROVAL STATUS FILTER
             // -----------------------------------------------------
 
             if (!string.IsNullOrWhiteSpace(status) &&
@@ -183,17 +212,17 @@ namespace PETHUB.Controllers
                     status,
                     out var listingStatus))
             {
-                listingsQuery = listingsQuery
-                    .Where(l => l.Status == listingStatus);
+                listingsQuery =
+                    listingsQuery.Where(
+                        l => l.Status == listingStatus);
             }
 
 
             // -----------------------------------------------------
-            // Post Type Filter
+            // POST TYPE FILTER
             // -----------------------------------------------------
             //
-            // If Lost & Found was selected, remove Marketplace
-            // posts from the result.
+            // If Lost & Found was selected, exclude Marketplace.
             // -----------------------------------------------------
 
             if (string.Equals(
@@ -201,7 +230,8 @@ namespace PETHUB.Controllers
                 "LostFound",
                 StringComparison.OrdinalIgnoreCase))
             {
-                listingsQuery = listingsQuery.Where(l => false);
+                listingsQuery =
+                    listingsQuery.Where(l => false);
             }
 
 
@@ -213,20 +243,21 @@ namespace PETHUB.Controllers
             // LOST & FOUND POSTS
             // =====================================================
             //
-            // Deleted Lost & Found reports are intentionally
-            // excluded from My Posts.
+            // Deleted reports are preserved for historical
+            // relationships but are hidden from My Posts.
             // =====================================================
 
-            var reportsQuery = _context.LostFounds
-                .Include(r => r.Images)
-                .Where(r =>
-                    r.UserId == userId &&
-                    r.RStatus != ReportStatus.Deleted)
-                .AsQueryable();
+            var reportsQuery =
+                _context.LostFounds
+                    .Include(r => r.Images)
+                    .Where(r =>
+                        r.UserId == userId &&
+                        r.RStatus != ReportStatus.Deleted)
+                    .AsQueryable();
 
 
             // -----------------------------------------------------
-            // Lost & Found Approval Status Filter
+            // LOST & FOUND APPROVAL STATUS FILTER
             // -----------------------------------------------------
 
             if (!string.IsNullOrWhiteSpace(status) &&
@@ -234,17 +265,17 @@ namespace PETHUB.Controllers
                     status,
                     out var reportStatus))
             {
-                reportsQuery = reportsQuery
-                    .Where(r => r.Status == reportStatus);
+                reportsQuery =
+                    reportsQuery.Where(
+                        r => r.Status == reportStatus);
             }
 
 
             // -----------------------------------------------------
-            // Post Type Filter
+            // POST TYPE FILTER
             // -----------------------------------------------------
             //
-            // If Marketplace was selected, remove Lost & Found
-            // reports from the result.
+            // If Marketplace was selected, exclude Lost & Found.
             // -----------------------------------------------------
 
             if (string.Equals(
@@ -268,6 +299,13 @@ namespace PETHUB.Controllers
             var user =
                 await _userManager.GetUserAsync(User);
 
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+
             model.Profile =
                 await _profileService
                     .BuildProfileViewModelAsync(user);
@@ -280,15 +318,14 @@ namespace PETHUB.Controllers
             foreach (var listing in listings)
             {
                 model.Posts.Add(
-                    (listing, null)
-                );
+                    (listing, null));
             }
+
 
             foreach (var report in reports)
             {
                 model.Posts.Add(
-                    (null, report)
-                );
+                    (null, report));
             }
 
 
@@ -296,46 +333,52 @@ namespace PETHUB.Controllers
             // SORT NEWEST FIRST
             // =====================================================
 
-            model.Posts = model.Posts
-                .OrderByDescending(post =>
-                    post.Listing != null
-                        ? post.Listing.DatePosted
-                        : post.Report!.DateReported)
-                .ToList();
+            model.Posts =
+                model.Posts
+                    .OrderByDescending(post =>
+                        post.Listing != null
+                            ? post.Listing.DatePosted
+                            : post.Report!.DateReported)
+                    .ToList();
 
 
-            // =========================================================
+            // =====================================================
             // PAGINATION
-            // =========================================================
+            // =====================================================
+            //
+            // Pagination is applied AFTER Marketplace and Lost &
+            // Found posts have been combined and sorted so that
+            // both post types share one correct timeline.
+            // =====================================================
 
-            // Count the combined posts AFTER all existing filters
-            // and the existing newest-first sorting have been applied.
-            var totalItems = model.Posts.Count;
+            var totalItems =
+                model.Posts.Count;
 
-            // Calculate the total number of pages.
-            var totalPages = (int)Math.Ceiling(
-                totalItems / (double)pageSize);
 
-            // Prevent the requested page from exceeding the available pages.
-            if (totalPages > 0 && page > totalPages)
+            var totalPages =
+                (int)Math.Ceiling(
+                    totalItems / (double)pageSize);
+
+
+            if (totalPages > 0 &&
+                page > totalPages)
             {
                 page = totalPages;
             }
 
-            // Keep only the posts for the current page.
-            // The existing sorting above remains unchanged.
-            model.Posts = model.Posts
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
 
-            // Store pagination information in the existing MyPostsViewModel.
+            model.Posts =
+                model.Posts
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+
             model.CurrentPage = page;
             model.PageSize = pageSize;
             model.TotalItems = totalItems;
 
 
-            // Return the existing MyPosts view.
             return View(model);
         }
 
@@ -347,12 +390,13 @@ namespace PETHUB.Controllers
         // IMPORTANT:
         // This is a SOFT DELETE.
         //
-        // The Listing database record is preserved because other
-        // records such as Conversations may still reference it.
+        // The Listing database record is preserved because
+        // Conversations and other historical records may still
+        // reference it.
         //
         // However:
-        // - Physical uploaded image files ARE permanently deleted.
-        // - ListingImage database records ARE permanently deleted.
+        // - Physical uploaded images ARE permanently deleted.
+        // - ListingImage records ARE permanently deleted.
         // - ListingStatus becomes Deleted.
         //
         // From the Member's point of view, the post is deleted.
@@ -366,15 +410,13 @@ namespace PETHUB.Controllers
                 _userManager.GetUserId(User);
 
 
-            // Retrieve the listing and its images.
-            var listing = await _context.Listings
-                .Include(l => l.Images)
-                .FirstOrDefaultAsync(
-                    l => l.ListingId == id
-                );
+            var listing =
+                await _context.Listings
+                    .Include(l => l.Images)
+                    .FirstOrDefaultAsync(
+                        l => l.ListingId == id);
 
 
-            // Listing does not exist.
             if (listing == null)
             {
                 return NotFound();
@@ -392,9 +434,11 @@ namespace PETHUB.Controllers
             if (listing.ListStatus ==
                 ListingStatus.Deleted)
             {
+                TempData["InfoMessage"] =
+                    "This Marketplace listing has already been deleted.";
+
                 return RedirectToAction(
-                    nameof(Index)
-                );
+                    nameof(Index));
             }
 
 
@@ -408,21 +452,21 @@ namespace PETHUB.Controllers
                 foreach (var image
                          in listing.Images.ToList())
                 {
-                    var filePath = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot",
-                        image.ImagePath.TrimStart('/')
-                    );
+                    var filePath =
+                        Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "wwwroot",
+                            image.ImagePath.TrimStart('/'));
 
 
-                    // Delete the physical image from wwwroot.
+                    // Delete the physical uploaded image.
                     if (System.IO.File.Exists(filePath))
                     {
                         System.IO.File.Delete(filePath);
                     }
 
 
-                    // Delete the image database record.
+                    // Delete only the related image database record.
                     _context.ListingImages.Remove(image);
                 }
             }
@@ -439,17 +483,12 @@ namespace PETHUB.Controllers
             await _context.SaveChangesAsync();
 
 
-            // =====================================================
-            // SYSTEM MODAL
-            // =====================================================
-
             TempData["SuccessMessage"] =
                 "Marketplace listing has been deleted.";
 
 
             return RedirectToAction(
-                nameof(Index)
-            );
+                nameof(Index));
         }
 
 
@@ -461,12 +500,11 @@ namespace PETHUB.Controllers
         // This is also a SOFT DELETE.
         //
         // The LostFound database record is preserved so existing
-        // conversations and other historical references do not
-        // break.
+        // Conversations and historical references remain valid.
         //
         // However:
-        // - Physical report images ARE permanently deleted.
-        // - LostFoundImage database records ARE permanently deleted.
+        // - Physical uploaded images ARE permanently deleted.
+        // - LostFoundImage records ARE permanently deleted.
         // - ReportStatus becomes Deleted.
         // =========================================================
 
@@ -478,15 +516,13 @@ namespace PETHUB.Controllers
                 _userManager.GetUserId(User);
 
 
-            // Retrieve the report and its images.
-            var report = await _context.LostFounds
-                .Include(r => r.Images)
-                .FirstOrDefaultAsync(
-                    r => r.LostFoundId == id
-                );
+            var report =
+                await _context.LostFounds
+                    .Include(r => r.Images)
+                    .FirstOrDefaultAsync(
+                        r => r.LostFoundId == id);
 
 
-            // Report does not exist.
             if (report == null)
             {
                 return NotFound();
@@ -504,9 +540,11 @@ namespace PETHUB.Controllers
             if (report.RStatus ==
                 ReportStatus.Deleted)
             {
+                TempData["InfoMessage"] =
+                    "This Lost & Found report has already been deleted.";
+
                 return RedirectToAction(
-                    nameof(Index)
-                );
+                    nameof(Index));
             }
 
 
@@ -520,21 +558,21 @@ namespace PETHUB.Controllers
                 foreach (var image
                          in report.Images.ToList())
                 {
-                    var filePath = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot",
-                        image.ImagePath.TrimStart('/')
-                    );
+                    var filePath =
+                        Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "wwwroot",
+                            image.ImagePath.TrimStart('/'));
 
 
-                    // Delete the physical image from wwwroot.
+                    // Delete the physical uploaded image.
                     if (System.IO.File.Exists(filePath))
                     {
                         System.IO.File.Delete(filePath);
                     }
 
 
-                    // Delete the image database record.
+                    // Delete only the related image database record.
                     _context.LostFoundImages.Remove(image);
                 }
             }
@@ -551,17 +589,12 @@ namespace PETHUB.Controllers
             await _context.SaveChangesAsync();
 
 
-            // =====================================================
-            // SYSTEM MODAL
-            // =====================================================
-
             TempData["SuccessMessage"] =
                 "Lost & Found report has been deleted.";
 
 
             return RedirectToAction(
-                nameof(Index)
-            );
+                nameof(Index));
         }
 
 
@@ -569,12 +602,8 @@ namespace PETHUB.Controllers
         // MARK MARKETPLACE LISTING AS SOLD
         // =========================================================
         //
-        // Only:
-        // - Owner
-        // - Approved listing
-        // - Currently available listing
-        //
-        // may perform this action.
+        // Only the owner of an Approved and currently available
+        // For Sale listing may perform this action.
         // =========================================================
 
         [HttpPost]
@@ -585,10 +614,10 @@ namespace PETHUB.Controllers
                 _userManager.GetUserId(User);
 
 
-            var listing = await _context.Listings
-                .FirstOrDefaultAsync(
-                    l => l.ListingId == id
-                );
+            var listing =
+                await _context.Listings
+                    .FirstOrDefaultAsync(
+                        l => l.ListingId == id);
 
 
             if (listing == null)
@@ -597,14 +626,12 @@ namespace PETHUB.Controllers
             }
 
 
-            // Only owner may perform this action.
             if (listing.MemberId != userId)
             {
                 return Forbid();
             }
 
 
-            // Listing must already be approved.
             if (listing.Status !=
                 ListApprovalStatus.Approved)
             {
@@ -612,7 +639,6 @@ namespace PETHUB.Controllers
             }
 
 
-            // Listing must still be available.
             if (listing.ListStatus !=
                 ListingStatus.Pending)
             {
@@ -636,8 +662,7 @@ namespace PETHUB.Controllers
                 new
                 {
                     id = listing.ListingId
-                }
-            );
+                });
         }
 
 
@@ -645,12 +670,8 @@ namespace PETHUB.Controllers
         // MARK MARKETPLACE LISTING AS ADOPTED
         // =========================================================
         //
-        // Only:
-        // - Owner
-        // - Approved listing
-        // - Currently available listing
-        //
-        // may perform this action.
+        // Only the owner of an Approved and currently available
+        // adoption listing may perform this action.
         // =========================================================
 
         [HttpPost]
@@ -661,10 +682,10 @@ namespace PETHUB.Controllers
                 _userManager.GetUserId(User);
 
 
-            var listing = await _context.Listings
-                .FirstOrDefaultAsync(
-                    l => l.ListingId == id
-                );
+            var listing =
+                await _context.Listings
+                    .FirstOrDefaultAsync(
+                        l => l.ListingId == id);
 
 
             if (listing == null)
@@ -673,14 +694,12 @@ namespace PETHUB.Controllers
             }
 
 
-            // Only owner may perform this action.
             if (listing.MemberId != userId)
             {
                 return Forbid();
             }
 
 
-            // Listing must already be approved.
             if (listing.Status !=
                 ListApprovalStatus.Approved)
             {
@@ -688,7 +707,6 @@ namespace PETHUB.Controllers
             }
 
 
-            // Listing must still be available.
             if (listing.ListStatus !=
                 ListingStatus.Pending)
             {
@@ -712,8 +730,7 @@ namespace PETHUB.Controllers
                 new
                 {
                     id = listing.ListingId
-                }
-            );
+                });
         }
 
 
@@ -727,7 +744,8 @@ namespace PETHUB.Controllers
         // Found report:
         //     "Mark as Resolved"
         //
-        // Only approved and active reports may be resolved.
+        // Only the owner of an Approved and Active report
+        // may perform this action.
         // =========================================================
 
         [HttpPost]
@@ -738,10 +756,10 @@ namespace PETHUB.Controllers
                 _userManager.GetUserId(User);
 
 
-            var report = await _context.LostFounds
-                .FirstOrDefaultAsync(
-                    r => r.LostFoundId == id
-                );
+            var report =
+                await _context.LostFounds
+                    .FirstOrDefaultAsync(
+                        r => r.LostFoundId == id);
 
 
             if (report == null)
@@ -750,14 +768,12 @@ namespace PETHUB.Controllers
             }
 
 
-            // Only owner may perform this action.
             if (report.UserId != userId)
             {
                 return Forbid();
             }
 
 
-            // Report must already be approved.
             if (report.Status !=
                 ApprovalStatus.Approved)
             {
@@ -765,7 +781,6 @@ namespace PETHUB.Controllers
             }
 
 
-            // Report must still be active.
             if (report.RStatus !=
                 ReportStatus.Active)
             {
@@ -791,8 +806,7 @@ namespace PETHUB.Controllers
                 new
                 {
                     id = report.LostFoundId
-                }
-            );
+                });
         }
     }
 }

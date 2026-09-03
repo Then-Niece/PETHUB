@@ -14,56 +14,75 @@
     <link rel="stylesheet" href="~/css/messages.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Marketplace.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Lost&Found.css" asp-append-version="true" />
+
+    <!-- PetFeed styles from both branches -->
     <link rel="stylesheet" href="~/css/PetFeed.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/custom-select.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/system-modal.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/petfeed-cards.css" asp-append-version="true" />
+
+    <!-- Profile / Logs / Gallery styles preserved from the other branch -->
     <link rel="stylesheet" href="~/css/MemberProfile.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Logs.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/image-gallery.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/image-preview.css" asp-append-version="true" />
+
+    <!-- New shared UI styles -->
+    <link rel="stylesheet" href="~/css/custom-select.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/system-modal.css" asp-append-version="true" />
+
     <link rel="stylesheet" href="~/PETHUB.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/price.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/petfeed-cards.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/image-preview.css" asp-append-version="true"/>
+
+
     <!-- ==========================================
-     PETHUB SIDEBAR - RESTORE STATE
-     Runs before the page is displayed so the
-     sidebar does not animate on page navigation.
-     ========================================== -->
+         PETHUB SIDEBAR - RESTORE STATE
+
+         Runs before the page is displayed so the
+         sidebar does not animate on page navigation.
+         ========================================== -->
     <script>
         (function () {
 
-        const storageKey = "pethubSidebarCollapsed";
-        const savedState = localStorage.getItem(storageKey);
+            const storageKey = "pethubSidebarCollapsed";
+            const savedState = localStorage.getItem(storageKey);
 
-        // Tell CSS that we are restoring the sidebar.
-        document.documentElement.classList.add("sidebar-loading");
+            // Tell CSS that we are restoring the sidebar.
+            document.documentElement.classList.add("sidebar-loading");
 
-        // If the user previously collapsed the sidebar,
-        // tell CSS to start it at the collapsed width.
-        if (savedState === "true") {
+            // If the user previously collapsed the sidebar,
+            // tell CSS to start it at the collapsed width.
+            if (savedState === "true") {
 
-        document.documentElement.classList.add(
-        "sidebar-collapsed"
-        );
-        }
+                document.documentElement.classList.add(
+                    "sidebar-collapsed"
+                );
+            }
 
         })();
     </script>
-
-    
 </head>
+
 <body>
-@*     Run the Navigation View Component and render its view. *@    
+
+    @* =========================================================
+       NAVIGATION
+       =========================================================
+       HideNavbar support is preserved from the newer branch.
+       ========================================================= *@
 
     @if (!(ViewData["HideNavbar"] as bool? ?? false))
     {
         @await Component.InvokeAsync("Navigation")
     }
 
+
     <div class="app @(ViewData["HideNavbar"] as bool? == true ? "app-no-navbar" : "")">
 
+        @* =====================================================
+           SIDEBAR
+           ===================================================== *@
+
         @if (!(ViewData["HideSidebar"] as bool? ?? false)
-     && User.Identity?.IsAuthenticated == true)
+            && User.Identity?.IsAuthenticated == true)
         {
             <div id="sidebar-wrapper">
 
@@ -82,10 +101,16 @@
 
             </div>
 
+
             <div id="sidebarOverlay"
                  class="sidebar-overlay">
             </div>
         }
+
+
+        @* =====================================================
+           MAIN PAGE CONTENT
+           ===================================================== *@
 
         <main id="mainContent">
             @RenderBody()
@@ -93,35 +118,94 @@
 
     </div>
 
-    <!-- Shared report modal used by Marketplace and Lost & Found pages.
-     The modal is rendered after the page content so report buttons from
-     the rendered views can open this single reusable modal. -->
+
+    <!-- =========================================================
+         SHARED REPORT MODAL
+
+         Used by Marketplace and Lost & Found pages.
+         ========================================================= -->
+
     <partial name="_ReportModal" />
 
-    <!-- Shared system modal -->
+
+    <!-- =========================================================
+         SHARED SYSTEM MODAL
+
+         Used by TempData feedback and other reusable system
+         notifications.
+         ========================================================= -->
+
     <partial name="_SystemModal" />
+
+
+    <!-- =========================================================
+         CORE SCRIPTS
+         ========================================================= -->
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- Shared report modal -->
     <script src="~/js/report-modal.js" asp-append-version="true"></script>
-    <!-- Lucide -->
+
+
+    <!-- Lucide icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+
+    <!-- =========================================================
+         SHARED UI SCRIPTS
+         ========================================================= -->
+
     <script src="~/js/custom-select.js" asp-append-version="true"></script>
+
     <script src="~/js/system-modal.js" asp-append-version="true"></script>
+
+
+    <!-- =========================================================
+         EXISTING APPLICATION SCRIPTS
+         ========================================================= -->
+
     <script src="~/js/Price.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/sidebar.js" asp-append-version="true"></script>
     <script src="~/js/user-crud.js"></script>
     <script src="~/js/imagePreviewHelper.js" asp-append-version="true"></script>
-    <script src="~/js/imageGallery.js" ></script>
+    <!-- Preserved from the other branch -->
+    <script src="~/js/imageGallery.js" asp-append-version="true"></script>
+
+
+    <!-- =========================================================
+         SIGNALR / GLOBAL MESSAGING
+         ========================================================= -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+
     <script src="~/js/global-messaging.js" asp-append-version="true"></script>
 
+
+    <!-- =========================================================
+         PETFEED
+         ========================================================= -->
+
     <script src="~/js/petfeed.js" asp-append-version="true"></script>
+
+    @* =========================================================
+       TEMPDATA -> SYSTEM MODAL
+
+       Reads SuccessMessage, ErrorMessage, WarningMessage and
+       InfoMessage after the system-modal JavaScript is loaded.
+       ========================================================= *@
+
     @await Html.PartialAsync("_TempDataSystemModal")
 
-    @await RenderSectionAsync("Scripts", required: false)
+
+    @* Page-specific scripts *@
+
+    @await RenderSectionAsync(
+        "Scripts",
+        required: false)
 
 </body>
 </html>

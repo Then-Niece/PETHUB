@@ -4,57 +4,8 @@
     ViewData["Title"] = "Edit My Profile";
 }
 
+
 <div class="admin-edit-profile-page">
-
-    @if (TempData["SuccessMessage"] != null) @* Shows Success Message After Saving Changes *@
-    {
-        <div class="alert alert-success alert-dismissible fade show">
-
-            @TempData["SuccessMessage"] @* Call from TempData in MyProfileController *@
-
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-            </button>
-
-                    @TempData["SuccessMessage"] @* Call from TempData in MyProfileController *@
-
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert">
-                    </button>
-
-                    @TempData["SuccessMessage"] @* Call from TempData in MyProfileController *@
-
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert">
-                    </button>
-
-                    @TempData["SuccessMessage"] @* Call from TempData in MyProfileController *@
-
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert">
-                    </button>
-
-        </div>
-    }
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert">
-                    </button>
-
-                    @TempData["SuccessMessage"] @* Call from TempData in MyProfileController *@
-
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert">
-                    </button>
-
-                </div>
-            }
-
 
     <form asp-action="Edit"
           method="post"
@@ -71,7 +22,9 @@
 
             <div class="admin-edit-profile-left-column">
 
-                <!-- PROFILE CARD -->
+                <!-- ===================================================== -->
+                <!-- PROFILE CARD                                          -->
+                <!-- ===================================================== -->
 
                 <div class="admin-edit-profile-card">
 
@@ -147,7 +100,7 @@
 
 
                         <!-- ================================================= -->
-                        <!-- VISIBLE MODAL BUTTON                                -->
+                        <!-- PROFILE PHOTO MODAL BUTTON                         -->
                         <!-- ================================================= -->
 
                         <button type="button"
@@ -160,8 +113,9 @@
 
 
                         <!-- ================================================= -->
-                        <!-- EXISTING HELPER BUTTONS                            -->
-                        <!-- Kept for profilePictureHelper.js                  -->
+                        <!-- HELPER BUTTONS                                     -->
+                        <!-- Kept hidden because profilePictureHelper.js        -->
+                        <!-- continues to use these existing controls.          -->
                         <!-- ================================================= -->
 
                         <button type="button"
@@ -191,9 +145,9 @@
                 </div>
 
 
-                <!-- ========================================================= -->
-                <!-- ACTIVITY                                                    -->
-                <!-- ========================================================= -->
+                <!-- ===================================================== -->
+                <!-- ACTIVITY                                               -->
+                <!-- ===================================================== -->
 
                 <div class="admin-edit-profile-activity-card">
 
@@ -275,14 +229,60 @@
 
             <div class="admin-edit-profile-right-column">
 
+                <!-- Display model-level validation errors. -->
                 <div asp-validation-summary="ModelOnly"
                      class="text-danger mb-3">
                 </div>
 
 
-                <!-- ================================================= -->
-                <!-- PERSONAL INFORMATION                               -->
-                <!-- ================================================= -->
+                <!-- ===================================================== -->
+                <!-- ABOUT ME                                               -->
+                <!-- ===================================================== -->
+                <!--
+                    Preserved from the other branch so the Administrator's
+                    biography remains editable in the redesigned page.
+                -->
+
+                <div class="admin-edit-profile-information-card">
+
+                    <div class="admin-edit-profile-section-header">
+
+                        <h3>
+                            About Me
+                        </h3>
+
+                        <p>
+                            Share a short introduction about yourself with other administrators.
+                        </p>
+
+                    </div>
+
+
+                    <h6 class="admin-edit-profile-subsection-title">
+                        Biography
+                    </h6>
+
+
+                    <div class="admin-edit-profile-information-item">
+
+                        <textarea asp-for="Bio"
+                                  rows="5"
+                                  class="form-control"
+                                  placeholder="Tell other administrators a little about yourself...">
+                        </textarea>
+
+                        <span asp-validation-for="Bio"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ===================================================== -->
+                <!-- PERSONAL INFORMATION                                   -->
+                <!-- ===================================================== -->
 
                 <div class="admin-edit-profile-information-card">
 
@@ -299,7 +299,9 @@
                     </div>
 
 
-                    <!-- NAME -->
+                    <!-- ------------------------------------------------- -->
+                    <!-- NAME                                               -->
+                    <!-- ------------------------------------------------- -->
 
                     <h6 class="admin-edit-profile-subsection-title">
                         Name
@@ -358,7 +360,9 @@
                     </div>
 
 
-                    <!-- CONTACT DETAILS -->
+                    <!-- ------------------------------------------------- -->
+                    <!-- CONTACT DETAILS                                    -->
+                    <!-- ------------------------------------------------- -->
 
                     <h6 class="admin-edit-profile-subsection-title">
                         Contact Details
@@ -400,9 +404,9 @@
                 </div>
 
 
-                <!-- ================================================= -->
-                <!-- ACCOUNT INFORMATION                                -->
-                <!-- ================================================= -->
+                <!-- ===================================================== -->
+                <!-- ACCOUNT INFORMATION                                    -->
+                <!-- ===================================================== -->
 
                 <div class="admin-edit-profile-information-card">
 
@@ -419,7 +423,9 @@
                     </div>
 
 
-                    <!-- ACCOUNT -->
+                    <!-- ------------------------------------------------- -->
+                    <!-- ACCOUNT                                            -->
+                    <!-- ------------------------------------------------- -->
 
                     <h6 class="admin-edit-profile-subsection-title">
                         Account
@@ -456,7 +462,9 @@
                     </div>
 
 
-                    <!-- ACCOUNT STATUS -->
+                    <!-- ------------------------------------------------- -->
+                    <!-- ACCOUNT STATUS                                     -->
+                    <!-- ------------------------------------------------- -->
 
                     <h6 class="admin-edit-profile-subsection-title">
                         Account Status
@@ -482,17 +490,19 @@
                 </div>
 
 
-                <!-- ================================================= -->
-                <!-- ACTIONS                                            -->
-                <!-- ================================================= -->
+                <!-- ===================================================== -->
+                <!-- ACTIONS                                                -->
+                <!-- ===================================================== -->
 
                 <div class="admin-edit-profile-actions-card">
 
-                   
-
                     <div class="admin-edit-profile-actions">
 
-                        <a asp-action="Edit"
+                        <!--
+                            Return to the Administrator's profile without
+                            submitting any changes.
+                        -->
+                        <a asp-action="View"
                            class="admin-edit-profile-cancel-button">
 
                             Cancel
@@ -520,6 +530,9 @@
 
     @* =============================================================
        PROFILE PHOTO MODAL
+
+       The redesigned page uses a modal while still reusing the
+       existing profilePictureHelper.js functionality underneath.
        ============================================================= *@
 
     <div id="profilePhotoModal"
@@ -596,7 +609,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 
-            /* Profile photo modal */
+            // =========================================================
+            // PROFILE PHOTO MODAL
+            // =========================================================
 
             const modal =
                 document.getElementById("profilePhotoModal");
@@ -625,7 +640,9 @@
 
             function openProfilePhotoModal() {
 
-                if (!modal) return;
+                if (!modal) {
+                    return;
+                }
 
                 modal.classList.add("show");
 
@@ -633,13 +650,14 @@
                     "aria-hidden",
                     "false"
                 );
-
             }
 
 
             function closeProfilePhotoModal() {
 
-                if (!modal) return;
+                if (!modal) {
+                    return;
+                }
 
                 modal.classList.remove("show");
 
@@ -647,7 +665,6 @@
                     "aria-hidden",
                     "true"
                 );
-
             }
 
 
@@ -661,7 +678,6 @@
 
                     }
                 );
-
             }
 
 
@@ -675,7 +691,6 @@
 
                     }
                 );
-
             }
 
 
@@ -689,13 +704,15 @@
 
                     }
                 );
-
             }
 
 
-            /* Upload Photo */
+            // =========================================================
+            // UPLOAD PHOTO
+            // =========================================================
 
-            if (modalUploadButton && existingChangeButton) {
+            if (modalUploadButton &&
+                existingChangeButton) {
 
                 modalUploadButton.addEventListener(
                     "click",
@@ -707,13 +724,15 @@
 
                     }
                 );
-
             }
 
 
-            /* Remove Photo */
+            // =========================================================
+            // REMOVE PHOTO
+            // =========================================================
 
-            if (modalRemoveButton && existingRemoveButton) {
+            if (modalRemoveButton &&
+                existingRemoveButton) {
 
                 modalRemoveButton.addEventListener(
                     "click",
@@ -725,11 +744,12 @@
 
                     }
                 );
-
             }
 
 
-            /* Escape closes modal */
+            // =========================================================
+            // ESCAPE KEY CLOSES MODAL
+            // =========================================================
 
             document.addEventListener(
                 "keydown",
@@ -742,14 +762,15 @@
                     ) {
 
                         closeProfilePhotoModal();
-
                     }
 
                 }
             );
 
 
-            /* Existing profile picture logic */
+            // =========================================================
+            // EXISTING PROFILE PICTURE HELPER
+            // =========================================================
 
             setupProfilePicture();
 

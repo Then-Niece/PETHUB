@@ -6,7 +6,6 @@ using PETHUB.Models;
 using PETHUB.Services;
 using PETHUB.ViewModels;
 
-
 namespace PETHUB.Controllers
 {
     public class UserAccountController : Controller
@@ -19,15 +18,27 @@ namespace PETHUB.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly EmailSender _emailSender;
-        //gamiton rani sya ug IConfiguration para sa pagkuha sa appsettings.json values
+
+        // gamiton rani sya ug IConfiguration para sa pagkuha
+        // sa appsettings.json values
         private readonly IConfiguration _config;
 
-        // Provides centralized audit logging for authentication activities.
-        // This records successful login and logout events in the AuditLogs table.
+        // Provides centralized audit logging for successful
+        // authentication activities such as Login and Logout.
         private readonly AuditLogService _auditLogService;
 
-        public UserAccountController(UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, EmailSender emailSender, IConfiguration config, AuditLogService auditLogService)
+
+        // =========================================================
+        // CONSTRUCTOR
+        // =========================================================
+
+        public UserAccountController(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            RoleManager<IdentityRole> roleManager,
+            EmailSender emailSender,
+            IConfiguration config,
+            AuditLogService auditLogService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -36,6 +47,7 @@ namespace PETHUB.Controllers
             _config = config;
             _auditLogService = auditLogService;
         }
+
 
         // =========================================================
         // REGISTER
@@ -57,8 +69,6 @@ namespace PETHUB.Controllers
         public async Task<IActionResult> Register(
             RegisterViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
             ViewData["HideSidebar"] = true;
 
 
@@ -72,21 +82,23 @@ namespace PETHUB.Controllers
             }
 
 
+            // Ensure Terms and Conditions were accepted.
             if (!model.AcceptTerms)
             {
                 ModelState.AddModelError(
                     nameof(model.AcceptTerms),
-                    "You must accept the Terms and Conditions."
-                );
+                    "You must accept the Terms and Conditions.");
 
                 return View(model);
             }
 
-            // Identity already checks if the email is already taken
-
 
             // =====================================================
             // CREATE USER OBJECT
+            // =====================================================
+            //
+            // New accounts remain Pending until their email
+            // address has been successfully verified.
             // =====================================================
 
             var user = new ApplicationUser
@@ -119,8 +131,7 @@ namespace PETHUB.Controllers
             var result =
                 await _userManager.CreateAsync(
                     user,
-                    model.Password
-                );
+                    model.Password);
 
 
             if (!result.Succeeded)
@@ -129,8 +140,7 @@ namespace PETHUB.Controllers
                 {
                     ModelState.AddModelError(
                         string.Empty,
-                        error.Description
-                    );
+                        error.Description);
                 }
 
                 return View(model);
@@ -144,22 +154,20 @@ namespace PETHUB.Controllers
             var roleResult =
                 await _userManager.AddToRoleAsync(
                     user,
-                    "Member"
-                );
+                    "Member");
 
 
             if (!roleResult.Succeeded)
             {
-                // Account creation was incomplete.
-                // Remove the newly created account.
+                // Account creation is incomplete without the role,
+                // so remove the newly created Identity account.
                 await _userManager.DeleteAsync(user);
 
                 foreach (var error in roleResult.Errors)
                 {
                     ModelState.AddModelError(
                         string.Empty,
-                        error.Description
-                    );
+                        error.Description);
                 }
 
                 return View(model);
@@ -168,6 +176,10 @@ namespace PETHUB.Controllers
 
             // =====================================================
             // SAVE ID PHOTO
+            // =====================================================
+            //
+            // Save the uploaded ID only after the Identity account
+            // and Member role have both been created successfully.
             // =====================================================
 
             if (model.IdPhoto != null)
@@ -187,8 +199,7 @@ namespace PETHUB.Controllers
                     {
                         ModelState.AddModelError(
                             string.Empty,
-                            error.Description
-                        );
+                            error.Description);
                     }
 
                     return View(model);
@@ -214,8 +225,7 @@ namespace PETHUB.Controllers
                         userId = user.Id,
                         token
                     },
-                    Request.Scheme
-                );
+                    Request.Scheme);
 
 
             // =====================================================
@@ -225,20 +235,18 @@ namespace PETHUB.Controllers
             var body =
                 EmailTemplateHelper.EmailVerification(
                     user.FirstName,
-                    confirmationLink!
-                );
+                    confirmationLink!);
 
 
             await _emailSender.SendEmailAsync(
                 user.Email!,
                 "Verify Your PETHUB Account",
-                body
-            );
+                body);
 
 
+            // Do not automatically sign in the new Member.
             return RedirectToAction(
-                nameof(EmailConfirmationSent)
-            );
+                nameof(EmailConfirmationSent));
         }
 
 
@@ -268,14 +276,15 @@ namespace PETHUB.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        public async Task<IActionResult> ConfirmEmail(
+            string userId,
+            string token)
         {
             if (string.IsNullOrWhiteSpace(userId) ||
                 string.IsNullOrWhiteSpace(token))
             {
                 return RedirectToAction(
-                    nameof(Login)
-                );
+                    nameof(Login));
             }
 
 
@@ -286,21 +295,19 @@ namespace PETHUB.Controllers
             if (user == null)
             {
                 return RedirectToAction(
-                    nameof(Login)
-                );
+                    nameof(Login));
             }
-
 
 
             // =====================================================
             // EMAIL ALREADY VERIFIED
             // =====================================================
 
-            if (await _userManager.IsEmailConfirmedAsync(user))
+            if (await _userManager
+                .IsEmailConfirmedAsync(user))
             {
                 return RedirectToAction(
-                    nameof(Login)
-                );
+                    nameof(Login));
             }
 
 
@@ -311,15 +318,13 @@ namespace PETHUB.Controllers
             var result =
                 await _userManager.ConfirmEmailAsync(
                     user,
-                    token
-                );
+                    token);
 
 
             if (!result.Succeeded)
             {
                 return RedirectToAction(
-                    nameof(EmailConfirmationExpired)
-                );
+                    nameof(EmailConfirmationExpired));
             }
 
 
@@ -327,7 +332,8 @@ namespace PETHUB.Controllers
             // ACTIVATE VERIFIED ACCOUNT
             // =====================================================
 
-            user.Status = UserStatus.Active;
+            user.Status =
+                UserStatus.Active;
 
 
             var updateResult =
@@ -337,14 +343,12 @@ namespace PETHUB.Controllers
             if (!updateResult.Succeeded)
             {
                 return RedirectToAction(
-                    nameof(Login)
-                );
+                    nameof(Login));
             }
 
 
             return RedirectToAction(
-                nameof(EmailConfirmed)
-            );
+                nameof(EmailConfirmed));
         }
 
 
@@ -362,7 +366,6 @@ namespace PETHUB.Controllers
         {
             return View();
         }
-
 
 
         // =========================================================
@@ -395,25 +398,22 @@ namespace PETHUB.Controllers
 
             var user =
                 await _userManager.FindByEmailAsync(
-                    model.Email
-                );
+                    model.Email);
 
 
             // Do not reveal whether the email exists.
             if (user == null)
             {
                 return View(
-                    "ResendEmailConfirmationSent"
-                );
+                    "ResendEmailConfirmationSent");
             }
 
 
-            // Already verified.
+            // Already verified accounts can simply return to Login.
             if (user.EmailConfirmed)
             {
                 return RedirectToAction(
-                    nameof(Login)
-                );
+                    nameof(Login));
             }
 
 
@@ -435,8 +435,7 @@ namespace PETHUB.Controllers
                         userId = user.Id,
                         token
                     },
-                    Request.Scheme
-                );
+                    Request.Scheme);
 
 
             // =====================================================
@@ -446,8 +445,7 @@ namespace PETHUB.Controllers
             var body =
                 EmailTemplateHelper.EmailVerification(
                     user.FirstName,
-                    confirmationLink!
-                );
+                    confirmationLink!);
 
 
             try
@@ -455,25 +453,21 @@ namespace PETHUB.Controllers
                 await _emailSender.SendEmailAsync(
                     user.Email!,
                     "Verify Your PETHUB Account",
-                    body
-                );
+                    body);
             }
             catch (Exception)
             {
                 ModelState.AddModelError(
                     string.Empty,
-                    "Unable to send the verification email right now. Please try again later."
-                );
+                    "Unable to send the verification email right now. Please try again later.");
 
                 return View(model);
             }
 
 
             return View(
-                "ResendEmailConfirmationSent"
-            );
+                "ResendEmailConfirmationSent");
         }
-
 
 
         // =========================================================
@@ -482,14 +476,20 @@ namespace PETHUB.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(bool deactivated = false)
+        public IActionResult Login(
+            bool deactivated = false)
         {
             ViewData["HideSidebar"] = true;
 
+
+            // Middleware redirects deactivated authenticated users
+            // here with deactivated=true.
             if (deactivated)
             {
-                TempData["WarningMessage"] = "Your account has been deactivated.\n Please contact an administrator if you believe this was a mistake.";
+                TempData["WarningMessage"] =
+                    "Your account has been deactivated.\nPlease contact an administrator if you believe this was a mistake.";
             }
+
 
             return View();
         }
@@ -498,12 +498,9 @@ namespace PETHUB.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(
+            LoginViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
             ViewData["HideSidebar"] = true;
 
 
@@ -513,34 +510,38 @@ namespace PETHUB.Controllers
             }
 
 
-            // Allow username OR email.
+            // Allow login using either Username or Email.
             var user =
                 await _userManager.FindByNameAsync(
-                    model.UserNameOrEmail
-                )
+                    model.UserNameOrEmail)
                 ??
                 await _userManager.FindByEmailAsync(
-                    model.UserNameOrEmail
-                );
+                    model.UserNameOrEmail);
 
 
             if (user == null)
             {
                 ModelState.AddModelError(
                     string.Empty,
-                    "Invalid login attempt."
-                );
+                    "Invalid login attempt.");
 
                 return View(model);
             }
 
-            // Checks if the user is active or inactive
-            if (user.Status == UserStatus.Inactive)
+
+            // =====================================================
+            // INACTIVE ACCOUNT
+            // =====================================================
+            //
+            // Deactivated users must not start a new session.
+            // =====================================================
+
+            if (user.Status ==
+                UserStatus.Inactive)
             {
                 ModelState.AddModelError(
                     string.Empty,
-                    "This account has been deactivated. Please contact the PetHub administrator for assistance."
-                );
+                    "This account has been deactivated. Please contact the PetHub administrator for assistance.");
 
                 return View(model);
             }
@@ -551,33 +552,29 @@ namespace PETHUB.Controllers
                     user.UserName!,
                     model.Password,
                     model.RememberMe,
-                    lockoutOnFailure: true
-                );
+                    lockoutOnFailure: true);
 
 
             // =====================================================
-            // SUCCESS
+            // SUCCESSFUL LOGIN
             // =====================================================
 
             if (result.Succeeded)
             {
-                // Records the successful login event after Identity confirms
-                // that the supplied username/email and password are correct.
-                // The existing user object already contains the user's Identity ID.
+                // Record the successful authentication only after
+                // ASP.NET Identity confirms the credentials.
                 await _auditLogService.LogAsync(
                     user,
-                    "Logged In"
-                );
+                    "Logged In");
 
-                if (await _userManager.IsInRoleAsync(user, "Admin"))
+
                 if (await _userManager.IsInRoleAsync(
                     user,
                     "Admin"))
                 {
                     return RedirectToAction(
                         "Index",
-                        "AdminDashboard"
-                    );
+                        "AdminDashboard");
                 }
 
 
@@ -587,28 +584,25 @@ namespace PETHUB.Controllers
                 {
                     return RedirectToAction(
                         "Feed",
-                        "PetFeeds"
-                    );
+                        "PetFeeds");
                 }
 
 
                 return RedirectToAction(
                     "Index",
-                    "Home"
-                );
+                    "Home");
             }
 
 
             // =====================================================
-            // LOCKED ACCOUNT
+            // ACCOUNT LOCKED
             // =====================================================
 
             if (result.IsLockedOut)
             {
                 ModelState.AddModelError(
                     string.Empty,
-                    "Your account has been temporarily locked because of too many failed login attempts. Please try again in 15 minutes."
-                );
+                    "Your account has been temporarily locked because of too many failed login attempts. Please try again in 15 minutes.");
 
                 return View(model);
             }
@@ -622,8 +616,7 @@ namespace PETHUB.Controllers
             {
                 ModelState.AddModelError(
                     string.Empty,
-                    "Please verify your email address before logging in."
-                );
+                    "Please verify your email address before logging in.");
 
                 return View(model);
             }
@@ -631,6 +624,7 @@ namespace PETHUB.Controllers
 
             // =====================================================
             // INVALID PASSWORD
+            // SHOW REMAINING ATTEMPTS
             // =====================================================
 
             var failedAttempts =
@@ -646,9 +640,9 @@ namespace PETHUB.Controllers
 
             var remainingAttempts =
                 Math.Max(
-                    maxFailedAttempts - failedAttempts,
-                    0
-                );
+                    maxFailedAttempts -
+                    failedAttempts,
+                    0);
 
 
             var attemptText =
@@ -659,8 +653,7 @@ namespace PETHUB.Controllers
 
             ModelState.AddModelError(
                 string.Empty,
-                $"Invalid login attempt. {remainingAttempts} {attemptText} remaining before your account is temporarily locked."
-            );
+                $"Invalid login attempt. {remainingAttempts} {attemptText} remaining before your account is temporarily locked.");
 
 
             return View(model);
@@ -676,37 +669,29 @@ namespace PETHUB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            // Retrieves the currently authenticated user before the Identity
-            // authentication session is cleared by SignOutAsync().
-            var user = await _userManager.GetUserAsync(User);
+            // Retrieve the authenticated user BEFORE signing out.
+            // After SignOutAsync the current Identity session is gone.
+            var user =
+                await _userManager.GetUserAsync(User);
 
-            // Only create the audit record if an authenticated user was found.
+
             if (user != null)
             {
-                // Records the logout event before signing the user out.
-                // The service stores the user's ID, role, action, and UTC timestamp.
                 await _auditLogService.LogAsync(
                     user,
-                    "Logged Out"
-                );
+                    "Logged Out");
             }
 
-            // Clears the user's authentication session.
+
             await _signInManager.SignOutAsync();
 
-            // Keeps the existing redirect behavior after logout.
-            return RedirectToAction("Index", "Home");
 
             return RedirectToAction(
                 "Index",
-                "Home"
-            );
+                "Home");
         }
 
 
-        // ======================================================
-        // FORGOT PASSWORD AND RESET PASSWORD
-        // ======================================================
         // =========================================================
         // FORGOT PASSWORD
         // =========================================================
@@ -729,21 +714,18 @@ namespace PETHUB.Controllers
             {
                 return View(model);
             }
-            }
 
 
             var user =
                 await _userManager.FindByEmailAsync(
-                    model.Email
-                );
+                    model.Email);
 
 
-            // Do not reveal whether the email exists.
+            // Do not reveal whether an account exists.
             if (user == null)
             {
                 return View(
-                    "ForgotPasswordConfirmation"
-                );
+                    "ForgotPasswordConfirmation");
             }
 
 
@@ -765,8 +747,7 @@ namespace PETHUB.Controllers
                         email = model.Email,
                         token
                     },
-                    Request.Scheme
-                );
+                    Request.Scheme);
 
 
             // =====================================================
@@ -776,20 +757,17 @@ namespace PETHUB.Controllers
             var body =
                 EmailTemplateHelper.PasswordReset(
                     user.FirstName,
-                    resetLink!
-                );
+                    resetLink!);
 
 
             await _emailSender.SendEmailAsync(
                 user.Email!,
                 "Reset Password",
-                body
-            );
+                body);
 
 
             return View(
-                "ForgotPasswordConfirmation"
-            );
+                "ForgotPasswordConfirmation");
         }
 
 
@@ -827,23 +805,24 @@ namespace PETHUB.Controllers
                 string.IsNullOrWhiteSpace(email))
             {
                 return RedirectToAction(
-                    nameof(Login)
-                );
+                    nameof(Login));
             }
 
 
             var user =
-                await _userManager.FindByEmailAsync(email);
+                await _userManager
+                    .FindByEmailAsync(email);
 
 
             if (user == null)
             {
                 return RedirectToAction(
-                    nameof(Login)
-                );
+                    nameof(Login));
             }
 
 
+            // Get the Password Reset token provider configured
+            // by ASP.NET Core Identity.
             var provider =
                 _userManager.Options
                     .Tokens
@@ -851,19 +830,18 @@ namespace PETHUB.Controllers
 
 
             var isValidToken =
-                await _userManager.VerifyUserTokenAsync(
-                    user,
-                    provider,
-                    "ResetPassword",
-                    token
-                );
+                await _userManager
+                    .VerifyUserTokenAsync(
+                        user,
+                        provider,
+                        "ResetPassword",
+                        token);
 
 
             if (!isValidToken)
             {
                 return RedirectToAction(
-                    nameof(ResetPasswordExpired)
-                );
+                    nameof(ResetPasswordExpired));
             }
 
 
@@ -872,8 +850,7 @@ namespace PETHUB.Controllers
                 {
                     Token = token,
                     Email = email
-                }
-            );
+                });
         }
 
 
@@ -891,48 +868,45 @@ namespace PETHUB.Controllers
             {
                 return View(model);
             }
-            }
 
 
             var user =
                 await _userManager.FindByEmailAsync(
-                    model.Email
-                );
+                    model.Email);
 
 
             if (user == null)
             {
                 return RedirectToAction(
-                    nameof(Login)
-                );
+                    nameof(Login));
             }
 
 
-            // Prevent using the current password again
+            // -----------------------------------------------------
+            // PREVENT REUSING CURRENT PASSWORD
+            // -----------------------------------------------------
+
             var isSamePassword =
                 await _userManager.CheckPasswordAsync(
                     user,
-                    model.Password
-                );
+                    model.Password);
+
 
             if (isSamePassword)
             {
                 ModelState.AddModelError(
                     nameof(model.Password),
-                    "Your new password cannot be the same as your current password."
-                );
+                    "Your new password cannot be the same as your current password.");
 
                 return View(model);
             }
-
 
 
             var result =
                 await _userManager.ResetPasswordAsync(
                     user,
                     model.Token,
-                    model.Password
-                );
+                    model.Password);
 
 
             // =====================================================
@@ -946,37 +920,33 @@ namespace PETHUB.Controllers
                         nameof(Login),
                         "UserAccount",
                         null,
-                        Request.Scheme
-                    );
+                        Request.Scheme);
 
 
                 // Password reset has already succeeded.
-                // Failure to send the notification should not
-                // undo or block the reset.
+                // Failure to send this notification must not undo it.
                 try
                 {
                     var emailBody =
                         EmailTemplateHelper.PasswordChanged(
                             user.FirstName,
-                            loginLink!
-                        );
+                            loginLink!);
 
 
                     await _emailSender.SendEmailAsync(
                         user.Email!,
                         "Your PETHUB Password Was Changed",
-                        emailBody
-                    );
+                        emailBody);
                 }
                 catch (Exception)
                 {
-                    // Later, we can log this failure.
+                    // Password was still changed successfully.
+                    // Email failure may be logged separately later.
                 }
 
 
                 return RedirectToAction(
-                    nameof(ResetPasswordConfirmation)
-                );
+                    nameof(ResetPasswordConfirmation));
             }
 
 
@@ -989,8 +959,7 @@ namespace PETHUB.Controllers
                     error.Code == "InvalidToken"))
             {
                 return RedirectToAction(
-                    nameof(ResetPasswordExpired)
-                );
+                    nameof(ResetPasswordExpired));
             }
 
 
@@ -1002,8 +971,7 @@ namespace PETHUB.Controllers
             {
                 ModelState.AddModelError(
                     string.Empty,
-                    error.Description
-                );
+                    error.Description);
             }
 
 
@@ -1037,8 +1005,7 @@ namespace PETHUB.Controllers
                 string.IsNullOrWhiteSpace(token))
             {
                 return BadRequest(
-                    "Invalid administrator invitation."
-                );
+                    "Invalid administrator invitation.");
             }
 
 
@@ -1055,16 +1022,14 @@ namespace PETHUB.Controllers
             var isAdmin =
                 await _userManager.IsInRoleAsync(
                     user,
-                    "Admin"
-                );
+                    "Admin");
 
 
             if (!isAdmin ||
                 user.Status != UserStatus.Pending)
             {
                 return BadRequest(
-                    "This administrator invitation is no longer valid."
-                );
+                    "This administrator invitation is no longer valid.");
             }
 
 
@@ -1073,15 +1038,13 @@ namespace PETHUB.Controllers
                     user,
                     "PETHubAdminInvitation",
                     "AdminInvitation",
-                    token
-                );
+                    token);
 
 
             if (!tokenValid)
             {
                 return BadRequest(
-                    "This administrator invitation is invalid or has expired."
-                );
+                    "This administrator invitation is invalid or has expired.");
             }
 
 
@@ -1121,8 +1084,7 @@ namespace PETHUB.Controllers
                 string.IsNullOrWhiteSpace(token))
             {
                 return BadRequest(
-                    "Invalid administrator invitation."
-                );
+                    "Invalid administrator invitation.");
             }
 
 
@@ -1139,16 +1101,14 @@ namespace PETHUB.Controllers
             var isAdmin =
                 await _userManager.IsInRoleAsync(
                     user,
-                    "Admin"
-                );
+                    "Admin");
 
 
             if (!isAdmin ||
                 user.Status != UserStatus.Pending)
             {
                 return BadRequest(
-                    "This administrator invitation is no longer valid."
-                );
+                    "This administrator invitation is no longer valid.");
             }
 
 
@@ -1157,15 +1117,13 @@ namespace PETHUB.Controllers
                     user,
                     "PETHubAdminInvitation",
                     "AdminInvitation",
-                    token
-                );
+                    token);
 
 
             if (!tokenValid)
             {
                 return BadRequest(
-                    "This administrator invitation is invalid or has expired."
-                );
+                    "This administrator invitation is invalid or has expired.");
             }
 
 
@@ -1175,8 +1133,7 @@ namespace PETHUB.Controllers
 
             var existingUser =
                 await _userManager.FindByNameAsync(
-                    model.UserName
-                );
+                    model.UserName);
 
 
             if (existingUser != null &&
@@ -1184,8 +1141,7 @@ namespace PETHUB.Controllers
             {
                 ModelState.AddModelError(
                     nameof(model.UserName),
-                    "This username is already taken."
-                );
+                    "This username is already taken.");
             }
 
 
@@ -1220,12 +1176,12 @@ namespace PETHUB.Controllers
 
             if (!profileResult.Succeeded)
             {
-                foreach (var error in profileResult.Errors)
+                foreach (var error
+                         in profileResult.Errors)
                 {
                     ModelState.AddModelError(
                         string.Empty,
-                        error.Description
-                    );
+                        error.Description);
                 }
 
 
@@ -1245,18 +1201,17 @@ namespace PETHUB.Controllers
             var passwordResult =
                 await _userManager.AddPasswordAsync(
                     user,
-                    model.Password
-                );
+                    model.Password);
 
 
             if (!passwordResult.Succeeded)
             {
-                foreach (var error in passwordResult.Errors)
+                foreach (var error
+                         in passwordResult.Errors)
                 {
                     ModelState.AddModelError(
                         string.Empty,
-                        error.Description
-                    );
+                        error.Description);
                 }
 
 
@@ -1283,19 +1238,18 @@ namespace PETHUB.Controllers
 
             if (!activationResult.Succeeded)
             {
-                /*
-                 * Try to undo the password addition so the
-                 * invitation can still be attempted again.
-                 */
-                await _userManager.RemovePasswordAsync(user);
+                // Attempt to undo the added password so the
+                // invitation can still be retried safely.
+                await _userManager
+                    .RemovePasswordAsync(user);
 
 
-                foreach (var error in activationResult.Errors)
+                foreach (var error
+                         in activationResult.Errors)
                 {
                     ModelState.AddModelError(
                         string.Empty,
-                        error.Description
-                    );
+                        error.Description);
                 }
 
 
@@ -1309,8 +1263,7 @@ namespace PETHUB.Controllers
 
 
             return RedirectToAction(
-                nameof(AdminSetupConfirmation)
-            );
+                nameof(AdminSetupConfirmation));
         }
 
 
@@ -1324,7 +1277,5 @@ namespace PETHUB.Controllers
         {
             return View();
         }
-
-
     }
 }
