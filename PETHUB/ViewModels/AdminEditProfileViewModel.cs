@@ -23,10 +23,8 @@ namespace PETHUB.ViewModels
         [StringLength(50, ErrorMessage = "Last name cannot exceed 50 characters.")]
         public string LastName { get; set; }
 
-        // Member's contact number.
         [Required(ErrorMessage = "Contact number is required.")]
-        [Phone(ErrorMessage = "Please enter a valid contact number.")]
-        [StringLength(20, ErrorMessage = "Contact number cannot exceed 20 characters.")]
+        [RegularExpression( @"^[0-9]{11}$", ErrorMessage = "Contact number must be exactly 11 digits.")]
         public string ContactNumber { get; set; }
 
         // Short biography displayed on the user's profile.

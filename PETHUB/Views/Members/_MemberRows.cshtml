@@ -1,0 +1,141 @@
+﻿@model IEnumerable<PETHUB.Models.ApplicationUser>
+
+@foreach (var item in Model)
+{
+    <tr>
+
+        <td>@item.UserName</td>
+
+        <td class="full-name-col">
+            @item.FirstName @item.LastName
+        </td>
+
+        <td class="email-col">
+            @item.Email
+        </td>
+
+        <td>
+            @item.ContactNumber
+        </td>
+
+        <td class="text-center">
+
+            @if (string.Equals(
+                item.Gender,
+                "Male",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                <span class="gender-pill male">
+                    Male
+                </span>
+            }
+            else if (string.Equals(
+                item.Gender,
+                "Female",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                <span class="gender-pill female">
+                    Female
+                </span>
+            }
+            else
+            {
+                <span class="gender-pill">
+                    Not specified
+                </span>
+            }
+
+        </td>
+
+        <td class="text-center">
+            <span class="role-pill">
+                @ViewBag.MemberRoles[item.Id]
+            </span>
+        </td>
+
+        <td class="text-center">
+
+            @if (item.Status == UserStatus.Active)
+            {
+                <span class="status-pill active">
+                    Active
+                </span>
+            }
+            else if (item.Status == UserStatus.Inactive)
+            {
+                <span class="status-pill inactive">
+                    Inactive
+                </span>
+            }
+            else
+            {
+                <span class="status-pill pending">
+                    Pending
+                </span>
+            }
+
+        </td>
+
+        <td class="text-center">
+
+            <div class="action-dropdown">
+
+                <button type="button" class="action-menu-btn">
+                    <i data-lucide="ellipsis-vertical"></i>
+                </button>
+
+                <div class="action-menu">
+
+                    <a asp-action="Details"
+                       asp-route-id="@item.Id">
+                        View
+                    </a>
+
+                    <a asp-action="Edit"
+                       asp-route-id="@item.Id">
+                        Edit
+                    </a>
+
+                    <div class="menu-divider"></div>
+
+                    @if (item.Status == UserStatus.Active)
+                    {
+                        <form asp-action="Deactivate"
+                              asp-route-id="@item.Id"
+                              method="post"
+                              class="action-menu-form">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="deactivate-item">
+                                Deactivate
+                            </button>
+
+                        </form>
+                    }
+                    else if (item.Status == UserStatus.Inactive)
+                    {
+                        <form asp-action="Reactivate"
+                              asp-route-id="@item.Id"
+                              method="post"
+                              class="action-menu-form">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="reactivate-item">
+                                Reactivate
+                            </button>
+
+                        </form>
+                    }
+
+                </div>
+
+            </div>
+
+        </td>
+
+    </tr>
+}

@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PETHUB</title>
+    <link rel="icon" type="image/png" href="~/images/PETHUB-LOGO.png" />
 
     <script type="importmap"></script>
 
@@ -11,9 +12,15 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/admin-dashboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-member-crud.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/messages.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Marketplace.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Lost&Found.css" asp-append-version="true" />
+
+    <!-- Date fields styles for everypage that needs date to use -->
+    <link rel="stylesheet"
+          href="~/css/date-fields.css"
+          asp-append-version="true" />
 
     <!-- PetFeed styles from both branches -->
     <link rel="stylesheet" href="~/css/PetFeed.css" asp-append-version="true" />
@@ -62,6 +69,21 @@
 </head>
 
 <body>
+
+    <!-- =========================================================
+         PAGE LOADER
+         ========================================================= -->
+    <div id="pageLoader" class="page-loader hidden">
+        <div class="page-loader-content">
+
+            <img src="~/images/cat-loading.gif"
+                 alt="Loading..."
+                 class="page-loader-cat" />
+
+            <p>Loading...</p>
+
+        </div>
+    </div>
 
     @* =========================================================
        NAVIGATION
@@ -184,6 +206,10 @@
 
     <script src="~/js/global-messaging.js" asp-append-version="true"></script>
 
+    <!-- Date fields -->
+    <script src="~/js/date-fields.js"
+        asp-append-version="true"></script>
+
 
     <!-- =========================================================
          PETFEED
@@ -207,5 +233,101 @@
         "Scripts",
         required: false)
 
+
+
+        <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const loader = document.getElementById("pageLoader");
+
+        if (!loader) {
+            return;
+        }
+
+
+        // =========================================================
+        // SHOW LOADER
+        // =========================================================
+
+        function showLoader() {
+            loader.classList.remove("hidden");
+        }
+
+
+        // =========================================================
+        // HIDE LOADER
+        // =========================================================
+
+        function hideLoader() {
+            loader.classList.add("hidden");
+        }
+
+
+        // Make sure the loader is hidden when the page is ready.
+        hideLoader();
+
+
+        // =========================================================
+        // LINKS
+        // =========================================================
+
+        document.addEventListener("click", function (event) {
+
+            const link = event.target.closest("a");
+
+            if (!link) {
+                return;
+            }
+
+            const href = link.getAttribute("href");
+
+
+            // Ignore links that don't cause normal page navigation.
+            if (
+                !href ||
+                href.startsWith("#") ||
+                href.startsWith("javascript:") ||
+                href.startsWith("mailto:") ||
+                href.startsWith("tel:") ||
+                link.target === "_blank" ||
+                link.hasAttribute("download")
+            ) {
+                return;
+            }
+
+
+            // Don't show loader when staying on exactly the same URL.
+            if (link.href === window.location.href) {
+                return;
+            }
+
+
+            showLoader();
+
+        });
+
+
+        // =========================================================
+        // FORM SUBMISSION
+        // =========================================================
+
+        document.addEventListener("submit", function () {
+            showLoader();
+        });
+
+
+        // =========================================================
+        // BROWSER BACK / FORWARD
+        // =========================================================
+
+        window.addEventListener("pageshow", function () {
+            hideLoader();
+        });
+
+    });
+</script>
+
+
 </body>
+
 </html>

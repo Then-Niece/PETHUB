@@ -24,17 +24,80 @@ namespace PETHUB.Controllers
             _emailSender = emailSender;
         }
 
-        // GET: Users
-        public async Task<IActionResult> Index(int page = 1)
+        // GET: Admins
+        public async Task<IActionResult> Index(
+            string? search,
+            int page = 1)
         {
-            // get the current logged-in user's ID to exclude them from the list
+            // Get the current logged-in user's ID so they are not
+            // displayed in the administrator management table.
             var currentUserId = _userManager.GetUserId(User);
 
-            // Get all users in the "Admin" role, excluding the current logged-in user, and order them by CreatedAt descending
+
+            // =========================================================
+            // GET ADMINISTRATORS
+            // =========================================================
+
             var users = (await _userManager.GetUsersInRoleAsync("Admin"))
                 .Where(u => u.Id != currentUserId)
                 .OrderByDescending(u => u.CreatedAt)
                 .ToList();
+
+
+            // =========================================================
+            // SEARCH
+            // =========================================================
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim();
+
+                users = users
+                    .Where(u =>
+                        (!string.IsNullOrWhiteSpace(u.UserName) &&
+                         u.UserName.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (
+                            $"{u.FirstName} {u.LastName}"
+                            .Contains(
+                                search,
+                                StringComparison.OrdinalIgnoreCase)
+                        ) ||
+
+                        (!string.IsNullOrWhiteSpace(u.FirstName) &&
+                         u.FirstName.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(u.LastName) &&
+                         u.LastName.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(u.Email) &&
+                         u.Email.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(u.ContactNumber) &&
+                         u.ContactNumber.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        u.Status
+                            .ToString()
+                            .Contains(
+                                search,
+                                StringComparison.OrdinalIgnoreCase)
+                    )
+                    .ToList();
+            }
+
+
+            // Keep the search text after the page reloads.
+            ViewBag.Search = search;
 
 
             // =========================================================
@@ -49,21 +112,23 @@ namespace PETHUB.Controllers
                 page = 1;
             }
 
-            // Get the total number of admins before pagination.
+            // TotalItems now represents the number of matching admins
+            // when a search is active.
             var totalItems = users.Count;
 
-            // Prevent the requested page from going beyond
-            // the available number of pages.
+
             var totalPages = (int)Math.Ceiling(
                 totalItems / (double)pageSize
             );
+
 
             if (totalPages > 0 && page > totalPages)
             {
                 page = totalPages;
             }
 
-            // Get only the admins for the current page.
+
+            // Get only the administrators for the current page.
             var pagedUsers = users
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -71,16 +136,17 @@ namespace PETHUB.Controllers
 
 
             // =========================================================
-            // EXISTING ROLE DICTIONARY
+            // ROLE DICTIONARY
             // =========================================================
 
-            // Build dictionary of user roles
             var userRoles = new Dictionary<string, string>();
 
             foreach (var user in pagedUsers)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                userRoles[user.Id] = roles.FirstOrDefault() ?? "No Role";
+
+                userRoles[user.Id] =
+                    roles.FirstOrDefault() ?? "No Role";
             }
 
             ViewBag.UserRoles = userRoles;
@@ -101,6 +167,97 @@ namespace PETHUB.Controllers
 
             return View(model);
         }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string? search)
+        {
+            // Get the current logged-in administrator so they remain
+            // excluded from the administrator management list.
+            var currentUserId = _userManager.GetUserId(User);
+
+
+            // =========================================================
+            // GET ADMINISTRATORS
+            // =========================================================
+
+            var admins = (await _userManager.GetUsersInRoleAsync("Admin"))
+                .Where(a => a.Id != currentUserId)
+                .OrderByDescending(a => a.CreatedAt)
+                .ToList();
+
+
+            // =========================================================
+            // SEARCH
+            // =========================================================
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim();
+
+                admins = admins
+                    .Where(a =>
+                        (!string.IsNullOrWhiteSpace(a.UserName) &&
+                         a.UserName.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        ($"{a.FirstName} {a.LastName}"
+                            .Contains(
+                                search,
+                                StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(a.FirstName) &&
+                         a.FirstName.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(a.LastName) &&
+                         a.LastName.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(a.Email) &&
+                         a.Email.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(a.ContactNumber) &&
+                         a.ContactNumber.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        a.Status
+                            .ToString()
+                            .Contains(
+                                search,
+                                StringComparison.OrdinalIgnoreCase)
+                    )
+                    .ToList();
+            }
+
+
+            // =========================================================
+            // ROLE DICTIONARY
+            // =========================================================
+
+            var userRoles = new Dictionary<string, string>();
+
+            foreach (var admin in admins)
+            {
+                var roles = await _userManager.GetRolesAsync(admin);
+
+                userRoles[admin.Id] =
+                    roles.FirstOrDefault() ?? "No Role";
+            }
+
+            ViewBag.UserRoles = userRoles;
+
+
+            return PartialView("_AdminRows", admins);
+        }
+
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(string id)
@@ -248,125 +405,6 @@ namespace PETHUB.Controllers
         }
 
 
-
-
-
-
-
-
-        // GET: Users/Edit/5
-        [HttpGet]
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                return NotFound();
-            }
-
-            var admin = await _userManager.FindByIdAsync(id);
-
-            if (admin == null)
-            {
-                return NotFound();
-            }
-
-            var isAdmin = await _userManager.IsInRoleAsync(admin, "Admin");
-
-            if (!isAdmin)
-            {
-                return NotFound();
-            }
-
-            var model = new EditAdminViewModel
-            {
-                Id = admin.Id,
-                UserName = admin.UserName ?? string.Empty,
-                Email = admin.Email ?? string.Empty,
-                FirstName = admin.FirstName,
-                LastName = admin.LastName,
-                ContactNumber = admin.ContactNumber,
-                Status = admin.Status
-            };
-
-            return View(model);
-        }
-
-        // POST: Users/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, EditAdminViewModel model)
-        {
-            if (id != model.Id)
-            {
-                return NotFound();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var admin = await _userManager.FindByIdAsync(id);
-
-            if (admin == null)
-            {
-                return NotFound();
-            }
-
-            var isAdmin = await _userManager.IsInRoleAsync(admin, "Admin");
-
-            if (!isAdmin)
-            {
-                return NotFound();
-            }
-
-            // Check if another user already uses this username.
-            var existingUser =
-                await _userManager.FindByNameAsync(model.UserName);
-
-            if (existingUser != null &&
-                existingUser.Id != admin.Id)
-            {
-                ModelState.AddModelError(
-                    nameof(model.UserName),
-                    "This username is already in use."
-                );
-
-                return View(model);
-            }
-
-            // =====================================================
-            // UPDATE EDITABLE ADMIN INFORMATION
-            // =====================================================
-
-            admin.UserName = model.UserName;
-            admin.FirstName = model.FirstName;
-            admin.LastName = model.LastName;
-            admin.ContactNumber = model.ContactNumber;
-
-            // Email is intentionally NOT changed here.
-            // Status is intentionally NOT changed here.
-
-            var result =
-                await _userManager.UpdateAsync(admin);
-
-            if (!result.Succeeded)
-            {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(
-                        string.Empty,
-                        error.Description
-                    );
-                }
-
-                return View(model);
-            }
-
-            TempData["SuccessMessage"] = "Administrator account updated successfully.";
-
-            return RedirectToAction(nameof(Index));
-        }
 
 
         // =========================================================

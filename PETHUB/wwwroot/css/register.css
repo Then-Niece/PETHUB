@@ -273,7 +273,6 @@
         box-shadow: 0 0 0 4px rgba(132, 201, 111, .12);
     }
 
-
 /* =========================================================
    ADDRESS PARTIAL
 ========================================================= */
@@ -709,6 +708,14 @@
     .register-full-width {
         grid-column: auto;
     }
+
+    .register-contact-field {
+        margin-top: 0 !important;
+    }
+
+    .register-gender-field {
+        margin-top: 0 !important;
+    }
 }
 
 
@@ -812,7 +819,29 @@
         color: inherit !important;
         stroke: currentColor !important;
     }
+/* =========================================================
+   REGISTER PERSONAL INFO ALIGNMENT FIX
+========================================================= */
 
+/* Align Contact Number with Birthdate controls */
+.register-contact-field {
+    margin-top: 27px;
+}
+
+/* Bring Gender closer to Contact Number / Birthdate */
+.register-gender-field {
+    margin-top: -8px;
+}
+
+
+/* =========================================================
+   DATE SELECT TEXT
+========================================================= */
+
+.pethub-date-fields .pethub-select-trigger,
+.pethub-date-fields .pethub-select-trigger.placeholder {
+    color: #273142;
+}
 
 
 /* =========================================================

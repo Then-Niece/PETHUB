@@ -29,17 +29,26 @@
 
         <div class="admin-toolbar">
 
-            <div class="search-box">
+           <form asp-action="Index"
+                  method="get"
+                  class="search-box"
+                  id="adminSearchForm">
 
-                <i data-lucide="search" class="search-icon"></i>
+                <i data-lucide="search"
+                   class="search-icon"></i>
 
                 <input class="admin-search"
                        type="text"
-                       placeholder="Search admins..." />
+                       name="search"
+                       id="adminSearchInput"
+                       value="@ViewBag.Search"
+                       placeholder="Search admins..."
+                       autocomplete="off" />
 
-            </div>
+            </form>
 
-            <div class="member-count">
+            <div class="member-count"
+                 id="adminCount">
 
                 @Model.TotalItems Admin@(Model.TotalItems == 1 ? "" : "s")
 
@@ -71,116 +80,9 @@
 
             </thead>
 
-            <tbody>
+            <tbody id="adminsTableBody">
 
-                @foreach (var item in Model.Items)
-                {
-
-                    <tr>
-
-                        <td>@item.UserName</td>
-
-                        <td class="full-name-col">
-                            @item.FirstName @item.LastName
-                        </td>
-
-                        <td class="email-col">
-                            @item.Email
-                        </td>
-
-                        <td>
-                            @item.ContactNumber
-                        </td>
-
-                        <td>
-
-                            <span class="admin-role-pill">
-
-                                @ViewBag.UserRoles[item.Id]
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            @if (item.Status == UserStatus.Active)
-                            {
-                                <span class="status-pill active">Active</span>
-                            }
-                            else if (item.Status == UserStatus.Inactive)
-                            {
-                                <span class="status-pill inactive">Inactive</span>
-                            }
-                            else
-                            {
-                                <span class="status-pill pending">Pending</span>
-                            }
-
-                        </td>
-
-                        <td>
-
-                            <div class="action-dropdown">
-
-                                <button class="action-menu-btn">
-                                    <i data-lucide="more-vertical"></i>
-                                </button>
-
-                                <div class="action-menu">
-
-                                    <a asp-action="Edit"
-                                       asp-route-id="@item.Id">
-                                        Edit
-                                    </a>
-
-                                    <a asp-action="Details"
-                                       asp-route-id="@item.Id">
-                                        View
-                                    </a>
-
-                                    <div class="menu-divider"></div>
-
-                                    @if (item.Status == UserStatus.Active)
-                                    {
-                                        <form asp-action="Deactivate"
-                                              asp-route-id="@item.Id"
-                                              method="post"
-                                              class="d-inline">
-
-                                            @Html.AntiForgeryToken()
-
-                                            <button type="submit"
-                                                    class="dropdown-item deactivate-item">
-                                                Deactivate
-                                            </button>
-                                        </form>
-                                    }
-                                    else if (item.Status == UserStatus.Inactive)
-                                    {
-                                        <form asp-action="Reactivate"
-                                              asp-route-id="@item.Id"
-                                              method="post"
-                                              class="d-inline">
-
-                                            @Html.AntiForgeryToken()
-
-                                            <button type="submit"
-                                                    class="dropdown-item reactivate-item">
-                                                Reactivate
-                                            </button>
-                                        </form>
-                                    }
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                }
+                <partial name="_AdminRows" model="Model.Items" />
 
             </tbody>
 
@@ -193,4 +95,85 @@
  
 
 </div>
+
+
+
+@section Scripts
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const searchInput =
+                document.getElementById("adminSearchInput");
+
+            const tableBody =
+                document.getElementById("adminsTableBody");
+
+            const adminCount =
+                document.getElementById("adminCount");
+
+            if (!searchInput || !tableBody) {
+                return;
+            }
+
+            let searchTimer;
+
+
+            searchInput.addEventListener("input", function () {
+
+                clearTimeout(searchTimer);
+
+                const searchValue = this.value.trim();
+
+                searchTimer = setTimeout(async function () {
+
+                    try {
+
+                        const response = await fetch(
+                            `/Admins/Search?search=${encodeURIComponent(searchValue)}`
+                        );
+
+                        if (!response.ok) {
+                            return;
+                        }
+
+                        const html = await response.text();
+
+                        tableBody.innerHTML = html;
+
+
+                        // Re-render Lucide icons inside the newly loaded rows.
+                        if (window.lucide) {
+                            lucide.createIcons();
+                        }
+
+
+                        // Update the administrator count.
+                        const rowCount =
+                            tableBody.querySelectorAll("tr").length;
+
+                        if (adminCount) {
+
+                            adminCount.textContent =
+                                `${rowCount} ${rowCount === 1 ? "Admin" : "Admins"}`;
+
+                        }
+
+                    }
+                    catch (error) {
+
+                        console.error(
+                            "Admin search failed:",
+                            error
+                        );
+
+                    }
+
+                }, 300);
+
+            });
+
+        });
+    </script>
+}
 

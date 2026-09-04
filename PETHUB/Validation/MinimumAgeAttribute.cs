@@ -14,8 +14,8 @@ namespace PETHUB.Validation
 
 
         protected override ValidationResult? IsValid(
-            object? value,
-            ValidationContext validationContext)
+    object? value,
+    ValidationContext validationContext)
         {
             // Let [Required] handle empty values.
             if (value == null)
@@ -34,6 +34,23 @@ namespace PETHUB.Validation
 
             var today = DateTime.Today;
 
+
+            // =====================================================
+            // FUTURE DATE CHECK
+            // =====================================================
+
+            if (birthdate.Date > today)
+            {
+                return new ValidationResult(
+                    "Birthdate cannot be in the future."
+                );
+            }
+
+
+            // =====================================================
+            // AGE CALCULATION
+            // =====================================================
+
             var age =
                 today.Year - birthdate.Year;
 
@@ -44,6 +61,10 @@ namespace PETHUB.Validation
                 age--;
             }
 
+
+            // =====================================================
+            // MINIMUM AGE CHECK
+            // =====================================================
 
             if (age < _minimumAge)
             {

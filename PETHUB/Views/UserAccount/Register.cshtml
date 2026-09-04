@@ -102,6 +102,24 @@
 
                         </div>
 
+                        <div class="floating-field">
+
+                            <input asp-for="MiddleName"
+                                   class="floating-input"
+                                   placeholder=" "
+                                   autocomplete="additional-name" />
+
+                            <label asp-for="MiddleName"
+                                   class="floating-label">
+                                Middle Name
+                            </label>
+
+                            <span asp-validation-for="MiddleName"
+                                  class="field-error">
+                            </span>
+
+                        </div>
+
 
                         <div class="floating-field">
 
@@ -141,12 +159,15 @@
                         </div>
 
 
-                        <div class="floating-field">
+                        <div class="floating-field register-contact-field">
 
                             <input asp-for="ContactNumber"
                                    class="floating-input"
                                    placeholder=" "
-                                   autocomplete="tel" />
+                                   autocomplete="tel"
+                                   inputmode="numeric"
+                                   maxlength="11"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
                             <label asp-for="ContactNumber"
                                    class="floating-label">
@@ -162,14 +183,15 @@
 
                         <div class="register-field">
 
-                            <label asp-for="Birthdate"
-                                   class="register-field-label">
-                                Birthdate
-                            </label>
-
-                            <input asp-for="Birthdate"
-                                   type="date"
-                                   class="register-control" />
+                           <partial name="Components/_DateFields"
+                                     model='new PETHUB.ViewModels.DateFieldsViewModel
+                                     {
+                                         FieldName = "Birthdate",
+                                         Label = "Birthdate",
+                                         Value = Model?.Birthdate,
+                                         AllowFuture = false,
+                                         MinimumAge = 18
+                                     }' />
 
                             <span asp-validation-for="Birthdate"
                                   class="field-error">
@@ -178,7 +200,7 @@
                         </div>
 
 
-                        <div class="register-field">
+                        <div class="register-field register-full-width register-gender-field">
 
                             <label class="register-field-label">
                                 Gender
@@ -187,30 +209,25 @@
                             <div class="gender-options">
 
                                 <label class="gender-option">
-
-                                    <input type="radio"
-                                           asp-for="Gender"
+                                    <input asp-for="Gender"
+                                           type="radio"
                                            value="Male" />
 
                                     <span>
                                         <i data-lucide="user"></i>
                                         Male
                                     </span>
-
                                 </label>
 
-
                                 <label class="gender-option">
-
-                                    <input type="radio"
-                                           asp-for="Gender"
+                                    <input asp-for="Gender"
+                                           type="radio"
                                            value="Female" />
 
                                     <span>
                                         <i data-lucide="user"></i>
                                         Female
                                     </span>
-
                                 </label>
 
                             </div>

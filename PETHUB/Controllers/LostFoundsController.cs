@@ -885,8 +885,7 @@ public class LostFoundsController : Controller
 
         if (User.Identity?.IsAuthenticated == true)
         {
-            lostFound.UserId =
-                _userManager.GetUserId(User);
+            lostFound.UserId = _userManager.GetUserId(User);
         }
 
         // ---------------------------------------------------------
@@ -919,6 +918,21 @@ public class LostFoundsController : Controller
                     "ClientIdImage",
                     "A valid ID is required.");
             }
+
+        }
+
+        // ---------------------------------------------------------
+        // LOST DATE VALIDATION
+        // ---------------------------------------------------------
+
+        if (lostFound.Type == LostFoundType.Lost &&
+            lostFound.LostDate.HasValue &&
+            lostFound.LostDate.Value.Date > DateTime.Today)
+        {
+            ModelState.AddModelError(
+                nameof(LostFound.LostDate),
+                "The lost date cannot be in the future."
+            );
         }
 
 
@@ -1090,8 +1104,10 @@ public class LostFoundsController : Controller
         }
 
 
-        return RedirectToAction(
-            nameof(SubmissionPending));
+        TempData["SuccessMessage"] =
+            "Your lost and found report was submitted successfully and is now waiting for admin approval.";
+
+        return RedirectToAction(nameof(Browse));
     }
 
 

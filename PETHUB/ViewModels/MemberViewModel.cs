@@ -13,11 +13,11 @@ namespace PETHUB.ViewModels
         public string Email { get; set; }
         public string Password { get; set; } // plain password for form
         public string FirstName { get; set; }
+        public string? MiddleName { get; set; }
         public string LastName { get; set; }
 
-        [Required]
-        [StringLength(11, MinimumLength = 11, ErrorMessage = "Contact number must be exactly 11 digits.")]
-        [RegularExpression(@"^\d{11}$", ErrorMessage = "Contact number must contain only numbers.")]
+        [Required(ErrorMessage = "Contact number is required.")]
+        [RegularExpression(@"^[0-9]{11}$", ErrorMessage = "Contact number must be exactly 11 digits.")]
         public string ContactNumber { get; set; }
         public UserStatus Status { get; set; } = UserStatus.Active;
 

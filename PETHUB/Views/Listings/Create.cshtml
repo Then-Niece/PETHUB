@@ -168,14 +168,75 @@
                          RIGHT SIDE - PHOTO UPLOAD
                     ====================================== -->
                     <div class="col-lg-4">
+
                         <div class="photo-upload-card">
-                            <h5 class="mb-3">Photos</h5>
+
+                            <h5 class="mb-3">
+                                Photos
+                            </h5>
+
+
                             <div class="mb-3">
-                                <input type="file" id="imageInput" name="ImageFiles" multiple class="form-control" accept="image/*" />
-                                <small class="text-muted">You can upload multiple images.</small>
+
+                                <label class="form-label">
+                                    Upload Images
+                                </label>
+
+
+                                <div class="photo-upload-control">
+
+                                    <input type="file"
+                                           id="imageInput"
+                                           name="ImageFiles"
+                                           multiple
+                                           hidden
+                                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+
+
+                                    <button type="button"
+                                            class="photo-upload-button"
+                                            id="addPhotosButton">
+
+                                        <i data-lucide="image-plus"></i>
+
+                                        Add Photos
+
+                                    </button>
+
+
+                                    <span class="photo-upload-count"
+                                          id="photoUploadCount">
+
+                                        0 / 5 photos
+
+                                    </span>
+
+                                </div>
+
+
+                                <small class="photo-upload-help">
+
+                                    Upload up to 5 photos.
+                                    JPG, PNG or WEBP only.
+                                    Maximum 5 MB each.
+
+                                </small>
+
+
+                                <div id="imageUploadError"
+                                     class="text-danger mt-2">
+                                </div>
+
                             </div>
-                            <div id="imagePreviewContainer" class="image-preview-grid"></div>
+
+
+                            <div id="imagePreviewContainer"
+                                 class="image-preview-grid"
+                                 data-count="0">
+                            </div>
+
                         </div>
+
                     </div>
                 </div>
 
@@ -301,14 +362,69 @@
    
 
     <script>
-        setupImagePreview(
-            "imageInput",
-            "imagePreviewContainer"
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
 
+                setupImagePreview(
+                    "imageInput",
+                    "imagePreviewContainer",
+                    {
+                        multiple: true,
+
+                        maxFiles: 5,
+
+                        maxFileSize:
+                            5 * 1024 * 1024,
+
+                        allowedTypes: [
+                            "image/jpeg",
+                            "image/png",
+                            "image/webp"
+                        ],
+
+                        previewWidth: null,
+                        previewHeight: null,
+
+                        countId:
+                            "photoUploadCount",
+
+                        errorId:
+                            "imageUploadError"
+                    }
+                );
+
+
+                const imageInput =
+                    document.getElementById(
+                        "imageInput"
+                    );
+
+                const addPhotosButton =
+                    document.getElementById(
+                        "addPhotosButton"
+                    );
+
+
+                if (
+                    imageInput &&
+                    addPhotosButton
+                ) {
+
+                    addPhotosButton.addEventListener(
+                        "click",
+                        function () {
+
+                            imageInput.click();
+
+                        }
+                    );
+
+                }
+
+            }
         );
-
-        setupImageGallery(
-    document.getElementById("imagePreviewContainer")
+        
 
     </script>
 

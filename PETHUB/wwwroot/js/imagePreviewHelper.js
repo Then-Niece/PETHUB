@@ -9,8 +9,12 @@
 // - Single image selection
 // - Removing selected images
 // - Maximum file count
+// - Allowed file types
+// - Maximum file size
 // - Configurable preview size
 // - Optional placeholder
+// - Optional upload count
+// - Dynamic layout count
 //
 // =========================================================
 
@@ -35,12 +39,25 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
         // null = unlimited
         maxFiles: null,
 
+        // null = unlimited
+        maxFileSize: null,
+
+        // Example:
+        // ["image/jpeg", "image/png", "image/webp"]
+        allowedTypes: null,
+
         // Preview dimensions
         previewWidth: 120,
         previewHeight: 120,
 
         // Optional placeholder element
         placeholderId: null,
+
+        // Optional count element
+        countId: null,
+
+        // Optional error element
+        errorId: null,
 
         ...options
     };
@@ -65,39 +82,120 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
 
     imageInput.addEventListener("change", function () {
 
+        clearError();
+
         const newFiles =
             Array.from(this.files);
 
 
         if (settings.multiple) {
 
-            selectedFiles.push(...newFiles);
+            for (const file of newFiles) {
+
+                // -----------------------------------------
+                // MAX FILE COUNT
+                // -----------------------------------------
+
+                const totalCount =
+                    settings.existingCount +
+                    selectedFiles.length;
 
 
-            // =================================================
-            // MAX FILE LIMIT
-            // =================================================
+                if (
+                    settings.maxFiles !== null &&
+                    totalCount >= settings.maxFiles
+                ) {
 
-            if (
-                settings.maxFiles !== null &&
-                selectedFiles.length > settings.maxFiles
-            ) {
-
-                selectedFiles =
-                    selectedFiles.slice(
-                        0,
-                        settings.maxFiles
+                    showError(
+                        `You can upload a maximum of ${settings.maxFiles} photos.`
                     );
 
-                showImageLimitMessage();
+                    break;
+                }
+
+
+                // -----------------------------------------
+                // FILE TYPE
+                // -----------------------------------------
+
+                if (
+                    settings.allowedTypes !== null &&
+                    !settings.allowedTypes.includes(file.type)
+                ) {
+
+                    showError(
+                        `"${file.name}" is not a supported image type.`
+                    );
+
+                    continue;
+                }
+
+
+                // -----------------------------------------
+                // FILE SIZE
+                // -----------------------------------------
+
+                if (
+                    settings.maxFileSize !== null &&
+                    file.size > settings.maxFileSize
+                ) {
+
+                    showError(
+                        `"${file.name}" exceeds the allowed file size.`
+                    );
+
+                    continue;
+                }
+
+
+                selectedFiles.push(file);
             }
 
         }
         else {
 
-            // Single image mode
-            selectedFiles =
-                newFiles.slice(0, 1);
+            const file =
+                newFiles[0];
+
+
+            if (!file) {
+                return;
+            }
+
+
+            if (
+                settings.allowedTypes !== null &&
+                !settings.allowedTypes.includes(file.type)
+            ) {
+
+                showError(
+                    `"${file.name}" is not a supported image type.`
+                );
+
+                updateRealInput();
+                renderPreviews();
+
+                return;
+            }
+
+
+            if (
+                settings.maxFileSize !== null &&
+                file.size > settings.maxFileSize
+            ) {
+
+                showError(
+                    `"${file.name}" exceeds the allowed file size.`
+                );
+
+                updateRealInput();
+                renderPreviews();
+
+                return;
+            }
+
+
+            selectedFiles = [file];
         }
 
 
@@ -138,6 +236,11 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
         previewContainer.innerHTML = "";
 
 
+        // Used by CSS for dynamic layout.
+        previewContainer.dataset.count =
+            selectedFiles.length;
+
+
         selectedFiles.forEach(file => {
 
             // Preview wrapper
@@ -150,11 +253,20 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
             );
 
 
-            previewDiv.style.width =
-                `${settings.previewWidth}px`;
+            // Only apply fixed dimensions
+            // if custom dimensions are provided.
+            if (settings.previewWidth) {
 
-            previewDiv.style.height =
-                `${settings.previewHeight}px`;
+                previewDiv.style.width =
+                    `${settings.previewWidth}px`;
+            }
+
+
+            if (settings.previewHeight) {
+
+                previewDiv.style.height =
+                    `${settings.previewHeight}px`;
+            }
 
 
             // =================================================
@@ -169,7 +281,9 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
                 URL.createObjectURL(file);
 
 
-            img.src = objectUrl;
+            img.src =
+                objectUrl;
+
 
             img.classList.add(
                 "image-preview-img"
@@ -177,11 +291,14 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
 
 
             // Release temporary browser URL after loading
-            img.onload = function () {
+            img.onload =
+                function () {
 
-                URL.revokeObjectURL(objectUrl);
+                    URL.revokeObjectURL(
+                        objectUrl
+                    );
 
-            };
+                };
 
 
             // =================================================
@@ -192,9 +309,13 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
                 document.createElement("button");
 
 
-            removeBtn.type = "button";
+            removeBtn.type =
+                "button";
 
-            removeBtn.innerHTML = "&times;";
+
+            removeBtn.innerHTML =
+                "&times;";
+
 
             removeBtn.classList.add(
                 "remove-image-btn"
@@ -206,7 +327,9 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
                 function () {
 
                     const index =
-                        selectedFiles.indexOf(file);
+                        selectedFiles.indexOf(
+                            file
+                        );
 
 
                     if (index !== -1) {
@@ -221,11 +344,16 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
                     updateRealInput();
 
                     renderPreviews();
+
+                    clearError();
                 }
             );
 
 
-            previewDiv.appendChild(img);
+            previewDiv.appendChild(
+                img
+            );
+
 
             previewDiv.appendChild(
                 removeBtn
@@ -239,24 +367,111 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
 
 
         updatePlaceholder();
+
+        updateCount();
     }
 
 
     // =====================================================
-    // MAX IMAGE WARNING
+    // COUNT DISPLAY
     // =====================================================
 
-    function showImageLimitMessage() {
+    function updateCount() {
 
-        if (!settings.maxFiles) {
+        if (!settings.countId) {
             return;
         }
 
 
-        /*
-         * Check parent because the warning is inserted
-         * beside the preview container, not inside it.
-         */
+        const countElement =
+            document.getElementById(
+                settings.countId
+            );
+
+
+        if (!countElement) {
+            return;
+        }
+
+
+        const totalSelected =
+            settings.existingCount +
+            selectedFiles.length;
+
+
+        if (settings.maxFiles !== null) {
+
+            countElement.textContent =
+                `${totalSelected} / ${settings.maxFiles} photos`;
+
+        }
+        else {
+
+            countElement.textContent =
+                `${totalSelected} photo${totalSelected === 1 ? "" : "s"}`;
+
+        }
+    }
+
+
+    // =====================================================
+    // ERROR MESSAGE
+    // =====================================================
+
+    function showError(messageText) {
+
+        if (settings.errorId) {
+
+            const errorElement =
+                document.getElementById(
+                    settings.errorId
+                );
+
+
+            if (errorElement) {
+
+                errorElement.textContent =
+                    messageText;
+
+                return;
+            }
+        }
+
+
+        showImageLimitMessage(
+            messageText
+        );
+    }
+
+
+    function clearError() {
+
+        if (!settings.errorId) {
+            return;
+        }
+
+
+        const errorElement =
+            document.getElementById(
+                settings.errorId
+            );
+
+
+        if (errorElement) {
+
+            errorElement.textContent = "";
+        }
+    }
+
+
+    // =====================================================
+    // FALLBACK WARNING MESSAGE
+    // =====================================================
+
+    function showImageLimitMessage(
+        messageText
+    ) {
+
         let message =
             previewContainer.parentElement
                 ?.querySelector(
@@ -267,7 +482,9 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
         if (!message) {
 
             message =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             message.classList.add(
@@ -284,11 +501,9 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
 
 
         message.textContent =
-            `You can send up to ${settings.maxFiles} photos at a time.`;
+            messageText;
 
 
-
-        // Remove old timer if user triggers warning repeatedly
         if (message._removeTimer) {
 
             clearTimeout(
@@ -298,18 +513,20 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
 
 
         message._removeTimer =
-            setTimeout(function () {
+            setTimeout(
+                function () {
 
-                message.remove();
+                    message.remove();
 
-            }, 3000);
+                },
+                3000
+            );
     }
 
 
     // =====================================================
     // OPTIONAL PLACEHOLDER
     // =====================================================
-
     function updatePlaceholder() {
 
         if (!settings.placeholderId) {
@@ -328,25 +545,37 @@ function setupImagePreview(inputId, previewContainerId, options = {}) {
         }
 
 
-        placeholder.style.display =
-            selectedFiles.length > 0
-                ? "none"
-                : "block";
-    }
+        if (selectedFiles.length > 0) {
 
+            placeholder.style.display = "none";
+
+        }
+        else {
+
+            // Let CSS decide whether this should be
+            // flex, grid, block, etc.
+            placeholder.style.display = "";
+
+        }
+    }
 
     // =====================================================
     // ALLOW OTHER JS FILES TO RESET THIS UPLOADER
     // =====================================================
 
-    imageInput.resetImagePreview = function () {
+    imageInput.resetImagePreview =
+        function () {
 
-        selectedFiles = [];
+            selectedFiles = [];
 
-        updateRealInput();
+            updateRealInput();
 
-        renderPreviews();
-    };
+            renderPreviews();
+
+            clearError();
+        };
 
 
+    // Initial UI state
+    renderPreviews();
 }

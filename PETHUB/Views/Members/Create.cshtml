@@ -2,13 +2,22 @@
 
 @{
     ViewData["Title"] = "Create Member";
+
+    ViewData["Province"] = "";
+    ViewData["City"] = "";
+    ViewData["Barangay"] = "";
+    ViewData["StreetAddress"] = "";
 }
 
 <div class="container-fluid py-4">
 
-    <div class="crud-page">
+    <div class="crud-page create-member-page">
 
         <div class="crud-card">
+
+            <!-- =====================================================
+                 HEADER
+            ====================================================== -->
 
             <div class="crud-header">
 
@@ -20,21 +29,26 @@
 
             </div>
 
-            <form asp-action="Create" enctype="multipart/form-data">
+
+            <form asp-action="Create"
+                  method="post"
+                  enctype="multipart/form-data">
 
                 <div asp-validation-summary="ModelOnly"
                      class="text-danger mb-4">
                 </div>
 
+
                 <div class="crud-content">
 
-                    <!-- ==========================
+                    <!-- =================================================
                          LEFT SIDE
-                    =========================== -->
+                    ================================================== -->
 
                     <div class="member-form">
 
                         <div class="form-grid">
+
 
                             <!-- Username -->
                             <div class="form-group">
@@ -47,9 +61,11 @@
                                        class="form-control custom-input" />
 
                                 <span asp-validation-for="UserName"
-                                      class="text-danger"></span>
+                                      class="text-danger">
+                                </span>
 
                             </div>
+
 
                             <!-- Email -->
                             <div class="form-group">
@@ -62,9 +78,11 @@
                                        class="form-control custom-input" />
 
                                 <span asp-validation-for="Email"
-                                      class="text-danger"></span>
+                                      class="text-danger">
+                                </span>
 
                             </div>
+
 
                             <!-- First Name -->
                             <div class="form-group">
@@ -77,9 +95,29 @@
                                        class="form-control custom-input" />
 
                                 <span asp-validation-for="FirstName"
-                                      class="text-danger"></span>
+                                      class="text-danger">
+                                </span>
 
                             </div>
+
+
+                            <!-- Middle Name -->
+                            <div class="form-group">
+
+                                <label asp-for="MiddleName">
+                                    Middle Name
+                                </label>
+
+                                <input asp-for="MiddleName"
+                                       class="form-control custom-input"
+                                       placeholder="Optional" />
+
+                                <span asp-validation-for="MiddleName"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
 
                             <!-- Last Name -->
                             <div class="form-group">
@@ -92,11 +130,13 @@
                                        class="form-control custom-input" />
 
                                 <span asp-validation-for="LastName"
-                                      class="text-danger"></span>
+                                      class="text-danger">
+                                </span>
 
                             </div>
 
-                            <!-- Contact -->
+
+                            <!-- Contact Number -->
                             <div class="form-group">
 
                                 <label asp-for="ContactNumber">
@@ -104,15 +144,21 @@
                                 </label>
 
                                 <input asp-for="ContactNumber"
-                                       class="form-control custom-input" />
+                                       class="form-control custom-input"
+                                       maxlength="11"
+                                       inputmode="numeric"
+                                       autocomplete="tel"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
                                 <span asp-validation-for="ContactNumber"
-                                      class="text-danger"></span>
+                                      class="text-danger">
+                                </span>
 
                             </div>
 
+
                             <!-- Gender -->
-                            <div class="form-group">
+                            <div class="form-group full-width">
 
                                 <label>
                                     Gender
@@ -130,12 +176,11 @@
 
                                         <label for="male"
                                                class="form-check-label">
-
                                             Male
-
                                         </label>
 
                                     </div>
+
 
                                     <div class="form-check">
 
@@ -147,9 +192,7 @@
 
                                         <label for="female"
                                                class="form-check-label">
-
                                             Female
-
                                         </label>
 
                                     </div>
@@ -157,124 +200,177 @@
                                 </div>
 
                                 <span asp-validation-for="Gender"
-                                      class="text-danger"></span>
+                                      class="text-danger">
+                                </span>
 
                             </div>
 
-                            <!-- Birthdate -->
-                            <div class="form-group">
 
-                                <label asp-for="Birthdate">
-                                    Birth Date
-                                </label>
+                            <!-- =================================================
+                                 BIRTHDATE
+                            ================================================== -->
 
-                                <input asp-for="Birthdate"
-                                       type="date"
-                                       class="form-control custom-input" />
+                            <div class="form-group full-width">
+
+                                <partial name="Components/_DateFields"
+                                         model='new PETHUB.ViewModels.DateFieldsViewModel
+                                         {
+                                             FieldName = "Birthdate",
+                                             Label = "Birthdate",
+                                             Value = Model?.Birthdate,
+                                             AllowFuture = false,
+                                             MinimumAge = 18
+                                         }' />
 
                                 <span asp-validation-for="Birthdate"
-                                      class="text-danger"></span>
+                                      class="text-danger">
+                                </span>
 
                             </div>
 
-                            
                             <!-- Password -->
                             <div class="form-group full-width">
 
-                                <label asp-for="Password" class="form-label"></label>
-                                <div class="input-group">
+                                <label asp-for="Password">
+                                    Password
+                                </label>
+
+                                <div class="member-password-field">
 
                                     <input asp-for="Password"
                                            type="password"
-                                           class="form-control custom-input" 
-                                           id="memberPassword"/>
+                                           class="form-control custom-input member-password-input"
+                                           id="memberPassword"
+                                           autocomplete="new-password" />
 
                                     <button type="button"
-                                            class="password-toggle"
+                                            class="password-toggle member-password-toggle"
                                             data-password-target="memberPassword"
                                             aria-label="Show password">
 
-                                            <i data-lucide="eye"></i>
+                                        <i data-lucide="eye"></i>
 
                                     </button>
 
                                 </div>
-                                <span asp-validation-for="Password" class="text-danger"></span>
+
+                                <span asp-validation-for="Password"
+                                      class="text-danger">
+                                </span>
 
                             </div>
 
-                            <!-- Address -->
-                            <partial name="Components/_AddressFields" />
+
+                            <!-- =================================================
+                                 ADDRESS
+                            ================================================== -->
+
+                            <div class="create-member-address full-width">
+
+                                <div class="create-member-section-title">
+                                    Address
+                                </div>
+
+                                <partial name="Components/_AddressFields" />
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                    <!-- ==========================
-                         RIGHT SIDE
-                    =========================== -->
 
-                    <div class="upload-panel">
+                    <!-- =================================================
+                         RIGHT SIDE - VALID ID
+                    ================================================== -->
+
+                    <div class="upload-panel create-member-id-panel">
 
                         <h5>
                             Valid ID
                         </h5>
 
                         <p class="upload-text">
-
                             Upload a clear image of the member's valid ID.
-
                         </p>
 
-                        <div class="upload-preview">
 
-                            <div id="idPhotoPreview"
-                                 class="d-flex flex-wrap gap-2">
+                        <div class="create-member-id-preview">
+
+                            <div id="idPhotoPreview">
                             </div>
 
-                            <div id="idPhotoPlaceholder" class="upload-placeholder">
-                                <i class="bi bi-card-image"></i>
+                            <div id="idPhotoPlaceholder"
+                                 class="create-member-id-placeholder">
 
-                                <p>
+                                <i data-lucide="image"></i>
+
+                                <span>
                                     Image Preview
-                                </p>
+                                </span>
+
                             </div>
 
                         </div>
-                        <label asp-for="IdPhoto"
-                               class="upload-label">
 
+
+                        <label class="upload-label">
                             Valid ID
                             <small>(Optional)</small>
-
                         </label>
 
-                        <input asp-for="IdPhoto"
-                               type="file"
-                               class="form-control custom-input"
-                               id="IdPhotoInput" />
+
+                        <div class="create-member-file-field">
+
+                            <input asp-for="IdPhoto"
+                                   type="file"
+                                   id="IdPhotoInput"
+                                   class="create-member-file-input"
+                                   accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+
+                            <label for="IdPhotoInput"
+                                   class="create-member-file-button">
+
+                                <i data-lucide="image-plus"></i>
+
+                                Choose File
+
+                            </label>
+
+                            <span id="memberFileName"
+                                  class="create-member-file-name">
+
+                                No file chosen
+
+                            </span>
+
+                        </div>
+
 
                         <span asp-validation-for="IdPhoto"
-                              class="text-danger"></span>
+                              class="text-danger">
+                        </span>
 
                     </div>
 
                 </div>
 
+
+                <!-- =====================================================
+                     FOOTER
+                ====================================================== -->
+
                 <div class="crud-footer">
 
                     <a asp-action="Index"
                        class="btn-cancel">
-
                         Cancel
-
                     </a>
+
 
                     <button type="submit"
                             class="btn-primary-action">
-
                         Create Member
-
                     </button>
 
                 </div>
@@ -287,21 +383,70 @@
 
 </div>
 
+
 @section Scripts
 {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script src="~/js/imagePreviewHelper.js"></script>
+    <script src="~/js/imagePreviewHelper.js"
+            asp-append-version="true">
+    </script>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
 
-        setupImagePreview("IdPhotoInput", "idPhotoPreview", {
-        multiple: false,
-        placeholderId: "idPhotoPlaceholder"
+            // =====================================================
+            // VALID ID PREVIEW
+            // =====================================================
+
+            setupImagePreview(
+                "IdPhotoInput",
+                "idPhotoPreview",
+                {
+                    multiple: false,
+                    placeholderId: "idPhotoPlaceholder",
+                    previewWidth: null,
+                    previewHeight: null
+                }
+            );
+
+
+            // =====================================================
+            // FILE NAME
+            // =====================================================
+
+            const fileInput =
+                document.getElementById("IdPhotoInput");
+
+            const fileName =
+                document.getElementById("memberFileName");
+
+
+            if (fileInput && fileName) {
+
+                fileInput.addEventListener(
+                    "change",
+                    function () {
+
+                        fileName.textContent =
+                            this.files &&
+                            this.files.length > 0
+
+                                ? this.files[0].name
+
+                                : "No file chosen";
+
+                    }
+                );
+
+            }
+
         });
-
     </script>
-    <script src="~/js/address-helper.js"></script>
+
+    <script src="~/js/address-helper.js"
+            asp-append-version="true">
+    </script>
 }
