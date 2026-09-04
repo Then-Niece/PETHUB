@@ -217,7 +217,8 @@
 
                         <input asp-for="LostDate"
                                type="date"
-                               class="form-control" />
+                               class="form-control"
+                               max="@DateTime.Today.ToString("yyyy-MM-dd")" />
 
                         <span asp-validation-for="LostDate"
                               class="text-danger">
@@ -456,27 +457,48 @@
                         </h5>
 
 
-                        <div class="mb-3">
+                       <div class="mb-3">
 
                             <label class="form-label">
                                 Upload Images
                             </label>
 
-                            <input type="file"
-                                   id="imageInput"
-                                   name="Images"
-                                   multiple
-                                   class="form-control"
-                                   accept="image/*" />
+                            <div class="photo-upload-control">
 
-                            <small class="text-muted">
-                                You can upload multiple images.
+                                <input type="file"
+                                       id="imageInput"
+                                       name="Images"
+                                       multiple
+                                       hidden
+                                       accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+
+                                <button type="button"
+                                        class="photo-upload-button"
+                                        id="addPhotosButton">
+
+                                    <i data-lucide="image-plus"></i>
+
+                                    Add Photos
+
+                                </button>
+
+                                <span class="photo-upload-count"
+                                      id="photoUploadCount">
+                                    0 / 5 photos
+                                </span>
+
+                            </div>
+
+                            <small class="photo-upload-help">
+                                Upload up to 5 photos. JPG, PNG or WEBP only. Maximum 5 MB each.
                             </small>
+
+                            <div id="imageUploadError"
+                                 class="text-danger mt-2">
+                            </div>
 
                         </div>
 
-
-                        <!-- IMAGE PREVIEW -->
 
                         <div id="imagePreviewContainer"
                              class="image-preview-grid">
@@ -815,14 +837,88 @@
          IMAGE PREVIEW HELPER
     ========================================================== -->
 
-    <script src="~/js/imagePreviewHelper.js"></script>
+    <script src="~/js/imagePreviewHelper.js"
+            asp-append-version="true"></script>
 
+
+    <!-- =========================================================
+         LOST & FOUND PHOTO UPLOAD
+    ========================================================== -->
 
     <script>
 
-        setupImagePreview(
-            "imageInput",
-            "imagePreviewContainer"
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                setupImagePreview(
+                    "imageInput",
+                    "imagePreviewContainer",
+                    {
+                        // Allow multiple images
+                        multiple: true,
+
+                        // Maximum 5 photos
+                        maxFiles: 5,
+
+                        // Maximum 5 MB per photo
+                        maxFileSize:
+                            5 * 1024 * 1024,
+
+                        // Allowed file types
+                        allowedTypes: [
+                            "image/jpeg",
+                            "image/png",
+                            "image/webp"
+                        ],
+
+                        // Let CSS control the dynamic layout
+                        previewWidth: null,
+                        previewHeight: null,
+
+                        // Update the "0 / 5 photos" text
+                        countId:
+                            "photoUploadCount",
+
+                        // Show upload validation errors here
+                        errorId:
+                            "imageUploadError"
+                    }
+                );
+
+
+                // =================================================
+                // CUSTOM "ADD PHOTOS" BUTTON
+                // =================================================
+
+                const imageInput =
+                    document.getElementById(
+                        "imageInput"
+                    );
+
+                const addPhotosButton =
+                    document.getElementById(
+                        "addPhotosButton"
+                    );
+
+
+                if (
+                    imageInput &&
+                    addPhotosButton
+                ) {
+
+                    addPhotosButton.addEventListener(
+                        "click",
+                        function () {
+
+                            imageInput.click();
+
+                        }
+                    );
+
+                }
+
+            }
         );
 
     </script>
@@ -834,11 +930,26 @@
 
     <script>
 
-        setupImagePreview(
-            "ClientIdImage",
-            "idPhotoPreview",
-            {
-                multiple: false
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                setupImagePreview(
+                    "ClientIdImage",
+                    "idPhotoPreview",
+                    {
+                        multiple: false,
+
+                        maxFileSize:
+                            5 * 1024 * 1024,
+
+                        allowedTypes: [
+                            "image/jpeg",
+                            "image/png"
+                        ]
+                    }
+                );
+
             }
         );
 
@@ -851,5 +962,4 @@
 
     <script src="~/js/address-helper.js"
             asp-append-version="true"></script>
-
 }

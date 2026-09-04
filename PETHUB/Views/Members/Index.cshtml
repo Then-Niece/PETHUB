@@ -1,211 +1,281 @@
 ﻿@model PETHUB.ViewModels.PaginationViewModel<PETHUB.Models.ApplicationUser>
+
 @{
     ViewData["Title"] = "Members";
 }
 
 <div class="container-fluid px-2 py-4">
 
-    <div class="admin-header">
+    <div class="members-page">
 
-        <div>
-            <h2 class="admin-title">Members</h2>
-            <p class="admin-subtitle">
-                Manage registered community members.
-            </p>
-        </div>
+        <!-- =====================================================
+             PAGE HEADER
+        ====================================================== -->
 
-        <a asp-action="Create" class="admin-add-btn">
-            + New Member
-        </a>
+        <div class="admin-header">
 
-    </div>
+            <div class="admin-header-text">
 
-    <div class="admin-card">
+                <h2 class="admin-title">
+                    Members
+                </h2>
 
-        <div class="admin-card-header">
+                <p class="admin-subtitle">
+                    Manage registered community members.
+                </p>
 
-            <div class="search-box">
-                <i data-lucide="search" class="search-icon"></i>
-
-                <input class="admin-search"
-                       placeholder="Search members..." />
             </div>
 
-            <span class="member-count">
-                @Model.TotalItems
-                @(Model.TotalItems == 1 ? "Member" : "Members")
-            </span>
+
+            <a asp-action="Create"
+               class="admin-add-btn">
+
+                <i data-lucide="user-plus"></i>
+
+                New Member
+
+            </a>
 
         </div>
 
-        
 
-            <table class="admin-table">
+        <!-- =====================================================
+             MEMBER CARD
+        ====================================================== -->
 
-                <thead>
+        <div class="admin-card members-card">
 
-                    <tr>
 
-                        <th>Username</th>
+            <!-- =================================================
+                 TOOLBAR
+            ================================================== -->
 
-                        <th>Full Name</th>
+            <div class="admin-card-header members-toolbar">
 
-                        <th>Email</th>
+                <form asp-action="Index"
+                      method="get"
+                      class="search-box"
+                      id="memberSearchForm">
 
-                        <th class="text-center">Contact</th>
+                    <i data-lucide="search"
+                       class="search-icon">
+                    </i>
 
-                        <th class="text-center">Gender</th>
+                    <input class="admin-search"
+                           type="text"
+                           name="search"
+                           id="memberSearchInput"
+                           value="@ViewBag.Search"
+                           placeholder="Search members..."
+                           autocomplete="off" />
 
-                        <th class="text-center">Role</th>
+                </form>
 
-                        <th class="text-center">Status</th>
 
-                        <th class="text-center" >
-                            Actions
-                        </th>
+                <span class="member-count"
+                      id="memberCount">
 
-                    </tr>
+                    @Model.TotalItems
+                    @(Model.TotalItems == 1 ? "Member" : "Members")
 
-                </thead>
+                </span>
 
-                <tbody>
+            </div>
 
-                @foreach (var item in Model.Items)
-                    {
+
+            <!-- =================================================
+                 TABLE
+            ================================================== -->
+
+            <div class="members-table-wrap">
+
+                <table class="admin-table members-table">
+
+                    <thead>
+
                         <tr>
 
-                            <td>@item.UserName</td>
+                            <th>
+                                Username
+                            </th>
 
-                            <td class="full-name-col">
-                                @item.FirstName @item.LastName
-                            </td>
+                            <th>
+                                Full Name
+                            </th>
 
-                            <td class="email-col">
-                                @item.Email
-                            </td>
+                            <th>
+                                Email
+                            </th>
 
-                            <td>
-                                @item.ContactNumber
-                            </td>
+                            <th class="text-center">
+                                Contact
+                            </th>
 
-                            <td class="text-center">
-                                <span class="gender-pill @(item.Gender == "Male" ? "male" : "female")">
-                                    @item.Gender
-                                </span>
-                            </td>
+                            <th class="text-center">
+                                Gender
+                            </th>
 
-                            <td class="text-center">
-                                <span class="role-pill">
-                                    @ViewBag.MemberRoles[item.Id]
-                                </span>
-                            </td>
+                            <th class="text-center">
+                                Role
+                            </th>
 
-                            <td class="text-center">
+                            <th class="text-center">
+                                Status
+                            </th>
 
-                                @if (item.Status == UserStatus.Active)
-                                {
-                                    <span class="status-pill active">
-                                        Active
-                                    </span>
-                                }
-                                else if (item.Status == UserStatus.Inactive)
-                                {
-                                    <span class="status-pill inactive">
-                                        Inactive
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="status-pill pending">
-                                        Pending
-                                    </span>
-                                }
-
-                            </td>
-
-                            <td class="text-center">
-
-                                <div class="action-dropdown">
-
-                                    <button type="button" class="action-menu-btn">
-
-                                        <i data-lucide="ellipsis-vertical"></i>
-
-                                    </button>
-
-                                    <div class="action-menu">
-
-                                        <a asp-action="Details"
-                                           asp-route-id="@item.Id">
-                                            View
-                                        </a>
-
-                                        <a asp-action="Edit"
-                                           asp-route-id="@item.Id">
-                                            Edit
-                                        </a>
-
-                                        <div class="menu-divider"></div>
-
-
-                                        @if (item.Status == UserStatus.Active)
-                                        {
-                                            <form asp-action="Deactivate"
-                                                  asp-route-id="@item.Id"
-                                                  method="post"
-                                                  class="action-menu-form">
-
-                                                @Html.AntiForgeryToken()
-
-                                                <button type="submit"
-                                                        class="deactivate-item">
-
-                                                    Deactivate
-
-                                                </button>
-
-                                            </form>
-                                        }
-                                        else if (item.Status == UserStatus.Inactive)
-                                        {
-                                            <form asp-action="Reactivate"
-                                                  asp-route-id="@item.Id"
-                                                  method="post"
-                                                  class="action-menu-form">
-
-                                                @Html.AntiForgeryToken()
-
-                                                <button type="submit"
-                                                        class="reactivate-item">
-
-                                                    Reactivate
-
-                                                </button>
-
-                                            </form>
-                                        }
-
-                                    </div>
-
-                                </div>
-
-                            </td>
+                            <th class="text-center">
+                                Actions
+                            </th>
 
                         </tr>
-                    }
 
-                </tbody>
+                    </thead>
 
-            </table>
 
-            
+                    <tbody id="membersTableBody">
 
-      
+                        <partial name="_MemberRows"
+                                 model="Model.Items" />
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             PAGINATION
+        ====================================================== -->
+
+        <div class="members-pagination">
+
+            <partial name="_Pagination"
+                     model="Model" />
+
+        </div>
 
     </div>
 
-    <partial name="_Pagination" model="Model" />
-
-
-
 </div>
+
+
+@section Scripts
+{
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const searchInput =
+                    document.getElementById(
+                        "memberSearchInput"
+                    );
+
+                const tableBody =
+                    document.getElementById(
+                        "membersTableBody"
+                    );
+
+                const memberCount =
+                    document.getElementById(
+                        "memberCount"
+                    );
+
+
+                if (
+                    !searchInput ||
+                    !tableBody
+                ) {
+                    return;
+                }
+
+
+                let searchTimer;
+
+
+                searchInput.addEventListener(
+                    "input",
+                    function () {
+
+                        clearTimeout(
+                            searchTimer
+                        );
+
+
+                        const searchValue =
+                            this.value.trim();
+
+
+                        searchTimer =
+                            setTimeout(
+                                async function () {
+
+                                    try {
+
+                                        const response =
+                                            await fetch(
+                                                `/Members/Search?search=${encodeURIComponent(searchValue)}`
+                                            );
+
+
+                                        if (!response.ok) {
+                                            return;
+                                        }
+
+
+                                        const html =
+                                            await response.text();
+
+
+                                        tableBody.innerHTML =
+                                            html;
+
+
+                                        // Re-render icons in AJAX rows.
+                                        if (window.lucide) {
+                                            lucide.createIcons();
+                                        }
+
+
+                                        // Update result count.
+                                        const rowCount =
+                                            tableBody.querySelectorAll(
+                                                "tr"
+                                            ).length;
+
+
+                                        if (memberCount) {
+
+                                            memberCount.textContent =
+                                                `${rowCount} ${rowCount === 1
+                                                    ? "Member"
+                                                    : "Members"}`;
+
+                                        }
+
+                                    }
+                                    catch (error) {
+
+                                        console.error(
+                                            "Member search failed:",
+                                            error
+                                        );
+
+                                    }
+
+                                },
+                                300
+                            );
+
+                    }
+                );
+
+            }
+        );
+
+    </script>
+}

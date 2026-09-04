@@ -1,91 +1,230 @@
 ﻿@model PETHUB.ViewModels.EditProfileViewModel
 
 @*
-    Reusable Address Fields
-    Used exclusively by the Edit Profile pages.
-    Uses ASP.NET MVC Tag Helpers to enable
-    built-in validation and model binding.
+    Reusable Edit Profile Address Fields
+
+    Uses:
+        address-helper.js
+        custom-select.js
+        custom-select.css
+
+    Keeps ASP.NET MVC validation/model binding
+    through asp-for on the real select/input fields.
 *@
 
-<div class="mb-3">
 
-    <!-- Province -->
-    <label asp-for="Province" class="form-label"></label>
+<div class="row g-3">
 
-    <select asp-for="Province"
-            id="Province"
-            class="form-select"
-            data-selected="@Model.Province">
 
-        <option value="">
-            Select Province
-        </option>
+    <!-- =====================================================
+         PROVINCE
+    ====================================================== -->
 
-    </select>
+    <div class="col-md-6">
 
-    <!-- Displays validation error for Province -->
-    <span asp-validation-for="Province"
-          class="text-danger"></span>
+        <label asp-for="Province"
+               class="form-label">
+        </label>
 
-</div>
 
-<div class="mb-3">
+        <div class="pethub-select-wrapper">
 
-    <!-- City -->
-    <label asp-for="City" class="form-label"></label>
 
-    <select asp-for="City"
-            id="City"
-            class="form-select"
-            data-selected="@Model.City"
-            disabled>
+            <!-- REAL SELECT -->
 
-        <option value="">
-            Select City
-        </option>
+            <select asp-for="Province"
+                    id="Province"
+                    class="pethub-select-native"
+                    data-selected="@Model.Province">
 
-    </select>
+                <option value="">
+                    Select Province
+                </option>
 
-    <!-- Displays validation error for City -->
-    <span asp-validation-for="City"
-          class="text-danger"></span>
+            </select>
 
-</div>
 
-<div class="mb-3">
+            <!-- CUSTOM VISUAL SELECT -->
 
-    <!-- Barangay -->
-    <label asp-for="Barangay" class="form-label"></label>
+            <button type="button"
+                    class="pethub-select-trigger placeholder"
+                    data-select-target="Province">
 
-    <select asp-for="Barangay"
-            id="Barangay"
-            class="form-select"
-            data-selected="@Model.Barangay"
-            disabled>
+                <span class="pethub-select-text">
+                    Select Province
+                </span>
 
-        <option value="">
-            Select Barangay
-        </option>
+                <i data-lucide="chevron-down"></i>
 
-    </select>
+            </button>
 
-    <!-- Displays validation error for Barangay -->
-    <span asp-validation-for="Barangay"
-          class="text-danger"></span>
 
-</div>
+            <!-- CUSTOM OPTIONS -->
 
-<div class="mb-3">
+            <div class="pethub-select-menu"
+                 data-menu-for="Province">
+            </div>
 
-    <!-- Street Address -->
-    <label asp-for="StreetAddress"
-           class="form-label"></label>
 
-    <input asp-for="StreetAddress"
-           class="form-control" />
+        </div>
 
-    <!-- Displays validation error for Street Address -->
-    <span asp-validation-for="StreetAddress"
-          class="text-danger"></span>
+
+        <span asp-validation-for="Province"
+              class="text-danger">
+        </span>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CITY
+    ====================================================== -->
+
+    <div class="col-md-6">
+
+        <label asp-for="City"
+               class="form-label">
+        </label>
+
+
+        <div class="pethub-select-wrapper">
+
+
+            <!-- REAL SELECT -->
+
+            <select asp-for="City"
+                    id="City"
+                    class="pethub-select-native"
+                    data-selected="@Model.City"
+                    disabled>
+
+                <option value="">
+                    Select City
+                </option>
+
+            </select>
+
+
+            <!-- CUSTOM VISUAL SELECT -->
+
+            <button type="button"
+                    class="pethub-select-trigger placeholder disabled"
+                    data-select-target="City"
+                    disabled>
+
+                <span class="pethub-select-text">
+                    Select City
+                </span>
+
+                <i data-lucide="chevron-down"></i>
+
+            </button>
+
+
+            <!-- CUSTOM OPTIONS -->
+
+            <div class="pethub-select-menu"
+                 data-menu-for="City">
+            </div>
+
+
+        </div>
+
+
+        <span asp-validation-for="City"
+              class="text-danger">
+        </span>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         BARANGAY
+    ====================================================== -->
+
+    <div class="col-md-6">
+
+        <label asp-for="Barangay"
+               class="form-label">
+        </label>
+
+
+        <div class="pethub-select-wrapper">
+
+
+            <!-- REAL SELECT -->
+
+            <select asp-for="Barangay"
+                    id="Barangay"
+                    class="pethub-select-native"
+                    data-selected="@Model.Barangay"
+                    disabled>
+
+                <option value="">
+                    Select Barangay
+                </option>
+
+            </select>
+
+
+            <!-- CUSTOM VISUAL SELECT -->
+
+            <button type="button"
+                    class="pethub-select-trigger placeholder disabled"
+                    data-select-target="Barangay"
+                    disabled>
+
+                <span class="pethub-select-text">
+                    Select Barangay
+                </span>
+
+                <i data-lucide="chevron-down"></i>
+
+            </button>
+
+
+            <!-- CUSTOM OPTIONS -->
+
+            <div class="pethub-select-menu"
+                 data-menu-for="Barangay">
+            </div>
+
+
+        </div>
+
+
+        <span asp-validation-for="Barangay"
+              class="text-danger">
+        </span>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         STREET ADDRESS
+    ====================================================== -->
+
+    <div class="col-md-6">
+
+        <label asp-for="StreetAddress"
+               class="form-label">
+        </label>
+
+
+        <input asp-for="StreetAddress"
+               id="StreetAddress"
+               class="form-control pethub-address-input"
+               placeholder="Enter street address" />
+
+
+        <span asp-validation-for="StreetAddress"
+              class="text-danger">
+        </span>
+
+    </div>
+
 
 </div>

@@ -89,6 +89,22 @@
 
                 </div>
 
+                <!-- MIDDLE NAME -->
+                <div class="admin-setup-field">
+
+                    <label asp-for="MiddleName">
+                        Middle Name
+                    </label>
+
+                    <input asp-for="MiddleName"
+                           class="admin-setup-input"
+                           placeholder="Enter your middle name" />
+
+                    <span asp-validation-for="MiddleName"
+                          class="admin-setup-error">
+                    </span>
+
+                </div>
 
                 <!-- LAST NAME -->
                 <div class="admin-setup-field">
@@ -137,7 +153,9 @@
                            class="admin-setup-input"
                            placeholder="11-digit contact number"
                            maxlength="11"
-                           inputmode="numeric" />
+                           inputmode="numeric"
+                           autocomplete="tel"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
                     <span asp-validation-for="ContactNumber"
                           class="admin-setup-error">

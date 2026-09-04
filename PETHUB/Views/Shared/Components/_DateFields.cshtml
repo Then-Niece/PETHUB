@@ -1,0 +1,133 @@
+﻿@model PETHUB.ViewModels.DateFieldsViewModel
+
+@{
+    var fieldId = Model.FieldName;
+
+    var selectedMonth = Model.Value?.Month ?? 0;
+    var selectedDay = Model.Value?.Day ?? 0;
+    var selectedYear = Model.Value?.Year ?? 0;
+
+    var hiddenValue =
+        Model.Value?.ToString("yyyy-MM-dd") ?? "";
+}
+
+<div class="pethub-date-fields"
+     data-date-field="@fieldId"
+     data-allow-future="@Model.AllowFuture.ToString().ToLower()"
+     data-minimum-age="@(Model.MinimumAge?.ToString() ?? "")"
+     data-minimum-year="@Model.MinimumYear">
+
+    <label class="pethub-date-label">
+        @Model.Label
+    </label>
+
+    <input type="hidden"
+           id="@fieldId"
+           name="@Model.FieldName"
+           value="@hiddenValue"
+           class="pethub-date-hidden" />
+
+    <div class="pethub-date-grid">
+
+        <!-- MONTH -->
+        <div class="pethub-select-wrapper">
+
+            <select id="@($"{fieldId}Month")"
+                    class="pethub-select-native pethub-date-month">
+
+                <option value="">Month</option>
+
+                @for (int month = 1; month <= 12; month++)
+                {
+                    if (month == selectedMonth)
+                    {
+                        <option value="@month" selected>@month</option>
+                    }
+                    else
+                    {
+                        <option value="@month">@month</option>
+                    }
+                }
+
+            </select>
+
+            <button type="button"
+                    class="pethub-select-trigger"
+                    data-select-target="@($"{fieldId}Month")">
+
+                <span class="pethub-select-text">
+                    Month
+                </span>
+
+                <i data-lucide="chevron-down"></i>
+            </button>
+
+            <div class="pethub-select-menu"
+                 data-menu-for="@($"{fieldId}Month")">
+            </div>
+
+        </div>
+
+
+        <!-- DAY -->
+        <div class="pethub-select-wrapper">
+
+            <select id="@($"{fieldId}Day")"
+                    class="pethub-select-native pethub-date-day"
+                    data-selected="@selectedDay">
+
+                <option value="">Day</option>
+
+            </select>
+
+            <button type="button"
+                    class="pethub-select-trigger"
+                    data-select-target="@($"{fieldId}Day")">
+
+                <span class="pethub-select-text">
+                    Day
+                </span>
+
+                <i data-lucide="chevron-down"></i>
+            </button>
+
+            <div class="pethub-select-menu"
+                 data-menu-for="@($"{fieldId}Day")">
+            </div>
+
+        </div>
+
+
+        <!-- YEAR -->
+        <div class="pethub-select-wrapper">
+
+            <select id="@($"{fieldId}Year")"
+                    class="pethub-select-native pethub-date-year"
+                    data-selected="@selectedYear">
+
+                <option value="">Year</option>
+
+            </select>
+
+            <button type="button"
+                    class="pethub-select-trigger"
+                    data-select-target="@($"{fieldId}Year")">
+
+                <span class="pethub-select-text">
+                    Year
+                </span>
+
+                <i data-lucide="chevron-down"></i>
+            </button>
+
+            <div class="pethub-select-menu"
+                 data-menu-for="@($"{fieldId}Year")">
+            </div>
+
+        </div>
+
+    </div>
+
+    <span class="pethub-date-error"></span>
+
+</div>

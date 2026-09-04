@@ -25,12 +25,79 @@ namespace PETHUB.Controllers
 
 
         // GET: Members
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(
+            string? search,
+            int page = 1)
         {
-            // Only get users in the Member role
+            // =========================================================
+            // GET MEMBERS
+            // =========================================================
+
+            // Only retrieve users assigned to the Member role.
             var members = (await _userManager.GetUsersInRoleAsync("Member"))
-                .OrderByDescending(m => m.CreatedAt) // Newest first
+                .OrderByDescending(m => m.CreatedAt)
                 .ToList();
+
+
+            // =========================================================
+            // SEARCH
+            // =========================================================
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim();
+
+                members = members
+                    .Where(m =>
+                        (!string.IsNullOrWhiteSpace(m.UserName) &&
+                         m.UserName.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (
+                            $"{m.FirstName} {m.LastName}"
+                            .Contains(
+                                search,
+                                StringComparison.OrdinalIgnoreCase)
+                        ) ||
+
+                        (!string.IsNullOrWhiteSpace(m.FirstName) &&
+                         m.FirstName.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(m.LastName) &&
+                         m.LastName.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(m.Email) &&
+                         m.Email.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(m.ContactNumber) &&
+                         m.ContactNumber.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(m.Gender) &&
+                         m.Gender.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        m.Status
+                            .ToString()
+                            .Contains(
+                                search,
+                                StringComparison.OrdinalIgnoreCase)
+                    )
+                    .ToList();
+            }
+
+
+            // Preserve the current search text in the search box.
+            ViewBag.Search = search;
 
 
             // =========================================================
@@ -45,21 +112,24 @@ namespace PETHUB.Controllers
                 page = 1;
             }
 
-            // Get the total number of members before pagination.
+
+            // TotalItems now represents all matching members
+            // when a search is active.
             var totalItems = members.Count;
 
-            // Prevent the requested page from going beyond
-            // the available number of pages.
+
             var totalPages = (int)Math.Ceiling(
                 totalItems / (double)pageSize
             );
+
 
             if (totalPages > 0 && page > totalPages)
             {
                 page = totalPages;
             }
 
-            // Get only the members for the current page.
+
+            // Get only the members belonging to the current page.
             var pagedMembers = members
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -67,16 +137,17 @@ namespace PETHUB.Controllers
 
 
             // =========================================================
-            // EXISTING ROLE DICTIONARY
+            // ROLE DICTIONARY
             // =========================================================
 
-            // Optional: build dictionary of roles if you want to display them
             var memberRoles = new Dictionary<string, string>();
 
             foreach (var member in pagedMembers)
             {
                 var roles = await _userManager.GetRolesAsync(member);
-                memberRoles[member.Id] = roles.FirstOrDefault() ?? "No Role";
+
+                memberRoles[member.Id] =
+                    roles.FirstOrDefault() ?? "No Role";
             }
 
             ViewBag.MemberRoles = memberRoles;
@@ -97,6 +168,73 @@ namespace PETHUB.Controllers
 
             return View(model);
         }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string? search)
+        {
+            var members = (await _userManager.GetUsersInRoleAsync("Member"))
+                .OrderByDescending(m => m.CreatedAt)
+                .ToList();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim();
+
+                members = members
+                    .Where(m =>
+                        (!string.IsNullOrWhiteSpace(m.UserName) &&
+                         m.UserName.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        ($"{m.FirstName} {m.LastName}"
+                            .Contains(
+                                search,
+                                StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(m.Email) &&
+                         m.Email.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(m.ContactNumber) &&
+                         m.ContactNumber.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        (!string.IsNullOrWhiteSpace(m.Gender) &&
+                         m.Gender.Contains(
+                             search,
+                             StringComparison.OrdinalIgnoreCase)) ||
+
+                        m.Status
+                            .ToString()
+                            .Contains(
+                                search,
+                                StringComparison.OrdinalIgnoreCase)
+                    )
+                    .ToList();
+            }
+
+            var memberRoles = new Dictionary<string, string>();
+
+            foreach (var member in members)
+            {
+                var roles = await _userManager.GetRolesAsync(member);
+
+                memberRoles[member.Id] =
+                    roles.FirstOrDefault() ?? "No Role";
+            }
+
+            ViewBag.MemberRoles = memberRoles;
+
+            ViewBag.TotalItems = members.Count;
+
+            return PartialView("_MemberRows", members);
+        }
+
 
 
         // GET: Members/Details/5
@@ -341,28 +479,29 @@ namespace PETHUB.Controllers
 
 
             var model =
-                new EditMemberViewModel
-                {
-                    Id = member.Id,
+                 new EditMemberViewModel
+                 {
+                     Id = member.Id,
 
-                    UserName = member.UserName!,
-                    Email = member.Email!,
+                     UserName = member.UserName!,
+                     Email = member.Email!,
 
-                    FirstName = member.FirstName,
-                    LastName = member.LastName,
-                    ContactNumber = member.ContactNumber,
+                     FirstName = member.FirstName,
+                     MiddleName = member.MiddleName,
+                     LastName = member.LastName,
+                     ContactNumber = member.ContactNumber,
 
-                    Gender = member.Gender,
-                    Birthdate = member.Birthdate,
+                     Gender = member.Gender,
+                     Birthdate = member.Birthdate,
 
-                    Province = member.Province,
-                    City = member.City,
-                    Barangay = member.Barangay,
-                    StreetAddress = member.StreetAddress,
+                     Province = member.Province,
+                     City = member.City,
+                     Barangay = member.Barangay,
+                     StreetAddress = member.StreetAddress,
 
-                    Status = member.Status,
-                    IdPhotoPath = member.IdPhotoPath
-                };
+                     Status = member.Status,
+                     IdPhotoPath = member.IdPhotoPath
+                 };
 
 
             return View(model);
@@ -441,6 +580,7 @@ namespace PETHUB.Controllers
             member.UserName = model.UserName;
 
             member.FirstName = model.FirstName;
+            member.MiddleName = model.MiddleName;
             member.LastName = model.LastName;
             member.ContactNumber = model.ContactNumber;
 

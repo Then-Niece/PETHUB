@@ -73,6 +73,56 @@
     }
 
 
+/* =========================================================
+   STREET ADDRESS INPUT
+   Matches the PETHUB custom select trigger
+========================================================= */
+
+.pethub-address-input.form-control {
+    width: 100% !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    padding: 0 16px 0 17px !important;
+    border: 1px solid #d9dee7 !important;
+    border-radius: 14px !important;
+    background-color: #ffffff !important;
+    color: #273142;
+    font-family: inherit;
+    font-size: .94rem;
+    font-weight: 400;
+    line-height: 1;
+    box-shadow: none !important;
+    transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+
+
+    .pethub-address-input.form-control:hover {
+        border-color: #c5cdd7 !important;
+    }
+
+
+    .pethub-address-input.form-control:focus {
+        outline: none;
+        border-color: #84c96f !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 0 0 4px rgba(132, 201, 111, .12) !important;
+    }
+
+
+    .pethub-address-input.form-control::placeholder {
+        color: #929ba7;
+    }
+
+
+    /* Remove browser autofill background */
+
+    .pethub-address-input.form-control:-webkit-autofill,
+    .pethub-address-input.form-control:-webkit-autofill:hover,
+    .pethub-address-input.form-control:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+        -webkit-text-fill-color: #273142 !important;
+        background-color: #ffffff !important;
+    }
     /* =========================================================
    PLACEHOLDER
 ========================================================= */

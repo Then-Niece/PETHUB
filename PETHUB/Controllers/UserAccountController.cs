@@ -59,7 +59,7 @@ namespace PETHUB.Controllers
         {
             ViewData["HideSidebar"] = true;
 
-            return View();
+            return View(new RegisterViewModel());
         }
 
 
@@ -107,6 +107,7 @@ namespace PETHUB.Controllers
                 Email = model.Email,
 
                 FirstName = model.FirstName,
+                MiddleName = model.MiddleName,
                 LastName = model.LastName,
                 ContactNumber = model.ContactNumber,
 
@@ -1166,6 +1167,7 @@ namespace PETHUB.Controllers
 
             user.UserName = model.UserName;
             user.FirstName = model.FirstName;
+            user.MiddleName = model.MiddleName;
             user.LastName = model.LastName;
             user.ContactNumber = model.ContactNumber;
 

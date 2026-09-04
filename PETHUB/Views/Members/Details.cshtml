@@ -6,193 +6,249 @@
 
 <div class="container-fluid py-4">
 
-    <div class="crud-page">
+    <div class="crud-page member-details-page">
 
         <div class="crud-card">
 
+            <!-- HEADER -->
             <div class="crud-header">
 
                 <h2>View Member</h2>
 
                 <p>
-                    View the member information below.
+                    Review the member's account and personal information.
                 </p>
 
             </div>
 
-            <div class="crud-content">
 
-                <!-- ==========================
-                     LEFT SIDE
-                =========================== -->
+            <!-- CONTENT -->
+            <div class="member-view-content">
 
-                <div class="form-grid">
+                <!-- LEFT SIDE -->
+                <div class="member-view-main">
 
-                    <!-- Username -->
-                    <div class="form-group">
 
-                        <label>Username</label>
+                    <!-- ACCOUNT -->
+                    <section class="member-view-section">
 
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.UserName"
-                               readonly />
+                        <div class="member-view-section-header">
 
-                    </div>
-
-                    <!-- Email -->
-                    <div class="form-group">
-
-                        <label>Email</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.Email"
-                               readonly />
-
-                    </div>
-
-                    <!-- First Name -->
-                    <div class="form-group">
-
-                        <label>First Name</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.FirstName"
-                               readonly />
-
-                    </div>
-
-                    <!-- Last Name -->
-                    <div class="form-group">
-
-                        <label>Last Name</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.LastName"
-                               readonly />
-
-                    </div>
-
-                    <!-- Contact -->
-                    <div class="form-group">
-
-                        <label>Contact Number</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.ContactNumber"
-                               readonly />
-
-                    </div>
-
-                    <!-- Gender -->
-                    <div class="form-group">
-
-                        <label>Gender</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.Gender"
-                               readonly />
-
-                    </div>
-
-                    <!-- Birthdate -->
-                    <div class="form-group">
-
-                        <label>Birthdate</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.Birthdate?.ToString("MMM dd, yyyy")"
-                               readonly />
-
-                    </div>
-
-                    <!-- Status -->
-                    <div class="form-group">
-
-                        <label>Status</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.Status"
-                               readonly />
-
-                    </div>
-
-                    <!-- Role -->
-                    <div class="form-group">
-
-                        <label>Role</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@ViewBag.MemberRoles[Model.Id]"
-                               readonly />
-
-                    </div>
-
-                    <!-- Address -->
-                    <div class="form-group full-width">
-
-                        <label>Province</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.Province"
-                               readonly />
-
-                        <label>City</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.City"
-                               readonly />
-
-                        <label>Barangay</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.Barangay"
-                               readonly />
-
-                        <label>Street Address</label>
-
-                        <input class="form-control custom-input readonly-input"
-                               value="@Model.StreetAddress"
-                               readonly />
-
-                    </div>
-
-                </div>
-
-                <!-- ==========================
-                     RIGHT SIDE
-                =========================== -->
-
-                <div class="upload-panel">
-
-                    <h5>Valid ID</h5>
-
-                    <p class="upload-text">
-                        Existing uploaded Valid ID.
-                    </p>
-
-                    <div class="upload-preview">
-
-                        <!--
-                            TODO:
-                            Replace this placeholder with the
-                            actual Valid ID image once the backend
-                            property is available.
-                        -->
-
-                        <div class="upload-placeholder">
-
-                            <i class="bi bi-card-image"></i>
-
-                            <p>No Valid ID Preview</p>
+                            <h5>Account Information</h5>
 
                         </div>
 
-                    </div>
+                        <div class="member-view-grid">
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Username</span>
+                                <strong class="member-view-value">
+                                    @Model.UserName
+                                </strong>
+                            </div>
+
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Email</span>
+                                <strong class="member-view-value">
+                                    @Model.Email
+                                </strong>
+                            </div>
+
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Status</span>
+
+                                <strong class="member-view-value">
+                                    @Model.Status
+                                </strong>
+                            </div>
+
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Role</span>
+
+                                <strong class="member-view-value">
+                                    @ViewBag.MemberRoles[Model.Id]
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- PERSONAL -->
+                    <section class="member-view-section">
+
+                        <div class="member-view-section-header">
+
+                            <h5>Personal Information</h5>
+
+                        </div>
+
+                        <div class="member-view-grid">
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">First Name</span>
+
+                                <strong class="member-view-value">
+                                    @Model.FirstName
+                                </strong>
+                            </div>
+
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Middle Name</span>
+
+                                <strong class="member-view-value">
+                                    @(string.IsNullOrWhiteSpace(Model.MiddleName)
+                                        ? "Not specified"
+                                        : Model.MiddleName)
+                                </strong>
+                            </div>
+
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Last Name</span>
+
+                                <strong class="member-view-value">
+                                    @Model.LastName
+                                </strong>
+                            </div>
+
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Contact Number</span>
+
+                                <strong class="member-view-value">
+                                    @Model.ContactNumber
+                                </strong>
+                            </div>
+
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Gender</span>
+
+                                <strong class="member-view-value">
+                                    @(string.IsNullOrWhiteSpace(Model.Gender)
+                                        ? "Not specified"
+                                        : Model.Gender)
+                                </strong>
+                            </div>
+
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Birthdate</span>
+
+                                <strong class="member-view-value">
+                                    @(Model.Birthdate?.ToString("MMMM dd, yyyy")
+                                        ?? "Not specified")
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ADDRESS -->
+                    <section class="member-view-section">
+
+                        <div class="member-view-section-header">
+
+                            <h5>Address</h5>
+
+                        </div>
+
+                        <div class="member-view-grid">
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Province</span>
+
+                                <strong class="member-view-value">
+                                    @Model.Province
+                                </strong>
+                            </div>
+
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">City</span>
+
+                                <strong class="member-view-value">
+                                    @Model.City
+                                </strong>
+                            </div>
+
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Barangay</span>
+
+                                <strong class="member-view-value">
+                                    @Model.Barangay
+                                </strong>
+                            </div>
+
+
+                            <div class="member-view-item">
+                                <span class="member-view-label">Street Address</span>
+
+                                <strong class="member-view-value">
+                                    @(string.IsNullOrWhiteSpace(Model.StreetAddress)
+                                        ? "Not specified"
+                                        : Model.StreetAddress)
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </section>
 
                 </div>
 
+
+                <!-- RIGHT SIDE -->
+                <aside class="member-id-panel">
+
+                    <div class="member-id-header">
+
+                        <h5>Valid ID</h5>
+
+                        <p>
+                            Uploaded identification document.
+                        </p>
+
+                    </div>
+
+
+                    <div class="member-id-preview">
+
+                        @if (!string.IsNullOrWhiteSpace(Model.IdPhotoPath))
+                        {
+                            <img src="@Url.Content(Model.IdPhotoPath)"
+                                 alt="Member Valid ID" />
+                        }
+                        else
+                        {
+                            <div class="member-id-empty">
+
+                                <i data-lucide="image"></i>
+
+                                <span>
+                                    No Valid ID Preview
+                                </span>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </aside>
+
             </div>
 
+
+            <!-- FOOTER -->
             <div class="crud-footer">
 
                 <a asp-action="Index"

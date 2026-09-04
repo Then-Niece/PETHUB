@@ -31,21 +31,16 @@ namespace PETHUB.ViewModels
         public string FirstName { get; set; }
 
 
+        public string? MiddleName { get; set; }
+
+
         [Required(ErrorMessage = "Last name is required.")]
         [StringLength(50)]
         public string LastName { get; set; }
 
 
         [Required(ErrorMessage = "Contact number is required.")]
-        [StringLength(
-            11,
-            MinimumLength = 11,
-            ErrorMessage = "Contact number must be exactly 11 digits."
-        )]
-        [RegularExpression(
-            @"^\d{11}$",
-            ErrorMessage = "Contact number must contain only numbers."
-        )]
+        [RegularExpression(@"^[0-9]{11}$", ErrorMessage = "Contact number must be exactly 11 digits.")]
         public string ContactNumber { get; set; }
 
 
