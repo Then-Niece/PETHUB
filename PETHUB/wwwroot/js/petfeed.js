@@ -368,6 +368,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // paw count and pawed state, which are used to update just this
     // post's button and count — no page reload, no scroll jump, no
     // interaction with the pagination cache at all.
+    // ==========================================================
+    // PAW / UNPAW (AJAX)
+    // ==========================================================
+
     feedContainer.addEventListener("submit", async function (event) {
 
         const form = event.target;
@@ -376,83 +380,144 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        if (form.hasAttribute("data-paw-form")) {
+        if (!form.hasAttribute("data-paw-form")) {
+            return;
+        }
 
-            event.preventDefault();
+        // IMPORTANT:
+        // Stop the normal form submission.
+        // This prevents the page from refreshing.
+        event.preventDefault();
+        event.stopPropagation();
+
+        const button = form.querySelector("[data-paw-button]");
+
+        if (!button) {
+            return;
+        }
+
+        // Prevent double clicks while the request is processing.
+        if (button.disabled) {
+            return;
+        }
+
+        button.disabled = true;
+
+        try {
 
             const formData = new FormData(form);
 
-            try {
+            const response = await fetch(form.action, {
+                method: "POST",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: formData
+            });
 
-                const response = await fetch(form.action, {
-                    method: "POST",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    },
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error(
-                        `Paw request failed: ${response.status}`
-                    );
-                }
-
-                const result = await response.json();
-
-                if (!result.success) {
-                    return;
-                }
-
-                const countWrapper = feedContainer.querySelector(
-                    `[data-paw-count-for="${result.petFeedId}"]`
-                );
-
-                if (countWrapper) {
-
-                    const countValue = countWrapper.querySelector(
-                        "[data-paw-count-value]"
-                    );
-
-                    if (countValue) {
-                        countValue.textContent = result.pawCount;
-                    }
-                }
-
-                // Flip the form to the opposite action for next time, and
-                // update the button label + form's asp-action equivalent
-                // (the resolved action URL) to match the new state.
-                const newAction = result.isPawed ? "Unpaw" : "Paw";
-
-                form.action =
-                    form.action.replace(
-                        /\/(Paw|Unpaw)(\?|$)/i,
-                        `/${newAction}$2`
-                    );
-
-                form.setAttribute(
-                    "data-is-pawed",
-                    result.isPawed ? "true" : "false"
-                );
-
-                const button = form.querySelector("[data-paw-button]");
-
-                if (button) {
-                    button.textContent =
-                        result.isPawed ? "Remove Paw" : "Paw";
-                }
-
-            }
-            catch (error) {
-
-                console.error(
-                    "Error submitting Paw/Unpaw:",
-                    error
+            if (!response.ok) {
+                throw new Error(
+                    `Paw request failed: ${response.status}`
                 );
             }
 
-            return;
+            const result = await response.json();
+
+            if (!result.success) {
+                return;
+            }
+
+
+            // ==================================================
+            // UPDATE PAW COUNT
+            // ==================================================
+
+            const countWrapper = feedContainer.querySelector(
+                `[data-paw-count-for="${result.petFeedId}"]`
+            );
+
+            if (countWrapper) {
+
+                const countValue = countWrapper.querySelector(
+                    "[data-paw-count-value]"
+                );
+
+                if (countValue) {
+                    countValue.textContent = result.pawCount;
+                }
+            }
+
+
+            // ==================================================
+            // UPDATE PAW ICON STATE
+            // ==================================================
+
+            button.classList.toggle(
+                "active",
+                result.isPawed
+            );
+
+
+            // ==================================================
+            // UPDATE ARIA LABEL
+            // ==================================================
+
+            button.setAttribute(
+                "aria-label",
+                result.isPawed
+                    ? "Remove Paw"
+                    : "Paw"
+            );
+
+
+            // ==================================================
+            // UPDATE FORM ACTION
+            // ==================================================
+
+            if (result.isPawed) {
+
+                // Currently Pawed.
+                // Next click = Unpaw.
+
+                form.action = form.dataset.unpawUrl;
+
+            }
+            else {
+
+                // Currently Unpawed.
+                // Next click = Paw.
+
+                form.action = form.dataset.pawUrl;
+            }
+
+
+            // ==================================================
+            // UPDATE CURRENT STATE
+            // ==================================================
+
+            form.setAttribute(
+                "data-is-pawed",
+                result.isPawed
+                    ? "true"
+                    : "false"
+            );
+
         }
+        catch (error) {
+
+            console.error(
+                "Error submitting Paw/Unpaw:",
+                error
+            );
+
+        }
+        finally {
+
+            button.disabled = false;
+
+        }
+
+    });
 
 
         // ======================================================

@@ -105,19 +105,23 @@
     <div class="marketplace-filter-bar">
 
 
-        <!-- =====================================================
-             FILTER LABEL
-        ====================================================== -->
+ 
+        <!-- SEARCH -->
+        <form method="get" class="marketplace-search">
+            <div class="marketplace-search-wrapper">
 
-        <div class="marketplace-filter-label">
+                <i data-lucide="search"
+                   class="marketplace-search-icon"></i>
 
-            <i data-lucide="sliders-horizontal"></i>
+                <input type="text"
+                       name="search"
+                       value="@Context.Request.Query["search"]"
+                       class="marketplace-search-input"
+                       placeholder="Search listings..." />
 
-            <span>
-                Filters
-            </span>
+            </div>
+        </form>
 
-        </div>
 
 
 

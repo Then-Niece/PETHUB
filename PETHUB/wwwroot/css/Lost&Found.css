@@ -208,10 +208,17 @@
 /* Section headings */
 
 .lostfound-section-title {
-    margin: 0 0 13px;
-    color: #172b43;
-    font-size: 0.9rem;
+    display: flex !important;
+    align-items: center;
+    gap: 7px;
+    margin: 0 0 11px 0 !important;
+    padding: 0 !important;
+    color: #76B968;
+    font-size: 0.95rem;
     font-weight: 700;
+    line-height: 1.35;
+    text-transform: uppercase;
+    letter-spacing: 0.045em;
 }
 
 
@@ -1337,7 +1344,7 @@
    SECTION TITLE
 ========================================================== */
 
-.lostfound-section-title {
+.lost-found-section-title {
     display: flex;
     align-items: center;
     gap: 7px;
@@ -1351,8 +1358,8 @@
     letter-spacing: 0.045em;
 }
 
-    .lostfound-section-title i,
-    .lostfound-section-title svg {
+    .lost-found-section-title i,
+    .lost-found-section-title svg {
         width: 17px;
         height: 17px;
         color: #76B968;
@@ -2083,17 +2090,18 @@
 
 .lostfound-more-dropdown {
     position: absolute;
-    top: calc(100% + 6px);
+    top: calc(100% + 8px);
     right: 0;
     z-index: 9999;
-    width: 195px;
+    width: 190px;
     padding: 6px;
     background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+    border: 1px solid #E0E4E7;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     display: none;
 }
+
 
 
 /* ==========================================================
@@ -3700,7 +3708,71 @@
     -webkit-backdrop-filter: blur(14px);
 }
 
+/* ==========================================================
+   LOST & FOUND SEARCH
+========================================================== */
 
+.lost-found-search {
+    flex: 1;
+    min-width: 260px;
+}
+
+
+.lost-found-search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+
+.lost-found-search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 17px;
+    height: 17px;
+    color: #344054;
+    stroke-width: 2;
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+.lost-found-search-input {
+    width: 100%;
+    min-width: 260px;
+    height: 44px;
+    padding: 0 16px 0 40px;
+    border: 1px solid #dfe5e2;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #344054;
+    font-family: inherit;
+    font-size: 0.79rem;
+    font-weight: 500;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+    .lost-found-search-input::placeholder {
+        color: #667085;
+        opacity: 1;
+    }
+
+
+    .lost-found-search-input:hover {
+        border-color: #cbd5d0;
+        background: #fbfdfb;
+    }
+
+
+    .lost-found-search-input:focus {
+        border-color: #8ace79;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
+    }
 
 /* ==========================================================
    FILTER LABEL
@@ -4271,7 +4343,6 @@
 
 .lost-found-location-label {
     color: #98a2b3;
-   
 }
 
 
@@ -4758,3 +4829,76 @@
 }
 
 
+/*three dot menu*/
+
+.lostfound-post-menu {
+    position: relative;
+}
+
+.lostfound-post-menu-button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+    .lostfound-post-menu-button:hover {
+        background: #f3f4f6;
+    }
+
+.lostfound-post-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 180px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    display: none;
+    z-index: 1000;
+}
+
+.lostfound-post-menu.show .lostfound-post-dropdown {
+    display: block;
+}
+
+.lostfound-post-dropdown button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    background: transparent;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    text-align: left;
+}
+
+    .lostfound-post-dropdown button:hover {
+        background: #f3f4f6;
+    }
+
+.lostfound-post-dropdown .danger-action {
+    color: #C14B4B;
+    
+}
+
+    .lostfound-post-dropdown .danger-action:hover {
+        background: #fef2f2;
+    }
+
+.lostfound-menu-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 4px 0;
+}

@@ -5,48 +5,58 @@
 @foreach (var post in Model)
 {
     // ==========================================================
-    // PETFEED
+    // PET TIP
     // ==========================================================
-    // Regular PetFeed posts keep Paws and Comments for Members.
     @if (post.ContentType == PetFeedContentType.PetFeed)
     {
-        // Determine whether this post contains at least one image.
-        // This controls whether the card uses the image + text layout
-        // or allows the text to use the full card width.
         var hasImages = post.Images != null && post.Images.Any();
 
-        <article class="feed-card @(post.IsHighlighted ? "highlight-post" : "") @(hasImages ? "" : "feed-card-no-image")"
+        <article class="feed-item @(post.IsHighlighted ? "highlight-post" : "") @(hasImages ? "" : "feed-item-no-image")"
                  id="post-@post.PetFeedId">
 
             <!-- ==================================================
                  POST HEADER
                  ================================================== -->
 
-            <div class="feed-card-header">
+            <div class="feed-item-header">
 
-                <div class="feed-author">
+                <div class="feed-item-author">
 
-                    <!--
-                        PetFeed administrator posts use the PETHUB logo
-                        as the visible author identity.
-                    -->
                     <img src="~/images/PETHUB-LOGO.png"
-                         class="feed-author-image"
+                         class="feed-item-author-image"
                          alt="PETHUB" />
 
-                    <div class="feed-author-info">
+                    <div class="feed-item-author-info">
 
-                        <strong class="feed-author-name">
-                            PETHUB
-                        </strong>
+                        <div class="feed-item-author-name-row">
 
-                        <small class="feed-post-date">
-                            @post.DateCreated.ToString("MMM dd, yyyy")
-                        </small>
+                            <strong class="feed-item-author-name">
+                                PETHUB
+                            </strong>
+
+                            <i data-lucide="badge-check"
+                               class="feed-item-verified"
+                               aria-label="Verified PETHUB account"></i>
+
+                        </div>
+
+                        <div class="feed-item-meta">
+
+                            <span>
+                                @post.DateCreated.ToString("MMM dd, yyyy")
+                            </span>
+
+                        </div>
 
                     </div>
 
                 </div>
+
+                <!-- Pet Tip badge -->
+                <span class="feed-item-type-badge pet-tip-badge">
+                    <i data-lucide="lightbulb"></i>
+                    Pet Tip
+                </span>
 
             </div>
 
@@ -55,169 +65,219 @@
                  POST CONTENT
                  ================================================== -->
 
-            <div class="feed-card-content @(hasImages ? "" : "feed-card-content-no-image")">
+            <div class="feed-item-content @(hasImages ? "" : "feed-item-content-no-image")">
 
+                <div class="feed-item-text">
+
+                    <h3 class="feed-item-title">
+                        @post.Title
+                    </h3>
+
+                    <div class="feed-item-description-wrapper">
+
+                        <p class="feed-item-description">
+                            @post.Content
+                        </p>
+
+                        <button type="button"
+                                class="feed-item-see-more">
+                            See more
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     PET TIP IMAGE / PHOTO CAROUSEL
+                     ================================================== -->
                 @if (hasImages)
                 {
-                    <!--
-                        The media section only exists when the post has
-                        an image, preventing an empty image column.
-                    -->
-                    <div class="feed-media">
+                    var images = post.Images!.ToList();
+                    var photoCarouselId = $"petTipPhotos_{post.PetFeedId}";
 
-                        @{
-                            // Convert the PetFeed image collection into a list.
-                            // The list allows the view to check the number of
-                            // images and safely access each image.
-                            var images = post.Images!.ToList();
-                        }
+                    @if (images.Count == 1)
+                    {
+                        <div class="feed-item-media">
 
-                        @if (images.Count == 1)
-                        {
-                            <!--
-                                A single image is displayed as the main
-                                feed image.
-                            -->
                             <img src="@images[0].ImagePath"
-                                 class="feed-main-image"
-                                 alt="PetFeed image" />
-                        }
-                        else
-                        {
-                            <!--
-                                Multiple images use the four-image preview.
-                                Any images beyond four are represented by +N.
-                            -->
-                            <div class="feed-image-grid">
+                                 class="feed-item-main-image"
+                                 alt="Pet Tip image" />
 
-                                @foreach (var image in images.Take(4))
-                                {
-                                    <img src="@image.ImagePath"
-                                         class="feed-grid-image"
-                                         alt="PetFeed image" />
-                                }
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="@photoCarouselId"
+                             class="carousel slide feed-item-photo-carousel"
+                             data-bs-ride="false">
 
-                                @if (images.Count > 4)
+                            <div class="carousel-inner">
+
+                                @for (int imageIndex = 0;
+                                      imageIndex < images.Count;
+                                      imageIndex++)
                                 {
-                                    <div class="feed-more-images">
-                                        +@(images.Count - 4)
+                                    var image = images[imageIndex];
+
+                                    <div class="carousel-item @(imageIndex == 0 ? "active" : "")">
+
+                                        <div class="feed-item-media">
+
+                                            <img src="@image.ImagePath"
+                                                 class="feed-item-main-image"
+                                                 alt="Pet Tip image" />
+
+                                        </div>
+
                                     </div>
                                 }
 
                             </div>
-                        }
 
-                    </div>
+                            <button class="feed-item-photo-control feed-item-photo-prev"
+                                    type="button"
+                                    data-bs-target="#@photoCarouselId"
+                                    data-bs-slide="prev"
+                                    aria-label="Previous photo">
+
+                                <span class="feed-item-photo-control-icon">
+                                    <i data-lucide="chevron-left"></i>
+                                </span>
+
+                            </button>
+
+                            <button class="feed-item-photo-control feed-item-photo-next"
+                                    type="button"
+                                    data-bs-target="#@photoCarouselId"
+                                    data-bs-slide="next"
+                                    aria-label="Next photo">
+
+                                <span class="feed-item-photo-control-icon">
+                                    <i data-lucide="chevron-right"></i>
+                                </span>
+
+                            </button>
+
+                            <div class="feed-item-photo-counter">
+                                <i data-lucide="images"></i>
+                                <span>@images.Count</span>
+                            </div>
+
+                        </div>
+                    }
                 }
-
-
-                <!-- ==================================================
-                     TEXT CONTENT
-                     ================================================== -->
-
-                <div class="feed-text-content">
-
-                    <!--
-                        The CSS allows long titles to wrap instead of
-                        overflowing or being cut off.
-                    -->
-                    <h3 class="feed-title">
-                        @post.Title
-                    </h3>
-
-                    <p class="feed-description">
-                        @post.Content
-                    </p>
-
-                </div>
 
             </div>
 
 
             <!-- ==================================================
-                 PAW AREA
+                 PET TIP ACTIVITY
                  ================================================== -->
             @if (User.IsInRole("Member"))
             {
-                <!--
-                    Only Members receive the actual Paw controls.
-                    This matches the Member-only Paw controller action.
-                -->
-                <div class="feed-engagement">
+                <div class="feed-item-footer">
 
-                    <div class="feed-paw-count"
-                         data-paw-count-for="@post.PetFeedId">
+                    <div class="feed-item-activity-left">
+                        <form asp-action="@(post.IsPawed ? "Unpaw" : "Paw")"
+                              method="post"
+                              class="feed-item-action-form"
+                              data-paw-form
+                              data-is-pawed="@post.IsPawed.ToString().ToLower()"
+                              data-paw-url="@Url.Action("Paw", "PetFeeds")"
+                              data-unpaw-url="@Url.Action("Unpaw", "PetFeeds")">
 
-                        <span class="feed-paw-icon">
-                            🐾
-                        </span>
+                            @Html.AntiForgeryToken()
 
-                        <span data-paw-count-value>
-                            @post.PawCount
-                        </span>
+                            <input type="hidden"
+                                   name="id"
+                                   value="@post.PetFeedId" />
 
-                    </div>
+                            <input type="hidden"
+                                   name="feedSeed"
+                                   value="@ViewData["FeedSeed"]" />
 
-                    <form asp-action="@(post.IsPawed ? "Unpaw" : "Paw")"
-                          method="post"
-                          class="feed-action-form"
-                          data-paw-form
-                          data-is-pawed="@post.IsPawed.ToString().ToLower()">
+                            <button type="submit"
+                                    class="feed-item-button feed-item-paw-button @(post.IsPawed ? "active" : "")"
+                                    data-paw-button>
 
-                        @Html.AntiForgeryToken()
+                                <i data-lucide="paw-print"></i>
 
-                        <input type="hidden"
-                               name="id"
-                               value="@post.PetFeedId" />
+                                <span data-paw-count-for="@post.PetFeedId"
+                                      data-paw-count-value>
+                                    @post.PawCount
+                                </span>
 
-                        <!--
-                            Preserving the current feedSeed keeps the feed's
-                            random order stable if the AJAX request falls
-                            back to a normal form submit (e.g. JavaScript
-                            disabled or the fetch call fails).
-                        -->
-                        <input type="hidden"
-                               name="feedSeed"
-                               value="@ViewData["FeedSeed"]" />
+                            </button>
 
-                        <button type="submit"
-                                class="feed-action-button"
-                                data-paw-button>
+                        </form>
 
-                            @(post.IsPawed ? "Remove Paw" : "Paw")
+                        <button type="button"
+                                class="feed-item-button feed-item-comment-button"
+                                data-comment-toggle="@post.PetFeedId"
+                                aria-label="View comments">
+
+                            <i data-lucide="message-circle"></i>
+
+                            <span>
+                                @post.CommentCount
+                            </span>
 
                         </button>
 
-                    </form>
+                    </div>
+
+
+                    <button type="button"
+                            class="feed-item-button feed-item-save-button"
+                            aria-label="Save Pet Tip">
+
+                        <i data-lucide="heart"></i>
+
+                    </button>
 
                 </div>
             }
             else if (User.Identity?.IsAuthenticated != true)
             {
-                <!--
-                    Only anonymous visitors receive the login prompt.
-                    Authenticated Admins do not see this prompt.
-                -->
-                <div class="feed-engagement">
+                <div class="feed-item-footer">
 
-                    <div class="feed-paw-count">
+                    <div class="feed-item-activity-left">
 
-                        <span class="feed-paw-icon">
-                            🐾
-                        </span>
+                        <button type="button"
+                                class="feed-item-button feed-item-paw-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#loginModal"
+                                aria-label="Login to Paw">
 
-                        <span>
-                            @post.PawCount
-                        </span>
+                            <i data-lucide="paw-print"></i>
+
+                            <span>@post.PawCount</span>
+
+                        </button>
+
+                        <button type="button"
+                                class="feed-item-button feed-item-comment-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#loginModal"
+                                aria-label="Login to comment">
+
+                            <i data-lucide="message-circle"></i>
+
+                            <span>@post.CommentCount</span>
+
+                        </button>
 
                     </div>
 
                     <button type="button"
-                            class="feed-action-button"
+                            class="feed-item-button feed-item-save-button"
                             data-bs-toggle="modal"
-                            data-bs-target="#loginModal">
+                            data-bs-target="#loginModal"
+                            aria-label="Login to save">
 
-                        Paw
+                        <i data-lucide="bookmark"></i>
 
                     </button>
 
@@ -227,60 +287,57 @@
 
             <!-- ==================================================
                  COMMENTS
+                 Hidden until the comment icon is clicked.
                  ================================================== -->
 
-            <div class="feed-comments-section"
-                 data-comments-for="@post.PetFeedId">
+            <div class="feed-item-comments"
+                 data-comments-for="@post.PetFeedId"
+                 hidden>
 
-                <h6 class="feed-section-title">
-                    Comments
-                </h6>
+                <div class="feed-item-comments-header">
+
+                    <h6 class="feed-item-section-title">
+                        Comments
+                    </h6>
+
+                </div>
 
                 @if (post.Comments != null && post.Comments.Any())
                 {
-                    <div class="feed-comments-list"
+                    <div class="feed-item-comments-list"
                          data-comments-list>
 
                         @foreach (var comment in post.Comments)
                         {
-                            <div class="feed-comment"
+                            <div class="feed-item-comment"
                                  data-comment-id="@comment.CommentId">
 
-                                <div class="feed-comment-header">
+                                <div class="feed-item-comment-header">
 
-                                    <div class="feed-comment-author">
+                                    <div class="feed-item-comment-author">
 
-                                        <div class="feed-comment-avatar">
+                                        <div class="feed-item-comment-avatar">
 
-                                            @if (!string.IsNullOrEmpty(
-                                                comment.Member?.ProfilePicturePath))
+                                            @if (!string.IsNullOrEmpty(comment.Member?.ProfilePicturePath))
                                             {
-                                                <!--
-                                                    Display the member's profile
-                                                    picture when available.
-                                                -->
                                                 <img src="@comment.Member.ProfilePicturePath"
                                                      alt="Profile picture" />
                                             }
                                             else
                                             {
-                                                <!--
-                                                    Fall back to the member's
-                                                    first initial.
-                                                -->
                                                 @(comment.Member?.FirstName?.Substring(0, 1) ?? "?")
                                             }
 
                                         </div>
 
-                                        <div>
+                                        <div class="feed-item-comment-author-info">
 
-                                            <strong>
+                                            <strong class="feed-item-comment-name">
                                                 @comment.Member?.FirstName
                                                 @comment.Member?.LastName
                                             </strong>
 
-                                            <small>
+                                            <small class="feed-item-comment-date">
                                                 @comment.DatePosted.ToString("MMM dd, yyyy")
                                             </small>
 
@@ -288,19 +345,15 @@
 
                                     </div>
 
-
                                     @if (User.IsInRole("Admin") ||
-                                        comment.MemberId ==
-                                        User.FindFirst(
-                                            System.Security.Claims.ClaimTypes.NameIdentifier
-                                        )?.Value)
+                                         comment.MemberId ==
+                                         User.FindFirst(
+                                             System.Security.Claims.ClaimTypes.NameIdentifier
+                                         )?.Value)
                                     {
-                                        <!--
-                                            Admins can delete any comment.
-                                            Members can delete their own comments.
-                                        -->
                                         <form asp-action="DeleteComment"
                                               method="post"
+                                              class="feed-item-delete-form"
                                               data-delete-comment-form>
 
                                             @Html.AntiForgeryToken()
@@ -314,9 +367,10 @@
                                                    value="@ViewData["FeedSeed"]" />
 
                                             <button type="submit"
-                                                    class="feed-delete-comment">
+                                                    class="feed-item-button feed-item-delete-button"
+                                                    aria-label="Delete comment">
 
-                                                Delete
+                                                <i data-lucide="trash-2"></i>
 
                                             </button>
 
@@ -325,7 +379,7 @@
 
                                 </div>
 
-                                <p class="feed-comment-content">
+                                <p class="feed-item-comment-content">
                                     @comment.Content
                                 </p>
 
@@ -336,7 +390,7 @@
                 }
                 else
                 {
-                    <p class="feed-empty-comments"
+                    <p class="feed-item-empty-comments"
                        data-empty-comments>
                         No comments yet. Be the first to comment!
                     </p>
@@ -348,12 +402,9 @@
                      ================================================== -->
                 @if (User.IsInRole("Member"))
                 {
-                    <!--
-                        Only Members can add comments.
-                    -->
                     <form asp-action="AddComment"
                           method="post"
-                          class="feed-comment-form"
+                          class="feed-item-comment-form"
                           data-add-comment-form>
 
                         @Html.AntiForgeryToken()
@@ -366,16 +417,21 @@
                                name="feedSeed"
                                value="@ViewData["FeedSeed"]" />
 
-                        <textarea name="content"
-                                  class="feed-comment-input"
-                                  rows="2"
-                                  placeholder="Write a comment..."
-                                  data-comment-input></textarea>
+                        <div class="feed-item-comment-input-wrapper">
+
+                            <textarea name="content"
+                                      class="feed-item-comment-input"
+                                      rows="1"
+                                      placeholder="Write a comment..."
+                                      data-comment-input></textarea>
+
+                        </div>
 
                         <button type="submit"
-                                class="feed-comment-submit">
+                                class="feed-item-button feed-item-comment-submit"
+                                aria-label="Post comment">
 
-                            Comment
+                            <i data-lucide="send"></i>
 
                         </button>
 
@@ -383,15 +439,16 @@
                 }
                 else if (User.Identity?.IsAuthenticated != true)
                 {
-                    <!--
-                        Only anonymous visitors receive the login prompt.
-                    -->
                     <button type="button"
-                            class="feed-login-comment"
+                            class="feed-item-button feed-item-login-comment"
                             data-bs-toggle="modal"
                             data-bs-target="#loginModal">
 
-                        Login to comment
+                        <i data-lucide="log-in"></i>
+
+                        <span>
+                            Login to comment
+                        </span>
 
                     </button>
                 }
@@ -407,152 +464,210 @@
     // ==========================================================
     else if (post.ContentType == PetFeedContentType.Marketplace)
     {
-        // Check whether the Marketplace listing has images.
-        // If not, the text section expands to use the full card width.
         var hasImages = post.ImagePaths != null && post.ImagePaths.Any();
 
-        <article class="feed-card @(hasImages ? "" : "feed-card-no-image")"
+        <article class="feed-item @(hasImages ? "" : "feed-item-no-image")"
                  id="post-@post.ContentId">
 
-            <!-- POST HEADER -->
+            <!-- ==================================================
+                 POST HEADER
+                 ================================================== -->
 
-            <div class="feed-card-header">
+            <div class="feed-item-header">
 
-                <div class="feed-author">
+                <div class="feed-item-author">
 
                     @if (!string.IsNullOrEmpty(post.OwnerProfileImage))
                     {
-                        <!--
-                            Display the Marketplace member's profile picture.
-                        -->
                         <img src="@post.OwnerProfileImage"
-                             class="feed-author-image"
+                             class="feed-item-author-image"
                              alt="Post owner" />
                     }
                     else
                     {
-                        <!--
-                            Use the default profile picture when none exists.
-                        -->
                         <img src="~/images/default_profile.jpg"
-                             class="feed-author-image"
+                             class="feed-item-author-image"
                              alt="Post owner" />
                     }
 
-                    <div class="feed-author-info">
+                    <div class="feed-item-author-info">
 
-                        <strong class="feed-author-name">
+                        <strong class="feed-item-author-name">
                             @(string.IsNullOrWhiteSpace(post.OwnerName)
                                 ? "Unknown User"
                                 : post.OwnerName)
                         </strong>
 
-                        <small class="feed-post-date">
-                            @post.DateCreated.ToString("MMM dd, yyyy")
-                        </small>
+                        <div class="feed-item-meta">
+
+                            <span>
+                                @post.DateCreated.ToString("MMM dd, yyyy")
+                            </span>
+
+                            <span class="feed-item-meta-separator">
+                                ·
+                            </span>
+
+                            @if (post.ListingType.HasValue)
+                            {
+                                <span>
+                                    @post.ListingType
+                                </span>
+                            }
+
+                        </div>
 
                     </div>
 
                 </div>
+
+                <span class="feed-item-type-badge marketplace-badge">
+                    <i data-lucide="shopping-bag"></i>
+                    Marketplace
+                </span>
 
             </div>
 
 
-            <!-- MAIN CONTENT -->
+            <!-- ==================================================
+                 POST CONTENT
+                 ================================================== -->
 
-            <div class="feed-card-content @(hasImages ? "" : "feed-card-content-no-image")">
+            <div class="feed-item-content @(hasImages ? "" : "feed-item-content-no-image")">
 
+                <div class="feed-item-text">
+
+                    <h3 class="feed-item-title">
+                        @post.Title
+                    </h3>
+
+                    <div class="feed-item-description-wrapper">
+
+                        <p class="feed-item-description">
+                            @post.Content
+                        </p>
+
+                        <button type="button"
+                                class="feed-item-see-more">
+                            See more
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     MARKETPLACE IMAGE / PHOTO CAROUSEL
+                     ================================================== -->
                 @if (hasImages)
                 {
-                    <!--
-                        Only create the media section when images exist.
-                    -->
-                    <div class="feed-media">
+                    var images = post.ImagePaths!.ToList();
+                    var photoCarouselId = $"marketplacePhotos_{post.ContentId}";
 
-                        @{
-                            // Convert Marketplace image paths into a list.
-                            // The list is used to determine whether to show
-                            // one image or a multi-image preview.
-                            var images = post.ImagePaths!.ToList();
-                        }
+                    @if (images.Count == 1)
+                    {
+                        <div class="feed-item-media">
 
-                        @if (images.Count == 1)
-                        {
                             <img src="@images[0]"
-                                 class="feed-main-image"
+                                 class="feed-item-main-image"
                                  alt="Marketplace listing image" />
-                        }
-                        else
-                        {
-                            <div class="feed-image-grid">
 
-                                @foreach (var image in images.Take(4))
-                                {
-                                    <img src="@image"
-                                         class="feed-grid-image"
-                                         alt="Marketplace listing image" />
-                                }
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="@photoCarouselId"
+                             class="carousel slide feed-item-photo-carousel"
+                             data-bs-ride="false">
 
-                                @if (images.Count > 4)
+                            <div class="carousel-inner">
+
+                                @for (int imageIndex = 0;
+                                      imageIndex < images.Count;
+                                      imageIndex++)
                                 {
-                                    <div class="feed-more-images">
-                                        +@(images.Count - 4)
+                                    var image = images[imageIndex];
+
+                                    <div class="carousel-item @(imageIndex == 0 ? "active" : "")">
+
+                                        <div class="feed-item-media">
+
+                                            <img src="@image"
+                                                 class="feed-item-main-image"
+                                                 alt="Marketplace listing image" />
+
+                                        </div>
+
                                     </div>
                                 }
 
                             </div>
-                        }
 
-                    </div>
+                            <button class="feed-item-photo-control feed-item-photo-prev"
+                                    type="button"
+                                    data-bs-target="#@photoCarouselId"
+                                    data-bs-slide="prev"
+                                    aria-label="Previous photo">
+
+                                <span class="feed-item-photo-control-icon">
+                                    <i data-lucide="chevron-left"></i>
+                                </span>
+
+                            </button>
+
+                            <button class="feed-item-photo-control feed-item-photo-next"
+                                    type="button"
+                                    data-bs-target="#@photoCarouselId"
+                                    data-bs-slide="next"
+                                    aria-label="Next photo">
+
+                                <span class="feed-item-photo-control-icon">
+                                    <i data-lucide="chevron-right"></i>
+                                </span>
+
+                            </button>
+
+                            <div class="feed-item-photo-counter">
+                                <i data-lucide="images"></i>
+                                <span>@images.Count</span>
+                            </div>
+
+                        </div>
+                    }
                 }
 
+            </div>
 
-                <!-- MARKETPLACE TEXT -->
 
-                <div class="feed-text-content">
+            <!-- ==================================================
+                 MARKETPLACE ACTIONS
+                 ================================================== -->
 
-                    <span class="feed-type-badge marketplace-badge">
-                        Marketplace
-                    </span>
+            <div class="feed-item-actions">
 
-                    <h3 class="feed-title">
-                        @post.Title
-                    </h3>
+                <button type="button"
+                        class="feed-item-button feed-item-save-button"
+                        aria-label="Save marketplace listing">
 
-                    <p class="feed-description">
-                        @post.Content
-                    </p>
+                    <i data-lucide="heart"></i>
 
-                    @if (post.ListingType.HasValue)
-                    {
-                        <!--
-                            Display the listing type when available.
-                        -->
-                        <p class="feed-meta-detail">
+                </button>
 
-                            <strong>
-                                Type:
-                            </strong>
 
-                            @post.ListingType
+                @if (!string.IsNullOrWhiteSpace(post.DetailsUrl))
+                {
+                    <a href="@post.DetailsUrl"
+                       class="feed-item-button feed-item-details-button">
 
-                        </p>
-                    }
-
-                    @if (!string.IsNullOrWhiteSpace(post.DetailsUrl))
-                    {
-                        <!--
-                            Use the existing Marketplace details URL.
-                        -->
-                        <a href="@post.DetailsUrl"
-                           class="feed-details-button">
-
+                        <span>
                             View details
+                        </span>
 
-                        </a>
-                    }
+                        <i data-lucide="arrow-up-right"></i>
 
-                </div>
+                    </a>
+                }
 
             </div>
 
@@ -565,155 +680,317 @@
     // ==========================================================
     else if (post.ContentType == PetFeedContentType.LostFound)
     {
-        // Check whether the Lost & Found report has images.
-        // If not, the text section expands to use the full card width.
         var hasImages = post.ImagePaths != null && post.ImagePaths.Any();
 
-        <article class="feed-card @(hasImages ? "" : "feed-card-no-image")"
+        <article class="feed-item @(hasImages ? "" : "feed-item-no-image")"
                  id="post-@post.ContentId">
 
-            <!-- POST HEADER -->
+            <!-- ==================================================
+                 POST HEADER
+                 ================================================== -->
 
-            <div class="feed-card-header">
+            <div class="feed-item-header">
 
-                <div class="feed-author">
+                <div class="feed-item-author">
 
                     @if (!string.IsNullOrEmpty(post.OwnerProfileImage))
                     {
-                        <!--
-                            Display the report owner's profile picture.
-                        -->
                         <img src="@post.OwnerProfileImage"
-                             class="feed-author-image"
+                             class="feed-item-author-image"
                              alt="Post owner" />
                     }
                     else
                     {
-                        <!--
-                            Use the default profile picture when none exists.
-                        -->
                         <img src="~/images/default_profile.jpg"
-                             class="feed-author-image"
+                             class="feed-item-author-image"
                              alt="Post owner" />
                     }
 
-                    <div class="feed-author-info">
+                    <div class="feed-item-author-info">
 
-                        <strong class="feed-author-name">
+                        <strong class="feed-item-author-name">
                             @(string.IsNullOrWhiteSpace(post.OwnerName)
                                 ? "Unknown User"
                                 : post.OwnerName)
                         </strong>
 
-                        <small class="feed-post-date">
-                            @post.DateCreated.ToString("MMM dd, yyyy")
-                        </small>
+                        <div class="feed-item-meta">
+
+                            <span>
+                                @post.DateCreated.ToString("MMM dd, yyyy")
+                            </span>
+
+                            <span class="feed-item-meta-separator">
+                                ·
+                            </span>
+
+                            @if (post.LostFoundType.HasValue)
+                            {
+                                <span>
+                                    @post.LostFoundType
+                                </span>
+                            }
+
+                        </div>
 
                     </div>
 
                 </div>
+
+                <span class="feed-item-type-badge lost-found-badge">
+                    <i data-lucide="search"></i>
+                    Lost &amp; Found
+                </span>
 
             </div>
 
 
-            <!-- MAIN CONTENT -->
+            <!-- ==================================================
+                 POST CONTENT
+                 ================================================== -->
 
-            <div class="feed-card-content @(hasImages ? "" : "feed-card-content-no-image")">
+            <div class="feed-item-content @(hasImages ? "" : "feed-item-content-no-image")">
 
+                <div class="feed-item-text">
+
+                    <h3 class="feed-item-title">
+                        @post.Title
+                    </h3>
+
+                    <div class="feed-item-description-wrapper">
+
+                        <p class="feed-item-description">
+                            @post.Content
+                        </p>
+
+                        <button type="button"
+                                class="feed-item-see-more">
+                            See more
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     LOST & FOUND IMAGE / PHOTO CAROUSEL
+                     ================================================== -->
                 @if (hasImages)
                 {
-                    <!--
-                        Only create the media section when images exist.
-                    -->
-                    <div class="feed-media">
+                    var images = post.ImagePaths!.ToList();
+                    var photoCarouselId = $"lostFoundPhotos_{post.ContentId}";
 
-                        @{
-                            // Convert Lost & Found image paths into a list.
-                            // The list is used to determine whether to show
-                            // one image or a multi-image preview.
-                            var images = post.ImagePaths!.ToList();
-                        }
+                    @if (images.Count == 1)
+                    {
+                        <div class="feed-item-media">
 
-                        @if (images.Count == 1)
-                        {
                             <img src="@images[0]"
-                                 class="feed-main-image"
+                                 class="feed-item-main-image"
                                  alt="Lost and Found image" />
-                        }
-                        else
-                        {
-                            <div class="feed-image-grid">
 
-                                @foreach (var image in images.Take(4))
-                                {
-                                    <img src="@image"
-                                         class="feed-grid-image"
-                                         alt="Lost and Found image" />
-                                }
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="@photoCarouselId"
+                             class="carousel slide feed-item-photo-carousel"
+                             data-bs-ride="false">
 
-                                @if (images.Count > 4)
+                            <div class="carousel-inner">
+
+                                @for (int imageIndex = 0;
+                                      imageIndex < images.Count;
+                                      imageIndex++)
                                 {
-                                    <div class="feed-more-images">
-                                        +@(images.Count - 4)
+                                    var image = images[imageIndex];
+
+                                    <div class="carousel-item @(imageIndex == 0 ? "active" : "")">
+
+                                        <div class="feed-item-media">
+
+                                            <img src="@image"
+                                                 class="feed-item-main-image"
+                                                 alt="Lost and Found image" />
+
+                                        </div>
+
                                     </div>
                                 }
 
                             </div>
-                        }
 
-                    </div>
+                            <button class="feed-item-photo-control feed-item-photo-prev"
+                                    type="button"
+                                    data-bs-target="#@photoCarouselId"
+                                    data-bs-slide="prev"
+                                    aria-label="Previous photo">
+
+                                <span class="feed-item-photo-control-icon">
+                                    <i data-lucide="chevron-left"></i>
+                                </span>
+
+                            </button>
+
+                            <button class="feed-item-photo-control feed-item-photo-next"
+                                    type="button"
+                                    data-bs-target="#@photoCarouselId"
+                                    data-bs-slide="next"
+                                    aria-label="Next photo">
+
+                                <span class="feed-item-photo-control-icon">
+                                    <i data-lucide="chevron-right"></i>
+                                </span>
+
+                            </button>
+
+                            <div class="feed-item-photo-counter">
+                                <i data-lucide="images"></i>
+                                <span>@images.Count</span>
+                            </div>
+
+                        </div>
+                    }
                 }
 
+            </div>
 
-                <!-- LOST & FOUND TEXT -->
 
-                <div class="feed-text-content">
+            <!-- ==================================================
+                 LOST & FOUND ACTIONS
+                 ================================================== -->
 
-                    <span class="feed-type-badge lost-found-badge">
-                        Lost &amp; Found
-                    </span>
+            <div class="feed-item-actions">
 
-                    <h3 class="feed-title">
-                        @post.Title
-                    </h3>
+                <button type="button"
+                        class="feed-item-button feed-item-save-button"
+                        aria-label="Save Lost and Found report">
 
-                    <p class="feed-description">
-                        @post.Content
-                    </p>
+                    <i data-lucide="heart"></i>
 
-                    @if (post.LostFoundType.HasValue)
-                    {
-                        <!--
-                            Display whether the report is Lost or Found.
-                        -->
-                        <p class="feed-meta-detail">
+                
+                </button>
 
-                            <strong>
-                                Report:
-                            </strong>
 
-                            @post.LostFoundType
+                @if (!string.IsNullOrWhiteSpace(post.DetailsUrl))
+                {
+                    <a href="@post.DetailsUrl"
+                       class="feed-item-button feed-item-details-button">
 
-                        </p>
-                    }
-
-                    @if (!string.IsNullOrWhiteSpace(post.DetailsUrl))
-                    {
-                        <!--
-                            Use the existing Lost & Found details URL.
-                        -->
-                        <a href="@post.DetailsUrl"
-                           class="feed-details-button">
-
+                        <span>
                             View details
+                        </span>
 
-                        </a>
-                    }
+                        <i data-lucide="arrow-up-right"></i>
 
-                </div>
+                    </a>
+                }
 
             </div>
 
         </article>
     }
 }
+
+
+<!-- ==============================================================
+     PETFEED UI BEHAVIOR
+     - Lucide icon initialization
+     - See more / See less for all three feed types
+     - Comment thread toggle for Pet Tips
+     ============================================================== -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        /* ==========================================================
+           LUCIDE
+           ========================================================== */
+
+        if (typeof lucide !== "undefined") {
+            lucide.createIcons();
+        }
+
+
+        /* ==========================================================
+           SEE MORE / SEE LESS
+           Applies to Pet Tip, Marketplace, and Lost & Found.
+           ========================================================== */
+
+        document.querySelectorAll(".feed-item-description-wrapper")
+            .forEach(function (wrapper) {
+
+                const description =
+                    wrapper.querySelector(".feed-item-description");
+
+                const seeMore =
+                    wrapper.querySelector(".feed-item-see-more");
+
+                if (!description || !seeMore) {
+                    return;
+                }
+
+                /* Show See More only when the description actually
+                   exceeds the collapsed height. */
+
+                if (description.scrollHeight >
+                    description.clientHeight + 1) {
+
+                    seeMore.classList.add("show");
+                }
+
+
+                seeMore.addEventListener("click", function () {
+
+                    const isExpanded =
+                        description.classList.contains("expanded");
+
+                    if (isExpanded) {
+
+                        description.classList.remove("expanded");
+
+                        seeMore.textContent = "See more";
+
+                    }
+                    else {
+
+                        description.classList.add("expanded");
+
+                        seeMore.textContent = "See less";
+
+                    }
+
+                });
+
+            });
+
+
+        /* ==========================================================
+           PET TIP COMMENT THREAD TOGGLE
+           ========================================================== */
+
+        document.querySelectorAll("[data-comment-toggle]")
+            .forEach(function (button) {
+
+                button.addEventListener("click", function () {
+
+                    const postId =
+                        button.getAttribute("data-comment-toggle");
+
+                    const comments =
+                        document.querySelector(
+                            '[data-comments-for="' + postId + '"]'
+                        );
+
+                    if (!comments) {
+                        return;
+                    }
+
+                    comments.hidden = !comments.hidden;
+
+                });
+
+            });
+
+    });
+</script>

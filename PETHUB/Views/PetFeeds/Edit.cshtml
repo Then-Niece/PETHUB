@@ -131,14 +131,20 @@
                 </div>
 
 
-                <!-- RIGHT SIDE: PHOTOS -->
+                <!-- =================================================
+                     RIGHT SIDE: PHOTOS
+                ================================================== -->
+
                 <div class="col-lg-4">
 
                     <div class="petfeed-edit-photo-card">
 
                         <h5>Photos</h5>
 
-                        <!-- CURRENT IMAGES -->
+
+                        <!-- =================================================
+                             CURRENT IMAGES
+                        ================================================== -->
                         @if (Model.ExistingImages != null && Model.ExistingImages.Any())
                         {
                             <div class="petfeed-edit-current-images">
@@ -151,21 +157,24 @@
                                              alt="PetFeed image"
                                              class="petfeed-edit-image" />
 
-                                        <form asp-action="RemoveImage"
-                                              method="post">
+                                        <!--
+                                            IMPORTANT:
+                                            No nested form here.
+                                            The button uses formaction to call
+                                            RemoveImage while staying inside
+                                            the main Edit form.
+                                        -->
 
-                                            @Html.AntiForgeryToken()
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@img.PetFeedImageId" />
 
-                                            <input type="hidden"
-                                                   name="id"
-                                                   value="@img.PetFeedImageId" />
-
-                                            <button type="submit"
-                                                    class="petfeed-edit-remove-button">
-                                                Remove
-                                            </button>
-
-                                        </form>
+                                        <button type="submit"
+                                                formaction="@Url.Action("RemoveImage")"
+                                                formmethod="post"
+                                                class="petfeed-edit-remove-button">
+                                            Remove
+                                        </button>
 
                                     </div>
                                 }
@@ -173,7 +182,11 @@
                             </div>
                         }
 
-                        <!-- ADD MORE IMAGES -->
+
+                        <!-- =================================================
+                             ADD MORE IMAGES
+                        ================================================== -->
+
                         <div class="petfeed-edit-upload">
 
                             <input asp-for="Images"
@@ -189,7 +202,11 @@
 
                         </div>
 
-                        <!-- NEW IMAGE PREVIEWS -->
+
+                        <!-- =================================================
+                             NEW IMAGE PREVIEWS
+                        ================================================== -->
+
                         <div id="imagePreviewContainer"
                              class="petfeed-edit-preview-grid">
                         </div>
@@ -197,6 +214,9 @@
                     </div>
 
                 </div>
+
+            </div>
+
 
             <!-- =====================================================
                  BOTTOM ACTIONS

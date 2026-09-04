@@ -97,19 +97,24 @@
     <div class="lost-found-filter-bar">
 
 
-        <!-- =====================================================
-             FILTER LABEL
-        ====================================================== -->
+        <!-- SEARCH -->
+        <form method="get" class="lost-found-search">
 
-        <div class="lost-found-filter-label">
+            <div class="lost-found-search-wrapper">
 
-            <i data-lucide="sliders-horizontal"></i>
+                <i data-lucide="search"
+                   class="lost-found-search-icon"></i>
 
-            <span>
-                Filters
-            </span>
+                <input type="text"
+                       name="search"
+                       value="@Context.Request.Query["search"]"
+                       class="lost-found-search-input"
+                       placeholder="Search reports..." />
 
-        </div>
+            </div>
+
+        </form>
+
 
 
 

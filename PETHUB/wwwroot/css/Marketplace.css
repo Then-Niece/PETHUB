@@ -1376,6 +1376,20 @@
         stroke-width: 2;
     }
 
+.listing-actions .listing-message-form {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+    .listing-actions .listing-message-form .listing-message-btn {
+        display: flex !important;
+        width: 100% !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
 
 /* ==========================================================
    FAVORITE BUTTON
@@ -5235,6 +5249,74 @@
         font-weight: 700;
     }
 
+
+/* ==========================================================
+   MARKETPLACE SEARCH
+========================================================== */
+
+.marketplace-search {
+    flex: 1;
+    min-width: 260px;
+}
+
+
+.marketplace-search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+
+.marketplace-search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 17px;
+    height: 17px;
+    color: #344054;
+    stroke-width: 2;
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+.marketplace-search-input {
+    width: 100%;
+    min-width: 260px;
+    height: 44px;
+    /* Space for the search icon */
+    padding: 0 16px 0 40px;
+    /* Same rounded style as filters */
+    border: 1px solid #dfe5e2;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #344054;
+    font-family: inherit;
+    font-size: 0.79rem;
+    font-weight: 500;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+    .marketplace-search-input::placeholder {
+        color: #667085;
+        opacity: 1;
+    }
+
+
+    .marketplace-search-input:hover {
+        border-color: #cbd5d0;
+        background: #fbfdfb;
+    }
+
+
+    .marketplace-search-input:focus {
+        border-color: #8ace79;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
+    }
 
 
 /* ==========================================================

@@ -1,1033 +1,2114 @@
-﻿/*
-    ==========================================================
-    PETHUB FEED CARD STYLES
-    ==========================================================
-
-    This stylesheet controls the normal PetFeed cards and the
-    administrator announcement carousel.
-
-    IMPORTANT:
-    The normal PetFeed cards and announcement carousel use
-    separate class names so changes to one do not affect the other.
-*/
+﻿/* ==========================================================
+   PETHUB PETFEED
+   FEED ITEM CARDS
+   ========================================================== */
 
 
-/*
-    ==========================================================
-    BASE FEED CARD
-    ==========================================================
-*/
+/* ==========================================================
+   FEED CONTAINER
+   ========================================================== */
 
-.feed-card {
+.feed-container {
     width: 100%;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 20px;
-    overflow: hidden;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 0 50px;
+    box-sizing: border-box;
 }
 
 
-    /*
-    Highlighted PetFeed posts keep their existing highlight class.
-*/
+/* ==========================================================
+   FEED CARDS: PET TIP / MARKETPLACE / LOST & FOUND
+   ========================================================== */
 
-    .feed-card.highlight-post {
-        border-width: 2px;
+/* ==========================================================
+   UPDATED PETFEED CARD UI
+   Matches the Announcement card structure/spacing.
+   Announcement green border remains announcement-only.
+   ========================================================== */
+
+
+/* ==========================================================
+   COMMON FEED CARDS
+   ========================================================== */
+
+.feed-item {
+    width: 100%;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+    .feed-item:hover {
+        border-color: #dfe4e1;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Keep highlighted PetFeed posts neutral.
+   Green borders are reserved for announcements. */
+    .feed-item.highlight-post {
+        border-color: #e5e7eb;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
     }
 
 
-/*
-    ==========================================================
-    POST HEADER
-    ==========================================================
-*/
+/* ==========================================================
+   COMMON FEED HEADER
+   ========================================================== */
 
-.feed-card-header {
+.feed-item-header {
     display: flex;
-    align-items: center;
-    padding: 20px 22px 12px;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px 10px;
 }
 
-.feed-author {
+.feed-item-author {
     display: flex;
     align-items: center;
+    gap: 11px;
     min-width: 0;
 }
 
-.feed-author-image {
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
-    border-radius: 50%;
+.feed-item-author-image {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
     object-fit: cover;
+    border-radius: 50%;
     border: 1px solid #e5e7eb;
+    background: #f8faf8;
 }
 
-.feed-author-info {
+.feed-item-author-info {
+    min-width: 0;
+    margin-left: 0;
+}
+
+.feed-item-author-name-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+    line-height: 1.2;
+}
+
+.feed-item-author-name {
+    margin: 0;
+    color: #2D3748;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.feed-item-verified {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: #76B968;
+    stroke-width: 2.4;
+}
+
+    .feed-item-verified svg {
+        width: 16px;
+        height: 16px;
+        stroke-width: 2.4;
+    }
+
+.feed-item-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 3px;
+    color: #718096;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.feed-item-meta-separator {
+    color: #A0AEC0;
+}
+
+
+/* ==========================================================
+   RIGHT-SIDE TYPE BADGES
+   ========================================================== */
+
+.feed-item-type-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    flex-shrink: 0;
+    min-height: 30px;
+    padding: 7px 13px;
+    margin: 0;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+    .feed-item-type-badge svg {
+        width: 14px;
+        height: 14px;
+        stroke-width: 2.2;
+    }
+
+    /* Pet Tip */
+    .feed-item-type-badge.pet-tip-badge {
+        background: #E8F1FF;
+        border: 1px solid #B8D4FF;
+        color: #2563EB;
+    }
+
+    /* Marketplace */
+    .feed-item-type-badge.marketplace-badge {
+        background: #EAF7E6;
+        border: 1px solid #BFE3B8;
+        color: #4F9D45;
+    }
+
+    /* Lost & Found */
+    .feed-item-type-badge.lost-found-badge {
+        background: #FDECEC;
+        border: 1px solid #F5B5B5;
+        color: #D64545;
+    }
+
+
+/* ==========================================================
+   FEED CONTENT
+   ========================================================== */
+
+.feed-item-content {
     display: flex;
     flex-direction: column;
-    min-width: 0;
-    margin-left: 12px;
 }
 
-.feed-author-name {
+.feed-item-text {
+    order: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 24px 20px;
+}
+
+.feed-item-media {
+    order: 2;
+    position: relative;
+    width: calc(100% - 48px);
+    height: 360px;
+    margin: 0 24px 20px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #F7F8F9;
+}
+
+.feed-item-main-image {
     display: block;
-    max-width: 100%;
-    color: #1f2937;
-    font-size: 16px;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: cover;
+    background: #F7F8F9;
+}
+
+.feed-item-content-no-image .feed-item-text {
+    padding-bottom: 20px;
+}
+
+.feed-item-title {
+    margin: 0 0 4px;
+    color: #2D3748;
+    font-size: 26px;
+    font-weight: 750;
     line-height: 1.3;
+    letter-spacing: -0.015em;
+}
+
+.feed-item-description {
+
+    color: #4A5568;
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-line;
     overflow-wrap: anywhere;
 }
 
-.feed-post-date {
-    margin-top: 3px;
-    color: #6b7280;
-    font-size: 13px;
+
+.feed-item-description-wrapper {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+.feed-item-content .feed-item-title {
+    margin: 0 0 4px;
+}
+
+.feed-item-content .feed-item-description {
+    margin: 0;
 }
 
 
-/*
-    ==========================================================
-    MAIN CARD CONTENT
-    ==========================================================
 
-    The normal PetFeed uses a Facebook-style vertical layout.
+/* ==========================================================
+   PET TIP SEE MORE
+   ========================================================== */
 
-    Instead of placing the image beside the text, the content
-    is arranged vertically so the post reads naturally:
+.feed-item-description-wrapper {
+    position: relative;
+}
 
-        Badge
-          ↓
-        Title
-          ↓
-        Description
-          ↓
-        Image
+    .feed-item-description-wrapper .feed-item-description {
+        max-height: 71px;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+    }
 
-    This only affects normal .feed-card elements.
-*/
+        .feed-item-description-wrapper .feed-item-description.expanded {
+            max-height: 2000px;
+        }
 
-.feed-card-content {
-    display: flex;
-    flex-direction: column;
+.feed-item-see-more {
+    display: none;
+    margin-top: 5px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: #4D8F45;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+    .feed-item-see-more.show {
+        display: inline-block;
+    }
+
+    .feed-item-see-more:hover {
+        color: #3F7839;
+        text-decoration: underline;
+    }
+
+
+/* ==========================================================
+   IMAGE GRID
+   Keep multiple-image support, but make the whole image area
+   use the same rounded rectangular shape as Announcement.
+   ========================================================== */
+
+.feed-item-image-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     width: 100%;
-    padding: 8px 0 0;
+    height: 100%;
+    aspect-ratio: auto;
+    gap: 2px;
+    overflow: hidden;
+    background: #f1f3f2;
 }
 
-
-/*
-    ==========================================================
-    TEXT CONTENT
-    ==========================================================
-
-    The text is displayed before the image to follow the
-    traditional social-media / Facebook-style feed structure.
-*/
-
-.feed-text-content {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    width: 100%;
-    padding: 8px 22px 16px;
-}
-
-
-/*
-    ==========================================================
-    MEDIA
-    ==========================================================
-
-    Images occupy the full available card width.
-
-    object-fit: cover
-        Keeps the existing image presentation while preventing
-        distortion.
-
-    max-width: 100%
-        Prevents an image from extending outside the card.
-*/
-
-.feed-media {
-    width: 100%;
-    min-width: 0;
-    order: 2;
-}
-
-.feed-main-image {
+.feed-item-grid-image {
     display: block;
     width: 100%;
-    max-width: 100%;
-    height: 420px;
-    border-radius: 0;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
     object-fit: cover;
 }
 
-
-/*
-    ==========================================================
-    MULTI-IMAGE GRID
-    ==========================================================
-*/
-
-.feed-image-grid {
-    position: relative;
-    display: grid;
-    width: 100%;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(2, 210px);
-    gap: 4px;
-    overflow: hidden;
-    border-radius: 0;
+.feed-item-more-images {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 34px;
+    padding: 0 11px;
+    border-radius: 999px;
+    background: rgba(32, 36, 40, 0.78);
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
 }
 
-.feed-grid-image {
+
+/* ==========================================================
+   SHARED PHOTO CAROUSEL
+   Used by Pet Tip, Marketplace, and Lost & Found.
+   Same image shape as Announcement.
+   ========================================================== */
+
+.feed-item-photo-carousel {
+    position: relative;
+    order: 2;
+    width: calc(100% - 48px);
+    height: 360px;
+    margin: 0 24px 20px;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #F7F8F9;
+}
+
+    .feed-item-photo-carousel .carousel-inner,
+    .feed-item-photo-carousel .carousel-item {
+        width: 100%;
+        height: 100%;
+    }
+
+    .feed-item-photo-carousel .carousel-item {
+        position: relative;
+    }
+
+    .feed-item-photo-carousel .feed-item-media {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border-radius: 0;
+        overflow: hidden;
+    }
+
+    .feed-item-photo-carousel .feed-item-main-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+/* Photo controls sit ON the image. */
+.feed-item-photo-control {
+    position: absolute;
+    top: 50%;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    opacity: 1;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .feed-item-photo-control:hover {
+        background: #FFFFFF;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+    }
+
+.feed-item-photo-prev {
+    left: 14px;
+}
+
+.feed-item-photo-next {
+    right: 14px;
+}
+
+.feed-item-photo-control-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feed-item-photo-control svg {
+    width: 21px;
+    height: 21px;
+    color: #2D3748;
+    stroke-width: 2.3;
+}
+
+/* Photo count sits on the lower-right of the image. */
+.feed-item-photo-counter {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: rgba(0, 0, 0, 0.58);
+    color: #FFFFFF;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+    .feed-item-photo-counter svg {
+        width: 14px;
+        height: 14px;
+        stroke-width: 2;
+    }
+
+/* ==========================================================
+   PET TIP FOOTER
+   Left: paw count + comment count
+   Right: save
+   ========================================================== */
+
+.feed-item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 24px 15px;
+    border-top: 1px solid #F0F1F2;
+}
+
+.feed-item-activity-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+}
+
+.feed-item-activity-item,
+.feed-item-comment-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 0;
+    padding: 5px 0;
+    border: none;
+    background: transparent;
+    color: #68737D;
+    font-size: 0.82rem;
+    line-height: 1;
+}
+
+.feed-item-comment-count {
+    cursor: pointer;
+}
+
+    .feed-item-comment-count:hover {
+        color: #4D8F45;
+    }
+
+    .feed-item-activity-item svg,
+    .feed-item-comment-count svg {
+        width: 18px;
+        height: 18px;
+        stroke-width: 2;
+    }
+
+
+/* ==========================================================
+   ACTION BUTTONS
+   ========================================================== */
+
+.feed-item-action-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.feed-item-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 5px 9px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #68737D;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+    .feed-item-button:hover {
+        background: #F3F6F3;
+        color: #4D8F45;
+    }
+
+    .feed-item-button:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    .feed-item-button svg {
+        width: 18px;
+        height: 18px;
+        stroke-width: 2;
+    }
+
+.feed-item-paw-button:hover,
+.feed-item-paw-button.active {
+    color: #4D8F45;
+    background: #F0F8EE;
+}
+
+.feed-item-save-button {
+    margin-left: auto;
+}
+
+    .feed-item-save-button:hover {
+        color: #4D8F45;
+    }
+
+
+/* ==========================================================
+   COMMENTS
+   Hidden until the Pet Tip comment icon is clicked.
+   ========================================================== */
+
+.feed-item-comments[hidden] {
+    display: none !important;
+}
+
+.feed-item-comments {
+    padding: 16px 24px 20px;
+    border-top: 1px solid #F0F1F2;
+}
+
+.feed-item-comments-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.feed-item-section-title {
+    margin: 0;
+    color: #30363B;
+    font-size: 0.88rem;
+    font-weight: 650;
+}
+
+.feed-item-comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 340px;
+    overflow-y: auto;
+    padding-right: 3px;
+    scrollbar-width: none;
+}
+
+    .feed-item-comments-list::-webkit-scrollbar {
+        display: none;
+    }
+
+
+/* ==========================================================
+   INDIVIDUAL COMMENT
+   ========================================================== */
+
+.feed-item-comment {
+    padding: 11px 12px;
+    border-radius: 12px;
+    background: #F7F9F7;
+}
+
+.feed-item-comment-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.feed-item-comment-author {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.feed-item-comment-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #DFEEDD;
+    color: #4D8F45;
+    font-size: 0.78rem;
+    font-weight: 650;
+}
+
+    .feed-item-comment-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.feed-item-comment-author-info {
+    min-width: 0;
+    margin-left: 9px;
+}
+
+.feed-item-comment-name {
+    display: block;
+    color: #343A40;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.feed-item-comment-date {
+    display: block;
+    margin-top: 2px;
+    color: #8A949C;
+    font-size: 0.7rem;
+    line-height: 1.3;
+}
+
+.feed-item-comment-content {
+    margin: 8px 0 0 43px;
+    color: #59636D;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   DELETE COMMENT
+   ========================================================== */
+
+.feed-item-delete-form {
+    margin-left: auto;
+}
+
+.feed-item-delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #8B949B;
+    cursor: pointer;
+}
+
+    .feed-item-delete-button:hover {
+        background: #FFF0F0;
+        color: #C94B4B;
+    }
+
+    .feed-item-delete-button svg {
+        width: 15px;
+        height: 15px;
+    }
+
+
+/* ==========================================================
+   EMPTY COMMENTS
+   ========================================================== */
+
+.feed-item-empty-comments {
+    margin: 0 0 14px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #F7F9F7;
+    color: #8A949C;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+
+/* ==========================================================
+   COMMENT FORM
+   ========================================================== */
+
+.feed-item-comment-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.feed-item-comment-input-wrapper {
+    display: flex;
+    align-items: flex-end;
+    flex: 1;
+    min-width: 0;
+    gap: 8px;
+}
+
+.feed-item-comment-input {
+    display: block;
+    width: 100%;
+    min-height: 42px;
+    max-height: 120px;
+    padding: 10px 12px;
+    resize: vertical;
+    border: 1px solid #DFE4E1;
+    border-radius: 12px;
+    background: #FFFFFF;
+    color: #30363B;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    box-sizing: border-box;
+}
+
+    .feed-item-comment-input::placeholder {
+        color: #9AA2A9;
+    }
+
+    .feed-item-comment-input:focus {
+        outline: none;
+        border-color: #8ACE79;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
+    }
+
+.feed-item-comment-submit {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    padding: 0;
+    border-radius: 12px;
+    background: #8ACE79;
+    color: #FFFFFF;
+}
+
+    .feed-item-comment-submit:hover {
+        background: #76B968;
+        color: #FFFFFF;
+    }
+
+    .feed-item-comment-submit:active {
+        transform: scale(0.96);
+    }
+
+    .feed-item-comment-submit svg {
+        width: 17px;
+        height: 17px;
+    }
+
+
+/* ==========================================================
+   LOGIN TO COMMENT
+   ========================================================== */
+
+.feed-item-login-comment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 14px;
+    border: 1px solid #DFE4E1;
+    border-radius: 12px;
+    background: #F8FAF8;
+    color: #4D8F45;
+}
+
+
+/* ==========================================================
+   MARKETPLACE / LOST & FOUND ACTIONS
+   Right aligned: Favorites + View details
+   ========================================================== */
+
+.feed-item-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin: 0;
+    padding: 11px 24px 15px;
+    border-top: 1px solid #F0F1F2;
+}
+
+.feed-item-actions-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+}
+
+.feed-item-actions .feed-item-save-button {
+    width: 38px;
+    height: 38px;
+    min-height: 38px;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #8ACE79;
+    border-radius: 50%;
+    background: #FFFFFF;
+    color: #8ACE79;
+    cursor: pointer;
+}
+
+    .feed-item-actions .feed-item-save-button:hover {
+        background: #F3F9F2;
+        color: #6FB965;
+    }
+
+    .feed-item-actions .feed-item-save-button.active {
+        background: #8ACE79;
+        color: #FFFFFF;
+    }
+
+    .feed-item-actions .feed-item-save-button svg {
+        width: 18px;
+        height: 18px;
+    }
+
+.feed-item-details-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 38px;
+    padding: 9px 20px;
+    border: none;
+    border-radius: 999px;
+    background: #8ACE79;
+    color: #FFFFFF;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .feed-item-details-button:hover {
+        background: #6FB965;
+        color: #FFFFFF;
+    }
+
+    .feed-item-details-button svg {
+        width: 15px;
+        height: 15px;
+    }
+
+
+/* ==========================================================
+   RESPONSIVE OVERRIDES
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    .feed-item {
+        border-radius: 18px;
+    }
+
+    .feed-item-header {
+        padding: 18px 20px 10px;
+    }
+
+    .feed-item-text {
+        padding: 8px 20px 18px;
+    }
+
+    .feed-item-media {
+        width: calc(100% - 40px);
+        height: 320px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .feed-item-title {
+        font-size: 23px;
+    }
+
+    .feed-item-description {
+        font-size: 14px;
+    }
+
+    .feed-item-footer,
+    .feed-item-actions {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .feed-item-comments {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .feed-item-type-badge {
+        padding: 6px 11px;
+        font-size: 10px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .feed-item {
+        border-radius: 18px;
+    }
+
+    .feed-item-header {
+        gap: 10px;
+    }
+
+    .feed-item-author-image {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+
+    .feed-item-author-name {
+        font-size: 14px;
+    }
+
+    .feed-item-type-badge {
+        padding: 6px 10px;
+        font-size: 10px;
+    }
+
+        .feed-item-type-badge svg {
+            width: 13px;
+            height: 13px;
+        }
+
+    .feed-item-title {
+        font-size: 21px;
+    }
+
+    .feed-item-description {
+        font-size: 13.5px;
+    }
+
+    .feed-item-media {
+        height: 280px;
+    }
+
+    .feed-item-footer,
+    .feed-item-actions {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .feed-item {
+        border-radius: 15px;
+    }
+
+    .feed-item-header {
+        padding: 16px 16px 8px;
+    }
+
+    .feed-item-text {
+        padding: 8px 16px 16px;
+    }
+
+    .feed-item-author-image {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+
+    .feed-item-author-name {
+        font-size: 14px;
+    }
+
+    .feed-item-meta {
+        font-size: 12px;
+    }
+
+    .feed-item-type-badge {
+        max-width: 48%;
+        padding: 6px 9px;
+        font-size: 9px;
+    }
+
+    .feed-item-media {
+        width: calc(100% - 32px);
+        height: 230px;
+        margin-left: 16px;
+        margin-right: 16px;
+        border-radius: 15px;
+    }
+
+    .feed-item-title {
+        font-size: 20px;
+    }
+
+    .feed-item-description {
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .feed-item-footer,
+    .feed-item-actions {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .feed-item-activity-left {
+        gap: 12px;
+    }
+
+    .feed-item-activity-item,
+    .feed-item-comment-count,
+    .feed-item-button,
+    .feed-item-details-button {
+        font-size: 0.76rem;
+    }
+
+    .feed-item-comments {
+        padding: 13px 16px 16px;
+    }
+
+    .feed-item-comment {
+        padding: 10px;
+    }
+
+    .feed-item-comment-content {
+        margin-left: 0;
+    }
+
+    .feed-item-comment-form {
+        gap: 6px;
+    }
+
+    .feed-item-comment-input-wrapper {
+        gap: 6px;
+    }
+
+    .feed-item-comment-submit {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+}
+
+/* =========================================================
+   PETHUB ANNOUNCEMENTS
+   ========================================================= */
+
+.feed-announcements {
+    width: 100%;
+    max-width: 720px;
+    margin: 20px auto 28px;
+}
+
+
+/* =========================================================
+   ANNOUNCEMENT CARD
+   ========================================================= */
+
+.announcement-card {
+    position: relative;
+    width: 100%;
+    background: #FFFFFF;
+    border: 2px solid #BFE3B8;
+    border-top: 4px solid #8ACE79;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(138, 206, 121, 0.12);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+    .announcement-card:hover {
+        border-color: #A9D99F;
+        box-shadow: 0 5px 18px rgba(138, 206, 121, 0.16);
+    }
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.announcement-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px 10px;
+}
+
+
+/* =========================================================
+   AUTHOR
+   ========================================================= */
+
+.announcement-author {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+}
+
+.announcement-author-image {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid #E5E7EB;
+}
+
+.announcement-author-info {
+    min-width: 0;
+}
+
+.announcement-author-name-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    line-height: 1.2;
+}
+
+.announcement-author-name {
+    color: #2D3748;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.announcement-verified {
+    width: 16px;
+    height: 16px;
+    color: #76B968;
+    stroke-width: 2.4;
+}
+
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+.announcement-meta {
+    display: flex;
+    align-items: center;
+    margin-top: 3px;
+    color: #718096;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   ANNOUNCEMENT BADGE
+   ========================================================= */
+
+.announcement-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+    padding: 7px 13px;
+    background: #8ACE79;
+    color: #FFFFFF;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+    .announcement-type svg {
+        width: 14px;
+        height: 14px;
+        stroke-width: 2.2;
+    }
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.announcement-card-content {
+    padding: 8px 24px 20px;
+}
+
+.announcement-title {
+    margin: 0 0 10px;
+    color: #2D3748;
+    font-size: 26px;
+    font-weight: 750;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.announcement-description-wrapper {
+    position: relative;
+}
+
+.announcement-description {
+    margin: 0;
+    color: #4A5568;
+    font-size: 14px;
+    line-height: 1.7;
+    /*
+       Approx. 3 lines.
+       JavaScript checks if the content overflows.
+    */
+    max-height: 71px;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+}
+
+    .announcement-description.expanded {
+        max-height: 2000px;
+    }
+
+
+/* =========================================================
+   SEE MORE
+   ========================================================= */
+
+.announcement-see-more {
+    display: none;
+    margin-top: 5px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: #4D8F45;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+    .announcement-see-more.show {
+        display: inline-block;
+    }
+
+    .announcement-see-more:hover {
+        color: #3F7839;
+        text-decoration: underline;
+    }
+
+
+/* =========================================================
+   IMAGE AREA
+   ========================================================= */
+
+.announcement-media {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    margin: 0;
+    background: #F7F8F9;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.announcement-image {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.feed-more-images {
+
+/* =========================================================
+   PHOTO CAROUSEL
+   ========================================================= */
+
+.announcement-photo-carousel {
+    position: relative;
+    width: calc(100% - 48px);
+    margin: 0 24px 20px;
+}
+
+    .announcement-photo-carousel .carousel-inner {
+        width: 100%;
+    }
+
+    .announcement-photo-carousel .carousel-item {
+        width: 100%;
+    }
+
+
+/* =========================================================
+   PHOTO CAROUSEL CONTROLS
+   ========================================================= */
+
+.announcement-photo-control {
     position: absolute;
-    right: 12px;
-    bottom: 12px;
+    top: 50%;
+    width: 42px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 48px;
-    min-height: 36px;
-    padding: 6px 12px;
-    border-radius: 18px;
-    background: rgba(0, 0, 0, 0.7);
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 700;
+    padding: 0;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    opacity: 1;
+    z-index: 5;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .announcement-photo-control:hover {
+        background: #FFFFFF;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+    }
+
+.announcement-photo-prev {
+    left: 14px;
+}
+
+.announcement-photo-next {
+    right: 14px;
+}
+
+.announcement-photo-control-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.announcement-photo-control svg {
+    width: 21px;
+    height: 21px;
+    color: #2D3748;
+    stroke-width: 2.3;
 }
 
 
-/*
-    ==========================================================
-    FEED TITLE
-    ==========================================================
-*/
+/* =========================================================
+   PHOTO COUNTER
+   ========================================================= */
 
-.feed-title {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 0 12px;
-    color: #111827;
-    font-size: 25px;
-    line-height: 1.25;
-    font-weight: 700;
-    /*
-        Normal titles can wrap naturally.
-
-        overflow-wrap and word-break prevent unusually long
-        strings from forcing the card wider than its container.
-    */
-    white-space: normal;
-    overflow: visible;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-}
-
-
-/*
-    ==========================================================
-    FEED DESCRIPTION
-    ==========================================================
-*/
-
-.feed-description {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    color: #374151;
-    font-size: 16px;
-    line-height: 1.7;
-    /*
-        Preserve line breaks entered by the user while still
-        allowing long text to wrap inside the card.
-    */
-    white-space: pre-line;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-}
-
-
-/*
-    ==========================================================
-    TYPE BADGES
-    ==========================================================
-
-    These are intentionally scoped to normal PetFeed cards.
-
-    width: fit-content
-        Prevents Marketplace / Lost & Found badges from stretching
-        across the entire card.
-*/
-
-.feed-type-badge {
+.announcement-photo-counter {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
     display: inline-flex;
     align-items: center;
-    align-self: flex-start;
-    width: fit-content;
-    max-width: 100%;
-    flex-shrink: 0;
-    padding: 6px 12px;
-    margin-bottom: 12px;
-    border-radius: 20px;
+    gap: 6px;
+    padding: 6px 10px;
+    background: rgba(0, 0, 0, 0.58);
+    color: #FFFFFF;
+    border-radius: 999px;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 600;
+    z-index: 5;
 }
 
-.marketplace-badge {
-    background: #eaf7e7;
-    color: #398f32;
-}
-
-.lost-found-badge {
-    background: #fff4d6;
-    color: #8a6500;
-}
+    .announcement-photo-counter svg {
+        width: 14px;
+        height: 14px;
+        stroke-width: 2;
+    }
 
 
-/*
-    ==========================================================
-    META INFORMATION
-    ==========================================================
-*/
+/* =========================================================
+   NO IMAGE
+   ========================================================= */
 
-.feed-meta-detail {
-    margin: 16px 0 0;
-    color: #4b5563;
-    font-size: 14px;
-    overflow-wrap: anywhere;
-}
-
-
-/*
-    ==========================================================
-    DETAILS BUTTON
-    ==========================================================
-
-    The normal PetFeed details button remains compact.
-
-    It is aligned to the lower-right of the text section rather
-    than stretching across the entire card.
-*/
-
-.feed-details-button {
-    display: inline-flex;
+.announcement-no-image {
+    display: flex;
     align-items: center;
     justify-content: center;
-    align-self: flex-end;
-    width: fit-content;
-    max-width: 100%;
-    flex-shrink: 0;
-    margin-top: 18px;
-    padding: 9px 18px;
-    border: 1px solid #8ACE79;
-    border-radius: 22px;
-    background: #ffffff;
-    color: #398f32;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: 0.2s ease;
+    border: 1px dashed #D9DEE3;
+    background: #F8FAF9;
 }
 
-    .feed-details-button:hover {
-        background: #eaf7e7;
-        color: #398f32;
-    }
-
-
-/*
-    ==========================================================
-    PAW / ENGAGEMENT
-    ==========================================================
-*/
-
-.feed-engagement {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 22px 20px;
-}
-
-.feed-paw-count {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    color: #4b5563;
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.feed-paw-icon {
-    font-size: 20px;
-}
-
-.feed-action-form {
-    margin: 0;
-}
-
-.feed-action-button {
-    border: 1px solid #8ACE79;
-    border-radius: 20px;
-    padding: 7px 16px;
-    background: #ffffff;
-    color: #398f32;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-    .feed-action-button:hover {
-        background: #eaf7e7;
-    }
-
-
-/*
-    ==========================================================
-    COMMENTS
-    ==========================================================
-*/
-
-.feed-comments-section {
-    margin: 0 22px 22px;
-    padding-top: 18px;
-    border-top: 1px solid #e5e7eb;
-}
-
-.feed-section-title {
-    margin-bottom: 14px;
-    color: #1f2937;
-}
-
-.feed-comments-list {
+.announcement-placeholder {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-.feed-comment {
-    padding: 12px 14px;
-    border-radius: 12px;
-    background: #f7f8f9;
-}
-
-.feed-comment-header {
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    justify-content: center;
+    gap: 9px;
+    color: #718096;
+    font-size: 13px;
+    text-align: center;
 }
 
-.feed-comment-author {
-    display: flex;
-    align-items: center;
-    min-width: 0;
+    .announcement-placeholder svg {
+        width: 30px;
+        height: 30px;
+        color: #718096;
+        stroke-width: 1.8;
+    }
+
+
+
+
+
+
+
+
+/* =========================================================
+   ANNOUNCEMENT CAROUSEL CONTROLS
+   ========================================================= */
+
+/*
+   These controls are for switching BETWEEN ANNOUNCEMENTS,
+   not between photos.
+*/
+
+.announcement-carousel-control {
+    width: 46px;
+    opacity: 1;
+    z-index: 10;
 }
 
-    .feed-comment-author > div:last-child {
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-        margin-left: 10px;
-    }
-
-    .feed-comment-author strong,
-    .feed-comment-author small {
-        overflow-wrap: anywhere;
-    }
-
-    .feed-comment-author small {
-        margin-top: 2px;
-        color: #6b7280;
-    }
-
-.feed-comment-avatar {
+.announcement-control-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-    overflow: hidden;
+    width: 38px;
+    height: 38px;
+    background: #FFFFFF;
+    border: 1px solid #DDE4DC;
     border-radius: 50%;
-    background: #8ACE79;
-    color: #ffffff;
-    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-    .feed-comment-avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+    .announcement-control-icon svg {
+        width: 19px;
+        height: 19px;
+        color: #2D3748;
+        stroke-width: 2.2;
     }
 
-.feed-comment-content {
+.announcement-carousel-control:hover .announcement-control-icon {
+    background: #F7FBF6;
+    border-color: #BFDDB8;
+}
+
+
+/* =========================================================
+   ANNOUNCEMENT INDICATORS
+   ========================================================= */
+
+.announcement-indicators {
+    position: static;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
     margin: 10px 0 0;
-    color: #374151;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
-    word-break: break-word;
 }
 
-.feed-delete-comment {
+    .announcement-indicators button {
+        width: 22px;
+        height: 6px;
+        margin: 0;
+        padding: 0;
+        background: #D8E8D5;
+        border: none;
+        border-radius: 999px;
+        opacity: 1;
+        transition: width 0.2s ease, background 0.2s ease;
+    }
+
+        .announcement-indicators button.active {
+            width: 28px;
+            background: #8ACE79;
+        }
+
+
+/* =========================================================
+   LUCIDE
+   ========================================================= */
+
+.feed-announcements svg {
     flex-shrink: 0;
-    border: 0;
-    background: transparent;
-    color: #dc3545;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.feed-empty-comments {
-    margin-bottom: 0;
-    color: #6b7280;
-    font-size: 14px;
 }
 
 
-/*
-    ==========================================================
-    COMMENT FORM
-    ==========================================================
-*/
-
-.feed-comment-form {
-    margin-top: 16px;
-}
-
-.feed-comment-input {
-    width: 100%;
-    resize: vertical;
-    border: 1px solid #d1d5db;
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-size: 14px;
-}
-
-    .feed-comment-input:focus {
-        outline: none;
-        border-color: #8ACE79;
-        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.15);
-    }
-
-.feed-comment-submit {
-    margin-top: 8px;
-    border: 0;
-    border-radius: 20px;
-    padding: 8px 18px;
-    background: #8ACE79;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.feed-login-comment {
-    width: 100%;
-    margin-top: 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 20px;
-    padding: 9px 16px;
-    background: #ffffff;
-    color: #4b5563;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-
-/*
-    ==========================================================
-    FEED CARD WITHOUT IMAGE
-    ==========================================================
-
-    No-image cards simply keep their text content at full width.
-*/
-
-.feed-card-content-no-image {
-    display: block;
-    width: 100%;
-}
-
-    .feed-card-content-no-image .feed-text-content {
-        width: 100%;
-        min-width: 0;
-    }
-
-.feed-card-no-image .feed-media {
-    display: none;
-}
-
-
-/*
-    ==========================================================
-    PETFEED NORMAL FEED CONTAINER
-    ==========================================================
-*/
-
-.feed-container {
-    width: 100%;
-    max-width: none;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-
-/*
-    ==========================================================
-    RESPONSIVE NORMAL FEED
-    ==========================================================
-*/
+/* =========================================================
+   TABLET
+   ========================================================= */
 
 @media (max-width: 768px) {
 
-    /*
-        Keep the Facebook-style vertical layout on mobile.
-    */
-
-    .feed-card,
-    .announcement-carousel {
-        width: 100%;
+    .feed-announcements {
         max-width: 100%;
-        box-sizing: border-box;
     }
 
-    .feed-card-header {
-        padding: 16px 16px 10px;
+    .announcement-card-header {
+        padding: 18px 20px 10px;
     }
 
-    .feed-text-content {
-        padding: 8px 16px 14px;
+    .announcement-card-content {
+        padding: 8px 20px 18px;
     }
 
-    .feed-main-image {
-        height: 240px;
+    .announcement-title {
+        font-size: 23px;
     }
 
-    .feed-image-grid {
-        grid-template-rows: repeat(2, 115px);
+    .announcement-media {
+        width: calc(100% - 40px);
+        height: 320px;
+        margin-left: 20px;
+        margin-right: 20px;
     }
 
-    .feed-title {
-        font-size: 22px;
-    }
-
-    .feed-description {
-        font-size: 15px;
-    }
-
-    .feed-engagement {
-        padding: 14px 16px 18px;
-    }
-
-    .feed-comments-section {
-        margin: 0 16px 18px;
+    .announcement-card-footer {
+        padding: 14px 20px;
     }
 }
 
 
-/*
-    ==========================================================
-    ANNOUNCEMENT CAROUSEL
-    ==========================================================
+/* =========================================================
+   MOBILE
+   ========================================================= */
 
-    IMPORTANT:
-    Everything below this point belongs specifically to the
-    administrator announcement carousel.
+@media (max-width: 600px) {
 
-    Do not reuse these selectors for normal PetFeed cards.
+    .announcement-card {
+        border-radius: 18px;
+    }
 
-    The announcement keeps its own special appearance:
+    .announcement-card-header {
+        gap: 10px;
+    }
 
-    - Green border
-    - Carousel behavior
-    - Announcement badge
-    - Counter
-    - Previous / next controls
-    - Indicators
+    .announcement-author-image {
+        width: 40px;
+        height: 40px;
+    }
 
-    The CONTENT layout follows the normal Facebook-style feed:
+    .announcement-author-name {
+        font-size: 14px;
+    }
 
-        Image
-          ↓
-        Title
-          ↓
-        Description
-          ↓
-        View announcement button
+    .announcement-type {
+        padding: 6px 10px;
+        font-size: 10px;
+    }
 
-    The announcement is centered and uses the same 700px maximum
-    width as the normal feed cards.
-*/
+        .announcement-type svg {
+            width: 13px;
+            height: 13px;
+        }
 
-.announcement-carousel {
+    .announcement-title {
+        font-size: 21px;
+    }
+
+    .announcement-description {
+        font-size: 13.5px;
+    }
+
+    .announcement-media {
+        height: 280px;
+    }
+
+    .announcement-photo-control {
+        width: 38px;
+        height: 38px;
+    }
+
+    .announcement-photo-prev {
+        left: 10px;
+    }
+
+    .announcement-photo-next {
+        right: 10px;
+    }
+
+    .announcement-photo-counter {
+        right: 10px;
+        bottom: 10px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .feed-announcements {
+        padding: 0 4px;
+    }
+
+    .announcement-card-header {
+        padding: 16px 16px 8px;
+    }
+
+    .announcement-card-content {
+        padding: 8px 16px 16px;
+    }
+
+    .announcement-title {
+        font-size: 20px;
+        line-height: 1.3;
+    }
+
+    .announcement-description {
+        max-height: 69px;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .announcement-media {
+        width: calc(100% - 32px);
+        height: 230px;
+        margin-left: 16px;
+        margin-right: 16px;
+        border-radius: 15px;
+    }
+
+    .announcement-card-footer {
+        padding: 13px 16px;
+    }
+
+    .announcement-details-button {
+        padding: 10px 16px;
+        font-size: 12px;
+    }
+
+    .announcement-carousel-control {
+        width: 40px;
+    }
+
+    .announcement-control-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+        .announcement-control-icon svg {
+            width: 17px;
+            height: 17px;
+        }
+}
+
+/* =========================================================
+   ANNOUNCEMENT DETAILS
+   ========================================================= */
+
+.announcement-details-container {
     width: 100%;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 24px;
-    position: relative;
-    overflow: hidden;
-    border: 2px solid #8ACE79;
-    border-radius: 16px;
-    background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
 }
 
 
-/*
-    ==========================================================
-    ANNOUNCEMENT HEADER
-    ==========================================================
-*/
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
 
-.announcement-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 22px 8px;
-}
-
-.announcement-badge {
+.announcement-details-back {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    width: fit-content;
-    padding: 8px 14px;
-    border-radius: 20px;
-    background: #398f32;
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
+    margin-bottom: 20px;
+    color: #4D8F45;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.announcement-counter {
+    .announcement-details-back:hover {
+        color: #3F7839;
+        transform: translateX(-2px);
+    }
+
+    .announcement-details-back svg {
+        width: 18px;
+        height: 18px;
+        stroke-width: 2;
+    }
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.announcement-details-card {
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.announcement-details-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid #F0F1F2;
+}
+
+
+/* Author */
+
+.announcement-details-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.announcement-details-author-image {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid #E5E7EB;
+}
+
+
+/* Author information */
+
+.announcement-details-author-info {
+    min-width: 0;
+}
+
+.announcement-details-author-name-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    line-height: 1.2;
+}
+
+.announcement-details-author-name {
+    color: #2D3748;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.announcement-details-verified {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    color: #4D8F45;
+    stroke-width: 2.4;
+}
+
+
+/* Meta */
+
+.announcement-details-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+    color: #718096;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.announcement-details-meta-separator {
+    color: #A0AEC0;
+}
+
+
+/* Announcement type */
+
+.announcement-details-type {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 7px;
+    flex-shrink: 0;
     padding: 7px 12px;
-    border-radius: 18px;
-    background: #f3f4f6;
-    color: #374151;
-    font-size: 13px;
+    background: #E8F1FF;
+    color: #3568A8;
+    border: 1px solid #C9DCF7;
+    border-radius: 999px;
+    font-size: 12px;
     font-weight: 700;
+    white-space: nowrap;
 }
 
+    .announcement-details-type svg {
+        width: 15px;
+        height: 15px;
+        stroke-width: 2.2;
+    }
 
-/*
-    ==========================================================
-    ANNOUNCEMENT CONTENT
-    ==========================================================
 
-    IMPORTANT:
+/* =========================================================
+   CONTENT
+   ========================================================= */
 
-    This is intentionally FLEX, not GRID.
-
-    The previous grid layout caused the image and text to appear
-    beside each other.
-
-    The required Facebook-style structure is vertical.
-*/
-
-.announcement-carousel .announcement-content {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-width: 0;
-    padding: 8px 22px 48px;
+.announcement-details-content {
+    padding: 28px 28px 24px;
 }
 
+.announcement-details-title {
+    margin: 0 0 14px;
+    color: #2D3748;
+    font-size: 30px;
+    font-weight: 750;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+}
 
-/*
-    ==========================================================
-    ANNOUNCEMENT IMAGE
-    ==========================================================
-*/
-
-.announcement-carousel .announcement-media {
-    /*
-        The announcement markup also carries the shared .feed-media
-        class, which sets order: 2 so normal feed cards show their
-        image last. The announcement needs the image FIRST, so this
-        overrides that order explicitly.
-    */
-    order: 0;
-    width: 100%;
-    min-width: 0;
+.announcement-details-description {
     margin: 0;
+    color: #4A5568;
+    font-size: 15px;
+    line-height: 1.8;
+    white-space: pre-line;
 }
 
-.announcement-carousel .announcement-image {
+
+/* =========================================================
+   IMAGE GALLERY
+   ========================================================= */
+
+.announcement-details-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 0 28px 28px;
+}
+
+.announcement-details-image-wrapper {
+    width: 100%;
+    background: #F7F8F9;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.announcement-details-image {
     display: block;
     width: 100%;
     height: 300px;
     object-fit: cover;
-    border-radius: 0;
+    transition: transform 0.25s ease;
+}
+
+.announcement-details-image-wrapper:hover
+.announcement-details-image {
+    transform: scale(1.015);
 }
 
 
-/*
-    ==========================================================
-    ANNOUNCEMENT TEXT
-    ==========================================================
-*/
+/* =========================================================
+   NO IMAGE
+   ========================================================= */
 
-.announcement-carousel .announcement-text {
+.announcement-details-no-image {
+    margin: 0 28px 28px;
+    border: 1px dashed #D9DEE3;
+    border-radius: 14px;
+    background: #F8FAF9;
+}
+
+.announcement-details-placeholder {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    min-width: 0;
-    padding: 18px 0 0;
-}
-
-
-/*
-    ==========================================================
-    ANNOUNCEMENT TITLE
-    ==========================================================
-
-    The title is limited to two lines.
-
-    -webkit-line-clamp: 2 tells supported browsers to display
-    only two lines.
-
-    overflow: hidden hides anything beyond those two lines.
-
-    overflow-wrap / word-break prevent extremely long words
-    from forcing the card wider.
-*/
-
-.announcement-carousel .announcement-title {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    width: 100%;
-    min-width: 0;
-    margin: 0 0 12px;
-    overflow: hidden;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    color: #111827;
-    font-size: 27px;
-    line-height: 1.25;
-    font-weight: 700;
-}
-
-
-/*
-    ==========================================================
-    ANNOUNCEMENT DESCRIPTION
-    ==========================================================
-
-    Limit the description to three lines.
-
-    This prevents very long announcement content from making
-    the carousel excessively tall.
-*/
-
-.announcement-carousel .announcement-description {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    width: 100%;
-    min-width: 0;
-    margin: 0 0 18px;
-    overflow: hidden;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    white-space: pre-line;
-    color: #374151;
-    font-size: 16px;
-    line-height: 1.7;
-}
-
-
-/*
-    ==========================================================
-    ANNOUNCEMENT DETAILS BUTTON
-    ==========================================================
-
-    Only this link opens AnnouncementDetails.
-
-    It is positioned at the bottom-right of the announcement
-    text section and does NOT stretch across the card.
-*/
-
-.announcement-carousel .announcement-details-button {
-    display: inline-flex;
     align-items: center;
     justify-content: center;
-    align-self: flex-end;
-    width: fit-content;
-    max-width: 100%;
-    margin-top: auto;
-    padding: 9px 18px;
-    border: 1px solid #8ACE79;
-    border-radius: 22px;
-    background: #ffffff;
-    color: #398f32;
+    gap: 10px;
+    min-height: 220px;
+    padding: 30px;
+    color: #A0AEC0;
+    text-align: center;
     font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: 0.2s ease;
 }
 
-    .announcement-carousel .announcement-details-button:hover {
-        background: #eaf7e7;
-        color: #398f32;
+    .announcement-details-placeholder svg {
+        width: 34px;
+        height: 34px;
+        stroke-width: 1.7;
     }
 
 
-/*
-    ==========================================================
-    ANNOUNCEMENT WITHOUT IMAGE
-    ==========================================================
+/* =========================================================
+   LUCIDE ICON NORMALIZATION
+   ========================================================= */
 
-    When no image exists, the text simply occupies the available
-    announcement content width.
-
-    There must NOT be an empty image column.
-*/
-
-.announcement-carousel .announcement-content-no-image {
-    display: block;
-    width: 100%;
-}
-
-    .announcement-carousel .announcement-content-no-image .announcement-text {
-        width: 100%;
-        padding-top: 8px;
-    }
-
-
-/*
-    ==========================================================
-    ANNOUNCEMENT INDICATORS
-    ==========================================================
-*/
-
-.announcement-indicators {
-    bottom: 8px;
-    margin-bottom: 0;
-}
-
-/*
-    Explicit flex sizing prevents Bootstrap from stretching
-    the indicators into elongated shapes.
-*/
-
-.announcement-carousel .announcement-indicators [data-bs-target] {
-    width: 12px;
-    height: 12px;
-    flex: 0 0 12px;
+.announcement-details-container svg {
     flex-shrink: 0;
-    margin: 0 6px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background-color: #adb5bd;
-    opacity: 1;
-}
-
-    /*
-    The active announcement indicator uses PetHub green.
-*/
-
-    .announcement-carousel .announcement-indicators [data-bs-target].active {
-        background-color: #398f32;
-    }
-
-
-/*
-    ==========================================================
-    ANNOUNCEMENT CONTROLS
-    ==========================================================
-*/
-
-.announcement-control {
-    /*
-        opacity: 1 keeps the control fully visible at rest and
-        on hover, so no separate :hover opacity rule is needed.
-    */
-    width: 48px;
-    height: 48px;
-    top: 50%;
-    transform: translateY(-35%);
-    margin: 0 8px;
-    border-radius: 50%;
-    background: #ffffff;
-    opacity: 1;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-
-    .announcement-control .carousel-control-prev-icon,
-    .announcement-control .carousel-control-next-icon {
-        filter: invert(1);
-    }
-
-
-/*
-    ==========================================================
-    ANNOUNCEMENT ACTIVE SLIDE
-    ==========================================================
-*/
-
-.announcement-carousel .carousel-item.active {
-    background: #ffffff;
-    color: inherit;
 }
 
 
-/*
-    ==========================================================
-    MOBILE
-    ==========================================================
-*/
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 768px) {
 
-    .announcement-carousel {
-        width: calc(100% - 20px);
-        max-width: none;
+    .announcement-details-container {
+        padding: 24px 16px 40px;
     }
 
-    .announcement-header {
-        padding: 14px 16px 6px;
+    .announcement-details-header {
+        padding: 20px;
     }
 
-    .announcement-carousel .announcement-content {
-        padding: 8px 16px 44px;
+    .announcement-details-content {
+        padding: 24px 20px 20px;
     }
 
-    .announcement-carousel .announcement-image {
-        height: 220px;
+    .announcement-details-gallery {
+        padding: 0 20px 20px;
+        gap: 10px;
     }
 
-    .announcement-carousel .announcement-title {
-        font-size: 22px;
+    .announcement-details-image {
+        height: 240px;
     }
 
-    .announcement-carousel .announcement-description {
-        font-size: 15px;
+    .announcement-details-no-image {
+        margin: 0 20px 20px;
     }
 
-    .announcement-control {
-        width: 40px;
-        height: 40px;
+    .announcement-details-title {
+        font-size: 26px;
     }
 }
+
+
+@media (max-width: 600px) {
+
+    .announcement-details-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .announcement-details-type {
+        align-self: flex-start;
+    }
+
+    .announcement-details-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .announcement-details-image {
+        height: 280px;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .announcement-details-container {
+        padding: 18px 12px 32px;
+    }
+
+    .announcement-details-back {
+        margin-bottom: 14px;
+        font-size: 13px;
+    }
+
+    .announcement-details-card {
+        border-radius: 15px;
+    }
+
+    .announcement-details-header {
+        padding: 18px 16px;
+    }
+
+    .announcement-details-author-image {
+        width: 42px;
+        height: 42px;
+    }
+
+    .announcement-details-author-name {
+        font-size: 14px;
+    }
+
+    .announcement-details-meta {
+        font-size: 12px;
+    }
+
+    .announcement-details-content {
+        padding: 20px 16px 18px;
+    }
+
+    .announcement-details-title {
+        font-size: 23px;
+        line-height: 1.3;
+    }
+
+    .announcement-details-description {
+        font-size: 14px;
+        line-height: 1.75;
+    }
+
+    .announcement-details-gallery {
+        padding: 0 16px 16px;
+    }
+
+    .announcement-details-image {
+        height: 230px;
+    }
+
+    .announcement-details-no-image {
+        margin: 0 16px 16px;
+    }
+
+    .announcement-details-placeholder {
+        min-height: 180px;
+        padding: 24px;
+    }
+}
+
+/* =========================================================
+   FEED LOGIN MODAL
+   ========================================================= */
+
+.login-modal-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .login-modal-icon svg {
+        width: 40px;
+        height: 40px;
+        color: #8ACE79;
+        stroke-width: 2;
+    }
+
+.login-modal-title {
+    color: #2D3748;
+}
+
+.login-modal-description {
+    line-height: 1.8;
+}
+
+.login-modal-button {
+    background: #8ACE79;
+    border-color: #8ACE79;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+    .login-modal-button:hover {
+        background: #76B968;
+        border-color: #76B968;
+        transform: translateY(-1px);
+    }

@@ -55,7 +55,7 @@
 
                                     <img src="@img.ImagePath"
                                          class="d-block w-100 lostfound-main-image"
-                                         alt="Lost & Found image" />
+                                         alt="Lost & Found image @(i + 1)" />
 
                                 </div>
                             }
@@ -65,8 +65,6 @@
 
                         <!-- =================================================
                              PREVIOUS ARROW
-
-                             Always displayed to match Marketplace Details.
                         ================================================= -->
 
                         <button class="carousel-control-prev lostfound-carousel-button"
@@ -86,8 +84,6 @@
 
                         <!-- =================================================
                              NEXT ARROW
-
-                             Always displayed to match Marketplace Details.
                         ================================================= -->
 
                         <button class="carousel-control-next lostfound-carousel-button"
@@ -133,6 +129,10 @@
                 }
                 else
                 {
+                    <!-- =================================================
+                         NO IMAGE
+                    ================================================= -->
+
                     <div class="lostfound-no-image">
 
                         <p class="text-muted mb-0">
@@ -160,6 +160,7 @@
                     ================================================= -->
 
                     <div class="lostfound-profile-section">
+
 
                         <!-- =================================================
                              PROFILE IMAGE
@@ -245,49 +246,76 @@
                              THREE DOT MENU
                         ================================================= -->
 
-                        <div class="lostfound-post-menu dropdown">
+                        <div class="lostfound-post-menu">
+
+                            <!-- THREE DOT BUTTON -->
 
                             <button type="button"
-                                    class="lostfound-post-menu-button dropdown-toggle"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    aria-label="More options">
+                                    class="lostfound-post-menu-button"
+                                    aria-label="More options"
+                                    onclick="this.parentElement.classList.toggle('show')">
 
-                                <i data-lucide="ellipsis"></i>
+                                <i data-lucide="more-horizontal"></i>
 
                             </button>
 
 
-                            <ul class="dropdown-menu dropdown-menu-end lostfound-post-dropdown">
+                            <!-- =================================================
+                                 DROPDOWN MENU
+                            ================================================= -->
 
-                                <li>
-                                    @if (User.IsInRole("Member") &&
-                                         Model.UserId != User.FindFirst(
-                                             System.Security.Claims.ClaimTypes.NameIdentifier
-                                         )?.Value)
-                                        {
-                                            <!-- Opens the shared Report modal for this Marketplace listing.
-                                             The server-side controller still verifies ownership before accepting
-                                             the submitted report. -->
+                            <div class="lostfound-post-dropdown">
 
-                                            <button type="button"
-                                                    class="danger-action"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#reportModal"
-                                                    data-report-type="LostFound"
-                                                    data-report-id="@Model.LostFoundId"
-                                                    data-report-title="@Model.Title">
 
-                                                <i data-lucide="flag"></i>
+                                <!-- =================================================
+                                     COPY LINK
+                                ================================================= -->
 
-                                                <span>
-                                                    Report Listing
-                                                </span>
+                                <button type="button"
+                                        id="copyLostFoundLink">
 
-                                            </button>
-                                        }
-                                </li>
-                            </ul>
+                                    <i data-lucide="link"></i>
+
+                                    <span id="copyLostFoundLinkText">
+                                        Copy Link
+                                    </span>
+
+                                </button>
+
+
+                                <!-- =================================================
+                                     DIVIDER
+                                ================================================= -->
+
+                                <div class="lostfound-menu-divider"></div>
+
+
+                                <!-- =================================================
+                                     REPORT LISTING
+                                ================================================= -->
+                                @if (User.IsInRole("Member") &&
+                                                                     Model.UserId != User.FindFirst(
+                                                                         System.Security.Claims.ClaimTypes.NameIdentifier
+                                                                     )?.Value)
+                                {
+                                    <button type="button"
+                                            class="danger-action"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#reportModal"
+                                            data-report-type="LostFound"
+                                            data-report-id="@Model.LostFoundId"
+                                            data-report-title="@Model.Title">
+
+                                        <i data-lucide="flag"></i>
+
+                                        <span>
+                                            Report 
+                                        </span>
+
+                                    </button>
+                                }
+
+                            </div>
 
                         </div>
 
@@ -315,16 +343,13 @@
 
                     <!-- =================================================
                          ABOUT THIS REPORT
-
-                         Heading + description are intentionally
-                         grouped inside the same container.
                     ================================================= -->
 
                     <div class="lostfound-about-section">
 
                         <div class="lostfound-about-content">
 
-                            <h5 class="lostfound-section-title">
+                            <h5 class="lost-found-section-title">
                                 About This Report
                             </h5>
 
@@ -332,9 +357,11 @@
                             <div class="lostfound-description-wrapper">
 
                                 <p class="lostfound-description">
+
                                     @(string.IsNullOrWhiteSpace(Model.Description)
                                         ? "No description provided."
                                         : Model.Description)
+
                                 </p>
 
                             </div>
@@ -351,7 +378,7 @@
 
                     <div class="lostfound-information-section">
 
-                        <h5 class="lostfound-section-title">
+                        <h5 class="lost-found-section-title">
                             Pet Information
                         </h5>
 
@@ -448,7 +475,7 @@
 
                     <div class="lostfound-information-section">
 
-                        <h5 class="lostfound-section-title">
+                        <h5 class="lost-found-section-title">
 
                             <i data-lucide="map-pin"></i>
 
@@ -530,89 +557,14 @@
 
 
                     <!-- =================================================
-                         GUEST / CLIENT CONTACT INFORMATION
-
-                         Guest-created reports cannot use PETHUB messaging
-                         because they do not have an ApplicationUser account.
-
-                         Their name and contact number are displayed instead.
-                    ================================================= -->
-                    @if (Model.UserId == null)
-                    {
-                        <div class="lostfound-information-section">
-
-                            <h5 class="lostfound-section-title">
-
-                                <i data-lucide="phone"></i>
-
-                                <span>
-                                    Contact Reporter
-                                </span>
-
-                            </h5>
-
-
-                            <div class="lostfound-information-box">
-
-                                <!-- Client Name -->
-
-                                <div class="lostfound-information-row">
-
-                                    <span class="lostfound-information-label">
-                                        Name
-                                    </span>
-
-                                    <span class="lostfound-information-value">
-
-                                        @(string.IsNullOrWhiteSpace(Model.ClientName)
-                                            ? "Not Available"
-                                            : Model.ClientName)
-
-                                    </span>
-
-                                </div>
-
-
-                                <!-- Client Contact -->
-
-                                <div class="lostfound-information-row">
-
-                                    <span class="lostfound-information-label">
-                                        Contact Number
-                                    </span>
-
-                                    <span class="lostfound-information-value">
-
-                                        @(string.IsNullOrWhiteSpace(Model.ClientContact)
-                                            ? "Not Available"
-                                            : Model.ClientContact)
-
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    }
-
-
-
-                    <!-- =================================================
                          MESSAGE REPORTER
-
-                         Messaging is available only when:
-                         1. The viewer is logged in.
-                         2. The viewer is a Member.
-                         3. The report belongs to a registered Member.
-                         4. The viewer is not the report owner.
                     ================================================= -->
-
                     @if (User.Identity?.IsAuthenticated == true &&
-                         User.IsInRole("Member") &&
-                         !string.IsNullOrEmpty(Model.UserId) &&
-                         Model.UserId != User.FindFirst(
-                             System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                                             User.IsInRole("Member") &&
+                                             !string.IsNullOrEmpty(Model.UserId) &&
+                                             Model.UserId != User.FindFirst(
+                                                 System.Security.Claims.ClaimTypes.NameIdentifier
+                                             )?.Value)
                     {
                         <div class="lostfound-message-section">
 
@@ -642,33 +594,8 @@
 
                         </div>
                     }
-                     
-           
-                   
-                </div>
-                <div class="card-footer d-flex justify-content-center gap-3">
 
-                    @if (User.IsInRole("Member") &&
-                         !string.IsNullOrEmpty(Model.UserId) &&
-                         Model.UserId != User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
-                    {
-                        <!-- Only registered-member Lost & Found posts can be reported.
-                             The owner cannot report their own post. -->
-                        <button type="button"
-                                class="btn btn-outline-danger px-4"
-                                data-bs-toggle="modal"
-                                data-bs-target="#reportModal"
-                                data-report-type="LostFound"
-                                data-report-id="@Model.LostFoundId"
-                                data-report-title="@Model.Title">
 
-                            <i data-lucide="flag"></i>
-                            Report
-
-                        </button>
-                    }
-
-                
                 </div>
 
             </div>
@@ -682,28 +609,124 @@
 
 
 <!-- =========================================================
-     LUCIDE + CAROUSEL THUMBNAIL SYNC
+     LUCIDE + MENU + CAROUSEL THUMBNAIL SYNC
 ========================================================= -->
 
 <script>
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
 
-        /* ==========================================
+
+        /* ==================================================
            LUCIDE ICONS
-        ========================================== */
+        ================================================== */
 
         if (typeof lucide !== "undefined") {
+
             lucide.createIcons();
+
         }
 
 
-        /* ==========================================
+        /* ==================================================
+           THREE DOT MENU
+        ================================================== */
+
+        const moreMenu =
+            document.querySelector(".lostfound-post-menu");
+
+
+        const copyLinkButton =
+            document.getElementById("copyLostFoundLink");
+
+
+        const copyLinkText =
+            document.getElementById("copyLostFoundLinkText");
+
+
+        /* ==================================================
+           CLOSE MENU WHEN CLICKING OUTSIDE
+        ================================================== */
+
+        document.addEventListener("click", function (event) {
+
+            if (!moreMenu) {
+                return;
+            }
+
+
+            if (!event.target.closest(".lostfound-post-menu")) {
+
+                moreMenu.classList.remove("show");
+
+            }
+
+        });
+
+
+        /* ==================================================
+           COPY LOST & FOUND LINK
+        ================================================== */
+
+        if (copyLinkButton) {
+
+            copyLinkButton.addEventListener(
+                "click",
+                async function () {
+
+                    try {
+
+                        await navigator.clipboard.writeText(
+                            window.location.href
+                        );
+
+
+                        if (copyLinkText) {
+
+                            copyLinkText.textContent =
+                                "Link Copied!";
+
+
+                            setTimeout(function () {
+
+                                copyLinkText.textContent =
+                                    "Copy Link";
+
+                            }, 1800);
+
+                        }
+
+
+                        if (moreMenu) {
+
+                            moreMenu.classList.remove("show");
+
+                        }
+
+                    }
+                    catch (error) {
+
+                        console.error(
+                            "Unable to copy Lost & Found link:",
+                            error
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+
+        /* ==================================================
            THUMBNAIL SYNC WITH CAROUSEL
-        ========================================== */
+        ================================================== */
 
         const carousel =
             document.getElementById("lostFoundCarousel");
+
 
         const thumbnails =
             document.querySelectorAll(
@@ -715,9 +738,10 @@
 
             carousel.addEventListener(
                 "slid.bs.carousel",
-                function(event) {
+                function (event) {
 
-                    thumbnails.forEach(function(thumbnail) {
+
+                    thumbnails.forEach(function (thumbnail) {
 
                         thumbnail.classList.remove("active");
 
@@ -726,6 +750,7 @@
 
                     const activeThumbnail =
                         thumbnails[event.to];
+
 
                     if (activeThumbnail) {
 

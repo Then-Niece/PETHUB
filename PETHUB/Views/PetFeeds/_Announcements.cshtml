@@ -1,232 +1,303 @@
 ﻿@using System.Linq
 @using PETHUB.Models
-@model IEnumerable<PetFeed>
+
+@model IEnumerable<PETHUB.Models.PetFeed>
 
 @{
-    // Convert the incoming announcement collection to a List so the
-    // view can safely use Count, indexing, and Any() multiple times.
-    var announcements = Model?.ToList() ?? new List<PetFeed>();
+    var items = Model?
+        .Where(x => x != null)
+        .ToList()
+        ?? new List<PetFeed>();
+
+    if (items.Count == 0)
+    {
+        return;
+    }
 }
 
-@if (announcements.Any())
-{
-    <!--
-        The announcement remains a dedicated carousel.
+<section class="feed-announcements">
 
-        The outer announcement styling stays separate from normal feed
-        cards, while the internal content structure now follows the same
-        Facebook-style layout used by the normal PetFeed cards.
-    -->
+    <!-- ==========================================================
+         ANNOUNCEMENT CAROUSEL
+         ========================================================== -->
+
     <div id="announcementCarousel"
          class="carousel slide announcement-carousel"
          data-bs-ride="false">
 
-        <!-- ==========================================================
-             ANNOUNCEMENT HEADER
-             ========================================================== -->
-
-        <div class="announcement-header">
-
-            <!--
-                This badge remains announcement-specific and is not
-                replaced by the normal feed type badges.
-            -->
-            <span class="announcement-badge">
-                <i class="bi bi-megaphone-fill"></i>
-                Announcement
-            </span>
-
-            @if (announcements.Count > 1)
-            {
-                <!--
-                    Shows the current announcement position when more
-                    than one announcement is available.
-                -->
-                <span class="announcement-counter">
-
-                    <span id="announcementCurrent">
-                        1
-                    </span>
-
-                    /
-                    @announcements.Count
-
-                </span>
-            }
-
-        </div>
-
-
-        <!-- ==========================================================
-             CAROUSEL CONTENT
-             ========================================================== -->
-
         <div class="carousel-inner">
 
-            @for (int i = 0; i < announcements.Count; i++)
+            @for (int i = 0; i < items.Count; i++)
             {
-                var announcement = announcements[i];
+                var item = items[i];
 
-                // Check whether the announcement has at least one image.
-                // This determines whether the normal two-column feed
-                // layout or the no-image single-column layout is used.
-                var hasImage =
-                    announcement.Images != null &&
-                    announcement.Images.Any();
+                var isActive = i == 0;
 
-                <!--
-                    Bootstrap requires the first carousel item to have
-                    the active class when the carousel initially loads.
-                -->
-                <div class="carousel-item @(i == 0 ? "active" : "")">
+                var images = item.Images?
+                    .ToList()
+                    ?? new List<PetFeedImage>();
 
-                    <!--
-                        IMPORTANT:
+                var photoCarouselId = $"announcementPhotos_{item.PetFeedId}";
 
-                        The announcement still uses its own announcement
-                        container so the green border and carousel remain
-                        unchanged.
+                <article class="carousel-item @(isActive ? "active" : "")">
 
-                        Inside it, the normal PetFeed content classes are
-                        reused so the announcement follows the same
-                        Facebook-style image/text layout as other cards.
-                    -->
-                    <div class="announcement-content
-                        feed-card-content
-                        @(hasImage ? "" : "feed-card-content-no-image")">
+                    <div class="announcement-card">
 
-                        @if (hasImage)
+                        <!-- ==================================================
+                             CARD HEADER
+                             ================================================== -->
+
+                        <div class="announcement-card-header">
+
+                            <div class="announcement-author">
+
+                                <img src="~/images/PETHUB-LOGO.png"
+                                     class="announcement-author-image"
+                                     alt="PETHUB" />
+
+                                <div class="announcement-author-info">
+
+                                    <div class="announcement-author-name-row">
+
+                                        <strong class="announcement-author-name">
+                                            PETHUB
+                                        </strong>
+
+                                        <i data-lucide="badge-check"
+                                           class="announcement-verified"></i>
+
+                                    </div>
+
+                                    <div class="announcement-meta">
+
+                                        <span>
+                                            @item.DateCreated.ToString("MMM dd, yyyy")
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Announcement Label -->
+
+                            <div class="announcement-type">
+
+                                <i data-lucide="megaphone"></i>
+
+                                <span>
+                                    Announcement
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================================
+                             CARD CONTENT
+                             ================================================== -->
+
+                        <div class="announcement-card-content">
+
+                            <h3 class="announcement-title">
+                                @item.Title
+                            </h3>
+
+
+                            <div class="announcement-description-wrapper">
+
+                                <p class="announcement-description">
+
+                                    @item.Content
+
+                                </p>
+
+                                <button type="button"
+                                        class="announcement-see-more">
+                                    See more
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================================
+                             ANNOUNCEMENT PHOTOS
+                             ================================================== -->
+                        @if (images.Any())
                         {
-                            <!--
-                                The media area now follows the same structure
-                                as a normal PetFeed card.
+                            if (images.Count == 1)
+                            {
+                                <!-- Single Image -->
 
-                                Only the first announcement image is shown
-                                because the full image collection belongs
-                                on AnnouncementDetails.cshtml.
-                            -->
-                            <div class="feed-media announcement-media">
+                                <div class="announcement-media">
 
-                                @{
-                                    // Select only the first image for the
-                                    // announcement carousel preview.
-                                    var firstImage =
-                                        announcement.Images!.First();
-                                }
+                                    <img src="@images.First().ImagePath"
+                                         class="announcement-image"
+                                         alt="@item.Title" />
 
-                                <img src="@firstImage.ImagePath"
-                                     class="feed-main-image announcement-image"
-                                     alt="Announcement image" />
+                                </div>
+                            }
+                            else
+                            {
+                                <!-- Photo Carousel -->
+
+                                <div id="@photoCarouselId"
+                                     class="carousel slide announcement-photo-carousel"
+                                     data-bs-ride="false">
+
+                                    <div class="carousel-inner">
+
+                                        @for (int imageIndex = 0;
+                                              imageIndex < images.Count;
+                                              imageIndex++)
+                                        {
+                                            var image = images[imageIndex];
+
+                                            <div class="carousel-item @(imageIndex == 0 ? "active" : "")">
+
+                                                <div class="announcement-media">
+
+                                                    <img src="@image.ImagePath"
+                                                         class="announcement-image"
+                                                         alt="@item.Title" />
+
+                                                </div>
+
+                                            </div>
+                                        }
+
+                                    </div>
+
+
+                                    <!-- Photo Previous -->
+
+                                    <button class="announcement-photo-control announcement-photo-prev"
+                                            type="button"
+                                            data-bs-target="#@photoCarouselId"
+                                            data-bs-slide="prev">
+
+                                        <span class="announcement-photo-control-icon"
+                                              aria-hidden="true">
+
+                                            <i data-lucide="chevron-left"></i>
+
+                                        </span>
+
+                                        <span class="visually-hidden">
+                                            Previous photo
+                                        </span>
+
+                                    </button>
+
+
+                                    <!-- Photo Next -->
+
+                                    <button class="announcement-photo-control announcement-photo-next"
+                                            type="button"
+                                            data-bs-target="#@photoCarouselId"
+                                            data-bs-slide="next">
+
+                                        <span class="announcement-photo-control-icon"
+                                              aria-hidden="true">
+
+                                            <i data-lucide="chevron-right"></i>
+
+                                        </span>
+
+                                        <span class="visually-hidden">
+                                            Next photo
+                                        </span>
+
+                                    </button>
+
+
+                                    <!-- Photo Counter -->
+
+                                    <div class="announcement-photo-counter">
+
+                                        <i data-lucide="images"></i>
+
+                                        <span>
+                                            @images.Count
+                                        </span>
+
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="announcement-media announcement-no-image">
+
+                                <div class="announcement-placeholder">
+
+                                    <i data-lucide="image-off"></i>
+
+                                    <span>
+                                        No image available
+                                    </span>
+
+                                </div>
 
                             </div>
                         }
 
 
-                        <!-- ==================================================
-                             ANNOUNCEMENT TEXT
-                             ================================================== -->
 
-                        <div class="feed-text-content announcement-text">
 
-                            <!--
-                                Keep the announcement title using the same
-                                text container structure as normal feed cards.
-                            -->
-                            <h3 class="feed-title announcement-title">
-                                @announcement.Title
-                            </h3>
-
-                            <!--
-                                Keep the announcement description using the
-                                same normal feed description structure.
-                            -->
-                            <p class="feed-description announcement-description">
-                                @announcement.Content
-                            </p>
-
-                            <!--
-                                Only this link is clickable.
-
-                                The surrounding announcement card is NOT
-                                wrapped in an <a>, so clicking the image,
-                                title, description, or empty card area will
-                                not open the details page.
-
-                                Anonymous visitors get a button that opens
-                                the shared login modal (defined in
-                                Feed.cshtml) instead of navigating directly,
-                                matching how Paw/Comment already behave for
-                                guests.
-                            -->
-                            @if (User.Identity?.IsAuthenticated == true)
-                            {
-                                <a asp-controller="PetFeeds"
-                                   asp-action="AnnouncementDetails"
-                                   asp-route-id="@announcement.PetFeedId"
-                                   class="announcement-details-button">
-
-                                    View announcement
-
-                                </a>
-                            }
-                            else
-                            {
-                                <button type="button"
-                                        class="announcement-details-button"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#loginModal">
-
-                                    View announcement
-
-                                </button>
-                            }
-
-                        </div>
+                    
 
                     </div>
 
-                </div>
+                </article>
             }
 
         </div>
 
 
         <!-- ==========================================================
-             CAROUSEL INDICATORS AND CONTROLS
+             ANNOUNCEMENT INDICATORS
              ========================================================== -->
-        @if (announcements.Count > 1)
+        @if (items.Count > 1)
         {
-            <!--
-                Each indicator represents one announcement.
-                Bootstrap changes the active indicator automatically.
-            -->
             <div class="carousel-indicators announcement-indicators">
 
-                @for (int i = 0; i < announcements.Count; i++)
+                @for (int i = 0; i < items.Count; i++)
                 {
                     <button type="button"
                             data-bs-target="#announcementCarousel"
                             data-bs-slide-to="@i"
                             class="@(i == 0 ? "active" : "")"
                             aria-current="@(i == 0 ? "true" : "false")"
-                            aria-label="Announcement @(i + 1)">
+                            aria-label="Go to announcement @(i + 1)">
                     </button>
                 }
 
             </div>
+        }
 
 
-            <!--
-                Previous control moves to the previous announcement.
-            -->
-            <button class="carousel-control-prev announcement-control"
+        <!-- ==========================================================
+             ANNOUNCEMENT PREVIOUS / NEXT CONTROLS
+             ========================================================== -->
+        @if (items.Count > 1)
+        {
+            <button class="carousel-control-prev announcement-carousel-control announcement-carousel-prev"
                     type="button"
                     data-bs-target="#announcementCarousel"
-                    data-bs-slide="prev"
-                    aria-label="Previous announcement">
+                    data-bs-slide="prev">
 
-                <span class="carousel-control-prev-icon"
+                <span class="announcement-control-icon"
                       aria-hidden="true">
+
+                    <i data-lucide="chevron-left"></i>
+
                 </span>
 
                 <span class="visually-hidden">
@@ -236,17 +307,16 @@
             </button>
 
 
-            <!--
-                Next control moves to the next announcement.
-            -->
-            <button class="carousel-control-next announcement-control"
+            <button class="carousel-control-next announcement-carousel-control announcement-carousel-next"
                     type="button"
                     data-bs-target="#announcementCarousel"
-                    data-bs-slide="next"
-                    aria-label="Next announcement">
+                    data-bs-slide="next">
 
-                <span class="carousel-control-next-icon"
+                <span class="announcement-control-icon"
                       aria-hidden="true">
+
+                    <i data-lucide="chevron-right"></i>
+
                 </span>
 
                 <span class="visually-hidden">
@@ -258,39 +328,77 @@
 
     </div>
 
+</section>
 
-    @if (announcements.Count > 1)
-    {
-        <script>
-            // Wait until the page has loaded so the carousel and its
-            // counter are available in the DOM.
-            document.addEventListener("DOMContentLoaded", function () {
 
-                // Locate the Bootstrap announcement carousel.
-                const carousel =
-                    document.getElementById("announcementCarousel");
+<!-- ==============================================================
+     SEE MORE + LUCIDE INITIALIZATION
+     ============================================================== -->
 
-                // Locate the number showing the current announcement.
-                const currentCounter =
-                    document.getElementById("announcementCurrent");
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
 
-                // Stop safely if either element does not exist.
-                if (!carousel || !currentCounter) {
-                    return;
+        /* ==========================================================
+           LUCIDE
+           ========================================================== */
+
+        if (typeof lucide !== "undefined") {
+            lucide.createIcons();
+        }
+
+
+        /* ==========================================================
+           ANNOUNCEMENT SEE MORE
+           ========================================================== */
+
+        const descriptionWrappers =
+            document.querySelectorAll(".announcement-description-wrapper");
+
+        descriptionWrappers.forEach(function (wrapper) {
+
+            const description =
+                wrapper.querySelector(".announcement-description");
+
+            const seeMore =
+                wrapper.querySelector(".announcement-see-more");
+
+            if (!description || !seeMore) {
+                return;
+            }
+
+
+            /* Check whether the text is actually too long */
+
+            if (description.scrollHeight > description.clientHeight + 1) {
+
+                seeMore.classList.add("show");
+
+            }
+
+
+            seeMore.addEventListener("click", function () {
+
+                const isExpanded =
+                    description.classList.contains("expanded");
+
+                if (isExpanded) {
+
+                    description.classList.remove("expanded");
+
+                    seeMore.textContent = "See more";
+
+                }
+                else {
+
+                    description.classList.add("expanded");
+
+                    seeMore.textContent = "See less";
+
                 }
 
-                // Bootstrap fires "slid.bs.carousel" after a slide
-                // transition has completed.
-                carousel.addEventListener("slid.bs.carousel", function (event) {
-
-                    // Bootstrap uses a zero-based index, so add one
-                    // for the user-facing announcement number.
-                    currentCounter.textContent =
-                        event.to + 1;
-
-                });
-
             });
-        </script>
-    }
-}
+
+        });
+
+    });
+</script>
