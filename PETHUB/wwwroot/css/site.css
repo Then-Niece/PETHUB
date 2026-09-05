@@ -2047,6 +2047,137 @@ a {
 
 
 /* ==========================================================
+   PET CARE & COMMUNITY CARDS
+========================================================== */
+
+.landing-petfeed-item {
+    min-width: 0;
+    height: 100%;
+}
+
+    .landing-petfeed-item > a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        color: inherit;
+    }
+
+
+/* ==========================================================
+   PET FEED CARD
+========================================================== */
+
+.landing-petfeed-card {
+    width: 100%;
+    height: 405px;
+    min-height: 405px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .04);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+    .landing-petfeed-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, .08);
+    }
+
+
+/* ==========================================================
+   PET FEED CARD IMAGE
+========================================================== */
+
+.landing-petfeed-card-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 210px;
+    min-height: 210px;
+    flex: 0 0 210px;
+    overflow: hidden;
+    background: #F1F3F3;
+}
+
+.landing-petfeed-card-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform .35s ease;
+}
+
+.landing-petfeed-card:hover .landing-petfeed-card-image {
+    transform: scale(1.02);
+}
+
+
+/* ==========================================================
+   PET FEED CARD BODY
+========================================================== */
+
+.landing-petfeed-card-body {
+    flex: 1;
+    min-height: 0;
+    padding: 17px 18px 14px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ==========================================================
+   DATE
+========================================================== */
+
+.landing-petfeed-card-date {
+    display: block;
+    margin-bottom: 7px;
+    color: #888888;
+    font-size: .72rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.landing-petfeed-card-title {
+    margin: 0 0 8px;
+    color: #26384F;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.landing-petfeed-card-description {
+    margin: 0;
+    color: #718096;
+    font-size: .78rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+
+
+
+
+/* ==========================================================
    HOW PETHUB WORKS
 ========================================================== */
 
@@ -2615,6 +2746,23 @@ a {
         grid-template-columns: 1fr;
     }
 
+    .landing-petfeed-card {
+        height: 400px;
+        min-height: 400px;
+    }
+
+    .landing-petfeed-card-body {
+        padding: 16px;
+    }
+
+    .landing-petfeed-card-title {
+        font-size: .96rem;
+    }
+
+    .landing-petfeed-card-description {
+        font-size: .76rem;
+    }
+
     .landing-steps {
         grid-template-columns: 1fr;
         row-gap: 45px;
@@ -2979,7 +3127,6 @@ a {
 
 .landing-lost-found-location-label {
     color: #98A2B3;
-   
 }
 
 .landing-lost-found-location-value {
@@ -3122,6 +3269,48 @@ a {
 
 .landing-lost-found-card:hover .landing-lost-found-card-title {
     color: #67B95A;
+}
+
+/* ==========================================================
+   PET FEED CARD STATS
+========================================================== */
+
+.landing-petfeed-card-stats {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid #EEF0F2;
+    color: #777777;
+    font-size: .74rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+    .landing-petfeed-card-stats span {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .landing-petfeed-card-stats svg {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        stroke-width: 2;
+    }
+
+/* ==========================================================
+   TITLE HOVER
+========================================================== */
+
+.landing-petfeed-card-title {
+    transition: color .2s ease;
+}
+
+.landing-petfeed-card:hover .landing-petfeed-card-title {
+    color: #8ACE79;
 }
 
 /* ==========================================================

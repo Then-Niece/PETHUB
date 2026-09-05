@@ -2394,7 +2394,6 @@
     overflow-wrap: anywhere;
 }
 
-
 /* ==========================================================
    REPORT STATUS BADGE
 ========================================================== */
@@ -2403,13 +2402,28 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 11px;
+    gap: 7px;
+    min-height: 30px;
+    padding: 5px 12px;
     border-radius: 999px;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     font-weight: 600;
-    line-height: 1;
+    line-height: 1.2;
     white-space: nowrap;
 }
+
+
+    /* ==========================================================
+   STATUS DOT
+========================================================== */
+
+    .lostfound-status-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        flex-shrink: 0;
+        border-radius: 50%;
+    }
 
 
     /* ==========================================================
@@ -2417,10 +2431,14 @@
 ========================================================== */
 
     .lostfound-status-badge.pending {
-        color: #B17A28;
-        background: #FFF7E6;
-        border: 1px solid #F1DEB7;
+        color: #B87900;
+        background: #FFF7DF;
+        border: none;
     }
+
+        .lostfound-status-badge.pending::before {
+            background: #E3A000;
+        }
 
 
     /* ==========================================================
@@ -2428,10 +2446,14 @@
 ========================================================== */
 
     .lostfound-status-badge.approved {
-        color: #579D4E;
-        background: #EFF9EC;
-        border: 1px solid #D2E9CD;
+        color: #3F9144;
+        background: #EAF8E8;
+        border: none;
     }
+
+        .lostfound-status-badge.approved::before {
+            background: #5BAA55;
+        }
 
 
     /* ==========================================================
@@ -2439,10 +2461,14 @@
 ========================================================== */
 
     .lostfound-status-badge.rejected {
-        color: #C55D5D;
+        color: #C44D4D;
         background: #FFF0F0;
-        border: 1px solid #F1D0D0;
+        border: none;
     }
+
+        .lostfound-status-badge.rejected::before {
+            background: #D85C5C;
+        }
 
 
     /* ==========================================================

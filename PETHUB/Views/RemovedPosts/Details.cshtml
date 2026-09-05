@@ -4,555 +4,676 @@
     ViewData["Title"] = "Removed Post";
 }
 
-<div class="container-fluid py-4">
+<div class="removed-details-page">
 
-    <!-- Page header and navigation back to the Removed Posts index. -->
-    <div class="d-flex align-items-center mb-4">
+    <!-- =====================================================
+         REMOVED POST NOTICE
+         ===================================================== -->
+    <div class="removed-details-notice">
 
-        <a asp-controller="RemovedPosts"
-           asp-action="Index"
-           class="btn btn-outline-secondary rounded-pill me-3">
-            <i data-lucide="arrow-left"></i>
+        <div class="removed-details-notice-icon">
+            <i data-lucide="shield-alert"></i>
+        </div>
 
-            Back
-        </a>
+        <div class="removed-details-notice-content">
 
-        <div>
-            <h2 class="fw-bold mb-1">
-                Removed Post
-            </h2>
+            <div class="removed-details-notice-title">
+                <h2>This post has been removed</h2>
 
-            <p class="text-muted mb-0">
-                Review the post and the reason it was removed.
+             
+            </div>
+
+            <p>
+                This post was taken down after being reviewed by our moderation team
+                following reports from community members. It is no longer visible to others.
             </p>
+
         </div>
 
     </div>
 
 
-    <!-- =========================================================
-         MARKETPLACE LISTING
-         ========================================================= -->
-    @if (Model.PostType == "listing")
-    {
-        <!-- Check that the Marketplace listing was successfully loaded
-             before accessing its properties. -->
-        @if (Model.Listing == null)
-        {
-            <div class="alert alert-warning">
-                The Marketplace listing could not be loaded.
-            </div>
-        }
-        else
-        {
-            <div class="card border-0 shadow-sm rounded-4">
-
-                <div class="card-body p-4">
-
-                    <div class="row g-4">
-
-                        <!-- Marketplace listing image. -->
-                        <div class="col-md-5">
-
-                            @if (Model.Listing.Images != null &&
-                                 Model.Listing.Images.Any())
-                            {
-                                <!-- First() retrieves the first image from the
-                                     loaded Marketplace image collection. -->
-                                <img src="@Url.Content(Model.Listing.Images.First().ImagePath)"
-                                     class="img-fluid rounded-4 w-100"
-                                     alt="@Model.Listing.Title"
-                                     style="max-height:400px; object-fit:cover;" />
-                            }
-                            else
-                            {
-                                <!-- Fallback when the listing has no images. -->
-                                <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
-                                     style="height:300px;">
-
-                                    <span class="text-muted">
-                                        No image available
-                                    </span>
-
-                                </div>
-                            }
-
-                        </div>
-
-
-                        <!-- Marketplace listing information. -->
-                        <div class="col-md-7">
-
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-
-                                <h3 class="fw-bold mb-0">
-                                    @Model.Listing.Title
-                                </h3>
-
-                                <!-- Indicates that the post was removed by an Admin. -->
-                                <span class="badge bg-danger rounded-pill">
-                                    Removed
-                                </span>
-
-                            </div>
-
-
-                            <div class="mb-3">
-
-                                <p class="mb-1">
-                                    <strong>Listing Type:</strong>
-                                    @Model.Listing.Type
-                                </p>
-
-                                <p class="mb-1">
-                                    <strong>Pet Type:</strong>
-                                    @Model.Listing.PetType
-                                </p>
-
-                                <p class="mb-1">
-                                    <strong>Pet Sex:</strong>
-                                    @Model.Listing.PetSex
-                                </p>
-
-                                <p class="mb-1">
-                                    <strong>Date Posted:</strong>
-                                    @Model.Listing.DatePosted.ToString("MMM dd, yyyy")
-                                </p>
-
-                            </div>
-
-
-                            <hr />
-
-
-                            <!-- Marketplace listing description. -->
-                            <div class="mb-4">
-
-                                <h5 class="fw-bold">
-                                    Description
-                                </h5>
-
-                                <p class="mb-0">
-                                    @(Model.Listing.Description ?? "No description provided.")
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Moderation information and actions. -->
-                <div class="card-footer bg-white border-0 p-4">
-
-                    <!-- Displays the Admin's original reason for removing the post. -->
-                    <div class="alert alert-danger mb-4">
-
-                        <h5 class="fw-bold">
-                            Reason for Removal
-                        </h5>
-
-                        @if (string.IsNullOrWhiteSpace(Model.AdminActionReason))
-                        {
-                            <p class="mb-0 text-muted">
-                                No removal reason was provided.
-                            </p>
-                        }
-                        else
-                        {
-                            <p class="mb-0">
-                                @Model.AdminActionReason
-                            </p>
-                        }
-
-                    </div>
-
-
-                    <!-- Displays the Member's appeal only when an appeal exists.
-                         The appeal is shown inside the same existing post card
-                         rather than creating a duplicate post/card. -->
-                    @if (Model.Appeal != null)
-                    {
-                        <div class="alert alert-secondary mb-4">
-
-                            <h5 class="fw-bold mb-2">
-                                Your Appeal
-                            </h5>
-
-                            <!-- Displays the explanation written by the Member. -->
-                            <p class="mb-3">
-                                @Model.Appeal.AppealMessage
-                            </p>
-
-
-                            <!-- Displays the current Appeal status. -->
-                            <div class="mb-0">
-
-                                <strong>Status:</strong>
-
-                                @if (Model.Appeal.Status == AppealStatus.Pending)
-                                {
-                                    <span class="badge bg-warning text-dark rounded-pill ms-1">
-                                        Pending
-                                    </span>
-                                }
-                                else if (Model.Appeal.Status == AppealStatus.Approved)
-                                {
-                                    <span class="badge bg-success rounded-pill ms-1">
-                                        Approved
-                                    </span>
-                                }
-                                else if (Model.Appeal.Status == AppealStatus.Rejected)
-                                {
-                                    <span class="badge bg-danger rounded-pill ms-1">
-                                        Rejected
-                                    </span>
-                                }
-
-                            </div>
-
-
-                            <!-- Displays the Admin's response after an Appeal
-                                 has been reviewed. This remains hidden while
-                                 the Appeal is still Pending. -->
-                            @if (!string.IsNullOrWhiteSpace(Model.Appeal.AdminActionReason))
-                            {
-                                <hr />
-
-                                <p class="mb-0">
-                                    <strong>Admin Response:</strong>
-                                    @Model.Appeal.AdminActionReason
-                                </p>
-                            }
-
-                        </div>
-                    }
-
-
-                    <!-- Action buttons. -->
-                    <div class="d-flex justify-content-end gap-2">
-
-                        <!-- Opens the existing Marketplace Edit workflow. -->
-                        <a asp-controller="Listings"
-                           asp-action="Edit"
-                           asp-route-id="@Model.Listing.ListingId"
-                           class="btn btn-primary rounded-pill px-4">
-                            Edit
-                        </a>
-
-
-                        @if (Model.Appeal == null ||
-                             Model.Appeal.Status == AppealStatus.Rejected)
-                        {
-                            <!-- Allows an Appeal when there is no existing Appeal
-                                 or when the previous Appeal was rejected. -->
-                            <a asp-controller="Appeals"
-                               asp-action="Create"
-                               asp-route-type="listing"
-                               asp-route-id="@Model.Listing.ListingId"
-                               class="btn btn-outline-danger rounded-pill px-4">
-                                Appeal
-                            </a>
-                        }
-                        else
-                        {
-                            <!-- Prevents duplicate Appeals while the current Appeal
-                                 is Pending or has already been Approved. -->
-                            <button type="button"
-                                    class="btn btn-outline-secondary rounded-pill px-4"
-                                    disabled>
-                                Appealed
-                            </button>
-                        }
-
-                    </div>
-
-                </div>
-
-            </div>
-        }
-    }
-
-
-    <!-- =========================================================
-         LOST & FOUND POST
-         ========================================================= -->
-    @if (Model.PostType == "lostfound")
-    {
-        <!-- Check that the Lost & Found post was successfully loaded
-             before accessing its properties. -->
-        @if (Model.LostFound == null)
-        {
-            <div class="alert alert-warning">
-                The Lost &amp; Found post could not be loaded.
-            </div>
-        }
-        else
-        {
-            <div class="card border-0 shadow-sm rounded-4">
-
-                <div class="card-body p-4">
-
-                    <div class="row g-4">
-
-                        <!-- Lost & Found image. -->
-                        <div class="col-md-5">
-
-                            @if (Model.LostFound.Images != null &&
-                                 Model.LostFound.Images.Any())
-                            {
-                                <!-- First() retrieves the first image from the
-                                     loaded Lost & Found image collection. -->
-                                <img src="@Url.Content(Model.LostFound.Images.First().ImagePath)"
-                                     class="img-fluid rounded-4 w-100"
-                                     alt="@Model.LostFound.Title"
-                                     style="max-height:400px; object-fit:cover;" />
-                            }
-                            else
-                            {
-                                <!-- Fallback when the post has no images. -->
-                                <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
-                                     style="height:300px;">
-
-                                    <span class="text-muted">
-                                        No image available
-                                    </span>
-
-                                </div>
-                            }
-
-                        </div>
-
-
-                        <!-- Lost & Found post information. -->
-                        <div class="col-md-7">
-
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-
-                                <h3 class="fw-bold mb-0">
-                                    @Model.LostFound.Title
-                                </h3>
-
-                                <!-- Indicates that the post was removed by an Admin. -->
-                                <span class="badge bg-danger rounded-pill">
-                                    Removed
-                                </span>
-
-                            </div>
-
-
-                            <div class="mb-3">
-
-                                <p class="mb-1">
-                                    <strong>Report Type:</strong>
-                                    @Model.LostFound.Type
-                                </p>
-
-                                <p class="mb-1">
-                                    <strong>Pet Type:</strong>
-                                    @Model.LostFound.PetType
-                                </p>
-
-                                <p class="mb-1">
-                                    <strong>Sex:</strong>
-                                    @(Model.LostFound.Sex?.ToString() ?? "Not specified")
-                                </p>
-
-                                <p class="mb-1">
-                                    <strong>Date Reported:</strong>
-                                    @Model.LostFound.DateReported.ToString("MMM dd, yyyy")
-                                </p>
-
-                                <p class="mb-1">
-                                    <strong>Breed:</strong>
-                                    @(Model.LostFound.Breed ?? "Not specified")
-                                </p>
-
-                                <p class="mb-1">
-                                    <strong>Location:</strong>
-                                    @Model.LostFound.Barangay,
-                                    @Model.LostFound.City,
-                                    @Model.LostFound.Province
-                                </p>
-
-                                @if (!string.IsNullOrWhiteSpace(Model.LostFound.StreetAddress))
-                                {
-                                    <p class="mb-1">
-                                        <strong>Street Address:</strong>
-                                        @Model.LostFound.StreetAddress
-                                    </p>
-                                }
-
-                            </div>
-
-
-                            <hr />
-
-
-                            <!-- Lost & Found description. -->
-                            <div class="mb-4">
-
-                                <h5 class="fw-bold">
-                                    Description
-                                </h5>
-
-                                <p class="mb-0">
-                                    @(Model.LostFound.Description ?? "No description provided.")
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Moderation information and actions. -->
-                <div class="card-footer bg-white border-0 p-4">
-
-                    <!-- Displays the Admin's original reason for removing the post. -->
-                    <div class="alert alert-danger mb-4">
-
-                        <h5 class="fw-bold">
-                            Reason for Removal
-                        </h5>
-
-                        @if (string.IsNullOrWhiteSpace(Model.AdminActionReason))
-                        {
-                            <p class="mb-0 text-muted">
-                                No removal reason was provided.
-                            </p>
-                        }
-                        else
-                        {
-                            <p class="mb-0">
-                                @Model.AdminActionReason
-                            </p>
-                        }
-
-                    </div>
-
-
-                    <!-- Displays the Member's appeal inside the existing
-                         Lost & Found post card. -->
-                    @if (Model.Appeal != null)
-                    {
-                        <div class="alert alert-secondary mb-4">
-
-                            <h5 class="fw-bold mb-2">
-                                Your Appeal
-                            </h5>
-
-                            <!-- Displays the explanation written by the Member. -->
-                            <p class="mb-3">
-                                @Model.Appeal.AppealMessage
-                            </p>
-
-
-                            <!-- Displays the current Appeal status. -->
-                            <div class="mb-0">
-
-                                <strong>Status:</strong>
-
-                                @if (Model.Appeal.Status == AppealStatus.Pending)
-                                {
-                                    <span class="badge bg-warning text-dark rounded-pill ms-1">
-                                        Pending
-                                    </span>
-                                }
-                                else if (Model.Appeal.Status == AppealStatus.Approved)
-                                {
-                                    <span class="badge bg-success rounded-pill ms-1">
-                                        Approved
-                                    </span>
-                                }
-                                else if (Model.Appeal.Status == AppealStatus.Rejected)
-                                {
-                                    <span class="badge bg-danger rounded-pill ms-1">
-                                        Rejected
-                                    </span>
-                                }
-
-                            </div>
-
-
-                            <!-- Displays the Admin's response when an Admin has
-                                 already made a decision. -->
-                            @if (!string.IsNullOrWhiteSpace(Model.Appeal.AdminActionReason))
-                            {
-                                <hr />
-
-                                <p class="mb-0">
-                                    <strong>Admin Response:</strong>
-                                    @Model.Appeal.AdminActionReason
-                                </p>
-                            }
-
-                        </div>
-                    }
-
-
-                    <!-- Action buttons. -->
-                    <div class="d-flex justify-content-end gap-2">
-
-                        <!-- Opens the existing Lost & Found Edit workflow. -->
-                        <a asp-controller="LostFounds"
-                           asp-action="Edit"
-                           asp-route-id="@Model.LostFound.LostFoundId"
-                           class="btn btn-primary rounded-pill px-4">
-                            Edit
-                        </a>
-
-
-                        @if (Model.Appeal == null ||
-                             Model.Appeal.Status == AppealStatus.Rejected)
-                        {
-                            <!-- Allows an Appeal when there is no existing Appeal
-                                 or when the previous Appeal was rejected. -->
-                            <a asp-controller="Appeals"
-                               asp-action="Create"
-                               asp-route-type="lostfound"
-                               asp-route-id="@Model.LostFound.LostFoundId"
-                               class="btn btn-outline-danger rounded-pill px-4">
-                                Appeal
-                            </a>
-                        }
-                        else
-                        {
-                            <!-- Prevents duplicate Appeals while the current Appeal
-                                 is Pending or has already been Approved. -->
-                            <button type="button"
-                                    class="btn btn-outline-secondary rounded-pill px-4"
-                                    disabled>
-                                Appeal Submitted
-                            </button>
-                        }
-
-                    </div>
-
-                </div>
-
-            </div>
-        }
-    }
-
-
-    <!-- =========================================================
+    <!-- =====================================================
          INVALID POST TYPE
-         ========================================================= -->
+         ===================================================== -->
     @if (Model.PostType != "listing" &&
          Model.PostType != "lostfound")
     {
-        <!-- Handles an unexpected or missing PostType without attempting
-             to access either Marketplace or Lost & Found properties. -->
-        <div class="alert alert-warning">
-            The removed post could not be identified.
+        <div class="removed-details-empty">
+
+            <div class="removed-details-empty-icon">
+                <i data-lucide="file-warning"></i>
+            </div>
+
+            <h3>Post Not Found</h3>
+
+            <p>
+                The removed post could not be identified.
+            </p>
+
         </div>
     }
 
+
+    <!-- =====================================================
+         MARKETPLACE LISTING
+         ===================================================== -->
+    @if (Model.PostType == "listing")
+    {
+        @if (Model.Listing == null)
+        {
+            <div class="removed-details-empty">
+
+                <div class="removed-details-empty-icon">
+                    <i data-lucide="file-warning"></i>
+                </div>
+
+                <h3>Post Not Found</h3>
+
+                <p>
+                    The removed marketplace post could not be found.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="removed-details-layout">
+
+                <!-- =================================================
+                     LEFT COLUMN
+                     ================================================= -->
+                <div class="removed-details-left-column">
+
+                    <!-- =================================================
+                         REASON FOR REMOVAL
+                         ================================================= -->
+                    <div class="removed-details-reason-card">
+
+                        <div class="removed-details-section-heading">
+
+                            <div class="removed-details-section-icon removal">
+                                <i data-lucide="triangle-alert"></i>
+                            </div>
+
+                            <div>
+                                <h2>Reason for Removal</h2>
+
+                                <p>
+                                    This post was removed for the following reason.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="removed-details-reason-box">
+
+                            @if (string.IsNullOrWhiteSpace(Model.AdminActionReason))
+                            {
+                                <span class="removed-details-muted">
+                                    No removal reason was provided.
+                                </span>
+                            }
+                            else
+                            {
+                                @Model.AdminActionReason
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         YOUR APPEAL
+                         ================================================= -->
+                    @if (Model.Appeal != null)
+                    {
+                        <div class="removed-details-appeal-card">
+
+                            <div class="removed-details-appeal-header">
+
+                                <div class="removed-details-section-heading">
+
+                                    <div class="removed-details-section-icon appeal">
+                                        <i data-lucide="scale"></i>
+                                    </div>
+
+                                    <div>
+                                        <h2>Your Appeal</h2>
+
+                                        <p>
+                                            Your submitted appeal for this post.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Appeal Status -->
+                                <div class="removed-details-appeal-status-wrapper">
+
+                                    @if (Model.Appeal.Status == AppealStatus.Pending)
+                                    {
+                                        <span class="removed-details-appeal-status pending">
+                                            <span></span>
+                                            Pending
+                                        </span>
+                                    }
+                                    else if (Model.Appeal.Status == AppealStatus.Approved)
+                                    {
+                                        <span class="removed-details-appeal-status approved">
+                                            <span></span>
+                                            Approved
+                                        </span>
+                                    }
+                                    else if (Model.Appeal.Status == AppealStatus.Rejected)
+                                    {
+                                        <span class="removed-details-appeal-status rejected">
+                                            <span></span>
+                                            Rejected
+                                        </span>
+                                    }
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Appeal Message -->
+                            <div class="removed-details-appeal-message">
+                                @Model.Appeal.AppealMessage
+                            </div>
+
+
+                            <!-- Admin Response -->
+                            @if (!string.IsNullOrWhiteSpace(Model.Appeal.AdminActionReason))
+                            {
+                                <div class="removed-details-admin-response">
+
+                                    <span>Admin Response</span>
+
+                                    <p>
+                                        @Model.Appeal.AdminActionReason
+                                    </p>
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+
+
+                    <!-- =================================================
+                         ACTIONS
+                         ================================================= -->
+                    <div class="removed-details-actions-card">
+
+                        <div class="removed-details-actions-text">
+
+                            <h3>What would you like to do?</h3>
+
+                            <p>
+                                Choose an action for this removed post.
+                            </p>
+
+                        </div>
+
+
+                        <div class="removed-details-actions">
+
+                            <!-- Edit -->
+                            <a asp-controller="Listings"
+                               asp-action="Edit"
+                               asp-route-id="@Model.Listing.ListingId"
+                               class="removed-details-edit">
+
+                                <i data-lucide="pencil"></i>
+                                Edit
+
+                            </a>
+
+
+                            <!-- Submit Appeal / Appeal Submitted -->
+                            @if (Model.Appeal == null ||
+                                 Model.Appeal.Status == AppealStatus.Rejected)
+                            {
+                                <a asp-controller="Appeals"
+                                   asp-action="Create"
+                                   asp-route-type="listing"
+                                   asp-route-id="@Model.Listing.ListingId"
+                                   class="removed-details-appeal">
+
+                                    <i data-lucide="scale"></i>
+                                    Submit an Appeal
+
+                                </a>
+                            }
+                            else
+                            {
+                                <button type="button"
+                                        class="removed-details-appeal disabled"
+                                        disabled>
+
+                                    <i data-lucide="check-circle"></i>
+                                    Appeal Submitted
+
+                                </button>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     RIGHT COLUMN — REPORTED CONTENT
+                     ================================================= -->
+                <div class="removed-details-content-card">
+
+                    <!-- Header -->
+                    <div class="removed-details-content-heading">
+
+                        <div class="removed-details-section-icon content">
+                            <i data-lucide="file-text"></i>
+                        </div>
+
+                        <h2>Reported Content</h2>
+
+                    </div>
+
+
+                    <!-- Image + View Details -->
+                    <div class="removed-details-content-image">
+
+                        @if (Model.Listing.Images != null &&
+                             Model.Listing.Images.Any())
+                        {
+                            <img src="@Url.Content(Model.Listing.Images.First().ImagePath)"
+                                 alt="@Model.Listing.Title" />
+                        }
+                        else
+                        {
+                            <div class="removed-details-no-image">
+
+                                <i data-lucide="image-off"></i>
+
+                                <span>
+                                    No image available.
+                                </span>
+
+                            </div>
+                        }
+
+
+                        <!-- View Details -->
+                        <a asp-controller="Listings"
+                           asp-action="Details"
+                           asp-route-id="@Model.Listing.ListingId"
+                           class="removed-details-view-button">
+
+                            <i data-lucide="external-link"></i>
+                            View Details
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- Listing Information -->
+                    <div class="removed-details-content-info">
+
+                        <!-- Type -->
+                        <div class="removed-details-type marketplace">
+
+                            <i data-lucide="store"></i>
+                            Marketplace
+
+                        </div>
+
+
+                        <!-- Title -->
+                        <h2 class="removed-details-title">
+                            @Model.Listing.Title
+                        </h2>
+
+
+                        <!-- Date -->
+                        <p class="removed-details-date">
+
+                            <i data-lucide="calendar"></i>
+
+                            Posted on
+                            @Model.Listing.DatePosted.ToString("MMMM dd, yyyy")
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+    }
+
+
+    <!-- =====================================================
+         LOST & FOUND
+         ===================================================== -->
+    @if (Model.PostType == "lostfound")
+    {
+        @if (Model.LostFound == null)
+        {
+            <div class="removed-details-empty">
+
+                <div class="removed-details-empty-icon">
+                    <i data-lucide="file-warning"></i>
+                </div>
+
+                <h3>Post Not Found</h3>
+
+                <p>
+                    The removed Lost &amp; Found post could not be found.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="removed-details-layout">
+
+                <!-- =================================================
+                     LEFT COLUMN
+                     ================================================= -->
+                <div class="removed-details-left-column">
+
+                    <!-- =================================================
+                         REASON FOR REMOVAL
+                         ================================================= -->
+                    <div class="removed-details-reason-card">
+
+                        <div class="removed-details-section-heading">
+
+                            <div class="removed-details-section-icon removal">
+                                <i data-lucide="triangle-alert"></i>
+                            </div>
+
+                            <div>
+                                <h2>Reason for Removal</h2>
+
+                                <p>
+                                    This post was removed for the following reason.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="removed-details-reason-box">
+
+                            @if (string.IsNullOrWhiteSpace(Model.AdminActionReason))
+                            {
+                                <span class="removed-details-muted">
+                                    No removal reason was provided.
+                                </span>
+                            }
+                            else
+                            {
+                                @Model.AdminActionReason
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         YOUR APPEAL
+                         ================================================= -->
+                    @if (Model.Appeal != null)
+                    {
+                        <div class="removed-details-appeal-card">
+
+                            <div class="removed-details-appeal-header">
+
+                                <div class="removed-details-section-heading">
+
+                                    <div class="removed-details-section-icon appeal">
+                                        <i data-lucide="scale"></i>
+                                    </div>
+
+                                    <div>
+                                        <h2>Your Appeal</h2>
+
+                                        <p>
+                                            Your submitted appeal for this post.
+                                        </p>
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Appeal Status -->
+                                <div class="removed-details-appeal-status-wrapper">
+
+                                    @if (Model.Appeal.Status == AppealStatus.Pending)
+                                    {
+                                        <span class="removed-details-appeal-status pending">
+                                            <span></span>
+                                            Pending
+                                        </span>
+                                    }
+                                    else if (Model.Appeal.Status == AppealStatus.Approved)
+                                    {
+                                        <span class="removed-details-appeal-status approved">
+                                            <span></span>
+                                            Approved
+                                        </span>
+                                    }
+                                    else if (Model.Appeal.Status == AppealStatus.Rejected)
+                                    {
+                                        <span class="removed-details-appeal-status rejected">
+                                            <span></span>
+                                            Rejected
+                                        </span>
+                                    }
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Appeal Message -->
+                            <div class="removed-details-appeal-message">
+                                @Model.Appeal.AppealMessage
+                            </div>
+
+
+                            <!-- Admin Response -->
+                            @if (!string.IsNullOrWhiteSpace(Model.Appeal.AdminActionReason))
+                            {
+                                <div class="removed-details-admin-response">
+
+                                    <span>Admin Response</span>
+
+                                    <p>
+                                        @Model.Appeal.AdminActionReason
+                                    </p>
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+
+
+                    <!-- =================================================
+                         ACTIONS
+                         ================================================= -->
+                    <div class="removed-details-actions-card">
+
+                        <div class="removed-details-actions-text">
+
+                            <h3>What would you like to do?</h3>
+
+                            <p>
+                                Choose an action for this removed post.
+                            </p>
+
+                        </div>
+
+
+                        <div class="removed-details-actions">
+
+                            <!-- Edit -->
+                            <a asp-controller="LostFounds"
+                               asp-action="Edit"
+                               asp-route-id="@Model.LostFound.LostFoundId"
+                               class="removed-details-edit">
+
+                                <i data-lucide="pencil"></i>
+                                Edit
+
+                            </a>
+
+
+                            <!-- Submit Appeal / Appeal Submitted -->
+                            @if (Model.Appeal == null ||
+                                 Model.Appeal.Status == AppealStatus.Rejected)
+                            {
+                                <a asp-controller="Appeals"
+                                   asp-action="Create"
+                                   asp-route-type="lostfound"
+                                   asp-route-id="@Model.LostFound.LostFoundId"
+                                   class="removed-details-appeal">
+
+                                    <i data-lucide="scale"></i>
+                                    Submit an Appeal
+
+                                </a>
+                            }
+                            else
+                            {
+                                <button type="button"
+                                        class="removed-details-appeal disabled"
+                                        disabled>
+
+                                    <i data-lucide="check-circle"></i>
+                                    Appeal Submitted
+
+                                </button>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     RIGHT COLUMN — REPORTED CONTENT
+                     ================================================= -->
+                <div class="removed-details-content-card">
+
+                    <!-- Header -->
+                    <div class="removed-details-content-heading">
+
+                        <div class="removed-details-section-icon content">
+                            <i data-lucide="file-text"></i>
+                        </div>
+
+                        <h2>Reported Content</h2>
+
+                    </div>
+
+
+                    <!-- Image + View Details -->
+                    <div class="removed-details-content-image">
+
+                        @if (Model.LostFound.Images != null &&
+                             Model.LostFound.Images.Any())
+                        {
+                            <img src="@Url.Content(Model.LostFound.Images.First().ImagePath)"
+                                 alt="@Model.LostFound.Title" />
+                        }
+                        else
+                        {
+                            <div class="removed-details-no-image">
+
+                                <i data-lucide="image-off"></i>
+
+                                <span>
+                                    No image uploaded for this report.
+                                </span>
+
+                            </div>
+                        }
+
+
+                        <!-- View Details -->
+                        <a asp-controller="LostFounds"
+                           asp-action="Details"
+                           asp-route-id="@Model.LostFound.LostFoundId"
+                           class="removed-details-view-button">
+
+                            <i data-lucide="external-link"></i>
+                            View Details
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- Lost & Found Information -->
+                    <div class="removed-details-content-info">
+
+                        <!-- Type -->
+                        <div class="removed-details-type lost-found">
+
+                            <i data-lucide="search"></i>
+                            Lost &amp; Found
+
+                        </div>
+
+
+                        <!-- Title -->
+                        <h2 class="removed-details-title">
+                            @Model.LostFound.Title
+                        </h2>
+
+
+                        <!-- Date -->
+                        <p class="removed-details-date">
+
+                            <i data-lucide="calendar"></i>
+
+                            Reported on
+                            @Model.LostFound.DateReported.ToString("MMMM dd, yyyy")
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+    }
+
 </div>
+
+
+@section Scripts
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            if (typeof lucide !== "undefined") {
+                lucide.createIcons();
+            }
+
+        });
+    </script>
+}

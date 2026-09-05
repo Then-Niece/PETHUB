@@ -876,44 +876,41 @@ These classes belong ONLY to the
                                asp-route-postId="@item.PetFeedId"
                                asp-fragment="post-@item.PetFeedId"
                                class="text-decoration-none text-dark">
+                                <div class="landing-petfeed-card">
 
-                                <div class="card marketplace-card h-100 border-0 shadow-sm">
+                                    <div class="landing-petfeed-card-image-wrapper">
+                                        @if (item.Images != null && item.Images.Any())
+                                        {
+                                            <img src="@item.Images.First().ImagePath"
+                                                 class="landing-petfeed-card-image"
+                                                 alt="@item.Title" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/no-image.png"
+                                                 class="landing-petfeed-card-image"
+                                                 alt="No Image Available" />
+                                        }
+                                    </div>
 
-                                    @if (item.Images != null && item.Images.Any())
-                                    {
-                                        <img src="@item.Images.First().ImagePath"
-                                             class="card-img-top"
-                                             alt="@item.Title" />
-                                    }
-                                    else
-                                    {
-                                        <img src="~/images/no-image.png"
-                                             class="card-img-top"
-                                             alt="No Image Available" />
-                                    }
+                                    <div class="landing-petfeed-card-body">
 
-                                    <div class="card-body d-flex flex-column">
-
-                                        <small class="text-muted mb-2">
-
+                                        <small class="landing-petfeed-card-date">
                                             @item.DateCreated.ToString("MMMM dd, yyyy")
-
                                         </small>
 
-                                        <h5 class="fw-bold">
+                                        <h3 class="landing-petfeed-card-title">
                                             @item.Title
-                                        </h5>
+                                        </h3>
 
-                                        <p class="description flex-grow-1">
-
+                                        <p class="landing-petfeed-card-description">
                                             @(item.Content.Length > 120
                                                 ? item.Content.Substring(0, 120) + "..."
                                                 : item.Content)
-
                                         </p>
 
-                                    </div>
 
+                                    </div>
                                 </div>
 
                             </a>
