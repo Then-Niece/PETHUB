@@ -1,0 +1,2489 @@
+﻿/* ==========================================================
+   PETHUB DARK MODE
+   Final consolidated theme.css
+
+   DESIGN RULE
+   ----------------------------------------------------------
+   - White / near-white surfaces become dark.
+   - Existing PetHub green stays green.
+   - Blue / red / yellow / orange status meanings stay intact.
+   - Images are not recolored.
+   - This file should be loaded AFTER every other CSS file.
+   ========================================================== */
+
+
+/* ==========================================================
+   1. DARK THEME TOKENS
+   ========================================================== */
+
+html.dark-mode {
+    --dark-page: #121212;
+    --dark-navbar: #181818;
+    --dark-sidebar: #181818;
+    --dark-surface: #1C1C1C;
+    --dark-surface-2: #242424;
+    --dark-surface-3: #2B2B2B;
+    --dark-surface-4: #303030;
+    --dark-border: #333333;
+    --dark-border-soft: #2A2A2A;
+    --dark-border-strong: #404040;
+    --dark-text: #F2F2F2;
+    --dark-text-2: #D7D7D7;
+    --dark-text-3: #A7ADB0;
+    --dark-text-4: #8F969A;
+    --dark-green-surface: #233222;
+    --dark-blue-surface: #202B39;
+    --dark-red-surface: #302020;
+    --dark-yellow-surface: #30291D;
+}
+
+
+    /* ==========================================================
+   2. PAGE / APP BACKGROUNDS
+   ========================================================== */
+
+    html.dark-mode,
+    html.dark-mode body {
+        background: var(--dark-page) !important;
+        color: var(--dark-text);
+        color-scheme: dark;
+    }
+
+        html.dark-mode .app,
+        html.dark-mode #mainContent,
+        html.dark-mode main,
+        html.dark-mode .main-content,
+        html.dark-mode .content-wrapper,
+        html.dark-mode .app-content {
+            background: var(--dark-page) !important;
+        }
+
+
+        /* ==========================================================
+   3. GENERIC TEXT
+   ========================================================== */
+
+        html.dark-mode .text-dark {
+            color: var(--dark-text) !important;
+        }
+
+        html.dark-mode .text-muted,
+        html.dark-mode .text-secondary {
+            color: var(--dark-text-3) !important;
+        }
+
+        html.dark-mode hr,
+        html.dark-mode .dropdown-divider {
+            border-color: var(--dark-border) !important;
+        }
+
+
+        /* ==========================================================
+   4. NAVBAR
+   ========================================================== */
+
+        html.dark-mode .navbar-custom {
+            background: var(--dark-navbar) !important;
+            border-color: var(--dark-border-soft) !important;
+        }
+
+        html.dark-mode .navbar-brand {
+            color: #F5F5F5 !important;
+        }
+
+        html.dark-mode #sidebarToggle,
+        html.dark-mode .navbar-icon-btn {
+            background: var(--dark-surface-2) !important;
+            color: #E5E5E5 !important;
+        }
+
+            html.dark-mode #sidebarToggle:hover,
+            html.dark-mode .navbar-icon-btn:hover,
+            html.dark-mode .navbar-icon-btn.active {
+                background: var(--dark-surface-3) !important;
+                color: #8ACE79 !important;
+            }
+
+                html.dark-mode #sidebarToggle:hover svg,
+                html.dark-mode .navbar-icon-btn:hover svg,
+                html.dark-mode .navbar-icon-btn.active svg {
+                    color: #8ACE79 !important;
+                }
+
+        html.dark-mode .profile-chevron {
+            color: #B5B5B5 !important;
+        }
+
+
+        /* Navbar search */
+
+        html.dark-mode .navbar-search .input-group,
+        html.dark-mode .navbar-search .input-group-text,
+        html.dark-mode .navbar-search .form-control {
+            background: var(--dark-surface-2) !important;
+            color: var(--dark-text) !important;
+            border-color: var(--dark-border) !important;
+        }
+
+        html.dark-mode .navbar-search .input-group-text {
+            color: #B0B0B0 !important;
+        }
+
+        html.dark-mode .navbar-search .form-control::placeholder {
+            color: #969696 !important;
+        }
+
+        html.dark-mode .navbar-search .form-control:focus {
+            background: var(--dark-surface-2) !important;
+            color: #FFFFFF !important;
+        }
+
+
+        /* Profile dropdown */
+
+        html.dark-mode .profile-dropdown,
+        html.dark-mode .navbar-custom .dropdown-menu {
+            background: var(--dark-surface) !important;
+            border-color: var(--dark-border) !important;
+            color: var(--dark-text) !important;
+        }
+
+            html.dark-mode .profile-dropdown .dropdown-item {
+                color: #E4E4E4 !important;
+            }
+
+                html.dark-mode .profile-dropdown .dropdown-item i,
+                html.dark-mode .profile-dropdown .dropdown-item svg {
+                    color: #B4B4B4 !important;
+                }
+
+                html.dark-mode .profile-dropdown .dropdown-item:hover,
+                html.dark-mode .profile-dropdown .dropdown-item:focus {
+                    background: var(--dark-surface-3) !important;
+                    color: #8ACE79 !important;
+                }
+
+                    html.dark-mode .profile-dropdown .dropdown-item:hover i,
+                    html.dark-mode .profile-dropdown .dropdown-item:hover svg {
+                        color: #8ACE79 !important;
+                    }
+
+
+        /* Notification badge borders */
+
+        html.dark-mode #notificationBadge,
+        html.dark-mode .notification-badge {
+            border-color: var(--dark-navbar) !important;
+        }
+
+
+        /* ==========================================================
+   5. SIDEBAR
+   ========================================================== */
+
+        html.dark-mode #sidebar-wrapper,
+        html.dark-mode #sidebar,
+        html.dark-mode .sidebar-nav {
+            background: var(--dark-sidebar) !important;
+        }
+
+        html.dark-mode #sidebar-wrapper {
+            border-right-color: var(--dark-border) !important;
+        }
+
+        html.dark-mode .sidebar-section-title {
+            color: #A5A5A5 !important;
+        }
+
+        html.dark-mode .sidebar-divider {
+            border-top-color: #2F2F2F !important;
+        }
+
+        html.dark-mode .sidebar-link {
+            color: #E1E1E1 !important;
+        }
+
+        html.dark-mode .sidebar-text {
+            color: inherit !important;
+        }
+
+        html.dark-mode .sidebar-link:hover {
+            background: var(--dark-surface-2) !important;
+            color: #8ACE79 !important;
+        }
+
+            html.dark-mode .sidebar-link:hover svg {
+                color: #8ACE79 !important;
+            }
+
+        html.dark-mode .sidebar-link.active {
+            background: var(--dark-green-surface) !important;
+            color: #8ACE79 !important;
+        }
+
+            html.dark-mode .sidebar-link.active svg {
+                color: #8ACE79 !important;
+            }
+
+        html.dark-mode .sidebar-view-toggle-label {
+            color: #E1E1E1 !important;
+        }
+
+        html.dark-mode .sidebar-view-toggle .form-check-input {
+            background-color: #282828 !important;
+            border-color: #444444 !important;
+        }
+
+            html.dark-mode .sidebar-view-toggle .form-check-input:checked {
+                background-color: #8ACE79 !important;
+                border-color: #8ACE79 !important;
+            }
+
+
+        /* Sidebar scrollbar */
+
+        html.dark-mode #sidebar {
+            scrollbar-color: #555555 var(--dark-sidebar);
+        }
+
+            html.dark-mode #sidebar::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            html.dark-mode #sidebar::-webkit-scrollbar-track {
+                background: var(--dark-sidebar) !important;
+            }
+
+            html.dark-mode #sidebar::-webkit-scrollbar-thumb {
+                background: #4A4A4A !important;
+                border-radius: 999px !important;
+            }
+
+            html.dark-mode #sidebar:hover::-webkit-scrollbar-thumb {
+                background: #5B5B5B !important;
+            }
+
+            html.dark-mode #sidebar::-webkit-scrollbar-thumb:hover {
+                background: #6A6A6A !important;
+            }
+
+@media (max-width: 768px) {
+    html.dark-mode #sidebar-wrapper {
+        background: var(--dark-sidebar) !important;
+        border-right-color: var(--dark-border) !important;
+    }
+}
+
+
+/* ==========================================================
+   6. PAGE LOADER
+   ========================================================== */
+
+html.dark-mode .page-loader {
+    background: var(--dark-page) !important;
+}
+
+html.dark-mode .page-loader-content p {
+    color: #D0D0D0 !important;
+}
+
+
+/* ==========================================================
+   7. COMMON CARDS / PANELS / BOOTSTRAP
+   ========================================================== */
+
+html.dark-mode .card,
+html.dark-mode .modal-content {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text);
+}
+
+html.dark-mode .modal-header,
+html.dark-mode .modal-footer {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .modal-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .dropdown-menu {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .dropdown-item {
+    color: #E4E4E4 !important;
+}
+
+    html.dark-mode .dropdown-item:hover,
+    html.dark-mode .dropdown-item:focus {
+        background: var(--dark-surface-3) !important;
+        color: #F5F5F5 !important;
+    }
+
+
+/* ==========================================================
+   8. COMMON FORM CONTROLS
+   ========================================================== */
+
+html.dark-mode input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+html.dark-mode textarea,
+html.dark-mode select,
+html.dark-mode .form-control,
+html.dark-mode .form-select,
+html.dark-mode .custom-input {
+    background-color: var(--dark-surface-2) !important;
+    border-color: #3A3A3A !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode input::placeholder,
+    html.dark-mode textarea::placeholder,
+    html.dark-mode .form-control::placeholder {
+        color: #909090 !important;
+    }
+
+    html.dark-mode input:focus,
+    html.dark-mode textarea:focus,
+    html.dark-mode select:focus,
+    html.dark-mode .form-control:focus,
+    html.dark-mode .form-select:focus,
+    html.dark-mode .custom-input:focus {
+        background-color: var(--dark-surface-2) !important;
+        color: #FFFFFF !important;
+    }
+
+
+/* Checkbox / radio neutral unchecked state */
+
+html.dark-mode .form-check-input:not(:checked) {
+    background-color: var(--dark-surface-2) !important;
+    border-color: #555555 !important;
+}
+
+
+/* Readonly */
+
+html.dark-mode .readonly-input,
+html.dark-mode input[readonly],
+html.dark-mode .form-control[readonly] {
+    background: #202020 !important;
+    color: #A8A8A8 !important;
+}
+
+
+/* ==========================================================
+   9. CUSTOM PETHUB SELECT + DATE FIELDS
+   ========================================================== */
+
+html.dark-mode .pethub-select-trigger {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .pethub-select-trigger:hover:not(:disabled) {
+        border-color: #505050 !important;
+    }
+
+    html.dark-mode .pethub-select-trigger.placeholder {
+        color: #999999 !important;
+    }
+
+    html.dark-mode .pethub-select-trigger:disabled,
+    html.dark-mode .pethub-select-trigger.disabled {
+        background: #202020 !important;
+        border-color: #333333 !important;
+        color: #777777 !important;
+    }
+
+    html.dark-mode .pethub-select-trigger svg {
+        color: #B0B0B0 !important;
+    }
+
+    html.dark-mode .pethub-select-trigger.open svg {
+        color: #78BD65 !important;
+    }
+
+html.dark-mode .pethub-select-menu {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .35) !important;
+    scrollbar-color: #555555 transparent;
+}
+
+html.dark-mode .pethub-select-option {
+    color: #E2E2E2 !important;
+}
+
+    html.dark-mode .pethub-select-option:hover {
+        background: var(--dark-surface-3) !important;
+        color: #FFFFFF !important;
+    }
+
+    html.dark-mode .pethub-select-option.active {
+        background: var(--dark-green-surface) !important;
+        color: #69AE58 !important;
+    }
+
+html.dark-mode .pethub-select-menu::-webkit-scrollbar-thumb {
+    background: #555555 !important;
+}
+
+html.dark-mode .pethub-address-input.form-control {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .pethub-address-input.form-control:focus {
+        background: var(--dark-surface-2) !important;
+    }
+
+    html.dark-mode .pethub-address-input.form-control:-webkit-autofill,
+    html.dark-mode .pethub-address-input.form-control:-webkit-autofill:hover,
+    html.dark-mode .pethub-address-input.form-control:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0 1000px var(--dark-surface-2) inset !important;
+        -webkit-text-fill-color: var(--dark-text) !important;
+    }
+
+html.dark-mode .pethub-date-label {
+    color: #D6D6D6 !important;
+}
+
+
+/* ==========================================================
+   10. SETTINGS
+   ========================================================== */
+
+html.dark-mode .settings-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .settings-subtitle {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .settings-section {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .settings-section-header,
+html.dark-mode .settings-row {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .settings-section-header h2,
+    html.dark-mode .settings-row h3 {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .settings-section-header p,
+    html.dark-mode .settings-row p {
+        color: var(--dark-text-3) !important;
+    }
+
+html.dark-mode .settings-section-icon {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode .settings-row-icon,
+html.dark-mode .settings-coming-soon {
+    background: #292929 !important;
+    color: #AEB4B8 !important;
+}
+
+html.dark-mode .settings-switch-slider {
+    background: #4A4A4A !important;
+}
+
+/* Keep checked green from settings.css */
+html.dark-mode .settings-switch input:checked + .settings-switch-slider {
+    background: #78C76C !important;
+}
+
+
+/* ==========================================================
+   11. NOTIFICATION PANEL
+   ========================================================== */
+
+html.dark-mode .notification-dropdown,
+html.dark-mode .notification-panel {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .notification-panel-header {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .notification-panel-title {
+    color: #F4F4F4 !important;
+}
+
+html.dark-mode .notification-panel-subtitle {
+    color: #A6ACB0 !important;
+}
+
+html.dark-mode .notification-filter {
+    background: var(--dark-surface-2) !important;
+    border-color: #3A3A3A !important;
+}
+
+html.dark-mode .notification-filter-button {
+    background: transparent !important;
+    color: #AEB4B8 !important;
+}
+
+    html.dark-mode .notification-filter-button.active {
+        background: var(--dark-green-surface) !important;
+        color: #8ACE79 !important;
+    }
+
+    html.dark-mode .notification-filter-button:hover:not(.active) {
+        background: #2D2D2D !important;
+        color: #F0F0F0 !important;
+    }
+
+html.dark-mode .notification-panel-list {
+    background: var(--dark-surface) !important;
+    scrollbar-color: #555555 var(--dark-surface);
+}
+
+    html.dark-mode .notification-panel-list::-webkit-scrollbar-track {
+        background: var(--dark-surface) !important;
+    }
+
+    html.dark-mode .notification-panel-list::-webkit-scrollbar-thumb {
+        background: #555555 !important;
+    }
+
+html.dark-mode .notification-item {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .notification-item.unread {
+        background: #202420 !important;
+    }
+
+    html.dark-mode .notification-item:hover {
+        background: #262626 !important;
+    }
+
+    html.dark-mode .notification-item.unread:hover {
+        background: #272D26 !important;
+    }
+
+html.dark-mode .notification-title {
+    color: #F0F2F3 !important;
+}
+
+html.dark-mode .notification-item.unread .notification-title {
+    color: #FFFFFF !important;
+}
+
+html.dark-mode .notification-message {
+    color: #AEB4B8 !important;
+}
+
+html.dark-mode .notification-date {
+    color: #8F969A !important;
+}
+
+html.dark-mode .notification-unread-dot {
+    background: #8ACE79 !important;
+}
+
+html.dark-mode .notification-icon-placeholder {
+    background: #292929 !important;
+    color: #B9BFC2 !important;
+}
+
+html.dark-mode .delete-notification {
+    background: transparent !important;
+}
+
+    html.dark-mode .delete-notification:hover {
+        background: #332222 !important;
+    }
+
+html.dark-mode .notification-empty-state {
+    background: var(--dark-surface) !important;
+}
+
+    html.dark-mode .notification-empty-state h6 {
+        color: #F1F1F1 !important;
+    }
+
+    html.dark-mode .notification-empty-state p {
+        color: #A5ACB0 !important;
+    }
+
+html.dark-mode .notification-empty-icon {
+    background: #292929 !important;
+    color: #AAB0B3 !important;
+}
+
+html.dark-mode .notification-pagination {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .notification-page-info {
+    color: #AEB4B8 !important;
+}
+
+html.dark-mode .notification-page-button {
+    background: var(--dark-surface-2) !important;
+    border-color: #3A3A3A !important;
+    color: #D5D5D5 !important;
+}
+
+    html.dark-mode .notification-page-button:hover:not(:disabled) {
+        background: #2D2D2D !important;
+    }
+
+    html.dark-mode .notification-page-button:disabled {
+        background: #202020 !important;
+        color: #666666 !important;
+    }
+
+
+/* ==========================================================
+   12. ADMIN DASHBOARD
+   ========================================================== */
+
+html.dark-mode .admin-dashboard-heading h2 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-dashboard-heading p {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-dashboard-stat-card,
+html.dark-mode .admin-dashboard-summary-card,
+html.dark-mode .admin-dashboard-queue-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .22) !important;
+}
+
+    html.dark-mode .admin-dashboard-stat-card:hover {
+        border-color: #444444 !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, .28) !important;
+    }
+
+html.dark-mode .admin-dashboard-stat-label {
+    color: #A9AFB2 !important;
+}
+
+html.dark-mode .admin-dashboard-stat-value {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-dashboard-stat-icon.members {
+    background: #1D2733 !important;
+}
+
+html.dark-mode .admin-dashboard-stat-icon.admins {
+    background: #1E2B20 !important;
+}
+
+html.dark-mode .admin-dashboard-stat-icon.marketplace {
+    background: var(--dark-yellow-surface) !important;
+}
+
+html.dark-mode .admin-dashboard-stat-icon.lost-found {
+    background: var(--dark-red-surface) !important;
+}
+
+html.dark-mode .admin-dashboard-stat-icon.petfeed {
+    background: #1D2C2A !important;
+}
+
+html.dark-mode .admin-dashboard-card-header {
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .admin-dashboard-card-header h3,
+    html.dark-mode .admin-dashboard-chart h4 {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .admin-dashboard-card-header p,
+    html.dark-mode .admin-dashboard-chart-legend span {
+        color: #B5B9BC !important;
+    }
+
+html.dark-mode .admin-dashboard-chart-legend strong {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-dashboard-queue-item {
+    background: var(--dark-surface-2) !important;
+    border-color: #383838 !important;
+}
+
+    html.dark-mode .admin-dashboard-queue-item h4 {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .admin-dashboard-queue-item p {
+        color: var(--dark-text-3) !important;
+    }
+
+html.dark-mode .admin-dashboard-pending-count {
+    background: var(--dark-yellow-surface) !important;
+}
+
+html.dark-mode .admin-dashboard-review-button {
+    background: var(--dark-surface-2) !important;
+    border-color: #424242 !important;
+}
+
+    html.dark-mode .admin-dashboard-review-button:hover {
+        background: #2B3329 !important;
+    }
+
+
+/* ==========================================================
+   13. MEMBERS / ADMINS INDEX
+   ========================================================== */
+
+html.dark-mode .admin-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-subtitle {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-card,
+html.dark-mode .members-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-card-header,
+html.dark-mode .admin-toolbar,
+html.dark-mode .members-toolbar {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .admin-card .search-box,
+    html.dark-mode .members-toolbar .search-box {
+        background: var(--dark-surface-2) !important;
+        border-color: var(--dark-border-strong) !important;
+    }
+
+    html.dark-mode .admin-card .admin-search,
+    html.dark-mode .members-toolbar .admin-search {
+        background: transparent !important;
+        color: var(--dark-text) !important;
+    }
+
+        html.dark-mode .admin-card .admin-search::placeholder,
+        html.dark-mode .members-toolbar .admin-search::placeholder {
+            color: #999999 !important;
+        }
+
+    html.dark-mode .admin-card .search-icon,
+    html.dark-mode .members-toolbar .search-icon {
+        color: #B0B0B0 !important;
+    }
+
+html.dark-mode .member-count {
+    color: #D5D5D5 !important;
+}
+
+html.dark-mode .members-table-wrap {
+    background: var(--dark-surface) !important;
+}
+
+html.dark-mode .admin-table,
+html.dark-mode .members-table {
+    background: var(--dark-surface) !important;
+    color: #EDEDED !important;
+}
+
+    html.dark-mode .admin-table thead,
+    html.dark-mode .members-table thead,
+    html.dark-mode .admin-table th,
+    html.dark-mode .members-table th {
+        background: #24282B !important;
+        color: #D0D4D6 !important;
+        border-color: #383838 !important;
+    }
+
+    html.dark-mode .admin-table td,
+    html.dark-mode .members-table td {
+        background: var(--dark-surface) !important;
+        color: #E4E4E4 !important;
+        border-color: var(--dark-border) !important;
+    }
+
+    html.dark-mode .admin-table tbody tr:hover td,
+    html.dark-mode .members-table tbody tr:hover td {
+        background: var(--dark-surface-2) !important;
+    }
+
+html.dark-mode .email-col {
+    color: #B8B8B8 !important;
+}
+
+html.dark-mode .action-menu-btn {
+    color: #D5D5D5 !important;
+}
+
+    html.dark-mode .action-menu-btn:hover {
+        background: #292929 !important;
+    }
+
+    html.dark-mode .action-menu-btn i,
+    html.dark-mode .action-menu-btn svg {
+        color: #D5D5D5 !important;
+    }
+
+html.dark-mode .action-menu {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .35) !important;
+}
+
+    html.dark-mode .action-menu a {
+        color: #E5E5E5 !important;
+    }
+
+        html.dark-mode .action-menu a:hover {
+            background: #2E2E2E !important;
+        }
+
+html.dark-mode .menu-divider {
+    background: #3A3A3A !important;
+}
+
+html.dark-mode .deactivate-item:hover {
+    background: var(--dark-yellow-surface) !important;
+}
+
+html.dark-mode .reactivate-item:hover {
+    background: var(--dark-green-surface) !important;
+}
+
+
+/* Pills: preserve foreground/status meaning */
+
+html.dark-mode .gender-pill.male,
+html.dark-mode .role-pill,
+html.dark-mode .status-pill.role {
+    background: var(--dark-blue-surface) !important;
+}
+
+html.dark-mode .gender-pill.female {
+    background: #302036 !important;
+}
+
+html.dark-mode .admin-role-pill {
+    background: var(--dark-yellow-surface) !important;
+}
+
+html.dark-mode .status-pill.active {
+    background: #203124 !important;
+}
+
+html.dark-mode .status-pill.pending {
+    background: var(--dark-yellow-surface) !important;
+}
+
+html.dark-mode .status-pill.inactive {
+    background: #292929 !important;
+}
+
+
+/* ==========================================================
+   14. ADMIN PETFEED INDEX
+   ========================================================== */
+
+html.dark-mode .admin-petfeed-header-text h1 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-petfeed-header-text p {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-petfeed-filter-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-petfeed-filter-label {
+    color: #E4E4E4 !important;
+}
+
+html.dark-mode .admin-petfeed-filter-button {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .admin-petfeed-filter-button:hover {
+        background: #292929 !important;
+        border-color: #505050 !important;
+    }
+
+    html.dark-mode .admin-petfeed-filter-button svg {
+        color: #B0B0B0 !important;
+    }
+
+html.dark-mode .admin-petfeed-filter-menu {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+html.dark-mode .admin-petfeed-filter-option {
+    color: #E7E7E7 !important;
+}
+
+    html.dark-mode .admin-petfeed-filter-option:hover {
+        background: #2E2E2E !important;
+    }
+
+    html.dark-mode .admin-petfeed-filter-option.selected {
+        background: var(--dark-green-surface) !important;
+    }
+
+html.dark-mode .admin-petfeed-total {
+    color: #C1C5C7 !important;
+}
+
+html.dark-mode .admin-petfeed-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-petfeed-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-petfeed-date,
+html.dark-mode .admin-petfeed-author,
+html.dark-mode .admin-petfeed-engagement span,
+html.dark-mode .admin-petfeed-engagement svg {
+    color: #B4B8BA !important;
+}
+
+html.dark-mode .admin-petfeed-image-container {
+    background: #292929 !important;
+}
+
+html.dark-mode .admin-petfeed-type-tip {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode .admin-petfeed-type-announcement {
+    background: var(--dark-blue-surface) !important;
+}
+
+html.dark-mode .admin-petfeed-empty {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .admin-petfeed-empty h3 {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .admin-petfeed-empty p {
+        color: var(--dark-text-3) !important;
+    }
+
+
+/* ==========================================================
+   15. MARKETPLACE APPROVAL
+   ========================================================== */
+
+html.dark-mode .admin-marketplace-header-text h1 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-marketplace-header-text p {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-marketplace-filter-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-marketplace-filter-label {
+    color: #E4E4E4 !important;
+}
+
+html.dark-mode .admin-marketplace-filter-button {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .admin-marketplace-filter-button:hover {
+        background: #292929 !important;
+        border-color: #505050 !important;
+    }
+
+    html.dark-mode .admin-marketplace-filter-button svg {
+        color: #B0B0B0 !important;
+    }
+
+html.dark-mode .admin-marketplace-filter-menu {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+html.dark-mode .admin-marketplace-filter-option {
+    color: #E5E5E5 !important;
+}
+
+    html.dark-mode .admin-marketplace-filter-option:hover {
+        background: #2E2E2E !important;
+    }
+
+    html.dark-mode .admin-marketplace-filter-option.selected {
+        background: var(--dark-green-surface) !important;
+    }
+
+html.dark-mode .admin-marketplace-total {
+    color: #C2C6C8 !important;
+}
+
+html.dark-mode .admin-marketplace-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-marketplace-image-container {
+    background: #292929 !important;
+}
+
+html.dark-mode .admin-marketplace-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-marketplace-date,
+html.dark-mode .admin-marketplace-location {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-marketplace-more-button:hover {
+    background: #292929 !important;
+}
+
+html.dark-mode .admin-marketplace-status-approved {
+    background: #203124 !important;
+}
+
+html.dark-mode .admin-marketplace-status-pending {
+    background: var(--dark-yellow-surface) !important;
+}
+
+html.dark-mode .admin-marketplace-status-rejected {
+    background: var(--dark-red-surface) !important;
+}
+
+
+/* ==========================================================
+   16. LOST & FOUND APPROVAL
+   ========================================================== */
+
+html.dark-mode .admin-lost-found-header-text h1 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-lost-found-header-text p {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-lost-found-filter-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-lost-found-filter-label {
+    color: #E5E5E5 !important;
+}
+
+html.dark-mode .admin-lost-found-filter-button {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .admin-lost-found-filter-button:hover {
+        background: #2B2B2B !important;
+    }
+
+    html.dark-mode .admin-lost-found-filter-button svg {
+        color: #B5B5B5 !important;
+    }
+
+html.dark-mode .admin-lost-found-filter-menu {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+html.dark-mode .admin-lost-found-filter-option {
+    color: #E7E7E7 !important;
+}
+
+    html.dark-mode .admin-lost-found-filter-option:hover {
+        background: #2E2E2E !important;
+    }
+
+    html.dark-mode .admin-lost-found-filter-option.selected {
+        background: var(--dark-green-surface) !important;
+    }
+
+html.dark-mode .admin-lost-found-total {
+    color: #C5C8CA !important;
+}
+
+html.dark-mode .admin-lost-found-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .admin-lost-found-card:hover {
+        background: #202020 !important;
+        border-color: #444444 !important;
+    }
+
+html.dark-mode .admin-lost-found-image-container {
+    background: #292929 !important;
+}
+
+html.dark-mode .admin-lost-found-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-lost-found-date,
+html.dark-mode .admin-lost-found-location {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-lost-found-status-approved {
+    background: #203124 !important;
+}
+
+html.dark-mode .admin-lost-found-status-pending {
+    background: var(--dark-yellow-surface) !important;
+}
+
+html.dark-mode .admin-lost-found-status-rejected {
+    background: var(--dark-red-surface) !important;
+}
+
+html.dark-mode .admin-lost-found-type-lost {
+    background: #33231F !important;
+}
+
+html.dark-mode .admin-lost-found-type-found {
+    background: #203124 !important;
+}
+
+
+/* ==========================================================
+   17. ADMIN REPORTS
+   ========================================================== */
+
+html.dark-mode .admin-report-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-report-subtitle {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-report-stat-card,
+html.dark-mode .admin-report-filter-card,
+html.dark-mode .admin-report-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-report-stat-label {
+    color: #B6BDC2 !important;
+}
+
+html.dark-mode .admin-report-stat-count {
+    color: var(--dark-text) !important;
+}
+
+/* Preserve status colors, darken only pale backgrounds */
+html.dark-mode .admin-report-stat-pending {
+    background: var(--dark-yellow-surface) !important;
+}
+
+html.dark-mode .admin-report-stat-appeal {
+    background: var(--dark-red-surface) !important;
+}
+
+html.dark-mode .admin-report-stat-resolved {
+    background: #203124 !important;
+}
+
+html.dark-mode .admin-report-stat-dismissed {
+    background: #292929 !important;
+}
+
+html.dark-mode .admin-report-filter-label {
+    color: #E4E4E4 !important;
+}
+
+html.dark-mode .admin-report-filter-button,
+html.dark-mode .admin-report-search-input {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .admin-report-filter-button:hover {
+        background: #292929 !important;
+    }
+
+    html.dark-mode .admin-report-filter-button svg,
+    html.dark-mode .admin-report-search-icon {
+        color: #B0B0B0 !important;
+    }
+
+html.dark-mode .admin-report-filter-menu {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+html.dark-mode .admin-report-filter-option {
+    color: #E5E5E5 !important;
+}
+
+    html.dark-mode .admin-report-filter-option:hover {
+        background: #2E2E2E !important;
+    }
+
+    html.dark-mode .admin-report-filter-option.selected {
+        background: var(--dark-green-surface) !important;
+    }
+
+html.dark-mode .admin-report-total-number {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-report-total-label {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-report-reason,
+html.dark-mode .admin-report-meta-value {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-report-description,
+html.dark-mode .admin-report-meta-label {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-report-type-marketplace,
+html.dark-mode .admin-report-status-resolved {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode .admin-report-type-lost-found,
+html.dark-mode .admin-report-status-appeal {
+    background: var(--dark-red-surface) !important;
+}
+
+html.dark-mode .admin-report-status-pending {
+    background: var(--dark-yellow-surface) !important;
+}
+
+html.dark-mode .admin-report-status-dismissed {
+    background: #292929 !important;
+}
+
+html.dark-mode .admin-report-information-item::after {
+    background: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-report-information-icon {
+    background: #292929 !important;
+    color: #B7BFC3 !important;
+}
+
+
+/* ==========================================================
+   18. LOGS
+   ========================================================== */
+
+html.dark-mode .logs-header h1 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .logs-header p {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .logs-toolbar,
+html.dark-mode .logs-card,
+html.dark-mode .logs-empty-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .logs-search-input,
+html.dark-mode .logs-filter-button {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .logs-search-input:hover,
+    html.dark-mode .logs-filter-button:hover {
+        background: #292929 !important;
+        border-color: #505050 !important;
+    }
+
+    html.dark-mode .logs-search-input:disabled,
+    html.dark-mode .logs-filter-button:disabled {
+        background: var(--dark-surface-2) !important;
+        color: var(--dark-text) !important;
+    }
+
+html.dark-mode .logs-search-icon,
+html.dark-mode .logs-filter-arrow {
+    color: #B0B0B0 !important;
+}
+
+html.dark-mode .logs-total-number {
+    color: #D0D0D0 !important;
+}
+
+html.dark-mode .logs-total-label {
+    color: #9FA4A7 !important;
+}
+
+html.dark-mode .logs-table thead,
+html.dark-mode .logs-table thead th {
+    background: #24282B !important;
+    color: #D0D4D6 !important;
+    border-color: #383838 !important;
+}
+
+html.dark-mode .logs-table tbody tr {
+    background: var(--dark-surface) !important;
+}
+
+    html.dark-mode .logs-table tbody tr:hover {
+        background: var(--dark-surface-2) !important;
+    }
+
+    html.dark-mode .logs-table tbody tr:not(:last-child) {
+        border-color: var(--dark-border) !important;
+    }
+
+html.dark-mode .logs-table tbody td {
+    background: transparent !important;
+    color: #E5E5E5 !important;
+}
+
+html.dark-mode .logs-avatar {
+    background: #203124 !important;
+}
+
+html.dark-mode .logs-admin-name {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .logs-action {
+    color: #D6D6D6 !important;
+}
+
+html.dark-mode .logs-date-cell {
+    color: #C7C7C7 !important;
+}
+
+html.dark-mode .logs-time-cell {
+    color: #AFAFAF !important;
+}
+
+html.dark-mode .logs-empty-card p {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   19. ADMIN SETUP
+   ========================================================== */
+
+html.dark-mode .admin-setup-page {
+    background: var(--dark-page) !important;
+}
+
+html.dark-mode .admin-setup-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, .28) !important;
+}
+
+html.dark-mode .admin-setup-header,
+html.dark-mode .admin-setup-footer {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-setup-logo {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode .admin-setup-header h1 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-setup-header p,
+html.dark-mode .admin-setup-note {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-setup-field label {
+    color: #D8D8D8 !important;
+}
+
+html.dark-mode .admin-setup-input {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .admin-setup-input.readonly {
+        background: #202020 !important;
+        color: #A0A0A0 !important;
+    }
+
+html.dark-mode .admin-password-toggle:hover {
+    background: #293127 !important;
+}
+
+
+/* ==========================================================
+   20. ADMIN CRUD / MEMBER DETAILS / CREATE MEMBER
+   ========================================================== */
+
+html.dark-mode .crud-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .crud-header,
+html.dark-mode .crud-footer,
+html.dark-mode .edit-member-section-title,
+html.dark-mode .create-member-section-title,
+html.dark-mode .member-view-section-header {
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .crud-header h2,
+    html.dark-mode .edit-member-section-title,
+    html.dark-mode .create-member-section-title,
+    html.dark-mode .member-view-section-header h5,
+    html.dark-mode .member-id-header h5,
+    html.dark-mode .upload-panel h5 {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .crud-header p,
+    html.dark-mode .edit-member-help,
+    html.dark-mode .member-id-header p,
+    html.dark-mode .upload-text {
+        color: var(--dark-text-3) !important;
+    }
+
+html.dark-mode .form-group label {
+    color: #D8D8D8 !important;
+}
+
+html.dark-mode .upload-panel,
+html.dark-mode .member-id-panel,
+html.dark-mode .create-member-id-panel {
+    background: #202020 !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .upload-preview,
+html.dark-mode .member-id-preview,
+html.dark-mode .create-member-id-preview {
+    background: var(--dark-surface-2) !important;
+    border-color: #454545 !important;
+}
+
+html.dark-mode .member-view-item {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .member-view-label {
+    color: #A7ADB0 !important;
+}
+
+html.dark-mode .member-view-value {
+    color: #E7E7E7 !important;
+}
+
+html.dark-mode .member-password-input {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .member-password-toggle:hover {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode .btn-cancel {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: #D8D8D8 !important;
+}
+
+    html.dark-mode .btn-cancel:hover {
+        background: #2D2D2D !important;
+    }
+
+
+/* ==========================================================
+   21. MEMBER PROFILE / MY POSTS
+   ========================================================== */
+
+html.dark-mode .my-posts-profile-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .my-posts-profile-menu {
+    color: #D4D4D4 !important;
+}
+
+    html.dark-mode .my-posts-profile-menu:hover {
+        background: #292929 !important;
+        color: #FFFFFF !important;
+    }
+
+html.dark-mode .my-posts-profile-dropdown .dropdown-menu {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+html.dark-mode .my-posts-profile-dropdown .dropdown-item {
+    color: #E5E5E5 !important;
+}
+
+    html.dark-mode .my-posts-profile-dropdown .dropdown-item:hover {
+        background: #2E2E2E !important;
+    }
+
+html.dark-mode .my-posts-profile-picture {
+    border-color: #333333 !important;
+}
+
+html.dark-mode .my-posts-profile-details h3,
+html.dark-mode .my-posts-stat strong,
+html.dark-mode .my-posts-heading h2 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .my-posts-profile-details p,
+html.dark-mode .my-posts-stat span,
+html.dark-mode .my-posts-heading p {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .my-posts-activity-summary,
+html.dark-mode .my-posts-stat {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .my-posts-toolbar {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .my-post-filter-label {
+    color: #E4E4E4 !important;
+}
+
+html.dark-mode .my-post-filter-button {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   22. PETFEED MEMBER FEED
+   ========================================================== */
+
+html.dark-mode .feed-item {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .feed-item:hover,
+    html.dark-mode .feed-item.highlight-post {
+        border-color: #404040 !important;
+    }
+
+html.dark-mode .feed-item-author-image {
+    border-color: var(--dark-border) !important;
+    background: #292929 !important;
+}
+
+html.dark-mode .feed-item-author-name,
+html.dark-mode .feed-item-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .feed-item-meta {
+    color: #A1A7AA !important;
+}
+
+html.dark-mode .feed-item-meta-separator {
+    color: #777777 !important;
+}
+
+html.dark-mode .feed-item-description {
+    color: #D0D0D0 !important;
+}
+
+html.dark-mode .feed-item-media,
+html.dark-mode .feed-item-main-image,
+html.dark-mode .feed-item-photo-carousel,
+html.dark-mode .feed-item-image-grid {
+    background: #202020 !important;
+}
+
+/* Preserve badge foreground colors, darken pale surfaces */
+html.dark-mode .feed-item-type-badge.pet-tip-badge {
+    background: var(--dark-blue-surface) !important;
+}
+
+html.dark-mode .feed-item-type-badge.marketplace-badge {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode .feed-item-type-badge.lost-found-badge {
+    background: var(--dark-red-surface) !important;
+}
+
+html.dark-mode .feed-item-photo-control {
+    background: rgba(36, 36, 36, .92) !important;
+    border-color: #4A4A4A !important;
+    color: #FFFFFF !important;
+}
+
+html.dark-mode .feed-item-footer,
+html.dark-mode .feed-item-actions,
+html.dark-mode .feed-item-comments {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .feed-item-comment {
+    background: var(--dark-surface-2) !important;
+}
+
+html.dark-mode .feed-item-comment-name {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .feed-item-comment-content {
+    color: #D0D0D0 !important;
+}
+
+html.dark-mode .feed-item-comment-date {
+    color: #999999 !important;
+}
+
+html.dark-mode .petfeed-search-empty {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .petfeed-search-empty h3 {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .petfeed-search-empty p,
+    html.dark-mode .petfeed-search-empty span {
+        color: var(--dark-text-3) !important;
+    }
+
+
+/* ==========================================================
+   23. MARKETPLACE PUBLIC / MEMBER CARDS
+   ========================================================== */
+
+html.dark-mode .marketplace-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .marketplace-card-image-wrapper {
+    background: #202020 !important;
+}
+
+html.dark-mode .marketplace-card-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .marketplace-card-description,
+html.dark-mode .marketplace-card-location,
+html.dark-mode .marketplace-card-date,
+html.dark-mode .marketplace-subtitle {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .marketplace-card-meta {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .marketplace-price-badge {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   24. MARKETPLACE CREATE / EDIT / DETAILS
+   ========================================================== */
+
+html.dark-mode .listing-form-card,
+html.dark-mode .photo-upload-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .listing-form-card h2,
+    html.dark-mode #listingSelection h2,
+    html.dark-mode .listing-type-card h5,
+    html.dark-mode .photo-upload-card h5 {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .listing-form-card p,
+    html.dark-mode #listingSelection p,
+    html.dark-mode .listing-type-card small,
+    html.dark-mode .photo-upload-card small {
+        color: var(--dark-text-3) !important;
+    }
+
+html.dark-mode #listingSelection .listing-type-card,
+html.dark-mode .listing-type-card {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+    html.dark-mode #listingSelection .listing-type-card:hover,
+    html.dark-mode .listing-type-card:hover {
+        background: #243022 !important;
+        border-color: #8ACE79 !important;
+    }
+
+html.dark-mode #listingForm .form-label,
+html.dark-mode #listingForm .form-check-label {
+    color: #D8D8D8 !important;
+}
+
+html.dark-mode #listingForm .form-control,
+html.dark-mode #listingForm .form-select,
+html.dark-mode #imageInput {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode #imageInput::file-selector-button {
+        background: #303030 !important;
+        border-color: #444444 !important;
+        color: #E5E5E5 !important;
+    }
+
+        html.dark-mode #imageInput::file-selector-button:hover {
+            background: #383838 !important;
+        }
+
+html.dark-mode #listingForm .btn-outline-secondary {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: #D6D6D6 !important;
+}
+
+    html.dark-mode #listingForm .btn-outline-secondary:hover {
+        background: #2E2E2E !important;
+    }
+
+
+/* ==========================================================
+   25. LOST & FOUND CREATE / EDIT
+   ========================================================== */
+
+html.dark-mode .lostfound-form-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode #reportTypeSelection h2,
+html.dark-mode #reportForm h2,
+html.dark-mode .listing-type-card h5,
+html.dark-mode .photo-upload-card h5 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode #reportTypeSelection .text-muted,
+html.dark-mode #reportFormSubtitle,
+html.dark-mode .listing-type-card small,
+html.dark-mode .photo-upload-card small {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode #reportForm .form-label,
+html.dark-mode .lostfound-radio-option {
+    color: #D8D8D8 !important;
+}
+
+html.dark-mode #reportForm .form-control {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .lostfound-radio-circle {
+    background: var(--dark-surface-2) !important;
+    border-color: #555555 !important;
+}
+
+html.dark-mode .lostfound-radio-option:has(input[type="radio"]:checked) .lostfound-radio-circle {
+    background: var(--dark-surface-2) !important;
+    border-color: #6FBA61 !important;
+}
+
+html.dark-mode .lostfound-type-badge.lost {
+    background: var(--dark-red-surface) !important;
+}
+
+html.dark-mode .lostfound-type-badge.found {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode #reportForm hr {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode #reportForm .btn-outline-secondary {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: #D6D6D6 !important;
+}
+
+    html.dark-mode #reportForm .btn-outline-secondary:hover {
+        background: #2E2E2E !important;
+    }
+
+
+/* ==========================================================
+   26. IMAGE UPLOAD / PREVIEW / GALLERY
+   ========================================================== */
+
+html.dark-mode .image-preview-item,
+html.dark-mode #imagePreviewContainer .image-preview-item {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+html.dark-mode .image-limit-message {
+    background: var(--dark-yellow-surface) !important;
+    border-color: #5C4A1F !important;
+    color: #E6BB55 !important;
+}
+
+html.dark-mode .photo-upload-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .photo-upload-button {
+    background: var(--dark-green-surface) !important;
+}
+
+    html.dark-mode .photo-upload-button:hover {
+        background: #293A27 !important;
+    }
+
+html.dark-mode .photo-upload-count,
+html.dark-mode .photo-upload-help {
+    color: var(--dark-text-3) !important;
+}
+
+/* Gallery is already intentionally dark. Keep navigation controls readable. */
+html.dark-mode .shared-gallery-close,
+html.dark-mode .shared-gallery-prev,
+html.dark-mode .shared-gallery-next {
+    background: rgba(36, 36, 36, .92) !important;
+    color: #FFFFFF !important;
+}
+
+    html.dark-mode .shared-gallery-close:hover,
+    html.dark-mode .shared-gallery-prev:hover,
+    html.dark-mode .shared-gallery-next:hover {
+        background: #303030 !important;
+    }
+
+
+/* ==========================================================
+   27. MESSAGES
+   ========================================================== */
+
+html.dark-mode .messages-page,
+html.dark-mode .messages-layout,
+html.dark-mode .messages-sidebar,
+html.dark-mode .messages-chat,
+html.dark-mode .chat-header {
+    background: var(--dark-surface) !important;
+}
+
+html.dark-mode .messages-sidebar,
+html.dark-mode .chat-header {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .messages-sidebar-header h2,
+html.dark-mode .conversation-name,
+html.dark-mode .conversation-first-name,
+html.dark-mode .chat-user-details h3 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .messages-search {
+    background: var(--dark-surface-2) !important;
+}
+
+    html.dark-mode .messages-search svg {
+        color: #AEB4B8 !important;
+    }
+
+    html.dark-mode .messages-search input {
+        background: transparent !important;
+        color: var(--dark-text) !important;
+    }
+
+html.dark-mode .conversation-filter {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: #B7B7B7 !important;
+}
+
+    html.dark-mode .conversation-filter:hover {
+        background: #2E2E2E !important;
+    }
+
+    html.dark-mode .conversation-filter.active {
+        background: var(--dark-green-surface) !important;
+        border-color: #8ACE79 !important;
+        color: #67A758 !important;
+    }
+
+html.dark-mode .conversation-item:hover {
+    background: var(--dark-surface-2) !important;
+}
+
+html.dark-mode .conversation-item.active {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode .conversation-avatar,
+html.dark-mode .conversation-post-placeholder {
+    background: #292929 !important;
+}
+
+html.dark-mode .conversation-post-title,
+html.dark-mode .conversation-preview,
+html.dark-mode .conversation-context,
+html.dark-mode .conversation-context-status {
+    color: #B1B6B9 !important;
+}
+
+html.dark-mode .conversation-time {
+    color: #8F969A !important;
+}
+
+
+/* Generic chat surfaces likely present later in Messages.css */
+html.dark-mode .chat-messages,
+html.dark-mode .chat-body,
+html.dark-mode .messages-empty-state {
+    background: var(--dark-surface) !important;
+}
+
+html.dark-mode .chat-composer,
+html.dark-mode .message-composer,
+html.dark-mode .chat-input-area {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .chat-composer input,
+    html.dark-mode .message-composer input,
+    html.dark-mode .chat-input-area textarea {
+        background: var(--dark-surface-2) !important;
+        border-color: var(--dark-border-strong) !important;
+        color: var(--dark-text) !important;
+    }
+
+
+/* ==========================================================
+   28. LOGIN
+   ========================================================== */
+
+html.dark-mode .login-page,
+html.dark-mode .login-right {
+    background: var(--dark-page) !important;
+}
+
+html.dark-mode .login-left {
+    background: radial-gradient(circle at top left, rgba(138, 206, 121, .14), transparent 30%), linear-gradient(135deg, #182018, #151A15) !important;
+}
+
+html.dark-mode .login-left-overlay {
+    background: radial-gradient(circle at bottom right, rgba(138, 206, 121, .10), transparent 35%) !important;
+}
+
+html.dark-mode .login-brand-text,
+html.dark-mode .login-hero-text h1,
+html.dark-mode .login-form-header h2 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .login-hero-text p,
+html.dark-mode .login-form-header p,
+html.dark-mode .remember-me-wrap .form-check-label,
+html.dark-mode .register-link-wrap,
+html.dark-mode .back-home-link {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .pet-card {
+    background: var(--dark-surface) !important;
+    border-color: #333333 !important;
+}
+
+html.dark-mode .login-form .floating-input {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .login-form input:-webkit-autofill,
+html.dark-mode .login-form input:-webkit-autofill:hover,
+html.dark-mode .login-form input:-webkit-autofill:focus,
+html.dark-mode .login-form input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--dark-text) !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--dark-surface-2) inset !important;
+    box-shadow: 0 0 0 1000px var(--dark-surface-2) inset !important;
+}
+
+html.dark-mode .password-toggle:hover {
+    background: var(--dark-green-surface) !important;
+}
+
+
+/* ==========================================================
+   29. REGISTER
+   ========================================================== */
+
+html.dark-mode .register-page {
+    background: var(--dark-page) !important;
+}
+
+html.dark-mode .register-header h1,
+html.dark-mode .register-section-heading h2,
+html.dark-mode .id-upload-text strong {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .register-header p,
+html.dark-mode .register-section-heading p,
+html.dark-mode .id-upload-text span {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .register-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .register-section {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .register-section-icon,
+html.dark-mode .id-upload-icon {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode .register-field-label,
+html.dark-mode .register-address .form-label {
+    color: #D8D8D8 !important;
+}
+
+html.dark-mode .register-form .floating-input,
+html.dark-mode .register-control,
+html.dark-mode .register-form .form-control,
+html.dark-mode .register-form .form-select {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .gender-option span {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: #B7B7B7 !important;
+}
+
+html.dark-mode .gender-option input:checked + span {
+    background: var(--dark-green-surface) !important;
+    border-color: #84C96F !important;
+    color: #68AD57 !important;
+}
+
+html.dark-mode .register-password-toggle:hover {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode .id-upload-box {
+    background: #202020 !important;
+    border-color: #4A4A4A !important;
+}
+
+    html.dark-mode .id-upload-box:hover {
+        background: #243022 !important;
+    }
+
+
+/* ==========================================================
+   30. FORGOT PASSWORD
+   ========================================================== */
+
+html.dark-mode .forgot-page {
+    background: radial-gradient(circle at top left, rgba(138, 206, 121, .08), transparent 32%), var(--dark-page) !important;
+}
+
+html.dark-mode .forgot-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .forgot-header h1 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .forgot-header p,
+html.dark-mode .back-login-link,
+html.dark-mode .confirmation-secondary-text {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .forgot-form .floating-input {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .forgot-form input:-webkit-autofill,
+html.dark-mode .forgot-form input:-webkit-autofill:hover,
+html.dark-mode .forgot-form input:-webkit-autofill:focus,
+html.dark-mode .forgot-form input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--dark-text) !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--dark-surface-2) inset !important;
+    box-shadow: 0 0 0 1000px var(--dark-surface-2) inset !important;
+}
+
+html.dark-mode .auth-confirmation-icon {
+    background: var(--dark-green-surface) !important;
+}
+
+
+/* ==========================================================
+   31. RESET PASSWORD / RESET CONFIRMATION / EXPIRED
+   ========================================================== */
+
+html.dark-mode .reset-page,
+html.dark-mode .reset-confirmation-page,
+html.dark-mode .expired-page,
+html.dark-mode .email-confirmation-page {
+    background: var(--dark-page) !important;
+}
+
+html.dark-mode .reset-card,
+html.dark-mode .reset-confirmation-card,
+html.dark-mode .expired-card,
+html.dark-mode .email-confirmation-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .reset-header h1,
+    html.dark-mode .reset-confirmation-card h1,
+    html.dark-mode .expired-card h1,
+    html.dark-mode .email-confirmation-card h1 {
+        color: var(--dark-text) !important;
+    }
+
+html.dark-mode .reset-header p,
+html.dark-mode .reset-confirmation-message,
+html.dark-mode .reset-confirmation-secondary,
+html.dark-mode .expired-message,
+html.dark-mode .expired-secondary,
+html.dark-mode .email-confirmation-message,
+html.dark-mode .email-confirmation-secondary,
+html.dark-mode .reset-confirmation-home,
+html.dark-mode .expired-back-link,
+html.dark-mode .email-confirmation-home {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .reset-form .floating-input {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .reset-form .floating-input[readonly] {
+        background: #202020 !important;
+        color: #A0A0A0 !important;
+    }
+
+html.dark-mode .reset-icon,
+html.dark-mode .reset-confirmation-icon,
+html.dark-mode .email-confirmation-icon,
+html.dark-mode .email-confirmation-icon.success {
+    background: var(--dark-green-surface) !important;
+}
+
+    html.dark-mode .expired-icon,
+    html.dark-mode .email-confirmation-icon.warning {
+        background: var(--dark-yellow-surface) !important;
+    }
+
+html.dark-mode .email-confirmation-note {
+    background: #202720 !important;
+    border-color: #354335 !important;
+    color: #B6C1B3 !important;
+}
+
+
+/* ==========================================================
+   32. SYSTEM MODAL
+   ========================================================== */
+
+html.dark-mode .system-modal {
+    background: var(--dark-surface) !important;
+}
+
+html.dark-mode .system-modal-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .system-modal-message {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .system-modal-icon.error {
+    background: var(--dark-red-surface) !important;
+}
+
+html.dark-mode .system-modal-icon.success {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode .system-modal-icon.warning {
+    background: var(--dark-yellow-surface) !important;
+}
+
+html.dark-mode .system-modal-icon.info {
+    background: var(--dark-blue-surface) !important;
+}
+
+
+/* ==========================================================
+   33. TERMS & CONDITIONS MODAL
+   ========================================================== */
+
+html.dark-mode .terms-modal {
+    background: var(--dark-surface) !important;
+}
+
+html.dark-mode .terms-modal-header,
+html.dark-mode .terms-modal-footer {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .terms-modal-icon {
+    background: var(--dark-green-surface) !important;
+}
+
+html.dark-mode .terms-modal-heading h2,
+html.dark-mode .terms-section h3,
+html.dark-mode .terms-agreement-box strong {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .terms-modal-heading p,
+html.dark-mode .terms-modal-body,
+html.dark-mode .terms-agreement-box p {
+    color: #B6BBC0 !important;
+}
+
+html.dark-mode .terms-modal-close {
+    background: var(--dark-surface-2) !important;
+    color: #C7C7C7 !important;
+}
+
+    html.dark-mode .terms-modal-close:hover {
+        background: #2E2E2E !important;
+        color: #FFFFFF !important;
+    }
+
+html.dark-mode .terms-effective-date {
+    background: #202720 !important;
+    color: #B6C1B3 !important;
+}
+
+html.dark-mode .terms-divider {
+    background: var(--dark-border) !important;
+}
+
+html.dark-mode .terms-agreement-box {
+    background: #202720 !important;
+    border-color: #354335 !important;
+}
+
+html.dark-mode .terms-agreement-icon {
+    background: var(--dark-green-surface) !important;
+}
+
+
+/* ==========================================================
+   34. LANDING PAGE
+   ========================================================== */
+
+html.dark-mode .landing-page,
+html.dark-mode .landing-hero,
+html.dark-mode .landing-mission-section {
+    background: var(--dark-page) !important;
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .landing-hero-text h1,
+html.dark-mode .landing-mission-content h2,
+html.dark-mode .landing-centered-content h2,
+html.dark-mode .landing-section-heading h2,
+html.dark-mode .landing-offer-heading h2 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .landing-hero-text p,
+html.dark-mode .landing-mission-content > p,
+html.dark-mode .landing-centered-content p,
+html.dark-mode .landing-mission-stats span {
+    color: #B0BBC5 !important;
+}
+
+html.dark-mode .landing-outline-button,
+html.dark-mode .landing-hero-image-badge {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .landing-hero-image-badge strong {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .landing-hero-image-badge span {
+        color: var(--dark-text-3) !important;
+    }
+
+
+/* ==========================================================
+   35. TABLES - SAFE FALLBACK
+   ========================================================== */
+
+html.dark-mode table,
+html.dark-mode .table {
+    color: #EAEAEA !important;
+}
+
+    html.dark-mode .table > :not(caption) > * > * {
+        background: var(--dark-surface) !important;
+        border-color: var(--dark-border) !important;
+        color: #EAEAEA !important;
+    }
+
+
+/* ==========================================================
+   36. SCROLLBARS - DARK MODE
+   ========================================================== */
+
+html.dark-mode * {
+    scrollbar-color: #555555 #1C1C1C;
+}
+
+    html.dark-mode *::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    html.dark-mode *::-webkit-scrollbar-track {
+        background: #1C1C1C;
+    }
+
+    html.dark-mode *::-webkit-scrollbar-thumb {
+        background: #505050;
+        border-radius: 999px;
+    }
+
+        html.dark-mode *::-webkit-scrollbar-thumb:hover {
+            background: #666666;
+        }
+
+
+/* ==========================================================
+   37. IMPORTANT ACCENT PRESERVATION
+   ========================================================== */
+
+/*
+   Do NOT globally recolor:
+   - #8ACE79 / #78C262 / other PetHub greens
+   - red error / rejected states
+   - yellow pending / sale states
+   - blue informational states
+   - images
+
+   This file only replaces light surfaces with dark surfaces
+   and dark text with readable light text.
+*/

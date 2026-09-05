@@ -1,0 +1,215 @@
+﻿@{
+    ViewData["Title"] = "Settings";
+}
+
+<div class="settings-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="settings-header">
+
+        <div>
+
+            <h1 class="settings-title">
+                Settings
+            </h1>
+
+            <p class="settings-subtitle">
+                Manage your PetHub preferences and account settings.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         APPEARANCE
+    ====================================================== -->
+
+    <section class="settings-section">
+
+        <div class="settings-section-header">
+
+            <div class="settings-section-icon">
+                <i data-lucide="palette"></i>
+            </div>
+
+            <div>
+
+                <h2>
+                    Appearance
+                </h2>
+
+                <p>
+                    Customize how PetHub looks on your device.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             DARK MODE
+        ================================================== -->
+
+        <div class="settings-row">
+
+            <div class="settings-row-info">
+
+                <div class="settings-row-icon">
+                    <i data-lucide="moon"></i>
+                </div>
+
+                <div>
+
+                    <h3>
+                        Dark Mode
+                    </h3>
+
+                    <p>
+                        Use a darker theme for PetHub.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <label class="settings-switch">
+
+                <input type="checkbox"
+                       id="darkModeToggle" />
+
+                <span class="settings-switch-slider"></span>
+
+            </label>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ACCOUNT PREVIEW
+         We will activate these next.
+    ====================================================== -->
+
+    <section class="settings-section">
+
+        <div class="settings-section-header">
+
+            <div class="settings-section-icon">
+                <i data-lucide="user-cog"></i>
+            </div>
+
+            <div>
+
+                <h2>
+                    Account
+                </h2>
+
+                <p>
+                    Manage your login and account information.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="settings-row settings-row-disabled">
+
+            <div class="settings-row-info">
+
+                <div class="settings-row-icon">
+                    <i data-lucide="at-sign"></i>
+                </div>
+
+                <div>
+
+                    <h3>
+                        Username
+                    </h3>
+
+                    <p>
+                        Change your PetHub username.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <span class="settings-coming-soon">
+                Coming next
+            </span>
+
+        </div>
+
+
+        <div class="settings-row settings-row-disabled">
+
+            <div class="settings-row-info">
+
+                <div class="settings-row-icon">
+                    <i data-lucide="mail"></i>
+                </div>
+
+                <div>
+
+                    <h3>
+                        Email
+                    </h3>
+
+                    <p>
+                        Update and verify your email address.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <span class="settings-coming-soon">
+                Coming next
+            </span>
+
+        </div>
+
+
+        <div class="settings-row settings-row-disabled">
+
+            <div class="settings-row-info">
+
+                <div class="settings-row-icon">
+                    <i data-lucide="lock-keyhole"></i>
+                </div>
+
+                <div>
+
+                    <h3>
+                        Password
+                    </h3>
+
+                    <p>
+                        Change your account password.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <span class="settings-coming-soon">
+                Coming next
+            </span>
+
+        </div>
+
+    </section>
+
+</div>

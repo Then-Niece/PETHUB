@@ -8,12 +8,27 @@
 
     <script type="importmap"></script>
 
+    <script>
+    (function () {
+
+        const savedTheme =
+            localStorage.getItem("pethubTheme");
+
+        if (savedTheme === "dark") {
+            document.documentElement.classList.add("dark-mode");
+        }
+
+    })();
+</script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/navbar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/admin-dashboard.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/admin-member-crud.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/settings.css" asp-append-version="true" />
+
     <link rel="stylesheet" href="~/css/messages.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/admin-report.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Marketplace.css" asp-append-version="true" />
@@ -39,6 +54,8 @@
 
     <link rel="stylesheet" href="~/PETHUB.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/price.css" asp-append-version="true" />
+    <!-- MUST BE LAST  para ma work and dark mode-->
+    <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
 
 
     <!-- ==========================================
@@ -196,6 +213,8 @@
     <script src="~/js/imagePreviewHelper.js" asp-append-version="true"></script>
     <!-- Preserved from the other branch -->
     <script src="~/js/imageGallery.js" asp-append-version="true"></script>
+    <!-- For changing theme feature js -->
+    <script src="~/js/theme.js" asp-append-version="true"></script>
 
 
     <!-- =========================================================

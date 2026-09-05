@@ -1279,5 +1279,20 @@ namespace PETHUB.Controllers
         {
             return View();
         }
+
+        // =========================================================
+        // SETTINGS
+        // =========================================================
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Settings()
+        {
+            return View();
+        }
+
+
     }
+
+
 }
