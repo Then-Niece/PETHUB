@@ -143,5 +143,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.MapHub<ChatHub>("/chatHub");
+app.MapHub<PetFeedHub>("/petFeedHub");
 
 app.Run();

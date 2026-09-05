@@ -1,27 +1,64 @@
 ﻿/* ==========================================
+   SIDEBAR / APP LAYOUT VARIABLES
+========================================== */
+
+body {
+    /*
+     * Normal navbar height.
+     *
+     * Desktop pages and mobile pages without
+     * the PetFeed search use this height.
+     */
+    --navbar-height: 72px;
+}
+
+
+
+
+
+/* ==========================================
    SIDEBAR LAYOUT
 ========================================== */
 
 .app {
     display: flex;
-    min-height: calc(100vh - 72px);
-    margin-top: 72px;
+    min-height: calc(100vh - var(--navbar-height));
+    margin-top: var(--navbar-height);
 }
+
+
+    /*
+ * Pages that intentionally hide the navbar
+ * should start directly at the top.
+ */
+    .app.app-no-navbar {
+        margin-top: 0;
+        min-height: 100vh;
+    }
+
+
+/* ==========================================
+   SIDEBAR WRAPPER
+========================================== */
 
 #sidebar-wrapper {
     width: 250px;
     flex-shrink: 0;
     border-right: 1px solid #E5E7EB;
-    background: #fff;
+    background: #FFFFFF;
     position: sticky;
-    top: 72px;
-    height: calc(100vh - 72px);
-    max-height: calc(100vh - 72px);
+    top: var(--navbar-height);
+    height: calc(100vh - var(--navbar-height));
+    max-height: calc(100vh - var(--navbar-height));
     align-self: flex-start;
     box-sizing: border-box;
-    /* Sidebar animation */
     transition: width .3s ease;
 }
+
+
+    /* ==========================================
+   COLLAPSED SIDEBAR WIDTH
+========================================== */
 
     #sidebar-wrapper.collapsed {
         width: 80px;
@@ -34,7 +71,7 @@
 
 /*
  * If the user previously collapsed the sidebar,
- * start it at 80px before the page is painted.
+ * start at the collapsed width before rendering.
  */
 html.sidebar-collapsed #sidebar-wrapper {
     width: 80px;
@@ -42,12 +79,13 @@ html.sidebar-collapsed #sidebar-wrapper {
 
 
 /*
- * Disable the width animation while the sidebar
- * is being restored during page load.
+ * Prevent the sidebar animation while its
+ * saved state is being restored.
  */
 html.sidebar-loading #sidebar-wrapper {
     transition: none !important;
 }
+
 
 /* ==========================================
    SIDEBAR
@@ -64,23 +102,30 @@ html.sidebar-loading #sidebar-wrapper {
 }
 
 
-    /* Sidebar scrollbar */
+    /* ==========================================
+   SIDEBAR SCROLLBAR
+========================================== */
+
     #sidebar::-webkit-scrollbar {
         width: 6px;
     }
 
+
     #sidebar::-webkit-scrollbar-track {
         background: transparent;
     }
+
 
     #sidebar::-webkit-scrollbar-thumb {
         border-radius: 10px;
         background: transparent;
     }
 
+
     #sidebar:hover::-webkit-scrollbar-thumb {
         background: #D1D5DB;
     }
+
 
 /* ==========================================
    SIDEBAR NAVIGATION
@@ -94,12 +139,14 @@ html.sidebar-loading #sidebar-wrapper {
     box-sizing: border-box;
 }
 
+
 .sidebar-section {
     display: flex;
     flex-direction: column;
     width: 100%;
     gap: 8px;
 }
+
 
 .sidebar-section-title {
     margin-bottom: 8px;
@@ -109,6 +156,11 @@ html.sidebar-loading #sidebar-wrapper {
     text-transform: uppercase;
     color: #9CA3AF;
 }
+
+
+/* ==========================================
+   SIDEBAR LINKS
+========================================== */
 
 .sidebar-link {
     display: flex;
@@ -123,10 +175,12 @@ html.sidebar-loading #sidebar-wrapper {
     transition: all .25s ease;
 }
 
+
     .sidebar-link:hover {
         background: #F3FAF1;
         color: #8ACE79;
     }
+
 
     .sidebar-link svg {
         width: 20px;
@@ -134,17 +188,35 @@ html.sidebar-loading #sidebar-wrapper {
         flex-shrink: 0;
     }
 
+
 .sidebar-text {
     white-space: nowrap;
     font-size: .95rem;
     font-weight: 500;
 }
 
+
 .sidebar-divider {
     margin: 24px 0;
     border: none;
     border-top: 1px solid #E5E7EB;
 }
+
+
+/* ==========================================
+   ACTIVE SIDEBAR LINK
+========================================== */
+
+.sidebar-link.active {
+    background: #F3FAF1;
+    color: #8ACE79;
+    font-weight: 600;
+}
+
+
+    .sidebar-link.active svg {
+        color: #8ACE79;
+    }
 
 
 /* ==========================================
@@ -155,11 +227,13 @@ html.sidebar-loading #sidebar-wrapper {
     padding: 16px 8px;
 }
 
+
 #sidebar-wrapper.collapsed .sidebar-section-title,
 #sidebar-wrapper.collapsed .sidebar-text,
 #sidebar-wrapper.collapsed .sidebar-divider {
     display: none;
 }
+
 
 #sidebar-wrapper.collapsed .sidebar-link {
     justify-content: center;
@@ -171,7 +245,7 @@ html.sidebar-loading #sidebar-wrapper {
 
 
 /* ==========================================
-   TOGGLE BUTTON
+   SIDEBAR TOGGLE BUTTON
 ========================================== */
 
 #sidebarToggle:focus {
@@ -192,7 +266,7 @@ html.sidebar-loading #sidebar-wrapper {
 
 
 /* ==========================================
-   ADJUSTMENTS
+   SIDEBAR ICON ADJUSTMENTS
 ========================================== */
 
 .bag-icon {
@@ -200,10 +274,12 @@ html.sidebar-loading #sidebar-wrapper {
     top: 1px;
 }
 
+
 .search-icon {
     position: relative;
     top: -2px;
 }
+
 
 .file-icon {
     position: relative;
@@ -212,18 +288,82 @@ html.sidebar-loading #sidebar-wrapper {
 
 
 /* ==========================================
-   ACTIVE SIDEBAR LINK
+   ADMIN / MEMBER VIEW TOGGLE
 ========================================== */
 
-.sidebar-link.active {
-    background: #F3FAF1;
-    color: #8ACE79;
+.sidebar-view-toggle {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 0 4px 0;
+}
+
+
+.sidebar-view-toggle-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 40px;
+}
+
+
+.sidebar-view-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #4B5563;
+    font-size: .9rem;
     font-weight: 600;
 }
 
-    .sidebar-link.active svg {
-        color: #8ACE79;
+
+    .sidebar-view-toggle-label svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
     }
+
+
+/* ==========================================
+   ADMIN / MEMBER BOOTSTRAP SWITCH
+========================================== */
+
+.sidebar-view-toggle .form-check-input {
+    width: 2.4em;
+    height: 1.3em;
+    margin: 0;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+
+    .sidebar-view-toggle .form-check-input:checked {
+        background-color: #8ACE79;
+        border-color: #8ACE79;
+    }
+
+
+    .sidebar-view-toggle .form-check-input:focus {
+        box-shadow: 0 0 0 .15rem rgba(138, 206, 121, .25);
+    }
+
+
+/* ==========================================
+   COLLAPSED VIEW TOGGLE
+========================================== */
+
+#sidebar-wrapper.collapsed .sidebar-view-toggle {
+    display: none;
+}
+
+
+/* ==========================================
+   SIDEBAR OVERLAY
+========================================== */
+
+.sidebar-overlay {
+    display: none;
+}
 
 
 /* ==========================================
@@ -232,42 +372,60 @@ html.sidebar-loading #sidebar-wrapper {
 
 @media (max-width: 768px) {
 
-    /* Main app should no longer reserve space
-       for the sidebar. */
+    /* ======================================
+       APP
+       ====================================== */
+
     .app {
         display: block;
+        min-height: calc(100vh - var(--navbar-height));
+        margin-top: var(--navbar-height);
     }
 
 
-    /* Sidebar becomes an off-canvas panel. */
+        /*
+     * Preserve pages that intentionally have
+     * no navbar.
+     */
+        .app.app-no-navbar {
+            margin-top: 0;
+            min-height: 100vh;
+        }
+
+
+    /* ======================================
+       MOBILE OFF-CANVAS SIDEBAR
+       ====================================== */
+
     #sidebar-wrapper {
         position: fixed;
-        top: 72px;
+        top: var(--navbar-height);
         left: 0;
         width: min(82vw, 280px);
-        height: calc(100vh - 72px);
-        max-height: calc(100vh - 72px);
+        height: calc(100vh - var(--navbar-height));
+        max-height: calc(100vh - var(--navbar-height));
         z-index: 1050;
-        background: #fff;
+        background: #FFFFFF;
         border-right: 1px solid #E5E7EB;
-        /* Hidden by default */
         transform: translateX(-100%);
         transition: transform .25s ease;
-        /* Width should NOT animate on mobile */
         flex-shrink: 0;
     }
 
 
-        /* When mobile sidebar is open */
+        /*
+     * Sidebar becomes visible when sidebar.js
+     * adds mobile-open.
+     */
         #sidebar-wrapper.mobile-open {
             transform: translateX(0);
         }
 
 
-        /*
-     * Ignore desktop collapsed width behavior
-     * while on mobile.
-     */
+        /* ======================================
+       IGNORE DESKTOP COLLAPSED WIDTH
+       ====================================== */
+
         #sidebar-wrapper.collapsed {
             width: min(82vw, 280px);
         }
@@ -278,7 +436,10 @@ html.sidebar-loading #sidebar-wrapper {
     }
 
 
-    /* Show normal text/navigation on mobile drawer. */
+    /* ======================================
+       RESTORE NORMAL MOBILE NAVIGATION
+       ====================================== */
+
     #sidebar-wrapper.collapsed .sidebar-nav {
         padding: 24px 16px;
     }
@@ -304,109 +465,39 @@ html.sidebar-loading #sidebar-wrapper {
     }
 
 
+    /*
+     * The Admin / Member switch should remain
+     * available when the mobile drawer is open.
+     */
     #sidebar-wrapper.collapsed .sidebar-view-toggle {
         display: block;
     }
 
 
-    /* Main content takes the WHOLE phone width. */
+    /* ======================================
+       MOBILE MAIN CONTENT
+       ====================================== */
+
     #mainContent {
         width: 100%;
         min-width: 0;
         padding: 0;
         overflow-x: hidden;
     }
-}
-
-/* ==========================================
-   ADMIN / MEMBER VIEW TOGGLE
-   ========================================== */
-
-.sidebar-view-toggle {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0 0 4px 0;
-}
-
-.sidebar-view-toggle-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    min-height: 40px;
-}
-
-.sidebar-view-toggle-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #4B5563;
-    font-size: .9rem;
-    font-weight: 600;
-}
-
-    .sidebar-view-toggle-label svg {
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-    }
-
-/* Bootstrap switch customization */
-.sidebar-view-toggle .form-check-input {
-    width: 2.4em;
-    height: 1.3em;
-    margin: 0;
-    cursor: pointer;
-    box-shadow: none;
-}
-
-    .sidebar-view-toggle .form-check-input:checked {
-        background-color: #8ACE79;
-        border-color: #8ACE79;
-    }
-
-    .sidebar-view-toggle .form-check-input:focus {
-        box-shadow: 0 0 0 .15rem rgba(138, 206, 121, .25);
-    }
 
 
-/* ==========================================
-   COLLAPSED SIDEBAR
-   ========================================== */
-
-/*
- * When the sidebar is collapsed, the text and
- * switch should not remain visible.
- *
- * We will later improve this behavior when the
- * Member View functionality is implemented.
- */
-
-#sidebar-wrapper.collapsed .sidebar-view-toggle {
-    display: none;
-}
-
-
-
-/* ==========================================
-   MOBILE SIDEBAR OVERLAY
-========================================== */
-
-.sidebar-overlay {
-    display: none;
-}
-
-
-@media (max-width: 768px) {
+    /* ======================================
+       MOBILE SIDEBAR OVERLAY
+       ====================================== */
 
     .sidebar-overlay {
         position: fixed;
-        top: 72px;
+        top: var(--navbar-height);
         left: 0;
         right: 0;
         bottom: 0;
         z-index: 1040;
-        background: rgba(0, 0, 0, 0.35);
+        background: rgba(0, 0, 0, .35);
         opacity: 0;
         visibility: hidden;
         transition: opacity .25s ease, visibility .25s ease;

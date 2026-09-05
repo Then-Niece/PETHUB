@@ -134,7 +134,7 @@
             <!-- Pet Feed -->
             <a asp-controller="PetFeeds"
                asp-action="Index"
-               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PetFeed" &&
+               class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PetFeeds" &&
                                                                           ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
 
                 <i data-lucide="paw-print"></i>
@@ -259,7 +259,7 @@
                asp-action="Index"
                class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "MyLogs" ? "active" : "")">
 
-                <i data-lucide="file-text"></i>
+                <i data-lucide="logs"></i>
 
                 <span class="sidebar-text">
                     My Logs

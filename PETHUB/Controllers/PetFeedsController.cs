@@ -1,27 +1,32 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Helpers;
 using PETHUB.Models;
 using PETHUB.Services;
 using PETHUB.ViewModels;
+using PETHUB.Hubs;
 
 public class PetFeedsController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly NotificationService _notificationService;
+    private readonly IHubContext<PetFeedHub> _petFeedHub;
 
     public PetFeedsController(
-        ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager,
-        NotificationService notificationService)
+    ApplicationDbContext context,
+    UserManager<ApplicationUser> userManager,
+    NotificationService notificationService,
+    IHubContext<PetFeedHub> petFeedHub)
     {
         _context = context;
         _userManager = userManager;
         _notificationService = notificationService;
+        _petFeedHub = petFeedHub;
     }
 
 
@@ -900,6 +905,14 @@ public class PetFeedsController : Controller
             var currentPawCount = await _context.PetFeedPaws
                 .CountAsync(p => p.PetFeedId == id);
 
+            await _petFeedHub.Clients.All.SendAsync(
+                "PetFeedPawUpdated",
+                new
+                {
+                    petFeedId = id,
+                    pawCount = currentPawCount
+                });
+
             return Json(new
             {
                 success = true,
@@ -950,6 +963,14 @@ public class PetFeedsController : Controller
         {
             var currentPawCount = await _context.PetFeedPaws
                 .CountAsync(p => p.PetFeedId == id);
+
+            await _petFeedHub.Clients.All.SendAsync(
+                "PetFeedPawUpdated",
+                new
+                {
+                    petFeedId = id,
+                    pawCount = currentPawCount
+                });
 
             return Json(new
             {
@@ -1022,6 +1043,21 @@ public class PetFeedsController : Controller
             var commentCount = await _context.PetFeedComments
                 .CountAsync(c => c.PetFeedId == id);
 
+            await _petFeedHub.Clients.All.SendAsync(
+                "PetFeedCommentAdded",
+                new
+                {
+                    petFeedId = id,
+                    commentId = comment.CommentId,
+                    content = comment.Content,
+                    datePosted = comment.DatePosted.ToString("MMM dd, yyyy"),
+                    firstName = member?.FirstName,
+                    lastName = member?.LastName,
+                    profilePicturePath = member?.ProfilePicturePath,
+                    senderUserId = userId,
+                    commentCount = commentCount
+                });
+
             return Json(new
             {
                 success = true,
@@ -1088,6 +1124,15 @@ public class PetFeedsController : Controller
         {
             var commentCount = await _context.PetFeedComments
                 .CountAsync(c => c.PetFeedId == petFeedId);
+
+            await _petFeedHub.Clients.All.SendAsync(
+                "PetFeedCommentDeleted",
+                new
+                {
+                    petFeedId = petFeedId,
+                    commentId = id,
+                    commentCount = commentCount
+                });
 
             return Json(new
             {
@@ -1177,6 +1222,10 @@ public class PetFeedsController : Controller
     // Builds the three independent feed queries using the supplied feed seed.
     // The seed is passed from Feed() or LoadMore() so every page uses the
     // exact same randomized ordering.
+    // Builds the three independent feed queries using the supplied feed seed.
+    //
+    // The optional search parameter allows the SAME combined feed backend
+    // to also be used by the PetFeed navbar search.
     private (
         IQueryable<FeedCandidate> PetFeeds,
         IQueryable<FeedCandidate> Marketplace,
@@ -1184,109 +1233,165 @@ public class PetFeedsController : Controller
         BuildFeedCandidateQueries(
             string city,
             string? userId,
-            long seed)
+            long seed,
+            string? search = null)
     {
-
-        // Prime number used to keep the generated random key in a safe range.
         const long prime = 2147483629L;
+
+        search = search?.Trim();
 
 
         // ==========================================================
         // PETFEED
         // ==========================================================
 
-        // Only Pet Tips remain in the normal combined feed.
-        // Announcements are handled separately by the announcement carousel
-        // and therefore must not enter pagination.
         var petFeedQuery = _context.PetFeeds
             .AsNoTracking()
-            .Where(p => p.Type == PetFeedType.PetTip)
+            .Where(p =>
+                p.Type == PetFeedType.PetTip)
             .AsQueryable();
 
-        // Convert PetFeed records into lightweight candidates.
-        var petFeeds = petFeedQuery.Select(p => new FeedCandidate
+
+        if (!string.IsNullOrWhiteSpace(search))
         {
-            // This candidate came from administrator-created PetFeed content.
-            ContentType = PetFeedContentType.PetFeed,
+            petFeedQuery = petFeedQuery.Where(p =>
+                p.Title.Contains(search)
+                ||
+                (
+                    p.Content != null &&
+                    p.Content.Contains(search)
+                )
+            );
+        }
 
-            // PetFeed uses PetFeedId as its source ID.
-            ContentId = p.PetFeedId,
 
-            Title = p.Title,
+        var petFeeds = petFeedQuery
+            .Select(p => new FeedCandidate
+            {
+                ContentType =
+                    PetFeedContentType.PetFeed,
 
-            Content = p.Content,
+                ContentId =
+                    p.PetFeedId,
 
-            DateCreated = p.DateCreated,
+                Title =
+                    p.Title,
 
-            // PetFeed-specific type.
-            PetFeedType = p.Type,
+                Content =
+                    p.Content,
 
-            // PetFeed does not have location fields.
-            City = null,
-            Province = null,
+                DateCreated =
+                    p.DateCreated,
 
-            // These properties are not used by PetFeed.
-            ListingType = null,
-            ListingPetType = null,
-            Price = null,
+                PetFeedType =
+                    p.Type,
 
-            LostFoundType = null,
-            LostFoundPetType = null,
+                City =
+                    null,
 
-            // Generate a deterministic daily ordering value.
-            RandomKey =
-                (((long)p.PetFeedId * seed) +
-                1000000007L) % prime
-        });
+                Province =
+                    null,
+
+                ListingType =
+                    null,
+
+                ListingPetType =
+                    null,
+
+                Price =
+                    null,
+
+                LostFoundType =
+                    null,
+
+                LostFoundPetType =
+                    null,
+
+                RandomKey =
+                    (((long)p.PetFeedId * seed) +
+                    1000000007L) % prime
+            });
 
 
         // ==========================================================
         // MARKETPLACE
         // ==========================================================
 
-        // Marketplace eligibility:
-        //
-        // Status       = Approved
-        // ListStatus   = Pending
-        // City         = current user's City
-        // MemberId     != current user's ID
-        var marketplace = _context.Listings
+        var marketplaceQuery = _context.Listings
             .AsNoTracking()
             .Where(l =>
                 l.Status == ListApprovalStatus.Approved &&
                 l.ListStatus == ListingStatus.Pending &&
                 l.City == city &&
                 l.MemberId != userId)
+            .AsQueryable();
+
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            marketplaceQuery = marketplaceQuery.Where(l =>
+                l.Title.Contains(search)
+                ||
+                (
+                    l.Description != null &&
+                    l.Description.Contains(search)
+                )
+                ||
+                (
+                    l.City != null &&
+                    l.City.Contains(search)
+                )
+                ||
+                (
+                    l.Province != null &&
+                    l.Province.Contains(search)
+                )
+            );
+        }
+
+
+        var marketplace = marketplaceQuery
             .Select(l => new FeedCandidate
             {
-                // This candidate came from Marketplace.
-                ContentType = PetFeedContentType.Marketplace,
+                ContentType =
+                    PetFeedContentType.Marketplace,
 
-                // Listing uses ListingId.
-                ContentId = l.ListingId,
+                ContentId =
+                    l.ListingId,
 
-                Title = l.Title,
+                Title =
+                    l.Title,
 
-                Content = l.Description,
+                Content =
+                    l.Description,
 
-                DateCreated = l.DatePosted,
+                DateCreated =
+                    l.DatePosted,
 
-                // Marketplace location.
-                City = l.City,
-                Province = l.Province,
+                City =
+                    l.City,
 
-                // Marketplace-specific values.
-                ListingType = l.Type,
-                ListingPetType = l.PetType,
-                Price = l.Price,
+                Province =
+                    l.Province,
 
-                // These properties are not used by Marketplace.
-                PetFeedType = null,
+                ListingType =
+                    l.Type,
 
-                LostFoundType = null,
-                LostFoundPetType = null,
+                ListingPetType =
+                    l.PetType,
 
-                // Generate the Marketplace candidate's daily ordering value.
+                Price =
+                    l.Price,
+
+                PetFeedType =
+                    null,
+
+                LostFoundType =
+                    null,
+
+                LostFoundPetType =
+                    null,
+
                 RandomKey =
                     (((long)l.ListingId * seed) +
                     2000000011L) % prime
@@ -1297,59 +1402,92 @@ public class PetFeedsController : Controller
         // LOST & FOUND
         // ==========================================================
 
-        // Lost & Found eligibility:
-        //
-        // Status       = Approved
-        // RStatus      = Active
-        // City         = current user's City
-        // UserId       != current user's ID
-        var lostFound = _context.LostFounds
+        var lostFoundQuery = _context.LostFounds
             .AsNoTracking()
             .Where(l =>
                 l.Status == ApprovalStatus.Approved &&
                 l.RStatus == ReportStatus.Active &&
                 l.City == city &&
                 l.UserId != userId)
+            .AsQueryable();
+
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            lostFoundQuery = lostFoundQuery.Where(l =>
+                l.Title.Contains(search)
+                ||
+                (
+                    l.Description != null &&
+                    l.Description.Contains(search)
+                )
+                ||
+                (
+                    l.Breed != null &&
+                    l.Breed.Contains(search)
+                )
+                ||
+                (
+                    l.City != null &&
+                    l.City.Contains(search)
+                )
+                ||
+                (
+                    l.Province != null &&
+                    l.Province.Contains(search)
+                )
+            );
+        }
+
+
+        var lostFound = lostFoundQuery
             .Select(l => new FeedCandidate
             {
-                // This candidate came from Lost & Found.
-                ContentType = PetFeedContentType.LostFound,
+                ContentType =
+                    PetFeedContentType.LostFound,
 
-                // Lost & Found uses LostFoundId.
-                ContentId = l.LostFoundId,
+                ContentId =
+                    l.LostFoundId,
 
-                Title = l.Title,
+                Title =
+                    l.Title,
 
-                Content = l.Description,
+                Content =
+                    l.Description,
 
-                DateCreated = l.DateReported,
+                DateCreated =
+                    l.DateReported,
 
-                // Lost & Found location.
-                City = l.City,
-                Province = l.Province,
+                City =
+                    l.City,
 
-                // These properties are not used by Lost & Found.
-                PetFeedType = null,
+                Province =
+                    l.Province,
 
-                ListingType = null,
-                ListingPetType = null,
-                Price = null,
+                PetFeedType =
+                    null,
 
-                // Lost & Found-specific values.
-                LostFoundType = l.Type,
-                LostFoundPetType = l.PetType,
+                ListingType =
+                    null,
 
-                // Generate the Lost & Found candidate's daily ordering value.
+                ListingPetType =
+                    null,
+
+                Price =
+                    null,
+
+                LostFoundType =
+                    l.Type,
+
+                LostFoundPetType =
+                    l.PetType,
+
                 RandomKey =
                     (((long)l.LostFoundId * seed) +
                     3000000017L) % prime
             });
 
 
-        // Return the three independent queries.
-        //
-        // Nothing is executed here. ToListAsync() is performed later
-        // by GetFeedPageAsync().
         return (
             petFeeds,
             marketplace,
@@ -1361,12 +1499,13 @@ public class PetFeedsController : Controller
     // The seed is identical for every page belonging to the same feed session,
     // which prevents pagination from reshuffling previously unseen posts.
     private async Task<(
-        List<PetFeedFeedViewModel> Items,
-        bool HasMore)> GetFeedPageAsync(
-        string city,
-        string? userId,
-        int page,
-        long feedSeed)
+    List<PetFeedFeedViewModel> Items,
+    bool HasMore)> GetFeedPageAsync(
+    string city,
+    string? userId,
+    int page,
+    long feedSeed,
+    string? search = null)
     {
         // Each feed page displays at most 10 posts.
         const int pageSize = 10;
@@ -1395,7 +1534,8 @@ public class PetFeedsController : Controller
         var queries = BuildFeedCandidateQueries(
             city,
             userId,
-            feedSeed);
+            feedSeed,
+            search);
 
         // ==========================================================
         // EXECUTE PETFEED QUERY
@@ -1902,6 +2042,84 @@ public class PetFeedsController : Controller
         // Return the final current page together with the pagination state.
         return (model, hasMore);
     }
+
+
+    // ==========================================================
+    // PETFEED LIVE SEARCH
+    // ==========================================================
+    //
+    // Uses the SAME combined feed backend as the normal PetFeed.
+    // This means search keeps all existing rules:
+    //
+    // - Pet Tips
+    // - Approved Marketplace posts
+    // - Active Lost & Found reports
+    // - Same City only
+    // - Excludes the logged-in member's own posts
+    //
+    // Only _FeedItems is returned, so JavaScript can replace
+    // the cards without reloading the whole page.
+    // ==========================================================
+
+    [HttpGet]
+    [Authorize(Roles = "Member")]
+    public async Task<IActionResult> Search(
+        string? search,
+        long feedSeed = 0)
+    {
+        var user =
+            await _userManager.GetUserAsync(User);
+
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+
+        if (string.IsNullOrWhiteSpace(user.City))
+        {
+            return BadRequest(
+                "Your account does not have a city set.");
+        }
+
+
+        /*
+         * Normally petfeed.js sends the existing FeedSeed.
+         * This fallback prevents the request from breaking
+         * if a seed was not supplied.
+         */
+        if (feedSeed <= 0)
+        {
+            feedSeed = CreateFeedSeed();
+        }
+
+
+        /*
+         * Page 1 is used because every new search starts
+         * from the beginning of its filtered results.
+         *
+         * If search is empty, GetFeedPageAsync() simply
+         * returns the normal first feed page.
+         */
+        var result =
+            await GetFeedPageAsync(
+                user.City,
+                user.Id,
+                1,
+                feedSeed,
+                search);
+
+
+        ViewData["HasMore"] =
+            result.HasMore;
+
+
+        return PartialView(
+            "_FeedItems",
+            result.Items);
+    }
+
 
     //==========================================================
     //                     AJAX LOAD MORE
