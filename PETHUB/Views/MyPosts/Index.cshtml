@@ -65,6 +65,7 @@
                         @filter.Label
                     </span>
 
+
                     <button type="button"
                             class="my-post-filter-button"
                             data-dropdown-button
@@ -78,6 +79,7 @@
                         <i data-lucide="chevron-down"></i>
 
                     </button>
+
 
                     <div class="my-post-filter-menu"
                          data-dropdown-menu>
@@ -129,6 +131,7 @@
 
         </div>
 
+
         <span class="my-posts-count">
 
             @Model.TotalItems
@@ -153,17 +156,18 @@
             ================================================== -->
             @if (post.Listing != null)
             {
-                <div class="my-post-card">
+
+                <a asp-controller="MyPosts"
+                   asp-action="MarketplaceDetails"
+                   asp-route-id="@post.Listing.ListingId"
+                   class="my-post-card">
 
 
                     <!-- ==================================================
                          LISTING IMAGE
                     ================================================== -->
 
-                    <a asp-controller="MyPosts"
-                       asp-action="MarketplaceDetails"
-                       asp-route-id="@post.Listing.ListingId"
-                       class="my-post-card-image-link">
+                    <div class="my-post-card-image-link">
 
                         @if (post.Listing.Images != null &&
                              post.Listing.Images.Any())
@@ -179,17 +183,14 @@
                                  alt="No Image" />
                         }
 
-                    </a>
+                    </div>
 
 
                     <!-- ==================================================
                          LISTING INFORMATION
                     ================================================== -->
 
-                    <a asp-controller="MyPosts"
-                       asp-action="MarketplaceDetails"
-                       asp-route-id="@post.Listing.ListingId"
-                       class="my-post-card-content">
+                    <div class="my-post-card-content">
 
                         <h3>
                             @post.Listing.Title
@@ -203,55 +204,15 @@
                             Created @post.Listing.DatePosted.ToString("MMM dd, yyyy")
                         </p>
 
-                    </a>
+                    </div>
 
 
                     <!-- ==================================================
-                         RIGHT SIDE ACTIONS
+                         APPROVAL STATUS
                     ================================================== -->
 
                     <div class="my-post-card-actions">
 
-
-                        <!-- ==================================================
-                             THREE-DOT MENU
-                        ================================================== -->
-
-                        <div class="dropdown">
-
-                            <button class="my-post-more-button"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    aria-label="Post options">
-
-                                <i data-lucide="ellipsis"></i>
-
-                            </button>
-
-                            <ul class="dropdown-menu dropdown-menu-end">
-
-                                <li>
-
-                                    <a asp-controller="MyPosts"
-                                       asp-action="MarketplaceDetails"
-                                       asp-route-id="@post.Listing.ListingId"
-                                       class="dropdown-item">
-
-                                        View Details
-
-                                    </a>
-
-                                </li>
-
-                            </ul>
-
-                        </div>
-
-
-                        <!-- ==================================================
-                             APPROVAL STATUS
-                        ================================================== -->
                         @if (post.Listing.Status == ListApprovalStatus.Pending)
                         {
                             <span class="my-post-status my-post-status-pending">
@@ -273,21 +234,23 @@
 
                     </div>
 
-                </div>
+
+                </a>
             }
             else if (post.Report != null)
             {
-                <div class="my-post-card">
+
+                <a asp-controller="MyPosts"
+                   asp-action="LostFoundDetails"
+                   asp-route-id="@post.Report.LostFoundId"
+                   class="my-post-card">
 
 
                     <!-- ==================================================
                          REPORT IMAGE
                     ================================================== -->
 
-                    <a asp-controller="MyPosts"
-                       asp-action="LostFoundDetails"
-                       asp-route-id="@post.Report.LostFoundId"
-                       class="my-post-card-image-link">
+                    <div class="my-post-card-image-link">
 
                         @if (post.Report.Images != null &&
                              post.Report.Images.Any())
@@ -303,17 +266,14 @@
                                  alt="No Image" />
                         }
 
-                    </a>
+                    </div>
 
 
                     <!-- ==================================================
                          REPORT INFORMATION
                     ================================================== -->
 
-                    <a asp-controller="MyPosts"
-                       asp-action="LostFoundDetails"
-                       asp-route-id="@post.Report.LostFoundId"
-                       class="my-post-card-content">
+                    <div class="my-post-card-content">
 
                         <h3>
                             @post.Report.Title
@@ -327,55 +287,15 @@
                             Created @post.Report.DateReported.ToString("MMM dd, yyyy")
                         </p>
 
-                    </a>
+                    </div>
 
 
                     <!-- ==================================================
-                         RIGHT SIDE ACTIONS
+                         APPROVAL STATUS
                     ================================================== -->
 
                     <div class="my-post-card-actions">
 
-
-                        <!-- ==================================================
-                             THREE-DOT MENU
-                        ================================================== -->
-
-                        <div class="dropdown">
-
-                            <button class="my-post-more-button"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    aria-label="Post options">
-
-                                <i data-lucide="ellipsis"></i>
-
-                            </button>
-
-                            <ul class="dropdown-menu dropdown-menu-end">
-
-                                <li>
-
-                                    <a asp-controller="MyPosts"
-                                       asp-action="LostFoundDetails"
-                                       asp-route-id="@post.Report.LostFoundId"
-                                       class="dropdown-item">
-
-                                        View Details
-
-                                    </a>
-
-                                </li>
-
-                            </ul>
-
-                        </div>
-
-
-                        <!-- ==================================================
-                             APPROVAL STATUS
-                        ================================================== -->
                         @if (post.Report.Status == ApprovalStatus.Pending)
                         {
                             <span class="my-post-status my-post-status-pending">
@@ -397,12 +317,14 @@
 
                     </div>
 
-                </div>
+
+                </a>
             }
 
         }
 
     </div>
+
 
     <partial name="_Pagination" model="Model" />
 

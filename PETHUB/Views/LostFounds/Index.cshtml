@@ -154,16 +154,20 @@
         @foreach (var item in Model.Items)
         {
 
-            <div class="admin-lost-found-card">
+            <!-- ==================================================
+                 CLICKABLE LOST & FOUND CARD
+            ================================================== -->
+
+            <a asp-action="Details"
+               asp-route-id="@item.LostFoundId"
+               class="admin-lost-found-card">
 
 
                 <!-- ==================================================
                      REPORT IMAGE
                 ================================================== -->
 
-                <a asp-action="Details"
-                   asp-route-id="@item.LostFoundId"
-                   class="admin-lost-found-image-container">
+                <div class="admin-lost-found-image-container">
 
                     @if (item.Images != null &&
                          item.Images.Any())
@@ -179,16 +183,14 @@
                              alt="No image" />
                     }
 
-                </a>
+                </div>
 
 
                 <!-- ==================================================
                      REPORT INFORMATION
                 ================================================== -->
 
-                <a asp-action="Details"
-                   asp-route-id="@item.LostFoundId"
-                   class="admin-lost-found-content">
+                <div class="admin-lost-found-content">
 
                     <h3 class="admin-lost-found-title">
                         @item.Title
@@ -210,55 +212,15 @@
 
                     </p>
 
-                </a>
+                </div>
 
 
                 <!-- ==================================================
-                     RIGHT SIDE ACTIONS
+                     APPROVAL STATUS
                 ================================================== -->
 
                 <div class="admin-lost-found-actions">
 
-
-                    <!-- ==================================================
-                         THREE-DOT MENU
-                    ================================================== -->
-
-                    <div class="dropdown">
-
-                        <button class="admin-lost-found-more-button"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                aria-label="Report options">
-
-                            <i data-lucide="ellipsis"></i>
-
-                        </button>
-
-
-                        <ul class="dropdown-menu dropdown-menu-end">
-
-                            <li>
-
-                                <a asp-action="Details"
-                                   asp-route-id="@item.LostFoundId"
-                                   class="dropdown-item">
-
-                                    View
-
-                                </a>
-
-                            </li>
-
-                        </ul>
-
-                    </div>
-
-
-                    <!-- ==================================================
-                         APPROVAL STATUS
-                    ================================================== -->
                     @if (item.Status == ApprovalStatus.Pending)
                     {
                         <span class="admin-lost-found-status admin-lost-found-status-pending">
@@ -286,11 +248,13 @@
 
                 </div>
 
-            </div>
+
+            </a>
 
         }
 
     </div>
+
 
     <partial name="_Pagination" model="Model" />
 

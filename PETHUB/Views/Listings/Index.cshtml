@@ -154,16 +154,20 @@
         @foreach (var item in Model.Items)
         {
 
-            <div class="admin-marketplace-card">
+            <!-- ==================================================
+                 CLICKABLE MARKETPLACE CARD
+            ================================================== -->
+
+            <a asp-action="Details"
+               asp-route-id="@item.ListingId"
+               class="admin-marketplace-card">
 
 
                 <!-- ==================================================
                      LISTING IMAGE
                 ================================================== -->
 
-                <a asp-action="Details"
-                   asp-route-id="@item.ListingId"
-                   class="admin-marketplace-image-container">
+                <div class="admin-marketplace-image-container">
 
                     @if (item.Images != null &&
                          item.Images.Any())
@@ -179,16 +183,14 @@
                              alt="No image" />
                     }
 
-                </a>
+                </div>
 
 
                 <!-- ==================================================
                      LISTING INFORMATION
                 ================================================== -->
 
-                <a asp-action="Details"
-                   asp-route-id="@item.ListingId"
-                   class="admin-marketplace-content">
+                <div class="admin-marketplace-content">
 
                     <h3 class="admin-marketplace-title">
                         @item.Title
@@ -210,55 +212,15 @@
 
                     </p>
 
-                </a>
+                </div>
 
 
                 <!-- ==================================================
-                     RIGHT SIDE ACTIONS
+                     APPROVAL STATUS
                 ================================================== -->
 
                 <div class="admin-marketplace-actions">
 
-
-                    <!-- ==================================================
-                         THREE-DOT MENU
-                    ================================================== -->
-
-                    <div class="dropdown">
-
-                        <button class="admin-marketplace-more-button"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                aria-label="Listing options">
-
-                            <i data-lucide="ellipsis"></i>
-
-                        </button>
-
-
-                        <ul class="dropdown-menu dropdown-menu-end">
-
-                            <li>
-
-                                <a asp-action="Details"
-                                   asp-route-id="@item.ListingId"
-                                   class="dropdown-item">
-
-                                    View
-
-                                </a>
-
-                            </li>
-
-                        </ul>
-
-                    </div>
-
-
-                    <!-- ==================================================
-                         APPROVAL STATUS
-                    ================================================== -->
                     @if (item.Status == ListApprovalStatus.Pending)
                     {
                         <span class="admin-marketplace-status admin-marketplace-status-pending">
@@ -286,11 +248,13 @@
 
                 </div>
 
-            </div>
+
+            </a>
 
         }
 
     </div>
+
 
     <partial name="_Pagination" model="Model" />
 

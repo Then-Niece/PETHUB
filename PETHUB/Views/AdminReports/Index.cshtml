@@ -1,257 +1,391 @@
-﻿@model IEnumerable<PETHUB.Models.UserReport>
+﻿@model PETHUB.ViewModels.PaginationViewModel<PETHUB.Models.UserReport>
 
 @{
     ViewData["Title"] = "Reports";
 
-    // Read the current status from the URL so the selected filter can
-    // remain active after the page reloads.
-    var currentStatus = Context.Request.Query["status"].ToString();
-
-    // Retrieve the reusable filter bar configuration created by
-    // ReportsController.Index().
     var reportFilters =
         ViewData["ReportFilters"]
         as PETHUB.ViewModels.FilterBarViewModel;
 
-    // Retrieves the IDs of the representative reports whose posts
-    // currently have a Pending Appeal.
     var pendingAppealReportIds =
         ViewData["PendingAppealReportIds"] as HashSet<int>
         ?? new HashSet<int>();
 }
 
-<div class="container-fluid py-4">
+<div class="admin-report-page">
 
-    <!-- Page header for the dedicated Administrator Reports module.
-         This page is separate from Marketplace and Lost & Found approval pages
-         because UserReportStatus represents a different moderation workflow. -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
 
-        <div>
-            <h2 class="fw-bold mb-1">
+    <div class="admin-report-header">
+
+        <div class="admin-report-header-text">
+
+            <h1 class="admin-report-title">
                 Reports
-            </h2>
+            </h1>
 
-            <p class="text-muted mb-0">
-                Review reports submitted by PETHUB members.
+            <p class="admin-report-subtitle">
+                Review and manage reports submitted by PETHUB members.
             </p>
+
         </div>
 
     </div>
 
 
-    <!-- Report status filter.
-         The buttons use the status query-string parameter so the controller
-         can filter UserReports before retrieving the final database results. -->
-    @if (reportFilters != null)
-    {
-        <!-- Render the same reusable local filter component used throughout
-         PETHUB. It preserves other active query parameters when one filter
-         is changed. -->
-        <partial name="Components/_FilterBar"
-                 model="reportFilters" />
-    }
+    <!-- =====================================================
+         REPORT STATISTICS
+    ====================================================== -->
 
-    @if (!Model.Any())
-    {
-        <!-- Display a clear empty state when the selected status has no reports. -->
-        <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-body text-center py-5">
+    <div class="admin-report-stats">
 
-                <i data-lucide="flag"
-                   style="width:48px;height:48px;"
-                   class="text-muted mb-3">
-                </i>
+        <!-- PENDING -->
 
-                <h5 class="fw-bold">
-                    No Reports Found
-                </h5>
+        <div class="admin-report-stat-card">
 
-                <p class="text-muted mb-0">
-                    There are no reports matching the selected status.
-                </p>
+            <div class="admin-report-stat-indicator admin-report-stat-pending">
+                <i data-lucide="clock-3"></i>
+            </div>
+
+            <div class="admin-report-stat-content">
+
+                <div class="admin-report-stat-top">
+                    <span class="admin-report-stat-label">
+                        Pending
+                    </span>
+                </div>
+
+                <div class="admin-report-stat-count">
+                    @Model.Items.Count(r =>
+                        r.Status == PETHUB.Models.UserReportStatus.Pending &&
+                        !pendingAppealReportIds.Contains(r.UserReportId))
+                </div>
 
             </div>
+
+        </div>
+
+
+        <!-- UNDER APPEAL -->
+
+        <div class="admin-report-stat-card">
+
+            <div class="admin-report-stat-indicator admin-report-stat-appeal">
+                <i data-lucide="scale"></i>
+            </div>
+
+            <div class="admin-report-stat-content">
+
+                <div class="admin-report-stat-top">
+                    <span class="admin-report-stat-label">
+                        Under Appeal
+                    </span>
+                </div>
+
+                <div class="admin-report-stat-count">
+                    @pendingAppealReportIds.Count
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESOLVED -->
+
+        <div class="admin-report-stat-card">
+
+            <div class="admin-report-stat-indicator admin-report-stat-resolved">
+                <i data-lucide="circle-check"></i>
+            </div>
+
+            <div class="admin-report-stat-content">
+
+                <div class="admin-report-stat-top">
+                    <span class="admin-report-stat-label">
+                        Resolved
+                    </span>
+                </div>
+
+                <div class="admin-report-stat-count">
+                    @Model.Items.Count(r =>
+                        r.Status == PETHUB.Models.UserReportStatus.Resolved &&
+                        !pendingAppealReportIds.Contains(r.UserReportId))
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DISMISSED -->
+
+        <div class="admin-report-stat-card">
+
+            <div class="admin-report-stat-indicator admin-report-stat-dismissed">
+                <i data-lucide="circle-x"></i>
+            </div>
+
+            <div class="admin-report-stat-content">
+
+                <div class="admin-report-stat-top">
+                    <span class="admin-report-stat-label">
+                        Dismissed
+                    </span>
+                </div>
+
+                <div class="admin-report-stat-count">
+                    @Model.Items.Count(r =>
+                        r.Status == PETHUB.Models.UserReportStatus.Dismissed &&
+                        !pendingAppealReportIds.Contains(r.UserReportId))
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FILTER BAR
+    ====================================================== -->
+    @if (reportFilters != null)
+    {
+        <div class="admin-report-filter-card">
+
+            <div class="admin-report-filters">
+
+                @foreach (var filter in reportFilters.Filters)
+                {
+                    var selectedValue =
+                        filter.SelectedValue ?? filter.DefaultValue;
+
+                    <div class="admin-report-filter"
+                         data-filter-dropdown>
+
+                        <span class="admin-report-filter-label">
+                            @filter.Label
+                        </span>
+
+                        <button type="button"
+                                class="admin-report-filter-button"
+                                data-dropdown-button
+                                aria-haspopup="true"
+                                aria-expanded="false">
+
+                            <span>
+                                @(filter.Options.FirstOrDefault(
+                                    x => x.Value == selectedValue
+                                )?.Label
+                                ?? filter.Options.FirstOrDefault()?.Label)
+                            </span>
+
+                            <i data-lucide="chevron-down"></i>
+
+                        </button>
+
+
+                        <div class="admin-report-filter-menu"
+                             data-dropdown-menu
+                             role="menu">
+
+                            @foreach (var option in filter.Options)
+                            {
+                                var query =
+                                    Context.Request.Query.ToDictionary(
+                                        item => item.Key,
+                                        item => item.Value.ToString()
+                                    );
+
+                                if (string.IsNullOrEmpty(option.Value))
+                                {
+                                    query.Remove(filter.ParameterName);
+                                }
+                                else
+                                {
+                                    query[filter.ParameterName] =
+                                        option.Value;
+                                }
+
+                                var queryString =
+                                    string.Join(
+                                        "&",
+                                        query.Select(
+                                            item =>
+                                                $"{item.Key}={Uri.EscapeDataString(item.Value)}"
+                                        )
+                                    );
+
+                                var baseUrl =
+                                    Context.Request.Path.ToString();
+
+                                var optionUrl =
+                                    string.IsNullOrEmpty(queryString)
+                                        ? baseUrl
+                                        : $"{baseUrl}?{queryString}";
+
+                                var isSelected =
+                                    option.Value == selectedValue;
+
+                                <a href="@optionUrl"
+                                   class="admin-report-filter-option @(isSelected ? "selected" : "")"
+                                   role="menuitem">
+
+                                    @option.Label
+
+                                </a>
+                            }
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+
+            <span class="admin-report-total">
+                @Model.TotalItems
+                @(Model.TotalItems == 1 ? "report" : "reports")
+            </span>
+
+        </div>
+    }
+
+
+    <!-- =====================================================
+         REPORT LIST
+    ====================================================== -->
+    @if (!Model.Items.Any())
+    {
+        <div class="admin-report-empty">
+
+            <div class="admin-report-empty-icon">
+                <i data-lucide="flag"></i>
+            </div>
+
+            <h3 class="admin-report-empty-title">
+                No Reports Found
+            </h3>
+
+            <p class="admin-report-empty-text">
+                There are no reports matching the selected filters.
+            </p>
+
         </div>
     }
     else
     {
-        <div class="row g-4">
+        <div class="admin-report-list">
 
-            @foreach (var report in Model)
+            @foreach (var report in Model.Items)
             {
-                <div class="col-12">
+                <a asp-controller="Reports"
+                   asp-action="Details"
+                   asp-route-id="@report.UserReportId"
+                   class="admin-report-card">
 
-                    <!-- Each report is presented as an independent moderation
-                         card. The actual reported post will be inspected from
-                         the dedicated Details page in the next phase. -->
-                    <div class="card border-0 shadow-sm rounded-4">
+                    <div class="admin-report-card-content">
 
-                        <div class="card-body p-4">
+                        <!-- REASON + STATUS -->
 
-                            <div class="row align-items-center">
+                        <div class="admin-report-main-row">
 
-                                <!-- Report type and basic information -->
-                                <div class="col-lg-8">
+                            <div class="admin-report-reason">
 
-                                    <div class="d-flex align-items-center gap-3 mb-3">
+                                @if (report.Reason ==
+                                     PETHUB.Models.UserReportReason.Other &&
+                                     !string.IsNullOrWhiteSpace(report.OtherReason))
+                                {
+                                    @report.OtherReason
+                                }
+                                else
+                                {
+                                    @report.Reason
+                                }
 
-                                        @if (report.ContentType ==
-                                             PETHUB.Models.ReportedContentType.Listing)
-                                        {
-                                            <span class="badge rounded-pill px-3 py-2"
-                                                  style="background:#EAF8E6;color:#4F8D42;">
-
-                                                Marketplace Listing
-
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge rounded-pill px-3 py-2"
-                                                  style="background:#EAF8E6;color:#4F8D42;">
-
-                                                Lost &amp; Found
-
-                                            </span>
-                                        }
+                            </div>
 
 
-                                        @if (pendingAppealReportIds.Contains(report.UserReportId))
-                                        {
-                                            <!-- This badge represents the Appeal workflow.
-         The original UserReport may already be Resolved because
-         the post was previously removed. -->
-                                            <span class="badge rounded-pill bg-danger px-3 py-2">
-                                                Under Appeal
-                                            </span>
-                                        }
-                                        else if (report.Status ==
-                                                 PETHUB.Models.UserReportStatus.Pending)
-                                        {
-                                            <span class="badge rounded-pill bg-warning text-dark px-3 py-2">
-                                                Pending
-                                            </span>
-                                        }
-                                        else if (report.Status ==
-                                                 PETHUB.Models.UserReportStatus.Dismissed)
-                                        {
-                                            <span class="badge rounded-pill bg-secondary px-3 py-2">
-                                                Dismissed
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge rounded-pill bg-success px-3 py-2">
-                                                Resolved
-                                            </span>
-                                        }
+                            <!-- STATUS -->
+                            @if (pendingAppealReportIds.Contains(
+                                                report.UserReportId))
+                            {
+                                <span class="admin-report-status-badge admin-report-status-appeal">
+                                    <span class="admin-report-status-dot"></span>
+                                    Under Appeal
+                                </span>
+                            }
 
-                                    </div>
+                            @if (!pendingAppealReportIds.Contains(
+                                report.UserReportId) &&
+                                report.Status ==
+                                PETHUB.Models.UserReportStatus.Pending)
+                            {
+                                <span class="admin-report-status-badge admin-report-status-pending">
+                                    <span class="admin-report-status-dot"></span>
+                                    Pending
+                                </span>
+                            }
 
+                            @if (!pendingAppealReportIds.Contains(
+                                report.UserReportId) &&
+                                report.Status ==
+                                PETHUB.Models.UserReportStatus.Dismissed)
+                            {
+                                <span class="admin-report-status-badge admin-report-status-dismissed">
+                                    <span class="admin-report-status-dot"></span>
+                                    Dismissed
+                                </span>
+                            }
 
-                                    <h5 class="fw-bold mb-2">
-                                        @if (report.ContentType ==
-                                             PETHUB.Models.ReportedContentType.Listing)
-                                        {
-                                            <span>
-                                                Marketplace Listing #@report.ListingId
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span>
-                                                Lost &amp; Found #@report.LostFoundId
-                                            </span>
-                                        }
-                                    </h5>
+                            @if (!pendingAppealReportIds.Contains(
+                                report.UserReportId) &&
+                                report.Status ==
+                                PETHUB.Models.UserReportStatus.Resolved)
+                            {
+                                <span class="admin-report-status-badge admin-report-status-resolved">
+                                    <span class="admin-report-status-dot"></span>
+                                    Resolved
+                                </span>
+                            }
+
+                        </div>
 
 
-                                    <p class="mb-2">
+                        <!-- REPORTER + DATE -->
 
-                                        <strong>Reason:</strong>
+                        <div class="admin-report-meta">
 
-                                        @if (report.Reason ==
-                                             PETHUB.Models.UserReportReason.Other &&
-                                             !string.IsNullOrWhiteSpace(report.OtherReason))
-                                        {
-                                            @report.OtherReason
-                                        }
-                                        else
-                                        {
-                                            @report.Reason
-                                        }
+                            <div class="admin-report-meta-row">
 
-                                    </p>
+                                <span class="admin-report-meta-label">
+                                    Reported by:
+                                </span>
 
+                                <span class="admin-report-meta-value">
+                                    @(report.Reporter == null
+                                        ? "Unknown"
+                                        : $"{report.Reporter.FirstName} {report.Reporter.LastName}")
+                                </span>
 
-                                    @if (!string.IsNullOrWhiteSpace(report.Description))
-                                    {
-                                        <p class="text-muted mb-2">
-                                            @report.Description
-                                        </p>
-                                    }
+                            </div>
 
 
-                                    <small class="text-muted">
+                            <div class="admin-report-meta-row">
 
-                                        Reported:
-                                        @report.DateCreated.ToLocalTime()
+                                <span class="admin-report-meta-label">
+                                    Date:
+                                </span>
 
-                                        &nbsp;|&nbsp;
-
-                                        Reported By:
-                                        @(
-                                            report.Reporter == null
-                                                ? "Unknown"
-                                                : $"{report.Reporter.FirstName} {report.Reporter.LastName}"
-                                        )
-
-                                        &nbsp;|&nbsp;
-
-                                        Owner:
-                                        @(
-                                            report.ContentType == PETHUB.Models.ReportedContentType.Listing
-                                                ? (
-                                                    report.Listing?.Member == null
-                                                        ? "Unknown"
-                                                        : $"{report.Listing.Member.FirstName} {report.Listing.Member.LastName}"
-                                                  )
-                                                : (
-                                                    report.LostFound?.User == null
-                                                        ? "Unknown"
-                                                        : $"{report.LostFound.User.FirstName} {report.LostFound.User.LastName}"
-                                                  )
-                                        )
-
-                                    </small>
-
-                                </div>
-
-
-                                <!-- Review action -->
-                                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-
-                                    <!-- Sends the Administrator to the dedicated
-                                         Report Details page. The Details page will
-                                         contain the complete reported-content review
-                                         and moderation actions in the next phase. -->
-                                    <a asp-controller="Reports"
-                                       asp-action="Details"
-                                       asp-route-id="@report.UserReportId"
-                                       class="btn rounded-pill px-4 text-white"
-                                       style="background-color:#8ACE79;">
-
-                                        <i data-lucide="flag"
-                                           style="width:16px;height:16px;"
-                                           class="me-1">
-                                        </i>
-
-                                        Review Report
-
-                                    </a>
-
-                                </div>
+                                <span class="admin-report-meta-value">
+                                    @(report.DateCreated
+                                        .ToLocalTime()
+                                        .ToString("MMM dd, yyyy"))
+                                </span>
 
                             </div>
 
@@ -259,10 +393,31 @@
 
                     </div>
 
-                </div>
+                </a>
             }
 
         </div>
     }
 
+
+    <!-- =====================================================
+         PAGINATION
+    ====================================================== -->
+
+    <partial name="_Pagination" model="Model" />
+
 </div>
+
+
+@section Scripts
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            if (typeof lucide !== "undefined") {
+                lucide.createIcons();
+            }
+
+        });
+    </script>
+}

@@ -1,0 +1,2823 @@
+﻿/* =========================================================
+   ADMIN REPORTS PAGE
+   ========================================================= */
+
+.admin-report-page {
+    width: 100%;
+    max-width: 1250px;
+    margin: 40px auto;
+    padding: 0 24px 50px;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.admin-report-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.admin-report-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-report-title {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 600;
+    color: #222;
+}
+
+.admin-report-subtitle {
+    margin: 6px 0 0;
+    font-size: 15px;
+    color: #777;
+}
+
+
+/* =========================================================
+   REPORT STATISTICS
+   ========================================================= */
+
+.admin-report-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.admin-report-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 108px;
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid #e1e6e3;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    position: relative;
+}
+
+
+/* =========================================================
+   STAT ICON
+   ========================================================= */
+
+.admin-report-stat-indicator {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+}
+
+    .admin-report-stat-indicator svg {
+        width: 22px;
+        height: 22px;
+        stroke-width: 2;
+    }
+
+
+/* =========================================================
+   STAT CONTENT
+   ========================================================= */
+
+.admin-report-stat-content {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-report-stat-top {
+    display: flex;
+    align-items: center;
+    margin: 0 0 2px;
+}
+
+.admin-report-stat-label {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: #53647a;
+}
+
+.admin-report-stat-count {
+    font-size: 21px;
+    line-height: 1.2;
+    font-weight: 600;
+    color: #172b4d;
+    margin-top: 2px;
+}
+
+.admin-report-stat-description {
+    display: none;
+}
+
+
+/* =========================================================
+   PENDING
+   ========================================================= */
+
+.admin-report-stat-pending {
+    background: #fff6e5;
+    color: #d99300;
+}
+
+
+/* =========================================================
+   UNDER APPEAL
+   ========================================================= */
+
+.admin-report-stat-appeal {
+    background: #fdebec;
+    color: #d9535f;
+}
+
+
+/* =========================================================
+   RESOLVED
+   ========================================================= */
+
+.admin-report-stat-resolved {
+    background: #eaf7e9;
+    color: #58a94f;
+}
+
+
+/* =========================================================
+   DISMISSED
+   ========================================================= */
+
+.admin-report-stat-dismissed {
+    background: #eeeeee;
+    color: #858585;
+}
+
+
+/* =========================================================
+   REPORT FILTER CARD
+   ========================================================= */
+
+.admin-report-filter-card {
+    width: 100%;
+    margin-bottom: 22px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #e1e5e8;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================================================
+   FILTERS
+   ========================================================= */
+
+.admin-report-filters {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   INDIVIDUAL FILTER
+   ========================================================= */
+
+.admin-report-filter {
+    position: relative;
+    width: 200px;
+    min-width: 200px;
+}
+
+
+/* =========================================================
+   FILTER LABEL
+   ========================================================= */
+
+.admin-report-filter-label {
+    display: block;
+    margin: 0 0 7px 2px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #344054;
+    line-height: 1.2;
+}
+
+
+/* =========================================================
+   FILTER BUTTON
+   ========================================================= */
+
+.admin-report-filter-button {
+    width: 100%;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 15px 0 16px;
+    border: 1px solid #d9e0e5;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #344054;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+    .admin-report-filter-button:hover {
+        border-color: #b9c9b5;
+        background: #fbfdfb;
+    }
+
+    .admin-report-filter-button:focus {
+        outline: none;
+        border-color: #8ace79;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
+    }
+
+
+    /* =========================================================
+   FILTER BUTTON TEXT
+   ========================================================= */
+
+    .admin-report-filter-button span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+    /* =========================================================
+   FILTER CHEVRON
+   ========================================================= */
+
+    .admin-report-filter-button svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        color: #667085;
+        transition: transform 0.2s ease;
+    }
+
+.admin-report-filter.open .admin-report-filter-button svg {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   FILTER DROPDOWN MENU
+   ========================================================= */
+
+.admin-report-filter-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    min-width: 200px;
+    display: none;
+    padding: 7px;
+    background: #ffffff;
+    border: 1px solid #e1e5e8;
+    border-radius: 11px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+
+    /* =========================================================
+   SHOW DROPDOWN
+   ========================================================= */
+
+    .admin-report-filter-menu.show {
+        display: block;
+    }
+
+
+/* =========================================================
+   FILTER OPTION
+   ========================================================= */
+
+.admin-report-filter-option {
+    display: block;
+    width: 100%;
+    padding: 9px 11px;
+    border-radius: 8px;
+    background: transparent;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+    .admin-report-filter-option:hover {
+        background: #f3f7f1;
+        color: #4f8d42;
+        text-decoration: none;
+    }
+
+    .admin-report-filter-option.selected {
+        background: #eaf8e6;
+        color: #4f8d42;
+        font-weight: 600;
+    }
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.admin-report-search {
+    position: relative;
+    width: 100%;
+    min-width: 240px;
+}
+
+.admin-report-search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    width: 17px;
+    height: 17px;
+    transform: translateY(-50%);
+    color: #8a9690;
+    pointer-events: none;
+}
+
+.admin-report-search-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 16px 0 42px;
+    border: 1px solid #dfe5e2;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #333;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .admin-report-search-input::placeholder {
+        color: #9aa39f;
+    }
+
+    .admin-report-search-input:focus {
+        border-color: #8ace79;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
+    }
+
+
+/* =========================================================
+   REPORT TOTAL
+   ========================================================= */
+
+.admin-report-total {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    white-space: nowrap;
+    padding-bottom: 9px;
+    flex-shrink: 0;
+}
+
+.admin-report-total-number {
+    font-size: 20px;
+  
+    color: #333;
+}
+
+.admin-report-total-label {
+    font-size: 14px;
+    color: #777;
+}
+
+
+/* =========================================================
+   REPORT LIST
+   ========================================================= */
+
+.admin-report-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+
+/* =========================================================
+   REPORT CARD
+   ========================================================= */
+
+.admin-report-card {
+    display: block;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e4e8e5;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+    .admin-report-card:hover {
+        border-color: #d7ddd9;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+        text-decoration: none;
+        color: inherit;
+        transform: translateY(-1px);
+    }
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.admin-report-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 26px 0;
+}
+
+
+
+
+/* =========================================================
+   REPORT CONTENT
+   ========================================================= */
+
+.admin-report-card-content {
+    padding: 18px 26px 22px;
+}
+
+
+/* =========================================================
+   REPORT REASON
+   ========================================================= */
+
+.admin-report-reason {
+    margin: 0 0 14px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #292929;
+}
+
+
+/* =========================================================
+   REPORT META
+   ========================================================= */
+
+.admin-report-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.admin-report-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.admin-report-meta-label {
+    color: #777;
+    font-weight: 500;
+}
+
+.admin-report-meta-value {
+    color: #333;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   REPORT CARD HEADER
+   ========================================================= */
+
+.admin-report-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 26px 0;
+}
+
+.admin-report-card-type {
+    display: flex;
+    align-items: center;
+}
+
+.admin-report-main-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.admin-report-reason {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #292929;
+}
+
+.admin-report-status-badge {
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   REPORT TYPE
+   ========================================================= */
+
+.admin-report-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 13px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+    .admin-report-type svg {
+        width: 15px;
+        height: 15px;
+        stroke-width: 2;
+    }
+
+
+/* =========================================================
+   MARKETPLACE
+   ========================================================= */
+
+.admin-report-type-marketplace {
+    background: #eaf8e6;
+    color: #4f8d42;
+}
+
+
+/* =========================================================
+   LOST & FOUND
+   ========================================================= */
+
+.admin-report-type-lost-found {
+    background: #fde8e8;
+    color: #d94f4f;
+}
+
+
+/* =========================================================
+   REPORT STATUS
+   ========================================================= */
+
+.admin-report-status {
+    display: flex;
+    align-items: center;
+}
+
+.admin-report-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 13px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.admin-report-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   PENDING STATUS
+   ========================================================= */
+
+.admin-report-status-pending {
+    background: #fff5d8;
+    color: #9a7415;
+}
+
+    .admin-report-status-pending .admin-report-status-dot {
+        background: #e5ad27;
+    }
+
+
+/* =========================================================
+   UNDER APPEAL STATUS
+   ========================================================= */
+
+.admin-report-status-appeal {
+    background: #fde8e8;
+    color: #b44848;
+}
+
+    .admin-report-status-appeal .admin-report-status-dot {
+        background: #d95c5c;
+    }
+
+
+/* =========================================================
+   RESOLVED STATUS
+   ========================================================= */
+
+.admin-report-status-resolved {
+    background: #eaf8e6;
+    color: #4f8d42;
+}
+
+    .admin-report-status-resolved .admin-report-status-dot {
+        background: #6fba5f;
+    }
+
+
+/* =========================================================
+   DISMISSED STATUS
+   ========================================================= */
+
+.admin-report-status-dismissed {
+    background: #eeeeee;
+    color: #666;
+}
+
+    .admin-report-status-dismissed .admin-report-status-dot {
+        background: #858585;
+    }
+
+
+/* =========================================================
+   REPORT CONTENT
+   ========================================================= */
+
+.admin-report-card-content {
+    padding: 18px 26px 22px;
+}
+
+.admin-report-reason {
+    font-size: 18px;
+    font-weight: 700;
+    color: #292929;
+    margin-bottom: 9px;
+}
+
+.admin-report-description {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #777;
+    margin-bottom: 17px;
+}
+
+
+/* =========================================================
+   REPORT INFORMATION
+   ========================================================= */
+
+.admin-report-information {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   INFORMATION ITEM
+   ========================================================= */
+
+.admin-report-information-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    column-gap: 11px;
+    padding: 0 0 15px;
+    margin-bottom: 15px;
+}
+
+
+    /* Divider starts after the icon */
+
+    .admin-report-information-item::after {
+        content: "";
+        position: absolute;
+        left: 45px;
+        right: 0;
+        bottom: 0;
+        height: 1px;
+        background: #e2e5e3;
+    }
+
+
+/* =========================================================
+   INFORMATION ICON
+   ========================================================= */
+
+.admin-report-information-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f0f3f1;
+    color: #68737a;
+    box-sizing: border-box;
+}
+
+    .admin-report-information-icon svg {
+        width: 16px;
+        height: 16px;
+        stroke-width: 1.8;
+    }
+
+
+/* =========================================================
+   INFORMATION CONTENT
+   ========================================================= */
+
+.admin-report-information-content {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 1px;
+}
+
+
+/* Label */
+
+.admin-report-information-label {
+    display: block;
+    margin-bottom: 3px;
+    color: #8a9298;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+
+/* Value */
+
+.admin-report-information-value {
+    display: block;
+    color: #292929;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   REPORT DESCRIPTION
+   ========================================================= */
+
+.admin-report-description {
+    margin-top: 1px;
+    padding: 15px 16px 16px;
+    border-radius: 22px;
+    background: #f5f7f6;
+    box-sizing: border-box;
+}
+
+.admin-report-description-label {
+    display: block;
+    margin-bottom: 9px;
+    color: #667085;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.admin-report-description-text {
+    margin: 0;
+    color: #292929;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   EMPTY DESCRIPTION
+   ========================================================= */
+
+.admin-report-details-muted {
+    color: #92979b;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .admin-report-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .admin-report-filter-card {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-report-filters {
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .admin-report-filter {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .admin-report-total {
+        align-self: flex-end;
+        padding-bottom: 0;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .admin-report-page {
+        margin: 25px auto;
+        padding: 0 16px 40px;
+    }
+
+    .admin-report-title {
+        font-size: 26px;
+    }
+
+    .admin-report-subtitle {
+        font-size: 14px;
+    }
+
+
+    /* Statistics */
+
+    .admin-report-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+
+    /* Filters */
+
+    .admin-report-filter-card {
+        padding: 16px;
+    }
+
+    .admin-report-filters {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .admin-report-filter {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .admin-report-filter-button {
+        width: 100%;
+    }
+
+    .admin-report-filter-menu {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .admin-report-total {
+        align-self: flex-end;
+    }
+
+
+    /* Report cards */
+
+    .admin-report-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .admin-report-card-content {
+        padding-top: 15px;
+    }
+
+    .admin-report-information-row {
+        align-items: flex-start;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .admin-report-page {
+        padding: 0 12px 30px;
+    }
+
+    .admin-report-header {
+        margin-bottom: 20px;
+    }
+
+    .admin-report-title {
+        font-size: 24px;
+    }
+
+    .admin-report-subtitle {
+        font-size: 13px;
+    }
+
+
+    /* Statistics */
+
+    .admin-report-stat-card {
+        min-height: 100px;
+        padding: 16px;
+    }
+
+    .admin-report-stat-indicator {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+        .admin-report-stat-indicator svg {
+            width: 20px;
+            height: 20px;
+        }
+
+
+    /* Filter */
+
+    .admin-report-filter-card {
+        padding: 16px;
+    }
+
+    .admin-report-filter-button {
+        height: 42px;
+    }
+
+
+    /* Report cards */
+
+    .admin-report-card-header {
+        padding: 18px 18px 0;
+    }
+
+    .admin-report-card-content {
+        padding: 15px 18px 18px;
+    }
+
+    .admin-report-information-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1px;
+    }
+
+    .admin-report-total {
+        font-size: 13px;
+    }
+}
+
+
+/* =========================================================
+   ADMIN REPORT DETAILS PAGE
+   ========================================================= */
+
+.admin-report-details-page {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 32px 48px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.admin-report-details-top {
+    margin-bottom: 20px;
+}
+
+.admin-report-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #667085;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+    .admin-report-back:hover {
+        color: #4d8f45;
+        text-decoration: none;
+    }
+
+    .admin-report-back svg {
+        width: 17px;
+        height: 17px;
+        stroke-width: 2;
+    }
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.admin-report-details-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.admin-report-details-title {
+    margin: 0 0 6px;
+    color: #292929;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.admin-report-details-subtitle {
+    margin: 0;
+    color: #777;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.admin-report-details-status {
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+   ========================================================= */
+
+.admin-report-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 13px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.admin-report-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+
+/* Pending */
+
+.admin-report-status-pending {
+    background: #fff4d6;
+    color: #a56b00;
+}
+
+    .admin-report-status-pending .admin-report-status-dot {
+        background: #d99a00;
+    }
+
+
+/* Under Appeal */
+
+.admin-report-status-appeal {
+    background: #eee9fb;
+    color: #7254b8;
+}
+
+    .admin-report-status-appeal .admin-report-status-dot {
+        background: #8768ca;
+    }
+
+
+/* Resolved */
+
+.admin-report-status-resolved {
+    background: #eaf8e6;
+    color: #4f8d42;
+}
+
+    .admin-report-status-resolved .admin-report-status-dot {
+        background: #65a957;
+    }
+
+
+/* Dismissed */
+
+.admin-report-status-dismissed {
+    background: #f0f1f2;
+    color: #687078;
+}
+
+    .admin-report-status-dismissed .admin-report-status-dot {
+        background: #899198;
+    }
+
+
+/* =========================================================
+   TWO-COLUMN ROW
+   ========================================================= */
+
+/*
+   IMPORTANT:
+   Do NOT use align-items: start here.
+
+   stretch makes both cards in the same row have the
+   same height and keeps their bottom edges aligned.
+*/
+
+.admin-report-details-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 22px;
+    margin-bottom: 22px;
+    align-items: stretch;
+}
+
+
+    /* Make every card in the row stretch */
+
+    .admin-report-details-grid > .admin-report-details-card {
+        height: 100%;
+        align-self: stretch;
+    }
+
+
+/* =========================================================
+   GENERAL DETAILS CARD
+   ========================================================= */
+
+.admin-report-details-card {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid #e4e8e5;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .04);
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.admin-report-details-card-header {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 24px;
+    flex-shrink: 0;
+}
+
+    .admin-report-details-card-header h2 {
+        margin: 0;
+        color: #292929;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+
+/* =========================================================
+   CARD HEADER ICON
+   ========================================================= */
+
+.admin-report-details-card-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: #fff0f0;
+    color: #d94f4f;
+}
+
+    .admin-report-details-card-icon svg {
+        width: 18px;
+        height: 18px;
+        stroke-width: 2;
+    }
+
+
+/* =========================================================
+   REPORT INFORMATION
+   ========================================================= */
+
+.report-info-list {
+    width: 100%;
+}
+
+
+/* =========================================================
+   INFORMATION ROW
+   ========================================================= */
+
+.report-info-row {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    min-width: 0;
+    gap: 12px;
+    padding: 0 0 16px;
+    margin: 0 0 16px;
+    box-sizing: border-box;
+}
+
+
+    /* Divider */
+
+    .report-info-row::after {
+        content: "";
+        position: absolute;
+        left: 46px;
+        right: 0;
+        bottom: 0;
+        height: 1px;
+        background: #e1e5e3;
+    }
+
+
+/* =========================================================
+   INFORMATION ICON
+   ========================================================= */
+
+.report-info-row-icon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    flex: 0 0 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f0f3f1;
+    color: #68737a;
+    box-sizing: border-box;
+}
+
+    .report-info-row-icon svg {
+        width: 16px;
+        height: 16px;
+        stroke-width: 1.8;
+    }
+
+
+/* =========================================================
+   INFORMATION CONTENT
+   ========================================================= */
+
+.report-info-row-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   INFORMATION LABEL
+   ========================================================= */
+
+.report-info-row-label {
+    display: block;
+    margin: 0 0 3px;
+    color: #8a9298;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   INFORMATION VALUE
+   ========================================================= */
+
+.report-info-row-value {
+    display: block;
+    margin: 0;
+    color: #292929;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   REPORT DESCRIPTION
+   ========================================================= */
+
+.report-info-description {
+    width: 100%;
+    margin-top: 2px;
+    padding: 16px;
+    border-radius: 22px;
+    background: #f5f7f6;
+    box-sizing: border-box;
+}
+
+.report-info-description-label {
+    display: block;
+    margin: 0 0 9px;
+    color: #667085;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.report-info-description-text {
+    margin: 0;
+    color: #292929;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+.report-info-muted {
+    color: #92979b;
+}
+
+
+/* =========================================================
+   REPORTED CONTENT
+   ========================================================= */
+
+.admin-report-content-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    flex: 1;
+}
+
+
+/* =========================================================
+   CONTENT IMAGE
+   ========================================================= */
+
+.admin-report-content-image-wrapper {
+    width: 100%;
+    height: 250px;
+    margin: 0 0 16px;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #f5f6f5;
+    box-sizing: border-box;
+}
+
+.admin-report-content-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   NO IMAGE
+   ========================================================= */
+
+.admin-report-content-no-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #f6f7f7;
+    color: #7c858c;
+    box-sizing: border-box;
+}
+
+    .admin-report-content-no-image svg {
+        width: 32px;
+        height: 32px;
+        stroke-width: 1.7;
+    }
+
+    .admin-report-content-no-image span {
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+
+/* =========================================================
+   CONTENT TYPE
+   ========================================================= */
+
+.admin-report-content-type {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin: 0 0 8px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: #eaf8e6;
+    color: #4f8d42;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+    box-sizing: border-box;
+}
+
+    .admin-report-content-type.lost-found {
+        background: #fde8e8;
+        color: #d94f4f;
+    }
+
+
+/* =========================================================
+   CONTENT TITLE
+   ========================================================= */
+
+.admin-report-content-title {
+    display: block;
+    width: 100%;
+    margin: 0 0 14px;
+    padding: 0;
+    color: #292929;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: left;
+    overflow-wrap: anywhere;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   VIEW DETAILS BUTTON
+   ========================================================= */
+
+.admin-report-view-post {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+    margin: 0;
+    padding: 0 17px;
+    border: 1px solid #cfe2cb;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #4d8f45;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+
+    .admin-report-view-post:hover {
+        background: #f5faf3;
+        border-color: #b9d5b4;
+        color: #41783a;
+        text-decoration: none;
+    }
+
+    .admin-report-view-post svg {
+        width: 15px;
+        height: 15px;
+        margin-left: 5px;
+        stroke-width: 2;
+    }
+
+
+/* =========================================================
+   CONTENT UNAVAILABLE
+   ========================================================= */
+
+.admin-report-content-unavailable {
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 24px;
+    border-radius: 14px;
+    background: #f6f7f7;
+    color: #888;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+    .admin-report-content-unavailable svg {
+        width: 30px;
+        height: 30px;
+        color: #9aa1a5;
+    }
+
+    .admin-report-content-unavailable span {
+        max-width: 320px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+
+/* =========================================================
+   REPORTS FOR THIS POST
+   ========================================================= */
+
+.admin-report-related-summary {
+    margin: -6px 0 18px;
+    color: #667085;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   RELATED REPORTS LIST
+   ========================================================= */
+
+.admin-report-related-list {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    width: 100%;
+}
+
+
+/* =========================================================
+   RELATED REPORT CARD
+   ========================================================= */
+
+.admin-report-related-item {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #dfe5e2;
+    border-radius: 24px;
+    background: #f8faf9;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   RELATED REPORT TOP
+   ========================================================= */
+
+.admin-report-related-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    width: 100%;
+}
+
+
+/* =========================================================
+   RELATED REPORTER
+   ========================================================= */
+
+.admin-report-related-reporter {
+    margin: 0 0 2px;
+    color: #292929;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+
+/* =========================================================
+   RELATED DATE
+   ========================================================= */
+
+.admin-report-related-date {
+    margin: 0;
+    color: #667085;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   RELATED STATUS
+   ========================================================= */
+
+.admin-report-related-top .admin-report-status-badge {
+    flex-shrink: 0;
+    padding: 7px 12px;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   RELATED REPORT REASON
+   ========================================================= */
+
+.admin-report-related-reason {
+    margin-top: 15px;
+    padding: 0;
+    border: 0;
+    color: #292929;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+
+    /* Reason label */
+
+    .admin-report-related-reason::before {
+        content: "REPORT REASON";
+        display: block;
+        margin-bottom: 4px;
+        color: #7c858c;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: .04em;
+    }
+
+
+/* =========================================================
+   REPORTER'S NOTE
+   ========================================================= */
+
+.admin-report-related-note {
+    margin-top: 10px;
+    color: #667085;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.admin-report-related-note-label {
+    display: block;
+    margin-bottom: 4px;
+    color: #7c858c;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: .04em;
+}
+
+
+/* =========================================================
+   REVIEW ACTIONS
+   ========================================================= */
+
+.admin-report-actions-description {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.admin-report-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    margin-top: 24px;
+}
+
+    .admin-report-action-buttons form {
+        width: 100%;
+        margin: 0;
+    }
+
+.admin-report-action-button {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+
+
+/* Dismiss */
+
+.admin-report-action-dismiss {
+    border: 1px solid #d9dddf;
+    background: #ffffff;
+    color: #596168;
+}
+
+    .admin-report-action-dismiss:hover {
+        border-color: #c8ced1;
+        background: #f7f8f8;
+        color: #444b50;
+    }
+
+
+/* Remove */
+
+.admin-report-action-remove {
+    border: 1px solid #e5aaaa;
+    background: #fff5f5;
+    color: #c74747;
+}
+
+    .admin-report-action-remove:hover {
+        border-color: #dc9292;
+        background: #fdeaea;
+        color: #b43b3b;
+    }
+
+
+/* =========================================================
+   COMPLETED ACTION
+   ========================================================= */
+
+.admin-report-action-completed {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 22px;
+    padding: 13px 15px;
+    border-radius: 11px;
+    background: #f5faf3;
+    color: #5b7656;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+    .admin-report-action-completed svg {
+        width: 17px;
+        height: 17px;
+        flex-shrink: 0;
+    }
+
+
+/* =========================================================
+   OWNER'S APPEAL
+   ========================================================= */
+
+.admin-report-appeal-card {
+    width: 100%;
+    margin-top: 0;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #e4e8e5;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .04);
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   APPEAL HEADER
+   ========================================================= */
+
+.admin-report-appeal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.admin-report-appeal-title-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    min-width: 0;
+}
+
+.admin-report-appeal-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: #f2edfc;
+    color: #7658b9;
+}
+
+    .admin-report-appeal-icon svg {
+        width: 18px;
+        height: 18px;
+        stroke-width: 2;
+    }
+
+.admin-report-appeal-header h2 {
+    margin: 0 0 5px;
+    color: #292929;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.admin-report-appeal-header p {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   APPEAL MESSAGE
+   ========================================================= */
+
+.admin-report-appeal-message {
+    margin-bottom: 20px;
+    padding: 17px 19px;
+    border: 1px solid #e7e9e8;
+    border-radius: 12px;
+    background: #f8f9f8;
+    box-sizing: border-box;
+}
+
+    .admin-report-appeal-message p {
+        margin: 0;
+        color: #4a4d4e;
+        font-size: 14px;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+    }
+
+
+/* =========================================================
+   ADMIN RESPONSE
+   ========================================================= */
+
+.admin-report-appeal-response {
+    margin-bottom: 20px;
+    padding-top: 18px;
+    border-top: 1px solid #edf0ee;
+}
+
+    .admin-report-appeal-response p {
+        margin: 6px 0 0;
+        color: #555;
+        font-size: 13px;
+        line-height: 1.55;
+    }
+
+
+/* =========================================================
+   APPEAL ACTIONS
+   ========================================================= */
+
+.admin-report-appeal-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 11px;
+    padding-top: 2px;
+}
+
+    .admin-report-appeal-actions form {
+        margin: 0;
+    }
+
+
+/* Confirm Appeal */
+
+.admin-report-appeal-confirm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 42px;
+    padding: 0 18px;
+    border: 1px solid #b9d8b2;
+    border-radius: 999px;
+    background: #eaf8e6;
+    color: #4d8f45;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+
+    .admin-report-appeal-confirm:hover {
+        border-color: #a7cda0;
+        background: #dff3da;
+        color: #41783a;
+    }
+
+    .admin-report-appeal-confirm svg {
+        width: 15px;
+        height: 15px;
+        stroke-width: 2.3;
+    }
+
+
+/* Reject Appeal */
+
+.admin-report-appeal-reject {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 18px;
+    border: 1px solid #e4b0b0;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #c74747;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+
+    .admin-report-appeal-reject:hover {
+        border-color: #d89595;
+        background: #fff5f5;
+        color: #b43b3b;
+    }
+
+
+/* =========================================================
+   MODALS
+   ========================================================= */
+
+#confirmViolationModal .modal-content,
+#rejectAppealModal .modal-content {
+    border-radius: 18px !important;
+}
+
+#confirmViolationModal textarea,
+#rejectAppealModal textarea {
+    resize: vertical;
+    border-radius: 11px;
+    border-color: #dfe4e1;
+}
+
+    #confirmViolationModal textarea:focus,
+    #rejectAppealModal textarea:focus {
+        border-color: #8ace79;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, .12);
+    }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .admin-report-details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .admin-report-details-page {
+        padding: 22px 18px 40px;
+    }
+
+    .admin-report-details-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .admin-report-details-title {
+        font-size: 26px;
+    }
+
+    .admin-report-details-card,
+    .admin-report-appeal-card {
+        padding: 20px;
+    }
+
+    .admin-report-appeal-header {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .admin-report-related-top {
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .admin-report-appeal-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+        .admin-report-appeal-actions form,
+        .admin-report-appeal-confirm,
+        .admin-report-appeal-reject {
+            width: 100%;
+        }
+}
+
+
+@media (max-width: 480px) {
+
+    .admin-report-details-page {
+        padding: 18px 14px 32px;
+    }
+
+    .admin-report-details-title {
+        font-size: 23px;
+    }
+
+    .admin-report-details-subtitle {
+        font-size: 13px;
+    }
+
+    .admin-report-details-card,
+    .admin-report-appeal-card {
+        padding: 17px;
+        border-radius: 15px;
+    }
+
+    .admin-report-details-card-header {
+        margin-bottom: 20px;
+    }
+
+    .admin-report-content-image-wrapper {
+        height: 190px;
+    }
+
+    .admin-report-content-title {
+        font-size: 17px;
+    }
+}
+
+
+
+
+/* =========================================================
+   CONFIRM VIOLATION MODAL
+   ========================================================= */
+
+.admin-report-confirm-dialog {
+    max-width: 520px;
+    margin: 1.75rem auto;
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.admin-report-confirm-modal {
+    overflow: hidden;
+    border: 0 !important;
+    border-radius: 22px !important;
+    background: #ffffff;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .14);
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.admin-report-confirm-header {
+    padding: 24px 24px 0;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.admin-report-confirm-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0;
+}
+
+    .admin-report-confirm-title svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        color: #667085;
+        stroke-width: 2;
+    }
+
+    .admin-report-confirm-title h2 {
+        margin: 0;
+        color: #292929;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.admin-report-confirm-subtitle {
+    margin: 7px 0 0;
+    color: #737b83;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.admin-report-confirm-body {
+    padding: 20px 24px 24px;
+}
+
+
+/* =========================================================
+   REPORT SUMMARY
+   ========================================================= */
+
+.admin-report-confirm-summary {
+    width: 100%;
+    margin-bottom: 22px;
+    padding: 17px;
+    border-radius: 20px;
+    background: #f5f7f6;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SUMMARY FIELD
+   ========================================================= */
+
+.admin-report-confirm-field {
+    margin: 0;
+}
+
+    .admin-report-confirm-field + .admin-report-confirm-field {
+        margin-top: 11px;
+    }
+
+
+/* =========================================================
+   SUMMARY LABEL
+   ========================================================= */
+
+.admin-report-confirm-label {
+    display: block;
+    margin-bottom: 3px;
+    color: #667085;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.3;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   REASON VALUE
+   ========================================================= */
+
+.admin-report-confirm-value {
+    color: #292929;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   REPORTER NOTE
+   ========================================================= */
+
+.admin-report-confirm-note {
+    color: #68727a;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+    .admin-report-confirm-note.muted {
+        color: #92979b;
+    }
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.admin-report-confirm-form {
+    width: 100%;
+    margin: 0;
+}
+
+
+/* =========================================================
+   INPUT GROUP
+   ========================================================= */
+
+.admin-report-confirm-input-group {
+    width: 100%;
+}
+
+
+/* =========================================================
+   INPUT LABEL
+   ========================================================= */
+
+.admin-report-confirm-input-label {
+    display: block;
+    margin: 0 0 7px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
+
+.admin-report-confirm-textarea {
+    display: block;
+    width: 100%;
+    min-height: 104px;
+    margin: 0;
+    padding: 14px;
+    resize: vertical;
+    border: 1px solid #dce1df;
+    border-radius: 22px;
+    outline: none;
+    background: #f5f7f6;
+    color: #292929;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+    box-sizing: border-box;
+    transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+    .admin-report-confirm-textarea::placeholder {
+        color: #8a9298;
+    }
+
+    .admin-report-confirm-textarea:focus {
+        border-color: #8ACE79;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, .15);
+    }
+
+
+/* =========================================================
+   HELPER TEXT
+   ========================================================= */
+
+.admin-report-confirm-help {
+    display: block;
+    margin-top: 8px;
+    color: #737b83;
+    font-size: 11.5px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.admin-report-confirm-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+
+/* =========================================================
+   CANCEL
+   ========================================================= */
+
+.admin-report-confirm-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    height: 42px;
+    padding: 0 18px;
+    border: 1px solid #d9dfe0;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #344054;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s ease, border-color .2s ease;
+}
+
+    .admin-report-confirm-cancel:hover {
+        background: #f7f8f8;
+        border-color: #cbd1d2;
+    }
+
+
+/* =========================================================
+   CONFIRM VIOLATION
+   PETHUB PRIMARY GREEN
+   ========================================================= */
+
+.admin-report-confirm-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 145px;
+    height: 42px;
+    padding: 0 19px;
+    border: 1px solid #8ACE79;
+    border-radius: 999px;
+    background: #8ACE79;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(138, 206, 121, .18);
+    transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .15s ease;
+}
+
+    .admin-report-confirm-submit:hover {
+        background: #79bd69;
+        border-color: #79bd69;
+        box-shadow: 0 4px 10px rgba(138, 206, 121, .22);
+        transform: translateY(-1px);
+    }
+
+    .admin-report-confirm-submit:active {
+        transform: translateY(0);
+    }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .admin-report-confirm-dialog {
+        width: calc(100% - 24px);
+        margin: 12px auto;
+    }
+
+    .admin-report-confirm-header {
+        padding: 20px 18px 0;
+    }
+
+    .admin-report-confirm-body {
+        padding: 18px;
+    }
+
+    .admin-report-confirm-title h2 {
+        font-size: 19px;
+    }
+
+    .admin-report-confirm-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .admin-report-confirm-cancel,
+    .admin-report-confirm-submit {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   REJECT APPEAL MODAL
+   ========================================================= */
+
+.admin-report-reject-dialog {
+    max-width: 520px;
+    margin: 1.75rem auto;
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.admin-report-reject-modal {
+    overflow: hidden;
+    border: 0 !important;
+    border-radius: 22px !important;
+    background: #ffffff;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .14);
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.admin-report-reject-header {
+    padding: 24px 24px 0;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.admin-report-reject-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0;
+}
+
+    .admin-report-reject-title svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        color: #d94f4f;
+        stroke-width: 2;
+    }
+
+    .admin-report-reject-title h2 {
+        margin: 0;
+        color: #292929;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.admin-report-reject-subtitle {
+    margin: 7px 0 0;
+    color: #737b83;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.admin-report-reject-body {
+    padding: 20px 24px 24px;
+}
+
+
+/* =========================================================
+   APPEAL SUMMARY
+   ========================================================= */
+
+.admin-report-reject-summary {
+    width: 100%;
+    margin-bottom: 22px;
+    padding: 17px;
+    border-radius: 20px;
+    background: #f5f7f6;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SUMMARY FIELD
+   ========================================================= */
+
+.admin-report-reject-field {
+    margin: 0;
+}
+
+    .admin-report-reject-field + .admin-report-reject-field {
+        margin-top: 11px;
+    }
+
+
+/* =========================================================
+   SUMMARY LABEL
+   ========================================================= */
+
+.admin-report-reject-label {
+    display: block;
+    margin-bottom: 3px;
+    color: #667085;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   SUMMARY VALUE
+   ========================================================= */
+
+.admin-report-reject-value {
+    color: #292929;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+.admin-report-reject-muted {
+    color: #92979b;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.admin-report-reject-form {
+    width: 100%;
+    margin: 0;
+}
+
+
+/* =========================================================
+   INPUT GROUP
+   ========================================================= */
+
+.admin-report-reject-input-group {
+    width: 100%;
+}
+
+
+/* =========================================================
+   INPUT LABEL
+   ========================================================= */
+
+.admin-report-reject-input-label {
+    display: block;
+    margin: 0 0 7px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
+
+.admin-report-reject-textarea {
+    display: block;
+    width: 100%;
+    min-height: 104px;
+    margin: 0;
+    padding: 14px;
+    resize: vertical;
+    border: 1px solid #dce1df;
+    border-radius: 22px;
+    outline: none;
+    background: #f5f7f6;
+    color: #292929;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+    box-sizing: border-box;
+    transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+    .admin-report-reject-textarea::placeholder {
+        color: #8a9298;
+    }
+
+    .admin-report-reject-textarea:focus {
+        border-color: #d94f4f;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(217, 79, 79, .12);
+    }
+
+
+/* =========================================================
+   HELPER TEXT
+   ========================================================= */
+
+.admin-report-reject-help {
+    display: block;
+    margin-top: 8px;
+    color: #737b83;
+    font-size: 11.5px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.admin-report-reject-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+
+/* =========================================================
+   CANCEL BUTTON
+   ========================================================= */
+
+.admin-report-reject-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    height: 42px;
+    padding: 0 18px;
+    border: 1px solid #d9dfe0;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #344054;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s ease, border-color .2s ease;
+}
+
+    .admin-report-reject-cancel:hover {
+        background: #f7f8f8;
+        border-color: #cbd1d2;
+    }
+
+
+/* =========================================================
+   REJECT APPEAL BUTTON
+   ========================================================= */
+
+.admin-report-reject-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 125px;
+    height: 42px;
+    padding: 0 19px;
+    border: 1px solid #d94f4f;
+    border-radius: 999px;
+    background: #d94f4f;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(217, 79, 79, .18);
+    transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .15s ease;
+}
+
+    .admin-report-reject-submit:hover {
+        background: #c74747;
+        border-color: #c74747;
+        box-shadow: 0 4px 10px rgba(217, 79, 79, .22);
+        transform: translateY(-1px);
+    }
+
+    .admin-report-reject-submit:active {
+        transform: translateY(0);
+    }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .admin-report-reject-dialog {
+        width: calc(100% - 24px);
+        margin: 12px auto;
+    }
+
+    .admin-report-reject-header {
+        padding: 20px 18px 0;
+    }
+
+    .admin-report-reject-body {
+        padding: 18px;
+    }
+
+    .admin-report-reject-title h2 {
+        font-size: 19px;
+    }
+
+    .admin-report-reject-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .admin-report-reject-cancel,
+    .admin-report-reject-submit {
+        width: 100%;
+    }
+}

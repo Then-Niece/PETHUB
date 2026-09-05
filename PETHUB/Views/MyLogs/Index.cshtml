@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PETHUB.Models.AuditLog>
+﻿@model PETHUB.ViewModels.PaginationViewModel<PETHUB.Models.AuditLog>
 
 @{
     ViewData["Title"] = User.IsInRole("Admin") ? "Admin Logs" : "My Logs";
@@ -9,7 +9,9 @@
         as Dictionary<string, PETHUB.Models.ApplicationUser>;
 }
 
+
 <div class="logs-page">
+
 
     <!-- ========================================================= -->
     <!-- PAGE HEADER                                                -->
@@ -19,7 +21,9 @@
 
         @if (User.IsInRole("Admin"))
         {
-            <h1>Admin Logs</h1>
+            <h1>
+                Admin Logs
+            </h1>
 
             <p>
                 View and review administrator activity.
@@ -27,7 +31,9 @@
         }
         else
         {
-            <h1>My Logs</h1>
+            <h1>
+                My Logs
+            </h1>
 
             <p>
                 View your account activity and actions.
@@ -86,7 +92,7 @@
         <div class="logs-total">
 
             <span class="logs-total-number">
-                @Model.Count()
+                @Model.TotalItems
             </span>
 
             <span class="logs-total-label">
@@ -131,7 +137,7 @@
     <!-- ========================================================= -->
     <!-- LOG TABLE                                                  -->
     <!-- ========================================================= -->
-    @if (!Model.Any())
+    @if (!Model.Items.Any())
     {
         <!-- Displays a message when there are no recorded activities. -->
 
@@ -175,17 +181,20 @@
                                 </th>
                             }
 
+
                             <!-- Displays the general activity that occurred. -->
 
                             <th class="logs-action-column">
                                 Action
                             </th>
 
+
                             <!-- Displays the date when the activity occurred. -->
 
                             <th class="logs-date-column">
                                 Date
                             </th>
+
 
                             <!-- Displays the time when the activity occurred. -->
 
@@ -200,7 +209,7 @@
 
                     <tbody>
 
-                        @foreach (var log in Model)
+                        @foreach (var log in Model.Items)
                         {
                             <tr>
 
@@ -297,4 +306,29 @@
         </div>
     }
 
+
+    <!-- ========================================================= -->
+    <!-- PAGINATION                                                  -->
+    <!-- ========================================================= -->
+
+    <partial name="_Pagination" model="Model" />
+
 </div>
+
+
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            if (typeof lucide !== "undefined") {
+                lucide.createIcons();
+            }
+
+        });
+
+    </script>
+
+}

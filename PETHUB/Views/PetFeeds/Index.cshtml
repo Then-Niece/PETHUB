@@ -1,4 +1,5 @@
 @model PETHUB.ViewModels.PaginationViewModel<PETHUB.Models.PetFeed>
+
 @{
     ViewData["Title"] = "PetFeed Management";
 
@@ -48,8 +49,8 @@
 
 
     @* =========================================================
-   FILTERS + TOTAL POST COUNT
-   ========================================================= *@
+       FILTERS + TOTAL POST COUNT
+       ========================================================= *@
 
     <div class="admin-petfeed-filter-card">
 
@@ -144,20 +145,26 @@
 
 
     @* =========================================================
-   PETFEED POSTS
-   ========================================================= *@
+       PETFEED POSTS
+       ========================================================= *@
 
     <div class="admin-petfeed-posts">
 
         @foreach (var item in Model.Items)
         {
 
-            <div class="admin-petfeed-card">
+            @* =================================================
+               CLICKABLE PETFEED CARD
+               ================================================= *@
+
+            <a asp-action="Details"
+               asp-route-id="@item.PetFeedId"
+               class="admin-petfeed-card">
 
 
                 @* =================================================
-               IMAGE
-               ================================================= *@
+                   IMAGE
+                   ================================================= *@
 
                 <div class="admin-petfeed-image-container">
 
@@ -179,8 +186,8 @@
 
 
                 @* =================================================
-               POST INFORMATION
-               ================================================= *@
+                   POST INFORMATION
+                   ================================================= *@
 
                 <div class="admin-petfeed-content">
 
@@ -195,19 +202,21 @@
 
 
                     @* =================================================
-                   ADMIN NAME
-                   ================================================= *@
+                       ADMIN NAME
+                       ================================================= *@
 
                     @if (item.Admin != null)
                     {
                         <p class="admin-petfeed-author">
 
-                            By: 
+                            By:
                             @item.Admin.FirstName
+
                             @if (!string.IsNullOrWhiteSpace(item.Admin.MiddleName))
                             {
                                 @($" {item.Admin.MiddleName}")
                             }
+
                             @($" {item.Admin.LastName}")
 
                         </p>
@@ -215,8 +224,8 @@
 
 
                     @* =================================================
-                   ENGAGEMENT
-                   ================================================= *@
+                       ENGAGEMENT
+                       ================================================= *@
 
                     <div class="admin-petfeed-engagement">
 
@@ -237,53 +246,10 @@
 
 
                 @* =================================================
-               RIGHT SIDE ACTIONS
-               ================================================= *@
-
-                <div class="admin-petfeed-actions">
-
-
-                    @* =================================================
-                   THREE-DOT MENU
-                   ================================================= *@
-
-                    <div class="dropdown">
-
-                        <button class="admin-petfeed-more-button"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                aria-label="PetFeed options">
-
-                            <i data-lucide="ellipsis"></i>
-
-                        </button>
-
-
-                        <ul class="dropdown-menu dropdown-menu-end">
-
-                            <li>
-
-                                <a asp-action="Details"
-                                   asp-route-id="@item.PetFeedId"
-                                   class="dropdown-item">
-
-                                    View
-
-                                </a>
-
-                            </li>
-
-
-                        </ul>
-
-                    </div>
-
-
-
-                    @* =================================================
                    PETFEED TYPE
                    ================================================= *@
+
+                <div class="admin-petfeed-actions">
 
                     @if (item.Type == PetFeedType.Announcement)
                     {
@@ -300,17 +266,20 @@
 
                 </div>
 
-            </div>
+
+            </a>
 
         }
 
 
+
         @* =========================================================
-       EMPTY STATE
-       ========================================================= *@
+           EMPTY STATE
+           ========================================================= *@
 
         @if (!Model.Items.Any())
         {
+
             <div class="admin-petfeed-empty">
 
                 <h3>
@@ -322,9 +291,12 @@
                 </p>
 
             </div>
+
         }
 
     </div>
+
+
 
     <partial name="_Pagination" model="Model" />
 

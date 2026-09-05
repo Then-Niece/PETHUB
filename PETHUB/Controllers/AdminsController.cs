@@ -104,7 +104,7 @@ namespace PETHUB.Controllers
             // PAGINATION
             // =========================================================
 
-            const int pageSize = 10;
+            const int pageSize = 25;
 
             // Prevent invalid page numbers.
             if (page < 1)

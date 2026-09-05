@@ -1,516 +1,310 @@
 ﻿@model PETHUB.ViewModels.AdminReportDetailsViewModel
 
 @{
-    // Sets the browser/page title used by the shared layout.
     ViewData["Title"] = "Review Report";
 }
 
-<div class="container-fluid py-4">
+<div class="admin-report-details-page">
 
     <!-- =========================================================
          PAGE HEADER
-         ========================================================= -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    ========================================================== -->
 
-        <div>
+    <div class="admin-report-details-top">
 
-            <h2 class="fw-bold mb-1">
-                Review Report
-            </h2>
-
-            <p class="text-muted mb-0">
-                Review the report and the content submitted for moderation.
-            </p>
-
-        </div>
-
-        <!-- Returns the Administrator to the Reports index page. -->
         <a asp-controller="Reports"
            asp-action="Index"
-           class="btn btn-outline-secondary rounded-pill px-4">
+           class="admin-report-back">
 
-            ← Back to Reports
+            <i data-lucide="arrow-left"></i>
+
+            Back to Reports
 
         </a>
 
     </div>
 
 
+    <div class="admin-report-details-header">
+
+        <div>
+
+            <h1 class="admin-report-details-title">
+                Review Report
+            </h1>
+
+            <p class="admin-report-details-subtitle">
+                Review the report and the content submitted for moderation.
+            </p>
+
+        </div>
+
+
+        <!-- REPORT STATUS -->
+
+        <div class="admin-report-details-status">
+
+            @if (Model.Appeal != null &&
+                 Model.Appeal.Status ==
+                 PETHUB.Models.AppealStatus.Pending)
+            {
+                <span class="admin-report-status-badge admin-report-status-pending">
+                    <span class="admin-report-status-dot"></span>
+                    Pending
+                </span>
+            }
+            else if (Model.Report.Status ==
+                     PETHUB.Models.UserReportStatus.Pending)
+            {
+                <span class="admin-report-status-badge admin-report-status-pending">
+                    <span class="admin-report-status-dot"></span>
+                    Pending
+                </span>
+            }
+            else if (Model.Report.Status ==
+                     PETHUB.Models.UserReportStatus.Dismissed)
+            {
+                <span class="admin-report-status-badge admin-report-status-dismissed">
+                    <span class="admin-report-status-dot"></span>
+                    Dismissed
+                </span>
+            }
+            else if (Model.Report.Status ==
+                     PETHUB.Models.UserReportStatus.Resolved)
+            {
+                <span class="admin-report-status-badge admin-report-status-resolved">
+                    <span class="admin-report-status-dot"></span>
+                    Resolved
+                </span>
+            }
+
+        </div>
+
+    </div>
+
+
     <!-- =========================================================
-         MAIN CONTENT ROW
-         ========================================================= -->
-    <div class="row g-4">
+         FIRST ROW
+    ========================================================== -->
+
+    <div class="admin-report-details-grid">
 
 
-        <!-- =========================================================
+        <!-- =====================================================
              REPORT INFORMATION
-             ========================================================= -->
-        <div class="col-12">
+        ====================================================== -->
 
-            <div class="card border-0 shadow-sm rounded-4">
+        <div class="admin-report-details-card">
 
-                <div class="card-body p-4">
+            <div class="admin-report-details-card-header">
 
-                    <h4 class="fw-bold mb-4">
-                        Report Information
-                    </h4>
+                <div class="admin-report-details-card-icon admin-report-info-main-icon">
+
+                    <i data-lucide="flag"></i>
+
+                </div>
+
+                <h2>
+                    Report Information
+                </h2>
+
+            </div>
 
 
-                    <div class="row g-4">
+            <div class="report-info-list">
 
 
-                        <!-- Report Type -->
-                        <div class="col-md-6">
+                <!-- REPORT TYPE -->
 
-                            <small class="text-muted d-block mb-1">
-                                Report Type
-                            </small>
+                <div class="report-info-row">
+
+                    <div class="report-info-row-icon">
+                        <i data-lucide="file-text"></i>
+                    </div>
+
+                    <div class="report-info-row-content">
+
+                        <span class="report-info-row-label">
+                            Report Type
+                        </span>
+
+                        <span class="report-info-row-value">
 
                             @if (Model.Report.ContentType ==
                                  PETHUB.Models.ReportedContentType.Listing)
                             {
-                                <span class="badge rounded-pill px-3 py-2"
-                                      style="background:#EAF8E6;color:#4F8D42;">
-
-                                    Marketplace Listing
-
-                                </span>
+                                @:Marketplace Listing
                             }
-                            else
+                            else if (Model.Report.ContentType ==
+                                     PETHUB.Models.ReportedContentType.LostFound)
                             {
-                                <span class="badge rounded-pill px-3 py-2"
-                                      style="background:#EAF8E6;color:#4F8D42;">
-
-                                    Lost &amp; Found
-
-                                </span>
+                                @:Lost &amp; Found
                             }
 
-                        </div>
+                        </span>
+
+                    </div>
+
+                </div>
 
 
-                        <!-- Report Status -->
-                        <div class="col-md-6">
+                <!-- REASON -->
 
-                            <small class="text-muted d-block mb-1">
-                                Status
-                            </small>
+                <div class="report-info-row">
 
-                            @if (Model.Report.Status ==
-                                 PETHUB.Models.UserReportStatus.Pending)
-                            {
-                                <span class="badge rounded-pill bg-warning text-dark px-3 py-2">
-                                    Pending
-                                </span>
-                            }
-                            else if (Model.Report.Status ==
-                                     PETHUB.Models.UserReportStatus.Dismissed)
-                            {
-                                <span class="badge rounded-pill bg-secondary px-3 py-2">
-                                    Dismissed
-                                </span>
-                            }
-                            else
-                            {
-                                <span class="badge rounded-pill bg-success px-3 py-2">
-                                    Resolved
-                                </span>
-                            }
+                    <div class="report-info-row-icon">
+                        <i data-lucide="triangle-alert"></i>
+                    </div>
 
-                        </div>
+                    <div class="report-info-row-content">
 
+                        <span class="report-info-row-label">
+                            Reason
+                        </span>
 
-                        <!-- Report Reason -->
-                        <div class="col-md-6">
-
-                            <small class="text-muted d-block mb-1">
-                                Reason
-                            </small>
+                        <span class="report-info-row-value">
 
                             @if (Model.Report.Reason ==
                                  PETHUB.Models.UserReportReason.Other &&
-                                 !string.IsNullOrWhiteSpace(Model.Report.OtherReason))
+                                 !string.IsNullOrWhiteSpace(
+                                     Model.Report.OtherReason))
                             {
-                                <span>
-                                    @Model.Report.OtherReason
-                                </span>
+                                @Model.Report.OtherReason
                             }
                             else
                             {
-                                <span>
-                                    @Model.Report.Reason
-                                </span>
+                                @Model.Report.Reason
                             }
 
-                        </div>
+                        </span>
+
+                    </div>
+
+                </div>
 
 
-                        <!-- Date Reported -->
-                        <div class="col-md-6">
+                <!-- DATE REPORTED -->
 
-                            <small class="text-muted d-block mb-1">
-                                Date Reported
-                            </small>
+                <div class="report-info-row">
 
-                            <span>
-                                @Model.Report.DateCreated.ToLocalTime()
-                            </span>
+                    <div class="report-info-row-icon">
+                        <i data-lucide="clock-3"></i>
+                    </div>
 
-                        </div>
+                    <div class="report-info-row-content">
+
+                        <span class="report-info-row-label">
+                            Date Reported
+                        </span>
+
+                        <span class="report-info-row-value">
+
+                            @(Model.Report.DateCreated
+                                .ToLocalTime()
+                                .ToString("MMM d, yyyy · h:mm tt"))
+
+                        </span>
+
+                    </div>
+
+                </div>
 
 
-                        <!-- Reporter -->
-                        <div class="col-md-6">
+                <!-- REPORTED BY -->
 
-                            <small class="text-muted d-block mb-1">
-                                Reported By
-                            </small>
+                <div class="report-info-row">
 
-                            <span>
+                    <div class="report-info-row-icon">
+                        <i data-lucide="user-round"></i>
+                    </div>
 
-                                @if (Model.Report.Reporter != null)
+                    <div class="report-info-row-content">
+
+                        <span class="report-info-row-label">
+                            Reported By
+                        </span>
+
+                        <span class="report-info-row-value">
+
+                            @(Model.Report.Reporter == null
+                                ? "Unknown"
+                                : $"{Model.Report.Reporter.FirstName} {Model.Report.Reporter.LastName}")
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- POST OWNER -->
+
+                <div class="report-info-row">
+
+                    <div class="report-info-row-icon">
+                        <i data-lucide="user-round"></i>
+                    </div>
+
+                    <div class="report-info-row-content">
+
+                        <span class="report-info-row-label">
+                            Post Owner
+                        </span>
+
+                        <span class="report-info-row-value">
+
+                            @if (Model.Report.ContentType ==
+                                 PETHUB.Models.ReportedContentType.Listing)
+                            {
+                                if (Model.Report.Listing?.Member != null)
                                 {
-                                    @($"{Model.Report.Reporter.FirstName} {Model.Report.Reporter.LastName}")
+                                    @($"{Model.Report.Listing.Member.FirstName} {Model.Report.Listing.Member.LastName}")
                                 }
                                 else
                                 {
                                     @:Unknown
                                 }
-
-                            </span>
-
-                        </div>
-
-
-                        <!-- Post Owner -->
-                        <div class="col-md-6">
-
-                            <small class="text-muted d-block mb-1">
-                                Post Owner
-                            </small>
-
-                            <span>
-
-                                @if (Model.Report.ContentType ==
-                                     PETHUB.Models.ReportedContentType.Listing)
+                            }
+                            else if (Model.Report.ContentType ==
+                                     PETHUB.Models.ReportedContentType.LostFound)
+                            {
+                                if (Model.Report.LostFound?.User != null)
                                 {
-                                    if (Model.Report.Listing?.Member != null)
-                                    {
-                                        @($"{Model.Report.Listing.Member.FirstName} {Model.Report.Listing.Member.LastName}")
-                                    }
-                                    else
-                                    {
-                                        @:Unknown
-                                    }
+                                    @($"{Model.Report.LostFound.User.FirstName} {Model.Report.LostFound.User.LastName}")
                                 }
                                 else
                                 {
-                                    if (Model.Report.LostFound?.User != null)
-                                    {
-                                        @($"{Model.Report.LostFound.User.FirstName} {Model.Report.LostFound.User.LastName}")
-                                    }
-                                    else
-                                    {
-                                        @:Unknown
-                                    }
+                                    @:Unknown
                                 }
-
-                            </span>
-
-                        </div>
-
-
-                        <!-- Report Description -->
-                        <div class="col-12">
-
-                            <small class="text-muted d-block mb-1">
-                                Report Description
-                            </small>
-
-                            @if (string.IsNullOrWhiteSpace(Model.Report.Description))
-                            {
-                                <p class="text-muted mb-0">
-                                    No additional description was provided.
-                                </p>
-                            }
-                            else
-                            {
-                                <p class="mb-0">
-                                    @Model.Report.Description
-                                </p>
                             }
 
-                        </div>
+                        </span>
 
                     </div>
 
                 </div>
 
-            </div>
 
-        </div>
+                <!-- REPORT DESCRIPTION -->
 
+                <div class="report-info-description">
 
-        <!-- =========================================================
-             REPORTED CONTENT
-             ========================================================= -->
-        <div class="col-12">
+                    <span class="report-info-description-label">
+                        Report Description
+                    </span>
 
-            <div class="card border-0 shadow-sm rounded-4">
-
-                <div class="card-body p-4">
-
-                    <h4 class="fw-bold mb-4">
-                        Reported Content
-                    </h4>
-
-
-                    <!-- =================================================
-                         MARKETPLACE LISTING
-                         ================================================= -->
-                    @if (Model.Report.ContentType ==
-                         PETHUB.Models.ReportedContentType.Listing)
+                    @if (string.IsNullOrWhiteSpace(
+                        Model.Report.Description))
                     {
-                        @if (Model.Report.Listing == null)
-                        {
-                            <div class="alert alert-warning mb-0">
-
-                                The reported Marketplace listing is no longer available.
-
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="row g-4">
-
-
-                                <!-- Listing Image -->
-                                <div class="col-lg-4">
-
-                                    @if (Model.Report.Listing.Images != null &&
-                                         Model.Report.Listing.Images.Any())
-                                    {
-                                        <img src="@Model.Report.Listing.Images.First().ImagePath"
-                                             class="img-fluid rounded-4 w-100"
-                                             alt="Reported listing image"
-                                             style="max-height:350px;object-fit:cover;" />
-                                    }
-                                    else
-                                    {
-                                        <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
-                                             style="height:250px;">
-
-                                            <span class="text-muted">
-                                                No image available
-                                            </span>
-
-                                        </div>
-                                    }
-
-                                </div>
-
-
-                                <!-- Listing Information -->
-                                <div class="col-lg-8">
-
-                                    <h3 class="fw-bold mb-3">
-                                        @Model.Report.Listing.Title
-                                    </h3>
-
-
-                                    <p class="text-muted">
-                                        @Model.Report.Listing.Description
-                                    </p>
-
-
-                                    <div class="row g-3">
-
-
-                                        <!-- Listing Type -->
-                                        <div class="col-md-6">
-
-                                            <small class="text-muted d-block">
-                                                Listing Type
-                                            </small>
-
-                                            <strong>
-                                                @Model.Report.Listing.Type
-                                            </strong>
-
-                                        </div>
-
-
-                                        <!-- Pet Type -->
-                                        <div class="col-md-6">
-
-                                            <small class="text-muted d-block">
-                                                Pet Type
-                                            </small>
-
-                                            <strong>
-                                                @Model.Report.Listing.PetType
-                                            </strong>
-
-                                        </div>
-
-
-                                        <!-- Price -->
-                                        <div class="col-md-6">
-
-                                            <small class="text-muted d-block">
-                                                Price
-                                            </small>
-
-                                            <strong>
-                                                ₱@Model.Report.Listing.Price
-                                            </strong>
-
-                                        </div>
-
-
-                                        <!-- Location -->
-                                        <div class="col-md-6">
-
-                                            <small class="text-muted d-block">
-                                                Location
-                                            </small>
-
-                                            <strong>
-                                                @Model.Report.Listing.City,
-                                                @Model.Report.Listing.Province
-                                            </strong>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        }
+                        <p class="report-info-description-text report-info-muted">
+                            No additional description was provided.
+                        </p>
                     }
                     else
                     {
-                        <!-- =================================================
-                             LOST & FOUND
-                             ================================================= -->
-                        @if (Model.Report.LostFound == null)
-                        {
-                            <div class="alert alert-warning mb-0">
-
-                                The reported Lost &amp; Found post is no longer available.
-
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="row g-4">
-
-
-                                <!-- Lost & Found Image -->
-                                <div class="col-lg-4">
-
-                                    @if (Model.Report.LostFound.Images != null &&
-                                         Model.Report.LostFound.Images.Any())
-                                    {
-                                        <img src="@Model.Report.LostFound.Images.First().ImagePath"
-                                             class="img-fluid rounded-4 w-100"
-                                             alt="Reported Lost & Found image"
-                                             style="max-height:350px;object-fit:cover;" />
-                                    }
-                                    else
-                                    {
-                                        <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
-                                             style="height:250px;">
-
-                                            <span class="text-muted">
-                                                No image available
-                                            </span>
-
-                                        </div>
-                                    }
-
-                                </div>
-
-
-                                <!-- Lost & Found Information -->
-                                <div class="col-lg-8">
-
-                                    <h3 class="fw-bold mb-3">
-                                        @Model.Report.LostFound.Title
-                                    </h3>
-
-
-                                    <p class="text-muted">
-                                        @Model.Report.LostFound.Description
-                                    </p>
-
-
-                                    <div class="row g-3">
-
-
-                                        <!-- Report Type -->
-                                        <div class="col-md-6">
-
-                                            <small class="text-muted d-block">
-                                                Report Type
-                                            </small>
-
-                                            <strong>
-                                                @Model.Report.LostFound.Type
-                                            </strong>
-
-                                        </div>
-
-
-                                        <!-- Pet Type -->
-                                        <div class="col-md-6">
-
-                                            <small class="text-muted d-block">
-                                                Pet Type
-                                            </small>
-
-                                            <strong>
-                                                @Model.Report.LostFound.PetType
-                                            </strong>
-
-                                        </div>
-
-
-                                        <!-- Location -->
-                                        <div class="col-md-6">
-
-                                            <small class="text-muted d-block">
-                                                Location
-                                            </small>
-
-                                            <strong>
-                                                @Model.Report.LostFound.City,
-                                                @Model.Report.LostFound.Province
-                                            </strong>
-
-                                        </div>
-
-
-                                        <!-- Date Reported -->
-                                        <div class="col-md-6">
-
-                                            <small class="text-muted d-block">
-                                                Date Reported
-                                            </small>
-
-                                            <strong>
-                                                @Model.Report.LostFound.DateReported.ToString("MMM dd, yyyy")
-                                            </strong>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        }
+                        <p class="report-info-description-text">
+                            @Model.Report.Description
+                        </p>
                     }
 
                 </div>
@@ -520,474 +314,691 @@
         </div>
 
 
-        <!-- =========================================================
-             REPORT HISTORY
-             ========================================================= -->
-        <div class="col-12">
+        <!-- =====================================================
+             REPORTED CONTENT
+        ====================================================== -->
 
-            <div class="card border-0 shadow-sm rounded-4">
+        <div class="admin-report-details-card">
 
-                <div class="card-body p-4">
+            <div class="admin-report-details-card-header">
+
+                <div class="admin-report-details-card-icon">
+
+                    <i data-lucide="file-text"></i>
+
+                </div>
+
+                <h2>
+                    Reported Content
+                </h2>
+
+            </div>
 
 
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+            <!-- MARKETPLACE -->
+            @if (Model.Report.ContentType ==
+                             PETHUB.Models.ReportedContentType.Listing)
+            {
+                @if (Model.Report.Listing == null)
+                {
+                    <div class="admin-report-content-unavailable">
 
-                        <div>
+                        <i data-lucide="image-off"></i>
 
-                            <h4 class="fw-bold mb-1">
-                                Reports for This Post
-                            </h4>
-
-                            <small class="text-muted">
-
-                                @Model.RelatedReports.Count
-                                report@(Model.RelatedReports.Count == 1 ? "" : "s")
-                                submitted for this post.
-
-                            </small>
-
-                        </div>
+                        <span>
+                            The reported Marketplace listing is no longer available.
+                        </span>
 
                     </div>
+                }
+                else
+                {
+                    <div class="admin-report-content-preview">
 
 
-                    <!-- Allows the report list to scroll independently
-                         when many reports are associated with the post. -->
-                    <div style="max-height:400px; overflow-y:auto;">
+                        <!-- IMAGE -->
 
-                        @foreach (var relatedReport in Model.RelatedReports)
-                        {
-                            <div class="border rounded-3 p-3 mb-3">
+                        <div class="admin-report-content-image-wrapper">
 
+                            @if (Model.Report.Listing.Images != null &&
+                                 Model.Report.Listing.Images.Any())
+                            {
+                                <img src="@Model.Report.Listing.Images.First().ImagePath"
+                                     class="admin-report-content-image"
+                                     alt="Reported listing image" />
+                            }
+                            else
+                            {
+                                <div class="admin-report-content-no-image">
 
-                                <div class="d-flex justify-content-between align-items-start">
+                                    <i data-lucide="image-off"></i>
 
-                                    <div>
-
-                                        <div class="fw-semibold">
-
-                                            Reporter:
-
-                                            @(relatedReport.Reporter != null
-                                                ? $"{relatedReport.Reporter.FirstName} {relatedReport.Reporter.LastName}"
-                                                : "Unknown")
-
-                                        </div>
-
-
-                                        <small class="text-muted">
-
-                                            Submitted
-                                            @relatedReport.DateCreated.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")
-
-                                        </small>
-
-                                    </div>
-
-
-                                    <!-- Shows the status of this individual report. -->
-                                    <span class="badge rounded-pill
-                                        @(relatedReport.Status == PETHUB.Models.UserReportStatus.Pending
-                                            ? "bg-warning text-dark"
-                                            : relatedReport.Status == PETHUB.Models.UserReportStatus.Resolved
-                                                ? "bg-success"
-                                                : "bg-secondary")">
-
-                                        @relatedReport.Status
-
+                                    <span>
+                                        No image available
                                     </span>
 
                                 </div>
+                            }
+
+                        </div>
 
 
-                                <hr />
+                        <!-- TYPE -->
+
+                        <p class="admin-report-content-type">
+                            Marketplace Listing
+                        </p>
 
 
-                                <!-- Report Reason -->
-                                <div class="mb-2">
+                        <!-- TITLE -->
 
-                                    <strong>
-                                        Report Reason:
-                                    </strong>
+                        <h3 class="admin-report-content-title">
+                            @Model.Report.Listing.Title
+                        </h3>
 
-                                    @if (relatedReport.Reason ==
-                                         PETHUB.Models.UserReportReason.Other &&
-                                         !string.IsNullOrWhiteSpace(relatedReport.OtherReason))
-                                    {
-                                        @relatedReport.OtherReason
-                                    }
-                                    else
-                                    {
-                                        @relatedReport.Reason
-                                    }
+
+                        <!-- VIEW DETAILS -->
+
+                        <a asp-controller="Marketplace"
+                           asp-action="Details"
+                           asp-route-id="@Model.Report.Listing.ListingId"
+                           class="admin-report-view-post">
+
+                            View Details
+
+                            <i data-lucide="arrow-right"></i>
+
+                        </a>
+
+                    </div>
+                }
+            }
+
+
+            <!-- LOST & FOUND -->
+            @if (Model.Report.ContentType ==
+                             PETHUB.Models.ReportedContentType.LostFound)
+            {
+                @if (Model.Report.LostFound == null)
+                {
+                    <div class="admin-report-content-unavailable">
+
+                        <i data-lucide="image-off"></i>
+
+                        <span>
+                            The reported Lost &amp; Found post is no longer available.
+                        </span>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="admin-report-content-preview">
+
+
+                        <!-- IMAGE -->
+
+                        <div class="admin-report-content-image-wrapper">
+
+                            @if (Model.Report.LostFound.Images != null &&
+                                 Model.Report.LostFound.Images.Any())
+                            {
+                                <img src="@Model.Report.LostFound.Images.First().ImagePath"
+                                     class="admin-report-content-image"
+                                     alt="Reported Lost &amp; Found image" />
+                            }
+                            else
+                            {
+                                <div class="admin-report-content-no-image">
+
+                                    <i data-lucide="image-off"></i>
+
+                                    <span>
+                                        No image available
+                                    </span>
+
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <!-- TYPE -->
+
+                        <p class="admin-report-content-type lost-found">
+                            Lost &amp; Found
+                        </p>
+
+
+                        <!-- TITLE -->
+
+                        <h3 class="admin-report-content-title">
+                            @Model.Report.LostFound.Title
+                        </h3>
+
+
+                        <!-- VIEW DETAILS -->
+
+                        <a asp-controller="LostFound"
+                           asp-action="Details"
+                           asp-route-id="@Model.Report.LostFound.LostFoundId"
+                           class="admin-report-view-post">
+
+                            View Details
+
+                            <i data-lucide="arrow-right"></i>
+
+                        </a>
+
+                    </div>
+                }
+            }
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         SECOND ROW
+    ========================================================== -->
+
+    <div class="admin-report-details-grid">
+
+
+        <!-- =====================================================
+             REPORTS FOR THIS POST
+        ====================================================== -->
+
+        <div class="admin-report-details-card">
+
+            <div class="admin-report-details-card-header">
+
+                <div class="admin-report-details-card-icon">
+
+                    <i data-lucide="files"></i>
+
+                </div>
+
+                <h2>
+                    Reports for This Post
+                </h2>
+
+            </div>
+
+
+            <p class="admin-report-related-summary">
+
+                @Model.RelatedReports.Count
+                report@(Model.RelatedReports.Count == 1 ? "" : "s")
+                submitted for this post.
+
+            </p>
+
+
+            <div class="admin-report-related-list">
+
+                @foreach (var relatedReport in Model.RelatedReports)
+                {
+                    <div class="admin-report-related-item">
+
+
+                        <!-- TOP ROW -->
+
+                        <div class="admin-report-related-top">
+
+                            <div>
+
+                                <div class="admin-report-related-reporter">
+
+                                    @(relatedReport.Reporter == null
+                                        ? "Unknown"
+                                        : $"{relatedReport.Reporter.FirstName} {relatedReport.Reporter.LastName}")
 
                                 </div>
 
+                                <div class="admin-report-related-date">
 
-                                <!-- Reporter Note -->
-                                <div>
-
-                                    <strong>
-                                        Reporter's Note:
-                                    </strong>
-
-                                    @if (string.IsNullOrWhiteSpace(relatedReport.Description))
-                                    {
-                                        <span class="text-muted">
-                                            No additional description was provided.
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <p class="mb-0 mt-1">
-                                            @relatedReport.Description
-                                        </p>
-                                    }
+                                    Submitted
+                                    @(relatedReport.DateCreated
+                                        .ToLocalTime()
+                                        .ToString("MMM d, yyyy · h:mm tt"))
 
                                 </div>
 
                             </div>
-                        }
+
+
+                            <!-- STATUS -->
+                            @if (relatedReport.Status ==
+                                                             PETHUB.Models.UserReportStatus.Pending)
+                            {
+                                <span class="admin-report-status-badge admin-report-status-pending">
+
+                                    <span class="admin-report-status-dot"></span>
+
+                                    Pending
+
+                                </span>
+                            }
+                            else if (relatedReport.Status ==
+                                     PETHUB.Models.UserReportStatus.Dismissed)
+                            {
+                                <span class="admin-report-status-badge admin-report-status-dismissed">
+
+                                    <span class="admin-report-status-dot"></span>
+
+                                    Dismissed
+
+                                </span>
+                            }
+                            else if (relatedReport.Status ==
+                                     PETHUB.Models.UserReportStatus.Resolved)
+                            {
+                                <span class="admin-report-status-badge admin-report-status-resolved">
+
+                                    <span class="admin-report-status-dot"></span>
+
+                                    Resolved
+
+                                </span>
+                            }
+
+                        </div>
+
+
+                        <!-- REPORT REASON -->
+
+                        <div class="admin-report-related-reason">
+
+                            @if (relatedReport.Reason ==
+                                 PETHUB.Models.UserReportReason.Other &&
+                                 !string.IsNullOrWhiteSpace(
+                                     relatedReport.OtherReason))
+                            {
+                                @relatedReport.OtherReason
+                            }
+                            else
+                            {
+                                @relatedReport.Reason
+                            }
+
+                        </div>
+
+
+                        <!-- REPORTER'S NOTE -->
+
+                        <div class="admin-report-related-note">
+
+                            <span class="admin-report-related-note-label">
+                                Reporter's Note
+                            </span>
+
+                            @if (string.IsNullOrWhiteSpace(
+                                relatedReport.Description))
+                            {
+                                <span>
+                                    No additional description was provided.
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    @relatedReport.Description
+                                </span>
+                            }
+
+                        </div>
 
                     </div>
-
-                </div>
+                }
 
             </div>
 
         </div>
 
 
-        <!-- =========================================================
-             OWNER'S APPEAL
-             ========================================================= -->
-        @if (Model.Appeal != null)
-        {
-            <div class="col-12">
+        <!-- =====================================================
+             REVIEW ACTIONS
+        ====================================================== -->
 
-                <div class="card border-0 shadow-sm rounded-4">
+        <div class="admin-report-details-card">
 
-                    <div class="card-body p-4">
+            <div class="admin-report-details-card-header">
 
+                <div class="admin-report-details-card-icon">
 
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-
-
-                            <div>
-
-                                <h4 class="fw-bold mb-1">
-                                    Owner's Appeal
-                                </h4>
-
-                                <p class="text-muted mb-0">
-                                    The owner submitted the following explanation
-                                    regarding the removal of this post.
-                                </p>
-
-                            </div>
-
-
-                            @if (Model.Appeal.Status ==
-                                PETHUB.Models.AppealStatus.Pending)
-                            {
-                                <span class="badge bg-warning text-dark rounded-pill">
-                                    Pending
-                                </span>
-                            }
-                            else if (Model.Appeal.Status ==
-                                     PETHUB.Models.AppealStatus.Approved)
-                            {
-                                <span class="badge bg-success rounded-pill">
-                                    Approved
-                                </span>
-                            }
-                            else if (Model.Appeal.Status ==
-                                     PETHUB.Models.AppealStatus.Rejected)
-                            {
-                                <span class="badge bg-danger rounded-pill">
-                                    Rejected
-                                </span>
-                            }
-
-                        </div>
-
-
-                        <!-- Displays the owner's appeal message. -->
-                        <div class="p-3 rounded-3 mb-3"
-                             style="background:#f8f9fa;">
-
-                            <p class="mb-0">
-                                @Model.Appeal.AppealMessage
-                            </p>
-
-                        </div>
-
-
-                        <!-- Displays the Admin response when one exists. -->
-                        @if (!string.IsNullOrWhiteSpace(Model.Appeal.AdminActionReason))
-                        {
-                            <div class="mb-0">
-
-                                <strong>
-                                    Admin Response:
-                                </strong>
-
-                                <p class="mb-0 mt-1">
-                                    @Model.Appeal.AdminActionReason
-                                </p>
-
-                            </div>
-                        }
-
-                    </div>
+                    <i data-lucide="gavel"></i>
 
                 </div>
+
+                <h2>
+                    Review Actions
+                </h2>
 
             </div>
 
 
-            <!-- =====================================================
-                 APPEAL ACTIONS
-                 ===================================================== -->
-            @if (Model.Appeal.Status ==
-                PETHUB.Models.AppealStatus.Pending)
+            <p class="admin-report-actions-description">
+
+                Review the report and the reported content before deciding
+                whether the report should be dismissed or the reported
+                content should be removed.
+
+            </p>
+
+
+            @if (Model.Report.Status ==
+                 PETHUB.Models.UserReportStatus.Pending)
             {
-                <div class="col-12">
-
-                    <div class="card border-0 shadow-sm rounded-4">
-
-                        <div class="card-body p-4">
+                <div class="admin-report-action-buttons">
 
 
-                            <h4 class="fw-bold mb-2">
-                                Appeal Decision
-                            </h4>
+                    <!-- DISMISS -->
+
+                    <form asp-controller="Reports"
+                          asp-action="Dismiss"
+                          method="post"
+                          onsubmit="return confirm('Are you sure you want to dismiss this report?');">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Report.UserReportId" />
+
+                        <button type="submit"
+                                class="admin-report-action-button admin-report-action-dismiss">
+
+                            Dismiss Report
+
+                        </button>
+
+                    </form>
 
 
-                            <p class="text-muted mb-0">
-                                Review the owner's appeal before deciding
-                                whether the removed post should be restored.
-                            </p>
+                    <!-- CONFIRM VIOLATION -->
 
+                    <button type="button"
+                            class="admin-report-action-button admin-report-action-remove"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmViolationModal">
 
-                            <div class="d-flex flex-wrap gap-3 mt-4">
+                        Confirm Violation &amp; Remove Post
 
-
-                                <!-- Sends the selected AppealId to the
-                                     ConfirmAppeal controller action. -->
-                                <form asp-controller="Reports"
-                                      asp-action="ConfirmAppeal"
-                                      method="post"
-                                      class="d-inline">
-
-                                    @Html.AntiForgeryToken()
-
-                                    <input type="hidden"
-                                           name="appealId"
-                                           value="@Model.Appeal.AppealId" />
-
-                                    <button type="submit"
-                                            class="btn btn-success rounded-pill px-4"
-                                            onclick="return confirm('Are you sure you want to confirm this appeal and restore the post?');">
-
-                                        Confirm Appeal
-
-                                    </button>
-
-                                </form>
-
-
-                                <!-- Opens the Reject Appeal modal. -->
-                                <button type="button"
-                                        class="btn btn-outline-danger rounded-pill px-4"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#rejectAppealModal">
-
-                                    Reject Appeal
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </div>
+                    </button>
 
                 </div>
             }
-        }
+            else
+            {
+                <div class="admin-report-action-completed">
+
+                    <i data-lucide="circle-check"></i>
+
+                    <span>
+                        This report has already been reviewed.
+                    </span>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
 
 
-        <!-- =========================================================
-             NORMAL ADMIN ACTIONS
-             ========================================================= -->
-        @if (Model.Report.Status ==
-             PETHUB.Models.UserReportStatus.Pending)
-        {
-            <div class="col-12">
-
-                <div class="card border-0 shadow-sm rounded-4">
-
-                    <div class="card-body p-4">
+    <!-- =========================================================
+         OWNER'S APPEAL
+    ========================================================== -->
+    @if (Model.Appeal != null)
+    {
+        <div class="admin-report-appeal-card">
 
 
-                        <h4 class="fw-bold mb-2">
-                            Review Actions
-                        </h4>
+            <!-- APPEAL HEADER -->
 
+            <div class="admin-report-appeal-header">
 
-                        <p class="text-muted">
-                            Review the report and the reported content before
-                            deciding whether the report should be dismissed or
-                            the reported content should be removed.
+                <div class="admin-report-appeal-title-wrapper">
+
+                    <div class="admin-report-appeal-icon">
+
+                        <i data-lucide="scale"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Owner's Appeal
+                        </h2>
+
+                        <p>
+                            The owner submitted an explanation regarding
+                            the removal of this post.
                         </p>
-
-
-                        <div class="d-flex flex-wrap gap-3 mt-4">
-
-
-                            <!-- Dismisses the selected UserReport. -->
-                            <form asp-controller="Reports"
-                                  asp-action="Dismiss"
-                                  method="post"
-                                  class="d-inline"
-                                  onsubmit="return confirm('Are you sure you want to dismiss this report?');">
-
-                                @Html.AntiForgeryToken()
-
-                                <input type="hidden"
-                                       name="id"
-                                       value="@Model.Report.UserReportId" />
-
-                                <button type="submit"
-                                        class="btn btn-outline-secondary rounded-pill px-4">
-
-                                    Dismiss Report
-
-                                </button>
-
-                            </form>
-
-
-                            <!-- Opens the Confirm Violation modal. -->
-                            <button type="button"
-                                    class="btn btn-danger rounded-pill px-4"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#confirmViolationModal">
-
-                                Confirm Violation
-
-                            </button>
-
-                        </div>
 
                     </div>
 
                 </div>
 
-            </div>
-        }
 
-    </div>
-    <!-- END MAIN CONTENT ROW -->
+                <!-- APPEAL STATUS -->
+                @if (Model.Appeal.Status ==
+                                     PETHUB.Models.AppealStatus.Pending)
+                {
+                    <span class="admin-report-status-badge admin-report-status-pending">
+
+                        <span class="admin-report-status-dot"></span>
+
+                        Pending
+
+                    </span>
+                }
+                else if (Model.Appeal.Status ==
+                         PETHUB.Models.AppealStatus.Approved)
+                {
+                    <span class="admin-report-status-badge admin-report-status-resolved">
+
+                        <span class="admin-report-status-dot"></span>
+
+                        Approved
+
+                    </span>
+                }
+                else if (Model.Appeal.Status ==
+                         PETHUB.Models.AppealStatus.Rejected)
+                {
+                    <span class="admin-report-status-badge admin-report-status-dismissed">
+
+                        <span class="admin-report-status-dot"></span>
+
+                        Rejected
+
+                    </span>
+                }
+
+            </div>
+
+
+            <!-- APPEAL MESSAGE -->
+
+            <div class="admin-report-appeal-message">
+
+                <p>
+                    "@Model.Appeal.AppealMessage"
+                </p>
+
+            </div>
+
+
+            <!-- ADMIN RESPONSE -->
+            @if (!string.IsNullOrWhiteSpace(
+                            Model.Appeal.AdminActionReason))
+            {
+                <div class="admin-report-appeal-response">
+
+                    <span class="admin-report-information-label">
+                        Admin Response
+                    </span>
+
+                    <p>
+                        @Model.Appeal.AdminActionReason
+                    </p>
+
+                </div>
+            }
+
+
+            <!-- APPEAL ACTIONS -->
+            @if (Model.Appeal.Status ==
+                             PETHUB.Models.AppealStatus.Pending)
+            {
+                <div class="admin-report-appeal-actions">
+
+
+                    <!-- CONFIRM APPEAL -->
+
+                    <form asp-controller="Reports"
+                          asp-action="ConfirmAppeal"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="appealId"
+                               value="@Model.Appeal.AppealId" />
+
+                        <button type="submit"
+                                class="admin-report-appeal-confirm"
+                                onclick="return confirm('Are you sure you want to confirm this appeal and restore the post?');">
+
+                            <i data-lucide="check"></i>
+
+                            Confirm Appeal &amp; Restore Post
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- REJECT APPEAL -->
+
+                    <button type="button"
+                            class="admin-report-appeal-reject"
+                            data-bs-toggle="modal"
+                            data-bs-target="#rejectAppealModal">
+
+                        Reject Appeal
+
+                    </button>
+
+                </div>
+            }
+
+        </div>
+    }
+
+
     <!-- =========================================================
-         CONFIRM VIOLATION MODAL
-         ========================================================= -->
+     CONFIRM VIOLATION MODAL
+========================================================= -->
+
     <div class="modal fade"
          id="confirmViolationModal"
          tabindex="-1"
          aria-labelledby="confirmViolationModalLabel"
          aria-hidden="true">
 
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered admin-report-confirm-dialog">
 
-            <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-content admin-report-confirm-modal">
 
 
-                <!-- Modal Header -->
-                <div class="modal-header border-0 px-4 pt-4">
+                <!-- =================================================
+                 HEADER
+            ================================================== -->
 
-                    <div>
+                <div class="admin-report-confirm-header">
 
-                        <h4 class="modal-title fw-bold"
-                            id="confirmViolationModalLabel">
+                    <div class="admin-report-confirm-title">
 
+                        <i data-lucide="triangle-alert"></i>
+
+                        <h2 id="confirmViolationModalLabel">
                             Confirm Violation
-
-                        </h4>
-
-                        <p class="text-muted mb-0">
-                            Review the report information before removing the post.
-                        </p>
+                        </h2>
 
                     </div>
 
 
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close">
-                    </button>
+                    <p class="admin-report-confirm-subtitle">
+                        Review the report information before removing the post.
+                    </p>
 
                 </div>
 
 
-                <!-- Modal Body -->
-                <div class="modal-body px-4 pb-4">
+                <!-- =================================================
+                 BODY
+            ================================================== -->
+
+                <div class="admin-report-confirm-body">
 
 
-                    <!-- Original Reporter information -->
-                    <div class="p-3 rounded-3 mb-4"
-                         style="background:#f8f9fa;">
+                    <!-- REPORT SUMMARY -->
 
-                        <h6 class="fw-bold mb-3">
-                            Original Report
-                        </h6>
+                    <div class="admin-report-confirm-summary">
 
 
-                        <!-- Report Reason -->
-                        <div class="mb-3">
+                        <!-- REPORT REASON -->
 
-                            <small class="text-muted d-block mb-1">
+                        <div class="admin-report-confirm-field">
+
+                            <span class="admin-report-confirm-label">
                                 Report Reason
-                            </small>
+                            </span>
 
-                            @if (Model.Report.Reason ==
-                                 PETHUB.Models.UserReportReason.Other &&
-                                 !string.IsNullOrWhiteSpace(Model.Report.OtherReason))
-                            {
-                                <strong>
+                            <div class="admin-report-confirm-value">
+
+                                @if (Model.Report.Reason ==
+                                     PETHUB.Models.UserReportReason.Other &&
+                                     !string.IsNullOrWhiteSpace(
+                                         Model.Report.OtherReason))
+                                {
                                     @Model.Report.OtherReason
-                                </strong>
-                            }
-                            else
-                            {
-                                <strong>
+                                }
+                                else
+                                {
                                     @Model.Report.Reason
-                                </strong>
-                            }
+                                }
+
+                            </div>
 
                         </div>
 
 
-                        <!-- Reporter Description -->
-                        <div>
+                        <!-- REPORTER'S NOTE -->
 
-                            <small class="text-muted d-block mb-1">
+                        <div class="admin-report-confirm-field">
+
+                            <span class="admin-report-confirm-label">
                                 Reporter's Note
-                            </small>
+                            </span>
 
-                            @if (string.IsNullOrWhiteSpace(Model.Report.Description))
+                            @if (string.IsNullOrWhiteSpace(
+                                Model.Report.Description))
                             {
-                                <span class="text-muted">
+                                <div class="admin-report-confirm-note muted">
                                     No additional description was provided.
-                                </span>
+                                </div>
                             }
                             else
                             {
-                                <p class="mb-0">
+                                <div class="admin-report-confirm-note">
                                     @Model.Report.Description
-                                </p>
+                                </div>
                             }
 
                         </div>
@@ -995,24 +1006,26 @@
                     </div>
 
 
-                    <!-- Sends the Admin's removal reason to the controller. -->
+                    <!-- =================================================
+                     ADMIN REASON
+                ================================================== -->
+
                     <form asp-controller="Reports"
                           asp-action="ConfirmViolation"
-                          method="post">
+                          method="post"
+                          class="admin-report-confirm-form">
 
                         @Html.AntiForgeryToken()
 
-
-                        <!-- Identifies the exact UserReport. -->
                         <input type="hidden"
                                name="id"
                                value="@Model.Report.UserReportId" />
 
 
-                        <div class="mb-4">
+                        <div class="admin-report-confirm-input-group">
 
                             <label for="adminActionReason"
-                                   class="form-label fw-semibold">
+                                   class="admin-report-confirm-input-label">
 
                                 Reason for Removing This Post
 
@@ -1021,27 +1034,28 @@
 
                             <textarea id="adminActionReason"
                                       name="adminActionReason"
-                                      class="form-control"
+                                      class="admin-report-confirm-textarea"
                                       rows="4"
                                       maxlength="1000"
                                       placeholder="Explain why this post violates PETHUB community standards and why it is being removed."
                                       required></textarea>
 
 
-                            <small class="text-muted">
-                                This reason will be shown to the post owner so they
-                                know what needs to be corrected or considered during
-                                an appeal.
-                            </small>
+                            <span class="admin-report-confirm-help">
+                                This reason will be shown to the post owner so they know what needs to be corrected or considered during an appeal.
+                            </span>
 
                         </div>
 
 
-                        <!-- Modal Actions -->
-                        <div class="d-flex justify-content-end gap-2">
+                        <!-- =================================================
+                         ACTION BUTTONS
+                    ================================================== -->
+
+                        <div class="admin-report-confirm-actions">
 
                             <button type="button"
-                                    class="btn btn-outline-secondary rounded-pill px-4"
+                                    class="admin-report-confirm-cancel"
                                     data-bs-dismiss="modal">
 
                                 Cancel
@@ -1050,7 +1064,7 @@
 
 
                             <button type="submit"
-                                    class="btn btn-danger rounded-pill px-4">
+                                    class="admin-report-confirm-submit">
 
                                 Confirm Violation
 
@@ -1070,8 +1084,8 @@
 
 
     <!-- =========================================================
-         REJECT APPEAL MODAL
-         ========================================================= -->
+     REJECT APPEAL MODAL
+========================================================= -->
     @if (Model.Appeal != null &&
          Model.Appeal.Status ==
          PETHUB.Models.AppealStatus.Pending)
@@ -1082,85 +1096,141 @@
              aria-labelledby="rejectAppealModalLabel"
              aria-hidden="true">
 
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered admin-report-reject-dialog">
 
-                <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-content admin-report-reject-modal">
 
 
-                    <!-- Modal Header -->
-                    <div class="modal-header border-0 px-4 pt-4">
+                    <!-- =================================================
+                     HEADER
+                ================================================== -->
 
-                        <div>
+                    <div class="admin-report-reject-header">
 
-                            <h4 class="modal-title fw-bold"
-                                id="rejectAppealModalLabel">
+                        <div class="admin-report-reject-title">
 
+                            <i data-lucide="triangle-alert"></i>
+
+                            <h2 id="rejectAppealModalLabel">
                                 Reject Appeal
-
-                            </h4>
-
-                            <p class="text-muted mb-0">
-                                The original post will remain removed.
-                            </p>
+                            </h2>
 
                         </div>
 
 
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close">
-                        </button>
+                        <p class="admin-report-reject-subtitle">
+                            Review the appeal before rejecting the owner's request.
+                        </p>
 
                     </div>
 
 
-                    <!-- Modal Body -->
-                    <div class="modal-body px-4 pb-4">
+                    <!-- =================================================
+                     BODY
+                ================================================== -->
+
+                    <div class="admin-report-reject-body">
+
+
+                        <!-- APPEAL SUMMARY -->
+
+                        <div class="admin-report-reject-summary">
+
+
+                            <!-- OWNER'S APPEAL -->
+
+                            <div class="admin-report-reject-field">
+
+                                <span class="admin-report-reject-label">
+                                    Owner's Appeal
+                                </span>
+
+                                <div class="admin-report-reject-value">
+
+                                    @if (string.IsNullOrWhiteSpace(
+                                        Model.Appeal.AppealMessage))
+                                    {
+                                        <span class="admin-report-reject-muted">
+                                            No appeal explanation was provided.
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        @Model.Appeal.AppealMessage
+                                    }
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- POST STATUS -->
+
+                            <div class="admin-report-reject-field">
+
+                                <span class="admin-report-reject-label">
+                                    Post Status
+                                </span>
+
+                                <div class="admin-report-reject-value">
+                                    Removed
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                         ADMIN RESPONSE FORM
+                    ================================================== -->
 
                         <form asp-controller="Reports"
                               asp-action="RejectAppeal"
-                              method="post">
+                              method="post"
+                              class="admin-report-reject-form">
 
                             @Html.AntiForgeryToken()
 
-
-                            <!-- Identifies the exact Appeal. -->
                             <input type="hidden"
                                    name="appealId"
                                    value="@Model.Appeal.AppealId" />
 
 
-                            <div class="mb-4">
+                            <div class="admin-report-reject-input-group">
 
                                 <label for="appealAdminActionReason"
-                                       class="form-label fw-semibold">
+                                       class="admin-report-reject-input-label">
 
-                                    Admin Response
+                                    Reason for Rejecting This Appeal
 
                                 </label>
 
 
                                 <textarea id="appealAdminActionReason"
                                           name="adminActionReason"
-                                          class="form-control"
+                                          class="admin-report-reject-textarea"
                                           rows="4"
                                           maxlength="2000"
-                                          placeholder="Explain why the appeal was rejected."></textarea>
+                                          placeholder="Explain why the owner's appeal is being rejected."
+                                          required></textarea>
 
 
-                                <small class="text-muted">
-                                    This response will be shown to the post owner.
-                                </small>
+                                <span class="admin-report-reject-help">
+                                    This response will be shown to the post owner so they understand why the appeal was rejected.
+                                </span>
 
                             </div>
 
 
-                            <!-- Modal Actions -->
-                            <div class="d-flex justify-content-end gap-2">
+                            <!-- =================================================
+                             ACTION BUTTONS
+                        ================================================== -->
+
+                            <div class="admin-report-reject-actions">
 
                                 <button type="button"
-                                        class="btn btn-outline-secondary rounded-pill px-4"
+                                        class="admin-report-reject-cancel"
                                         data-bs-dismiss="modal">
 
                                     Cancel
@@ -1169,7 +1239,7 @@
 
 
                                 <button type="submit"
-                                        class="btn btn-danger rounded-pill px-4">
+                                        class="admin-report-reject-submit">
 
                                     Reject Appeal
 
@@ -1188,4 +1258,18 @@
         </div>
     }
 
-</div>
+
+@section Scripts
+{
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            if (typeof lucide !== "undefined") {
+                lucide.createIcons();
+            }
+
+        });
+
+    </script>
+}

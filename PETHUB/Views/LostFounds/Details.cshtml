@@ -4,272 +4,461 @@
     ViewData["Title"] = "Lost & Found Details";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
+<div class="admin-review-page">
 
-        <!-- ========================= -->
-        <!-- Left Side: Image Gallery -->
-        <!-- ========================= -->
-        <div class="col-md-6">
+    <div class="admin-review-card">
 
-            @* CUSTOMIZE:
-               - Change carousel height (currently 400px)
-               - Change object-fit (cover, contain, etc.)
-            *@
-            @if (Model.Images != null && Model.Images.Any())
-            {
-                <div id="lostFoundCarousel" class="carousel slide shadow-sm" data-bs-ride="carousel">
+        <!-- HEADER -->
+        <div class="admin-review-header">
+            <div class="admin-review-header-content">
+                <h1>Review Lost &amp; Found Report</h1>
+                <p>Review the submitted report and verify the information provided.</p>
+            </div>
 
-                    <div class="carousel-inner rounded">
+            <div class="admin-review-status">
+                @if (Model.Status == ApprovalStatus.Pending)
+                {
+                    <span class="admin-status-badge pending">
+                        <span class="status-dot"></span>
+                        Pending
+                    </span>
+                }
+                else if (Model.Status == ApprovalStatus.Approved)
+                {
+                    <span class="admin-status-badge approved">
+                        <span class="status-dot"></span>
+                        Approved
+                    </span>
+                }
+                else if (Model.Status == ApprovalStatus.Rejected)
+                {
+                    <span class="admin-status-badge rejected">
+                        <span class="status-dot"></span>
+                        Rejected
+                    </span>
+                }
+            </div>
+        </div>
 
-                        @for (int i = 0; i < Model.Images.Count; i++)
+
+        <!-- TWO COLUMN LAYOUT -->
+        <div class="admin-review-layout">
+
+            <!-- LEFT COLUMN -->
+            <div class="admin-review-left">
+
+                <!-- PHOTOS -->
+                <div class="admin-review-section">
+
+                    <h3>Photos</h3>
+
+                    @if (Model.Images != null && Model.Images.Any())
+                    {
+                        <div id="lostFoundCarousel" class="admin-listing-carousel carousel slide" data-bs-ride="carousel">
+
+                            <div class="carousel-inner">
+
+                                @for (int i = 0; i < Model.Images.Count; i++)
+                                {
+                                    var img = Model.Images.ElementAt(i);
+
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                        <img src="@img.ImagePath"
+                                             class="d-block w-100"
+                                             alt="Lost & Found Image">
+                                    </div>
+                                }
+
+                            </div>
+
+                            <button class="carousel-control-prev"
+                                    type="button"
+                                    data-bs-target="#lostFoundCarousel"
+                                    data-bs-slide="prev">
+
+                                <span class="carousel-control-prev-icon"></span>
+                                <span class="visually-hidden">Previous</span>
+
+                            </button>
+
+                            <button class="carousel-control-next"
+                                    type="button"
+                                    data-bs-target="#lostFoundCarousel"
+                                    data-bs-slide="next">
+
+                                <span class="carousel-control-next-icon"></span>
+                                <span class="visually-hidden">Next</span>
+
+                            </button>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="admin-no-image">
+                            <p>No images uploaded.</p>
+                        </div>
+                    }
+
+                </div>
+
+
+                <!-- REPORTER INFORMATION -->
+                <div class="admin-review-section">
+
+                    <h3>Reporter Information</h3>
+
+                    <div class="admin-member-card">
+
+                        <div class="listing-profile">
+
+                            <div class="listing-profile-main">
+
+                                <div class="listing-profile-avatar">
+                                    @if (Model.UserId != null && Model.User != null)
+                                    {
+                                        <span>
+                                            @Model.User.FirstName?.FirstOrDefault()@Model.User.LastName?.FirstOrDefault()
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            @Model.ClientName?.FirstOrDefault()
+                                        </span>
+                                    }
+                                </div>
+
+                                <div class="listing-profile-details">
+
+                                    @if (Model.UserId == null)
+                                    {
+                                        <div class="listing-profile-name">
+                                            @Model.ClientName
+                                        </div>
+
+                                        <div class="listing-profile-meta">
+                                            External Client
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="listing-profile-name">
+                                            @Model.User?.FirstName @Model.User?.LastName
+                                        </div>
+
+                                        <div class="listing-profile-meta">
+                                            PETHUB Member
+                                        </div>
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CONTACT -->
+                        <div class="admin-member-contact">
+
+                            @if (Model.UserId == null)
+                            {
+                                <strong>Contact Number</strong>
+                                <span>@Model.ClientContact</span>
+                            }
+                            else
+                            {
+                                <strong>Contact Number</strong>
+                                <span>@Model.User?.ContactNumber</span>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- VALID ID -->
+                <div class="admin-review-section">
+
+                    @if (Model.UserId == null)
+                    {
+                        <h3>Client Valid ID</h3>
+
+                        @if (!string.IsNullOrEmpty(Model.ClientIdImagePath))
                         {
-                            var img = Model.Images.ElementAt(i);
+                            <div class="admin-valid-id-container">
 
-                            <div class="carousel-item @(i == 0 ? "active" : "")">
-                                <img src="@img.ImagePath"
-                                     class="d-block w-100"
-                                     alt="Lost & Found Image"
-                                     style="height:400px; object-fit:cover;">
+                                <img src="@Model.ClientIdImagePath"
+                                     alt="Client ID Photo"
+                                     class="admin-valid-id-image" />
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="admin-no-id">
+                                <strong>No client ID photo uploaded.</strong>
+                                <span>No valid ID image was provided.</span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <h3>Member Valid ID</h3>
+
+                        @if (!string.IsNullOrEmpty(Model.User?.IdPhotoPath))
+                        {
+                            <div class="admin-valid-id-container">
+
+                                <img src="@Model.User.IdPhotoPath"
+                                     alt="Member ID Photo"
+                                     class="admin-valid-id-image" />
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="admin-no-id">
+                                <strong>No member ID photo uploaded.</strong>
+                                <span>No valid ID image was provided.</span>
+                            </div>
+                        }
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT COLUMN -->
+            <div class="admin-review-right">
+
+                <!-- TITLE -->
+                <div class="admin-review-section">
+
+                    <h2 class="admin-listing-title">
+                        @Model.Title
+                    </h2>
+
+                    <p class="admin-listing-date">
+                        Reported on @Model.DateReported.ToString("MMMM dd, yyyy")
+                    </p>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+                <div class="admin-review-section">
+
+                    <h3>Description</h3>
+
+                    <div class="admin-description-box">
+
+                        <p class="admin-description">
+                            @(string.IsNullOrWhiteSpace(Model.Description)
+                                ? "No description provided."
+                                : Model.Description)
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REPORT INFORMATION -->
+                <div class="admin-review-section">
+
+                    <h3>Report Information</h3>
+
+                    <div class="admin-information-card">
+
+                        <!-- REPORT TYPE -->
+                        <div class="admin-information-row">
+
+                            <strong>Report Type</strong>
+
+                            <span class="admin-type-pill">
+                                @Model.Type
+                            </span>
+
+                        </div>
+
+
+                        <!-- PET TYPE -->
+                        <div class="admin-information-row">
+
+                            <strong>Pet Type</strong>
+
+                            <span>
+                                @Model.PetType
+                            </span>
+
+                        </div>
+
+
+                        <!-- BREED -->
+                        <div class="admin-information-row">
+
+                            <strong>Breed</strong>
+
+                            <span>
+                                @(string.IsNullOrWhiteSpace(Model.Breed)
+                                    ? "Not specified"
+                                    : Model.Breed)
+                            </span>
+
+                        </div>
+
+
+                        <!-- SEX -->
+                        <div class="admin-information-row">
+
+                            <strong>Sex</strong>
+
+                            <span>
+                                @(Model.Sex.HasValue
+                                    ? Model.Sex.ToString()
+                                    : "Not specified")
+                            </span>
+
+                        </div>
+
+
+                        <!-- LOST DATE -->
+                        @if (Model.Type == LostFoundType.Lost)
+                        {
+                            <div class="admin-information-row">
+
+                                <strong>Lost Date</strong>
+
+                                <span>
+                                    @(Model.LostDate.HasValue
+                                        ? Model.LostDate.Value.ToString("MMMM dd, yyyy")
+                                        : "Not specified")
+                                </span>
+
                             </div>
                         }
 
                     </div>
 
-                    <button class="carousel-control-prev"
-                            type="button"
-                            data-bs-target="#lostFoundCarousel"
-                            data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-
-                    <button class="carousel-control-next"
-                            type="button"
-                            data-bs-target="#lostFoundCarousel"
-                            data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-
                 </div>
-            }
-            else
-            {
-                <div class="bg-light d-flex justify-content-center align-items-center rounded shadow-sm"
-                     style="height:400px;">
-                    <p class="text-muted mb-0">
-                        No images uploaded.
-                    </p>
-                </div>
-            }
 
-        </div>
 
-        <!-- ========================= -->
-        <!-- Right Side: Report Details -->
-        <!-- ========================= -->
-        <div class="col-md-5">
+                <!-- LOCATION -->
+                <div class="admin-review-section">
 
-            @* CUSTOMIZE:
-               - shadow-sm
-               - rounded corners
-               - border style
-            *@
-            <div class="card border-0 shadow-sm">
+                    <h3>Location</h3>
 
-                <div class="card-body">
+                    <div class="admin-information-card">
 
-                    <!-- Report Title -->
-                    <h2 class="fw-bold">
-                        @Model.Title
-                    </h2>
+                        <div class="admin-information-row">
 
-                    <!-- Report Date -->
-                    <p class="text-muted">
-                        Reported on @Model.DateReported.ToString("MMMM dd, yyyy")
-                    </p>
+                            <strong>Street Address</strong>
 
-                    <hr />
+                            <span>
+                                @(string.IsNullOrWhiteSpace(Model.StreetAddress)
+                                    ? "Not specified"
+                                    : Model.StreetAddress)
+                            </span>
 
-                    <!-- Description -->
-                    <h5>Description</h5>
+                        </div>
 
-                    <p>
-                        @(string.IsNullOrWhiteSpace(Model.Description)
-                            ? "No description provided."
-                            : Model.Description)
-                    </p>
+                        <div class="admin-information-row">
 
-                    <hr />
+                            <strong>Barangay</strong>
 
-                    <!-- Report Information -->
-                    <h5>Report Information</h5>
+                            <span>
+                                @(string.IsNullOrWhiteSpace(Model.Barangay)
+                                    ? "Not specified"
+                                    : Model.Barangay)
+                            </span>
 
-                    <p>
-                        <strong>Report Type:</strong>
-                        @Model.Type
-                    </p>
+                        </div>
 
-                    <p>
-                        <strong>Pet Type:</strong>
-                        @Model.PetType
-                    </p>
+                        <div class="admin-information-row">
 
-                    <p>
-                        <strong>Breed:</strong>
-                        @(string.IsNullOrWhiteSpace(Model.Breed)
-                            ? "Not specified"
-                            : Model.Breed)
-                    </p>
+                            <strong>City</strong>
 
-                    <p>
-                        <strong>Sex:</strong>
-                        @(Model.Sex.HasValue
-                            ? Model.Sex.ToString()
-                            : "Not specified")
-                    </p>
+                            <span>
+                                @(string.IsNullOrWhiteSpace(Model.City)
+                                    ? "Not specified"
+                                    : Model.City)
+                            </span>
 
-                    <!-- I added this conditional statement so that if the type is found then it hides the LostDate details -->
-                    <!-- But if the type is lost, then it shows the client details -->
-                    @if (Model.Type ==  LostFoundType.Found)
-                    {
-                        
-                    }else
-                    {
-                        <p>
-                            <strong>Lost Date:</strong>
-                            @(Model.LostDate.HasValue
-                                ? Model.LostDate.Value.ToString("MMMM dd, yyyy")
-                                : "Not specified")
-                        </p>
-                    }
-                   
+                        </div>
 
-                    <p>
-                        <strong>Location:</strong>
-                        @if (string.IsNullOrWhiteSpace(Model.City))
-                        {
-                            <span>Not specified</span>
-                        }
-                        else
-                        {
-                            <br />
-                            @if (!string.IsNullOrEmpty(Model.StreetAddress))
-                            {
-                                <span>@Model.StreetAddress<br /></span>
-                            }
-                            <span>@Model.Barangay<br />@Model.City<br />@Model.Province</span>
-                        }
-                    </p>
+                        <div class="admin-information-row">
 
-                    <hr />
+                            <strong>Province</strong>
 
-                    <!-- Reporter Information -->
-                    <h5>Reporter Information</h5>
+                            <span>
+                                @(string.IsNullOrWhiteSpace(Model.Province)
+                                    ? "Not specified"
+                                    : Model.Province)
+                            </span>
 
-                    <!-- I Added this conditional statement so that if the UserId is null then it means its a client report and it shows its details-->
-                    <!-- But if its a registered member, it shows its firstname and last name -->
-                    @if (Model.UserId == null)
-                    {
-                        <p>
-                            <strong>Name:</strong>
-                            @Model.ClientName
-                        </p>
-
-                        <p>
-                            <strong>Contact:</strong>
-                            @Model.ClientContact
-                        </p>
-                    }else
-                    {
-                        <hr />
-                        <p><strong>Posted by:</strong> @Model.User?.FirstName @Model.User?.LastName</p>
-                        <p><strong>Contact Number:</strong> @Model.User?.ContactNumber</p>
-                    }
-
-                    <hr />
-
-                    <div class="mt-3">
-
-                        @if (Model.UserId == null)
-                        {
-                            <h6 class="fw-bold mb-2">Client Valid ID Photo</h6>
-
-                            @if (!string.IsNullOrEmpty(Model.ClientIdImagePath))
-                            {
-                                <div class="d-flex justify-content-center">
-                                    <img src="@Model.ClientIdImagePath"
-                                         alt="Client ID Photo"
-                                         class="border rounded shadow-sm"
-                                         style="max-width:250px; height:auto;" />
-                                </div>
-                            }
-                            else
-                            {
-                                <p class="text-muted">
-                                    No client ID photo uploaded.
-                                </p>
-                            }
-                        }
-                        else
-                        {
-                            <h6 class="fw-bold mb-2">Member Valid ID Photo</h6>
-
-                            @if (!string.IsNullOrEmpty(Model.User?.IdPhotoPath))
-                            {
-                                <div class="d-flex justify-content-center">
-                                    <img src="@Model.User.IdPhotoPath"
-                                         alt="Member ID Photo"
-                                         class="border rounded shadow-sm"
-                                         style="max-width:250px; height:auto;" />
-                                </div>
-                            }
-                            else
-                            {
-                                <p class="text-muted">
-                                    No member ID photo uploaded.
-                                </p>
-                            }
-                        }
+                        </div>
 
                     </div>
-
-                </div>
-
-                <!-- ========================= -->
-                <!-- DO NOT MODIFY BUTTONS -->
-                <!-- ========================= -->
-                <div class="card-footer d-flex justify-content-center gap-3">
-
-                    @if (Model.Status == ApprovalStatus.Pending)
-                    {
-                    <form asp-action="Approve" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="@Model.LostFoundId" />
-
-                        <button type="submit" class="btn btn-success">
-                            Approve
-                        </button>
-                    </form>
-
-                    <form asp-action="Reject" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="@Model.LostFoundId" />
-
-                        <button type="submit" class="btn btn-danger">
-                            Reject
-                        </button>
-                    </form>
-                    }
-
-                    <a asp-action="Index"
-                       class="btn btn-secondary px-4">
-                        ← Back to Reports
-                    </a>
 
                 </div>
 
             </div>
 
         </div>
+
+
+        <!-- ADMIN DECISION -->
+        <form asp-action="Approve" method="post" class="admin-decision-form">
+
+            <input type="hidden"
+                   name="id"
+                   value="@Model.LostFoundId" />
+
+            <div class="admin-decision-section">
+
+                <div class="admin-decision-content">
+
+                 
+
+                </div>
+
+
+                <div class="admin-decision-actions">
+
+                    <!-- BACK -->
+                    <a asp-action="Index"
+                       class="admin-back-btn">
+                        ← Back to Reports
+                    </a>
+
+
+                    <!-- REJECT -->
+                    @if (Model.Status == ApprovalStatus.Pending)
+                    {
+                        <button type="submit"
+                                formaction="@Url.Action("Reject")"
+                                class="admin-reject-btn">
+                            Reject
+                        </button>
+
+                        <!-- APPROVE -->
+                        <button type="submit"
+                                class="admin-approve-btn">
+                            Approve
+                        </button>
+                    }
+
+                </div>
+
+            </div>
+
+        </form>
+
     </div>
+
 </div>

@@ -222,7 +222,8 @@ namespace PETHUB.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(
             string? reportStatus,
-            string? reportType)
+            string? reportType,
+            int page = 1)
         {
             // Loads reports together with their Reporter, post owner,
             // and reported content.
@@ -414,18 +415,22 @@ namespace PETHUB.Controllers
                 .Where(report =>
                     (report.ContentType == ReportedContentType.Listing &&
                      report.ListingId.HasValue &&
-                     pendingListingAppealDates.ContainsKey(report.ListingId.Value))
+                     pendingListingAppealDates.ContainsKey(
+                         report.ListingId.Value))
                     ||
                     (report.ContentType == ReportedContentType.LostFound &&
                      report.LostFoundId.HasValue &&
-                     pendingLostFoundAppealDates.ContainsKey(report.LostFoundId.Value)))
+                     pendingLostFoundAppealDates.ContainsKey(
+                         report.LostFoundId.Value)))
                 .Select(report => report.UserReportId)
                 .ToHashSet();
 
 
             // Makes the Pending Appeal information available to the existing
             // Admin Reports Index Razor view.
-            ViewData["PendingAppealReportIds"] = pendingAppealReportIds;
+            ViewData["PendingAppealReportIds"] =
+                pendingAppealReportIds;
+
 
             // Builds the existing Admin report filter bar.
             var filters = PETHUB.Helpers.FilterBarHelper.Create(
@@ -437,14 +442,50 @@ namespace PETHUB.Controllers
                 )
             );
 
+
             ViewData["ReportFilters"] = filters;
 
 
-            // Sends one representative report per reported post to the Index view.
-            // The original UserReport records remain unchanged in the database.
+            // =========================================================
+            // PAGINATION
+            // =========================================================
+
+            const int pageSize = 25;
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            var totalItems = orderedReports.Count;
+
+            var totalPages =
+                (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (totalPages > 0 && page > totalPages)
+            {
+                page = totalPages;
+            }
+
+            var pagedReports = orderedReports
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+
+            var model = new PaginationViewModel<UserReport>
+            {
+                Items = pagedReports,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalItems = totalItems
+            };
+
+
+            // Sends the paginated representative reports to the Index view.
             return View(
                 "~/Views/AdminReports/Index.cshtml",
-                orderedReports
+                model
             );
         }
 
@@ -645,6 +686,7 @@ namespace PETHUB.Controllers
                     "Dismissed Report");
             }
 
+
             // Notifies each Reporter.
             foreach (var relatedReport in relatedReports)
             {
@@ -796,6 +838,7 @@ namespace PETHUB.Controllers
                     currentUser,
                     "Removed Post");
             }
+
 
             // Notifies every Reporter that the report was accepted.
             foreach (var relatedReport in relatedReports)
@@ -1028,6 +1071,7 @@ namespace PETHUB.Controllers
                     "Confirmed Appeal");
             }
 
+
             // Returns to the same Admin Report Details page where the
             // appeal was reviewed.
             //
@@ -1134,6 +1178,7 @@ namespace PETHUB.Controllers
                     currentUser,
                     "Rejected Appeal");
             }
+
 
             // Return to the original Admin Report Details page.
             var reportId = await GetReportIdForAppealAsync(appeal);
