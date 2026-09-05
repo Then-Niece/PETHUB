@@ -776,54 +776,83 @@
         color: #4d8f45;
     }
 
-
 /* ==========================================================
-APPROVAL STATUS PILLS
+   MY POSTS — STATUS PILLS
 ========================================================== */
 
 .my-post-status {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 82px;
+    gap: 7px;
+    min-width: 92px;
     min-height: 30px;
-    padding: 5px 14px;
+    padding: 5px 12px;
     border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.78rem;
+    font-weight: 600;
     line-height: 1.2;
     white-space: nowrap;
+    box-sizing: border-box;
 }
 
+
+    /* ==========================================================
+   STATUS DOT
+========================================================== */
+
+    .my-post-status::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        flex-shrink: 0;
+        border-radius: 50%;
+    }
+
+
 /* ==========================================================
-PENDING
+   PENDING
 ========================================================== */
 
 .my-post-status-pending {
-    background-color: #fff8e8;
-    border: 1px solid #f0dca7;
-    color: #a66a00;
+    background-color: #fff7df;
+    border: none;
+    color: #b87900;
 }
 
+    .my-post-status-pending::before {
+        background-color: #e3a000;
+    }
+
+
 /* ==========================================================
-APPROVED
+   APPROVED
 ========================================================== */
 
 .my-post-status-approved {
-    background-color: #eef8f0;
-    border: 1px solid #c9e4cf;
-    color: #3f8b50;
+    background-color: #eaf8e8;
+    border: none;
+    color: #3f9144;
 }
 
+    .my-post-status-approved::before {
+        background-color: #5baa55;
+    }
+
+
 /* ==========================================================
-REJECTED
+   REJECTED
 ========================================================== */
 
 .my-post-status-rejected {
     background-color: #fff0f0;
-    border: 1px solid #efcaca;
-    color: #b64242;
+    border: none;
+    color: #c44d4d;
 }
+
+    .my-post-status-rejected::before {
+        background-color: #d85c5c;
+    }
 /* ==========================================================
    RESPONSIVE — TABLET
 ========================================================== */
@@ -1766,5 +1795,1776 @@ REJECTED
     .profile-information-card {
         border-radius: 14px;
         padding: 20px 16px;
+    }
+}
+
+
+/* =========================================================
+   REMOVED POSTS PAGE
+   ========================================================= */
+
+.removed-posts-page {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 32px 48px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+   ========================================================= */
+
+.removed-posts-heading {
+    margin-bottom: 26px;
+}
+
+    .removed-posts-heading h2 {
+        margin: 0 0 5px;
+        color: #17345f;
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .removed-posts-heading p {
+        margin: 0;
+        color: #667085;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.removed-posts-section {
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+    .removed-posts-section:last-child {
+        margin-bottom: 0;
+    }
+
+
+
+
+/* =========================================================
+   RESULTS
+   ========================================================= */
+
+.removed-posts-results {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+
+/* =========================================================
+   REMOVED POST CARD
+   ========================================================= */
+
+.removed-post-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 142px;
+    padding: 6px;
+    background: #ffffff;
+    border: 1px solid #e0e5e3;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+    color: inherit;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+    .removed-post-card:hover {
+        border-color: #cfd8d3;
+        box-shadow: 0 5px 14px rgba(0, 0, 0, .07);
+        color: inherit;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+
+/* =========================================================
+   IMAGE
+   ========================================================= */
+
+.removed-post-card-image-wrapper {
+    width: 132px;
+    height: 132px;
+    flex: 0 0 132px;
+    overflow: hidden;
+    border-radius: 13px;
+    background: #f1f3f2;
+    box-sizing: border-box;
+}
+
+.removed-post-card-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   POST CONTENT
+   ========================================================= */
+
+.removed-post-card-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.removed-post-card-title {
+    margin: 0 0 5px;
+    color: #233b63;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.removed-post-card-type {
+    margin: 0 0 7px;
+    color: #596b83;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.removed-post-card-date {
+    margin: 0;
+    color: #738198;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.removed-post-card-status {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    align-self: stretch;
+    flex: 0 0 auto;
+    padding: 10px 10px 0 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   REMOVED STATUS
+   ========================================================= */
+
+.removed-post-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 6px 13px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.removed-post-status-removed {
+    background: #fde8e8;
+    color: #d94f4f;
+    border: 1px solid #f4c5c5;
+}
+
+
+
+
+
+/* =========================================================
+   REASON LABEL
+   ========================================================= */
+
+.removed-post-reason-label {
+    margin: 0 0 4px;
+    color: #7a858d;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   REASON TEXT
+   ========================================================= */
+
+.removed-post-reason-text {
+    color: #4d5961;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.removed-post-reason-muted {
+    color: #92999e;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.removed-posts-empty {
+    width: 100%;
+    padding: 55px 24px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e1e6e3;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .03);
+    box-sizing: border-box;
+}
+
+.removed-posts-empty-icon {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    border-radius: 12px;
+    background: #fdeeee;
+    color: #d94f4f;
+}
+
+    .removed-posts-empty-icon svg {
+        width: 22px;
+        height: 22px;
+        stroke-width: 1.9;
+    }
+
+.removed-posts-empty h3 {
+    margin: 0 0 6px;
+    color: #292929;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.removed-posts-empty p {
+    max-width: 450px;
+    margin: 0 auto;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .removed-posts-page {
+        padding: 22px 18px 40px;
+    }
+
+    .removed-posts-heading h2 {
+        font-size: 27px;
+    }
+
+    .removed-post-card {
+        min-height: 120px;
+    }
+
+    .removed-post-card-image-wrapper {
+        width: 108px;
+        height: 108px;
+        flex-basis: 108px;
+        border-radius: 11px;
+    }
+
+    .removed-post-card-content {
+        padding: 0 14px;
+    }
+
+    .removed-post-card-title {
+        font-size: 16px;
+    }
+
+    .removed-post-card-type {
+        font-size: 12px;
+    }
+
+    .removed-post-card-date {
+        font-size: 11px;
+    }
+
+    .removed-post-card-status {
+        padding: 9px 8px 0 0;
+    }
+
+    .removed-post-status {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+    .removed-posts-page {
+        padding: 18px 12px 32px;
+    }
+
+    .removed-posts-heading {
+        margin-bottom: 20px;
+    }
+
+        .removed-posts-heading h2 {
+            font-size: 24px;
+        }
+
+    .removed-posts-section-title {
+        font-size: 17px;
+    }
+
+    .removed-post-card {
+        min-height: 100px;
+        padding: 5px;
+        border-radius: 14px;
+    }
+
+    .removed-post-card-image-wrapper {
+        width: 86px;
+        height: 86px;
+        flex-basis: 86px;
+        border-radius: 10px;
+    }
+
+    .removed-post-card-content {
+        padding: 0 10px;
+    }
+
+    .removed-post-card-title {
+        margin-bottom: 3px;
+        font-size: 15px;
+    }
+
+    .removed-post-card-type {
+        margin-bottom: 4px;
+        font-size: 11px;
+    }
+
+    .removed-post-card-date {
+        font-size: 10px;
+    }
+
+    .removed-post-card-status {
+        padding: 7px 6px 0 0;
+    }
+
+    .removed-post-status {
+        min-height: 27px;
+        padding: 5px 8px;
+        font-size: 10px;
+    }
+
+    .removed-post-reason {
+        width: calc(100% - 20px);
+        margin-left: 10px;
+        margin-right: 10px;
+        padding: 11px 13px;
+        border-radius: 11px;
+    }
+
+    .removed-post-reason-text {
+        font-size: 12px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .removed-post-card-image-wrapper {
+        width: 76px;
+        height: 76px;
+        flex-basis: 76px;
+    }
+
+    .removed-post-card-content {
+        padding: 0 8px;
+    }
+
+    .removed-post-card-title {
+        font-size: 14px;
+    }
+
+    .removed-post-card-type,
+    .removed-post-card-date {
+        font-size: 10px;
+    }
+
+    .removed-post-status {
+        padding: 5px 7px;
+        font-size: 9px;
+    }
+}
+
+
+/* =========================================================
+   REMOVED POST DETAILS PAGE
+   ========================================================= */
+
+.removed-details-page {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 30px 35px 45px;
+    box-sizing: border-box;
+}
+
+
+
+
+/* =========================================================
+   MAIN TWO-COLUMN LAYOUT
+   ========================================================= */
+
+.removed-details-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 25px;
+    width: 100%;
+    /*
+       The grid row automatically takes the height
+       of the taller column. The right card stretches
+       to exactly match the left column.
+    */
+    align-items: stretch;
+}
+
+
+/* =========================================================
+   LEFT COLUMN
+   ========================================================= */
+
+.removed-details-left-column {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+
+/* =========================================================
+   LEFT-SIDE CARDS
+   ========================================================= */
+
+.removed-details-reason-card,
+.removed-details-appeal-card,
+.removed-details-actions-card {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .04);
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   REASON CARD
+   ========================================================= */
+
+.removed-details-reason-card {
+    padding: 25px 28px;
+}
+
+
+/* =========================================================
+   APPEAL CARD
+   ========================================================= */
+
+.removed-details-appeal-card {
+    padding: 25px 28px;
+}
+
+
+/* =========================================================
+   ACTIONS CARD
+   ========================================================= */
+
+.removed-details-actions-card {
+    padding: 25px 28px;
+}
+
+.removed-details-actions-text h3 {
+    margin: 0 0 5px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #171717;
+}
+
+.removed-details-actions-text p {
+    margin: 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.removed-details-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+   ========================================================= */
+
+.removed-details-section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    margin-bottom: 18px;
+}
+
+    .removed-details-section-heading h2 {
+        margin: 0 0 4px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #171717;
+    }
+
+    .removed-details-section-heading p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #777;
+    }
+
+
+/* =========================================================
+   SECTION ICONS
+   ========================================================= */
+
+.removed-details-section-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+    .removed-details-section-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .removed-details-section-icon.removal {
+        background: #fff1f1;
+        color: #e66b6b;
+    }
+
+    .removed-details-section-icon.appeal {
+        background: #f1f8ef;
+        color: #72bd63;
+    }
+
+    .removed-details-section-icon.content {
+        background: #f1f8ef;
+        color: #72bd63;
+    }
+
+
+/* =========================================================
+   REASON BOX
+   ========================================================= */
+
+.removed-details-reason-box {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: 220px;
+    padding: 15px 17px;
+    box-sizing: border-box;
+    background: #fafafa;
+    border: 1px solid #e7e7e7;
+    border-radius: 12px;
+    color: #444;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #bdbdbd #f5f5f5;
+}
+
+    .removed-details-reason-box::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .removed-details-reason-box::-webkit-scrollbar-track {
+        background: #f5f5f5;
+        border-radius: 10px;
+    }
+
+    .removed-details-reason-box::-webkit-scrollbar-thumb {
+        background: #bdbdbd;
+        border-radius: 10px;
+    }
+
+
+/* =========================================================
+   MUTED TEXT
+   ========================================================= */
+
+.removed-details-muted {
+    color: #999;
+    font-style: italic;
+}
+
+
+/* =========================================================
+   APPEAL STATUS
+   ========================================================= */
+
+.removed-details-appeal-status-wrapper {
+    margin-bottom: 13px;
+}
+
+.removed-details-appeal-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+    .removed-details-appeal-status > span {
+        width: 7px;
+        height: 7px;
+        display: inline-block;
+        border-radius: 50%;
+    }
+
+    .removed-details-appeal-status.pending {
+        background: #fff6df;
+        color: #b78316;
+    }
+
+        .removed-details-appeal-status.pending > span {
+            background: #dca72b;
+        }
+
+    .removed-details-appeal-status.approved {
+        background: #edf8ea;
+        color: #5eaa51;
+    }
+
+        .removed-details-appeal-status.approved > span {
+            background: #72bd63;
+        }
+
+    .removed-details-appeal-status.rejected {
+        background: #fff0f0;
+        color: #d45f5f;
+    }
+
+        .removed-details-appeal-status.rejected > span {
+            background: #e66b6b;
+        }
+
+
+/* =========================================================
+   APPEAL MESSAGE
+   ========================================================= */
+
+.removed-details-appeal-message {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: 220px;
+    padding: 15px 17px;
+    box-sizing: border-box;
+    background: #fafafa;
+    border: 1px solid #e7e7e7;
+    border-radius: 12px;
+    color: #444;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #bdbdbd #f5f5f5;
+}
+
+    .removed-details-appeal-message::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .removed-details-appeal-message::-webkit-scrollbar-track {
+        background: #f5f5f5;
+        border-radius: 10px;
+    }
+
+    .removed-details-appeal-message::-webkit-scrollbar-thumb {
+        background: #bdbdbd;
+        border-radius: 10px;
+    }
+
+
+/* =========================================================
+   ADMIN RESPONSE
+   ========================================================= */
+
+.removed-details-admin-response {
+    margin-top: 15px;
+    padding: 13px 15px;
+    background: #f6faf5;
+    border-left: 3px solid #8ace79;
+    border-radius: 9px;
+}
+
+    .removed-details-admin-response span {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #555;
+    }
+
+    .removed-details-admin-response p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #555;
+    }
+
+
+/* =========================================================
+   EDIT BUTTON
+   ========================================================= */
+
+.removed-details-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 84px;
+    padding: 11px 18px;
+    border: 1px solid #7cc56d;
+    border-radius: 999px;
+    background: #7cc56d;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+    .removed-details-edit svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .removed-details-edit:hover {
+        background: #6fba61;
+        border-color: #6fba61;
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+
+/* =========================================================
+   APPEAL BUTTON
+   ========================================================= */
+
+.removed-details-appeal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 11px 18px;
+    border: 1px solid #ff7d87;
+    border-radius: 999px;
+    background: #fff;
+    color: #f06f79;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+    .removed-details-appeal svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .removed-details-appeal:hover {
+        background: #fff1f2;
+        border-color: #f06f79;
+        color: #e85f69;
+        transform: translateY(-1px);
+    }
+
+
+    /* =========================================================
+   DISABLED APPEAL BUTTON
+   ========================================================= */
+
+    .removed-details-appeal.disabled,
+    .removed-details-appeal:disabled {
+        background: #f3f3f3;
+        border-color: #d6d6d6;
+        color: #999;
+        cursor: not-allowed;
+        opacity: 1;
+        box-shadow: none;
+        transform: none;
+    }
+
+        .removed-details-appeal.disabled svg,
+        .removed-details-appeal:disabled svg {
+            color: #999;
+        }
+
+        .removed-details-appeal.disabled:hover,
+        .removed-details-appeal:disabled:hover {
+            background: #f3f3f3;
+            border-color: #d6d6d6;
+            color: #999;
+            transform: none;
+        }
+
+
+/* =========================================================
+   REPORTED CONTENT CARD
+   ========================================================= */
+
+.removed-details-content-card {
+    width: 100%;
+    min-width: 0;
+    /*
+       Grid stretches this card to exactly the height
+       of the left column.
+    */
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .04);
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   REPORTED CONTENT HEADER
+   ========================================================= */
+
+.removed-details-content-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 25px 30px 20px;
+    flex-shrink: 0;
+}
+
+    .removed-details-content-heading h2 {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 700;
+        color: #171717;
+    }
+
+
+/* =========================================================
+   IMAGE AREA
+   ========================================================= */
+
+.removed-details-content-image {
+    position: relative;
+    width: calc(100% - 50px);
+    margin: 0 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 14px;
+    background: transparent;
+}
+
+
+    /* =========================================================
+   ACTUAL IMAGE
+   ========================================================= */
+
+    .removed-details-content-image img {
+        display: block;
+        /*
+       Preserve the image's natural aspect ratio.
+    */
+        width: auto;
+        height: auto;
+        /*
+       Fit the image within the card without cropping.
+    */
+        max-width: 100%;
+        max-height: 430px;
+        object-fit: contain;
+        object-position: center;
+        border-radius: 14px;
+        background: transparent;
+    }
+
+
+/* =========================================================
+   VIEW DETAILS BUTTON
+   ========================================================= */
+
+.removed-details-view-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: 1px solid #8ace79;
+    border-radius: 999px;
+    background: rgba(138, 206, 121, .95);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+    .removed-details-view-button svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .removed-details-view-button:hover {
+        background: #72bd63;
+        color: #fff;
+        transform: translate(-50%, -50%) scale(1.03);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, .2);
+    }
+
+
+/* =========================================================
+   NO IMAGE
+   ========================================================= */
+
+.removed-details-no-image {
+    width: 100%;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #999;
+    font-size: 14px;
+}
+
+    .removed-details-no-image svg {
+        width: 32px;
+        height: 32px;
+    }
+
+
+/* =========================================================
+   CONTENT INFORMATION
+   ========================================================= */
+
+.removed-details-content-info {
+    flex-shrink: 0;
+    padding: 20px 30px 25px;
+}
+
+
+/* =========================================================
+   POST TYPE BADGES
+   ========================================================= */
+
+.removed-details-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 7px 12px;
+    margin-bottom: 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+    .removed-details-type svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .removed-details-type.marketplace {
+        background: #edf8ea;
+        color: #61a953;
+    }
+
+    .removed-details-type.lost-found {
+        background: #fff0f0;
+        color: #d46464;
+    }
+
+
+/* =========================================================
+   POST TITLE
+   ========================================================= */
+
+.removed-details-title {
+    margin: 0 0 7px;
+    font-size: 22px;
+    line-height: 1.3;
+    font-weight: 700;
+    color: #171717;
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   POST DATE
+   ========================================================= */
+
+.removed-details-date {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    font-size: 13px;
+    color: #777;
+}
+
+    .removed-details-date svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+    }
+
+
+/* =========================================================
+   EMPTY / ERROR STATE
+   ========================================================= */
+
+.removed-details-empty {
+    width: 100%;
+    padding: 60px 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .04);
+}
+
+.removed-details-empty-icon {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    background: #fff4e6;
+    color: #d59a45;
+    border-radius: 15px;
+}
+
+    .removed-details-empty-icon svg {
+        width: 27px;
+        height: 27px;
+    }
+
+.removed-details-empty h3 {
+    margin: 0 0 7px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+}
+
+.removed-details-empty p {
+    margin: 0;
+    font-size: 14px;
+    color: #777;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .removed-details-page {
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+
+    .removed-details-layout {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: 20px;
+    }
+
+    .removed-details-title {
+        font-size: 21px;
+    }
+
+    .removed-details-content-image img {
+        max-height: 380px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE / SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .removed-details-page {
+        padding: 25px 20px 40px;
+    }
+
+    .removed-details-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+        .removed-details-header h1 {
+            font-size: 26px;
+        }
+
+    .removed-details-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 20px;
+    }
+
+    .removed-details-left-column {
+        height: auto;
+        gap: 20px;
+    }
+
+    .removed-details-content-card {
+        height: auto;
+    }
+
+    .removed-details-content-image img {
+        max-height: 500px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — PHONE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .removed-details-page {
+        padding: 20px 15px 35px;
+    }
+
+    .removed-details-header-content {
+        align-items: flex-start;
+    }
+
+    .removed-details-header-icon {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+    }
+
+        .removed-details-header-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+    .removed-details-header h1 {
+        font-size: 23px;
+    }
+
+    .removed-details-header p {
+        font-size: 13px;
+    }
+
+    .removed-details-back {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .removed-details-reason-card,
+    .removed-details-appeal-card,
+    .removed-details-actions-card {
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    .removed-details-content-card {
+        border-radius: 16px;
+    }
+
+    .removed-details-content-heading {
+        padding: 20px;
+    }
+
+    .removed-details-content-image {
+        width: calc(100% - 40px);
+        margin: 0 20px;
+    }
+
+        .removed-details-content-image img {
+            max-height: 400px;
+        }
+
+    .removed-details-content-info {
+        padding: 18px 20px 22px;
+    }
+
+    .removed-details-section-heading {
+        gap: 10px;
+    }
+
+    .removed-details-section-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+    }
+
+        .removed-details-section-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+    .removed-details-section-heading h2 {
+        font-size: 16px;
+    }
+
+    .removed-details-section-heading p {
+        font-size: 12px;
+    }
+
+    .removed-details-title {
+        font-size: 20px;
+    }
+
+    .removed-details-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .removed-details-edit,
+    .removed-details-appeal {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .removed-details-view-button {
+        padding: 11px 17px;
+        font-size: 13px;
+    }
+}
+
+/* =========================================================
+   REMOVED POST NOTICE
+   ========================================================= */
+
+.removed-details-notice {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 23px 24px;
+    background: #fff5f5;
+    border: 1px solid #f0b1b1;
+    border-radius: 16px;
+}
+
+
+/* =========================================================
+   NOTICE ICON
+   ========================================================= */
+
+.removed-details-notice-icon {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffeaea;
+    color: #c94f4f;
+    border: 1px solid #f3bcbc;
+    border-radius: 13px;
+}
+
+    .removed-details-notice-icon svg {
+        width: 25px;
+        height: 25px;
+        stroke-width: 2.3;
+    }
+
+/* =========================================================
+   NOTICE CONTENT
+   ========================================================= */
+
+.removed-details-notice-content {
+    min-width: 0;
+    flex: 1;
+}
+
+
+/* =========================================================
+   NOTICE TITLE
+   ========================================================= */
+
+.removed-details-notice-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 7px;
+}
+
+    .removed-details-notice-title h2 {
+        margin: 0;
+        font-size: 21px;
+        font-weight: 700;
+        color: #c94f4f;
+    }
+
+
+/* =========================================================
+   REMOVED STATUS
+   ========================================================= */
+
+.removed-details-notice-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: #fffaf0;
+    border: 1px solid #f2c45c;
+    border-radius: 999px;
+    color: #c88900;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+    .removed-details-notice-status > span {
+        width: 6px;
+        height: 6px;
+        display: inline-block;
+        background: #f0a500;
+        border-radius: 50%;
+    }
+
+
+/* =========================================================
+   NOTICE DESCRIPTION
+   ========================================================= */
+
+.removed-details-notice-content p {
+    margin: 0;
+    max-width: 1000px;
+    color: #6b5a42;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .removed-details-notice {
+        padding: 18px;
+        gap: 12px;
+    }
+
+    .removed-details-notice-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+    }
+
+        .removed-details-notice-icon svg {
+            width: 21px;
+            height: 21px;
+        }
+
+    .removed-details-notice-title h2 {
+        font-size: 18px;
+    }
+
+    .removed-details-notice-content p {
+        font-size: 13px;
+    }
+}
+
+
+/* =========================================================
+   APPEAL HEADER
+   ========================================================= */
+
+.removed-details-appeal-header {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+    .removed-details-appeal-header
+    .removed-details-section-heading {
+        flex: 1;
+        min-width: 0;
+        margin-bottom: 18px;
+    }
+
+    .removed-details-appeal-header
+    .removed-details-appeal-status-wrapper {
+        flex-shrink: 0;
+        margin: 3px 0 0 auto;
+    }
+
+
+/* ==========================================================
+   APPEAL REMOVED POST
+========================================================== */
+
+.appeal-page {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 35px 25px 50px;
+    box-sizing: border-box;
+}
+
+.appeal-card {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 20px;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.04);
+    padding: 32px 35px;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.appeal-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.appeal-header-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef8ec;
+    border: 1px solid #d5e9d0;
+    border-radius: 13px;
+    color: #4f9147;
+}
+
+    .appeal-header-icon svg {
+        width: 23px;
+        height: 23px;
+        stroke-width: 2.2;
+    }
+
+.appeal-header-content h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #222;
+}
+
+.appeal-header-content p {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #777;
+}
+
+
+/* ==========================================================
+   DIVIDER
+========================================================== */
+
+.appeal-divider {
+    width: 100%;
+    height: 1px;
+    margin: 28px 0;
+    background: #e8e8e8;
+}
+
+
+/* ==========================================================
+   POST INFORMATION
+========================================================== */
+
+.appeal-post-section {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.appeal-post-label {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+}
+
+.appeal-post-card {
+    width: 100%;
+    padding: 18px 20px;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 14px;
+    box-sizing: border-box;
+}
+
+    .appeal-post-card h2 {
+        margin: 0 0 9px;
+        font-size: 17px;
+        font-weight: 650;
+        color: #252525;
+    }
+
+.appeal-post-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.appeal-post-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #b05b5b;
+}
+
+    .appeal-post-type svg {
+        width: 13px;
+        height: 13px;
+    }
+
+
+/* ==========================================================
+   APPEAL FORM
+========================================================== */
+
+.appeal-form {
+    width: 100%;
+}
+
+.appeal-message-section {
+    width: 100%;
+}
+
+.appeal-message-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 650;
+    color: #333;
+}
+
+.appeal-message-input {
+    display: block;
+    width: 100%;
+    min-height: 170px;
+    padding: 15px 16px;
+    background: #fff;
+    border: 1px solid #dcdcdc;
+    border-radius: 13px;
+    color: #333;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .appeal-message-input::placeholder {
+        color: #aaa;
+    }
+
+    .appeal-message-input:focus {
+        border-color: #8ACE79;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
+    }
+
+.appeal-validation {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #c44d4d;
+}
+
+.appeal-message-help {
+    margin: 10px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #777;
+}
+
+
+/* ==========================================================
+   ACTIONS
+========================================================== */
+
+.appeal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 28px;
+}
+
+.appeal-cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 8px 20px;
+    background: #fff;
+    border: 1px solid #d8d8d8;
+    border-radius: 999px;
+    color: #555;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+    .appeal-cancel-btn:hover {
+        background: #f7f7f7;
+        border-color: #cfcfcf;
+        color: #444;
+    }
+
+.appeal-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 8px 20px;
+    background: #8ACE79;
+    border: 1px solid #8ACE79;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+    .appeal-submit-btn:hover {
+        background: #79bd69;
+        border-color: #79bd69;
+    }
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .appeal-page {
+        padding: 20px 15px 35px;
+    }
+
+    .appeal-card {
+        padding: 25px 20px;
+        border-radius: 17px;
+    }
+
+    .appeal-header-content h1 {
+        font-size: 21px;
+    }
+
+    .appeal-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .appeal-cancel-btn,
+    .appeal-submit-btn {
+        width: 100%;
     }
 }

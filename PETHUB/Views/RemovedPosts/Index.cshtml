@@ -3,305 +3,326 @@
 @{
     ViewData["Title"] = "Removed Posts";
 
-    // Creates safe references to the two collections.
-    // The null-conditional operator prevents an exception if the ViewModel
-    // itself is unexpectedly null, while the ?? operator provides an empty
-    // collection as a fallback.
     var removedListings = Model?.RemovedListings
         ?? new List<(PETHUB.Models.Listing Listing, string? AdminActionReason)>();
 
     var removedLostFound = Model?.RemovedLostFound
         ?? new List<(PETHUB.Models.LostFound Report, string? AdminActionReason)>();
+
+    var totalRemovedPosts =
+        removedListings.Count +
+        removedLostFound.Count;
 }
 
 
-<!-- Page heading for the Member's removed content. -->
-<div class="mb-4">
-
-    <h2 class="mb-1">
-        Removed Posts
-    </h2>
-
-    <p class="text-muted mb-0">
-        Posts that were removed by an administrator are shown here.
-    </p>
-
-</div>
+<div class="removed-posts-page">
 
 
-@if (!removedListings.Any() && !removedLostFound.Any())
-{
-    <!-- Displays the empty state only when neither collection contains
-         a removed Marketplace listing nor a removed Lost & Found post. -->
-    <div class="card shadow-sm border-0">
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
 
-        <div class="card-body text-center py-5">
+    <div class="removed-posts-heading">
 
-            <h4 class="fw-bold">
-                No Removed Posts
-            </h4>
+        <div>
 
-            <p class="text-muted mb-0">
-                You do not currently have any posts that were removed by an administrator.
+            <h2>
+                Removed Posts
+            </h2>
+
+            <p>
+                Posts that were removed by an administrator are shown here.
             </p>
 
         </div>
 
     </div>
-}
-else
-{
+
+
     <!-- =========================================================
-         REMOVED MARKETPLACE LISTINGS
-         ========================================================= -->
-    @if (removedListings.Any())
+         FILTER / TOTAL TOOLBAR
+    ========================================================== -->
+
+    <div class="removed-posts-toolbar">
+
+
+        <!-- =====================================================
+             FILTER CONTAINER
+
+             FILTERS WILL BE ADDED HERE BY THE PROGRAMMER.
+
+             Suggested filters:
+             - Post Type
+                 • All
+                 • Marketplace
+                 • Lost & Found
+
+             - Status
+                 • All
+                 • Removed
+
+             Use the same dropdown/filter structure used
+             elsewhere in the system.
+
+             DO NOT ADD FILTER LOGIC HERE YET.
+        ====================================================== -->
+
+        <div class="removed-posts-filters">
+
+            <!--
+            =====================================================
+            FILTER PLACEHOLDER
+
+            Example:
+
+            <div class="removed-post-filter">
+                ...
+            </div>
+
+            =====================================================
+            -->
+
+        </div>
+
+
+        <!-- =====================================================
+             TOTAL COUNT
+        ====================================================== -->
+
+        <span class="removed-posts-count">
+
+            @totalRemovedPosts
+            @(totalRemovedPosts == 1 ? "post" : "posts")
+
+        </span>
+
+    </div>
+
+
+    <!-- =========================================================
+         EMPTY STATE
+    ========================================================== -->
+    @if (!removedListings.Any() && !removedLostFound.Any())
     {
-        <h4 class="fw-bold mb-3">
-            Marketplace
-        </h4>
+        <div class="removed-posts-empty">
 
-        <div class="d-flex flex-column gap-3 mb-5">
+            <div class="removed-posts-empty-icon">
 
-            @foreach (var item in removedListings)
-            {
-                // Keeps the tuple values in simple local variables so the
-                // Razor markup below remains easier to read.
-                var listing = item.Listing;
-                var adminReason = item.AdminActionReason;
+                <i data-lucide="file-x"></i>
 
-                <div class="card shadow-sm">
+            </div>
 
-                    <!-- Card body containing the removed Marketplace listing. -->
-                    <div class="card-body d-flex justify-content-between align-items-center">
+            <h3>
+                No Removed Posts
+            </h3>
 
-                        <!-- Clicking the existing post opens its Removed Posts
-                             Details page instead of creating a separate post. -->
+            <p>
+                You do not currently have any posts that were removed by an administrator.
+            </p>
+
+        </div>
+    }
+    else
+    {
+
+
+        <!-- =====================================================
+             REMOVED MARKETPLACE LISTINGS
+        ====================================================== -->
+        @if (removedListings.Any())
+        {
+            <div class="removed-posts-section">
+
+              
+
+
+                <div class="removed-posts-results">
+
+                    @foreach (var item in removedListings)
+                    {
+                        var listing = item.Listing;
+                        var adminReason = item.AdminActionReason;
+
+
+                        <!-- =================================================
+                             REMOVED MARKETPLACE CARD
+                        ================================================== -->
+
                         <a asp-controller="RemovedPosts"
                            asp-action="Details"
                            asp-route-type="listing"
                            asp-route-id="@listing.ListingId"
-                           class="d-flex align-items-center flex-grow-1 text-decoration-none text-dark">
+                           class="removed-post-card">
 
 
-                            <!-- Listing thumbnail. -->
-                            <div class="me-4">
+                            <!-- IMAGE -->
+
+                            <div class="removed-post-card-image-wrapper">
 
                                 @if (listing.Images != null &&
                                      listing.Images.Any())
                                 {
-                                    <!-- Displays the first stored listing image. -->
                                     <img src="@Url.Content(listing.Images.First().ImagePath)"
-                                         class="img-fluid rounded"
-                                         alt="@listing.Title"
-                                         style="width:140px;height:140px;object-fit:cover;" />
+                                         class="removed-post-card-image"
+                                         alt="@listing.Title" />
                                 }
                                 else
                                 {
-                                    <!-- Displays the existing fallback image when
-                                         the listing has no stored image. -->
                                     <img src="@Url.Content("~/images/no-image.png")"
-                                         class="img-fluid rounded"
-                                         alt="No Image"
-                                         style="width:140px;height:140px;object-fit:cover;" />
+                                         class="removed-post-card-image"
+                                         alt="No Image" />
                                 }
 
                             </div>
 
 
-                            <!-- Listing information. -->
-                            <div>
+                            <!-- POST INFORMATION -->
 
-                                <h4 class="fw-bold">
+                            <div class="removed-post-card-content">
+
+                                <h4 class="removed-post-card-title">
                                     @listing.Title
                                 </h4>
 
-                                <p class="mb-1">
-                                    <strong>Created:</strong>
-                                    @listing.DatePosted.ToString("MMM dd, yyyy")
+                                <p class="removed-post-card-type">
+                                    Marketplace · @listing.Type
                                 </p>
 
-                                <p class="mb-1">
-                                    <strong>Listing Type:</strong>
-                                    @listing.Type
+                                <p class="removed-post-card-date">
+                                    Created @listing.DatePosted.ToString("MMM dd, yyyy")
                                 </p>
+
+                            </div>
+
+
+                            <!-- STATUS -->
+
+                            <div class="removed-post-card-status">
+
+                                <span class="removed-post-status removed-post-status-removed">
+                                    Removed
+                                </span>
 
                             </div>
 
                         </a>
 
-                    </div>
 
 
-                    <!-- Footer containing the moderation information. -->
-                    <div class="card-footer">
 
-                        <div class="mb-3">
-
-                            <strong>Approval:</strong>
-
-                            <!-- Removed is intentionally displayed as a separate
-                                 moderation state. -->
-                            <span class="badge bg-danger">
-                                Removed
-                            </span>
-
-                        </div>
-
-
-                        <!-- Administrator's explanation for removing the listing. -->
-                        <div class="mb-0">
-
-                            <strong>
-                                Reason for Removal:
-                            </strong>
-
-                            @if (string.IsNullOrWhiteSpace(adminReason))
-                            {
-                                <span class="text-muted">
-                                    No removal reason was provided.
-                                </span>
-                            }
-                            else
-                            {
-                                <span>
-                                    @adminReason
-                                </span>
-                            }
-
-                        </div>
-
-                    </div>
+                    }
 
                 </div>
-            }
 
-        </div>
-    }
+            </div>
+        }
 
 
-    <!-- =========================================================
-         REMOVED LOST & FOUND POSTS
-         ========================================================= -->
-    @if (removedLostFound.Any())
-    {
-        <h4 class="fw-bold mb-3">
-            Lost &amp; Found
-        </h4>
+        <!-- =====================================================
+             REMOVED LOST & FOUND POSTS
+        ====================================================== -->
+        @if (removedLostFound.Any())
+        {
+            <div class="removed-posts-section">
 
-        <div class="d-flex flex-column gap-3">
+              
 
-            @foreach (var item in removedLostFound)
-            {
-                // Keeps the tuple values in local variables for readability.
-                var report = item.Report;
-                var adminReason = item.AdminActionReason;
+                <div class="removed-posts-results">
 
-                <div class="card shadow-sm">
+                    @foreach (var item in removedLostFound)
+                    {
+                        var report = item.Report;
+                        var adminReason = item.AdminActionReason;
 
-                    <!-- Card body containing the removed Lost & Found post. -->
-                    <div class="card-body d-flex justify-content-between align-items-center">
 
-                        <!-- Clicking the existing post opens its Removed Posts
-                             Details page. -->
+                        <!-- =================================================
+                             REMOVED LOST & FOUND CARD
+                        ================================================== -->
+
                         <a asp-controller="RemovedPosts"
                            asp-action="Details"
                            asp-route-type="lostfound"
                            asp-route-id="@report.LostFoundId"
-                           class="d-flex align-items-center flex-grow-1 text-decoration-none text-dark">
+                           class="removed-post-card">
 
 
-                            <!-- Report thumbnail. -->
-                            <div class="me-4">
+                            <!-- IMAGE -->
+
+                            <div class="removed-post-card-image-wrapper">
 
                                 @if (report.Images != null &&
                                      report.Images.Any())
                                 {
-                                    <!-- Displays the first stored Lost & Found image. -->
                                     <img src="@Url.Content(report.Images.First().ImagePath)"
-                                         class="img-fluid rounded"
-                                         alt="@report.Title"
-                                         style="width:140px;height:140px;object-fit:cover;" />
+                                         class="removed-post-card-image"
+                                         alt="@report.Title" />
                                 }
                                 else
                                 {
-                                    <!-- Displays the existing fallback image when
-                                         no Lost & Found image exists. -->
                                     <img src="@Url.Content("~/images/no-image.png")"
-                                         class="img-fluid rounded"
-                                         alt="No Image"
-                                         style="width:140px;height:140px;object-fit:cover;" />
+                                         class="removed-post-card-image"
+                                         alt="No Image" />
                                 }
 
                             </div>
 
 
-                            <!-- Lost & Found information. -->
-                            <div>
+                            <!-- POST INFORMATION -->
 
-                                <h4 class="fw-bold">
+                            <div class="removed-post-card-content">
+
+                                <h4 class="removed-post-card-title">
                                     @report.Title
                                 </h4>
 
-                                <p class="mb-1">
-                                    <strong>Created:</strong>
-                                    @report.DateReported.ToString("MMM dd, yyyy")
+                                <p class="removed-post-card-type">
+                                    Lost &amp; Found · @report.Type
                                 </p>
 
-                                <p class="mb-1">
-                                    <strong>Report Type:</strong>
-                                    @report.Type
+                                <p class="removed-post-card-date">
+                                    Created @report.DateReported.ToString("MMM dd, yyyy")
                                 </p>
+
+                            </div>
+
+
+                            <!-- STATUS -->
+
+                            <div class="removed-post-card-status">
+
+                                <span class="removed-post-status removed-post-status-removed">
+                                    Removed
+                                </span>
 
                             </div>
 
                         </a>
 
-                    </div>
 
 
-                    <!-- Footer containing the moderation information. -->
-                    <div class="card-footer">
-
-                        <div class="mb-3">
-
-                            <strong>Approval:</strong>
-
-                            <!-- Removed indicates that an Administrator
-                                 removed this post after moderation. -->
-                            <span class="badge bg-danger">
-                                Removed
-                            </span>
-
-                        </div>
-
-
-                        <!-- Administrator's explanation for removing the post. -->
-                        <div class="mb-0">
-
-                            <strong>
-                                Reason for Removal:
-                            </strong>
-
-                            @if (string.IsNullOrWhiteSpace(adminReason))
-                            {
-                                <span class="text-muted">
-                                    No removal reason was provided.
-                                </span>
-                            }
-                            else
-                            {
-                                <span>
-                                    @adminReason
-                                </span>
-                            }
-
-                        </div>
-
-                    </div>
+                    }
 
                 </div>
+
+            </div>
+        }
+
+    }
+
+</div>
+
+
+@section Scripts
+{
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            if (typeof lucide !== "undefined") {
+                lucide.createIcons();
             }
 
-        </div>
-    }
+        });
+
+    </script>
 }
