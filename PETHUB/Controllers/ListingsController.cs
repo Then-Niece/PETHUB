@@ -175,9 +175,10 @@ namespace PETHUB.Controllers
         // Listings owned by deactivated accounts are also hidden.
         [AllowAnonymous]
         public async Task<IActionResult> Marketplace(
-            string? listingType,
-            string? petType,
-            int page = 1)
+     string? search,
+     string? listingType,
+     string? petType,
+     int page = 1)
         {
             const int pageSize = 12;
 
@@ -209,6 +210,29 @@ namespace PETHUB.Controllers
                         l.Member.Status ==
                             UserStatus.Active)
                     .AsQueryable();
+
+
+            // -----------------------------------------------------
+            // SEARCH
+            // -----------------------------------------------------
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim();
+
+                listings = listings.Where(l =>
+                    l.Title.Contains(search)
+                    ||
+                    (l.Description != null &&
+                     l.Description.Contains(search))
+                    ||
+                    (l.City != null &&
+                     l.City.Contains(search))
+                    ||
+                    (l.Province != null &&
+                     l.Province.Contains(search))
+                );
+            }
 
 
             // -----------------------------------------------------
@@ -253,6 +277,7 @@ namespace PETHUB.Controllers
             var totalPages =
                 (int)Math.Ceiling(
                     totalItems / (double)pageSize);
+
 
             if (totalPages > 0 &&
                 page > totalPages)

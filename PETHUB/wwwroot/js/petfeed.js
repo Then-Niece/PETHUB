@@ -1,49 +1,412 @@
 ﻿// Wait until the entire HTML document has been loaded.
-// This ensures the feed container exists before the script tries to use it.
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Find the container that holds the rendered PetFeed cards.
-    // Feed.cshtml contains this element around _FeedItems.cshtml.
-    const feedContainer = document.querySelector(".feed-container");
+    // ==========================================================
+    // FEED CONTAINER
+    // ==========================================================
 
-    // Stop the script if this page does not contain the PetFeed container.
+    const feedContainer =
+        document.querySelector(".feed-container");
+
+    // petfeed.js is loaded globally, so stop when this is not PetFeed.
     if (!feedContainer) {
         return;
     }
 
 
     // ==========================================================
+    // INITIALIZE DYNAMIC PETFEED CARD UI
+    // ==========================================================
+    //
+    // Search and infinite scroll insert new HTML into the feed.
+    // Direct click listeners from _FeedItems do not automatically
+    // exist on those newly inserted elements.
+    //
+    // This function attaches the required UI behavior to new cards.
+    // ==========================================================
+
+    function initializePetFeedCards(container) {
+
+        if (!container) {
+            return;
+        }
+
+
+        // ======================================================
+        // COMMENT TOGGLE
+        // ======================================================
+
+        container
+            .querySelectorAll("[data-comment-toggle]")
+            .forEach(function (button) {
+
+                /*
+                 * Prevent attaching the same listener twice.
+                 */
+                if (button.dataset.commentInitialized === "true") {
+                    return;
+                }
+
+
+                button.dataset.commentInitialized = "true";
+
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const postId =
+                            button.getAttribute(
+                                "data-comment-toggle"
+                            );
+
+
+                        const comments =
+                            feedContainer.querySelector(
+                                `[data-comments-for="${postId}"]`
+                            );
+
+
+                        if (!comments) {
+                            return;
+                        }
+
+
+                        comments.hidden =
+                            !comments.hidden;
+
+                    }
+                );
+
+            });
+
+
+        // ======================================================
+        // SEE MORE / SEE LESS
+        // ======================================================
+
+        container
+            .querySelectorAll(
+                ".feed-item-description-wrapper"
+            )
+            .forEach(function (wrapper) {
+
+                if (
+                    wrapper.dataset.descriptionInitialized
+                    === "true"
+                ) {
+                    return;
+                }
+
+
+                wrapper.dataset.descriptionInitialized =
+                    "true";
+
+
+                const description =
+                    wrapper.querySelector(
+                        ".feed-item-description"
+                    );
+
+
+                const seeMore =
+                    wrapper.querySelector(
+                        ".feed-item-see-more"
+                    );
+
+
+                if (!description || !seeMore) {
+                    return;
+                }
+
+
+                if (
+                    description.scrollHeight >
+                    description.clientHeight + 1
+                ) {
+                    seeMore.classList.add("show");
+                }
+
+
+                seeMore.addEventListener(
+                    "click",
+                    function () {
+
+                        const isExpanded =
+                            description.classList.contains(
+                                "expanded"
+                            );
+
+
+                        if (isExpanded) {
+
+                            description.classList.remove(
+                                "expanded"
+                            );
+
+                            seeMore.textContent =
+                                "See more";
+
+                        }
+                        else {
+
+                            description.classList.add(
+                                "expanded"
+                            );
+
+                            seeMore.textContent =
+                                "See less";
+
+                        }
+
+                    }
+                );
+
+            });
+    }
+
+
+    // ==========================================================
+    // PETFEED NAVBAR LIVE SEARCH
+    // ==========================================================
+
+    const petFeedSearchInput =
+        document.getElementById(
+            "petFeedSearchInput"
+        );
+
+
+    let petFeedSearchTimer = null;
+
+    let petFeedIsSearching = false;
+
+
+    /*
+     * Search only exists on PetFeed.
+     * If the navbar input is not present,
+     * nothing below will run.
+     */
+    if (petFeedSearchInput) {
+
+        petFeedSearchInput.addEventListener(
+            "input",
+            function () {
+
+                /*
+                 * Wait 300ms after the user stops typing.
+                 *
+                 * This prevents sending a request for
+                 * every single key press.
+                 */
+                clearTimeout(
+                    petFeedSearchTimer
+                );
+
+
+                petFeedSearchTimer =
+                    setTimeout(
+                        async function () {
+
+                            const search =
+                                petFeedSearchInput
+                                    .value
+                                    .trim();
+
+
+                            isPetFeedSearchActive =
+                                search !== "";
+
+
+                            /*
+                             * feedSeed already belongs to the
+                             * current PetFeed session.
+                             *
+                             * We send it so clearing search
+                             * can restore the same randomized
+                             * feed order.
+                             */
+                            const url =
+                                `/PetFeeds/Search?search=${encodeURIComponent(search)}&feedSeed=${encodeURIComponent(feedSeed)}`;
+
+
+                            try {
+
+                                petFeedIsSearching = true;
+
+
+                                const response =
+                                    await fetch(
+                                        url,
+                                        {
+                                            method: "GET",
+
+                                            headers: {
+                                                "X-Requested-With":
+                                                    "XMLHttpRequest"
+                                            }
+                                        }
+                                    );
+
+
+                                if (!response.ok) {
+
+                                    throw new Error(
+                                        `PetFeed search failed: ${response.status}`
+                                    );
+                                }
+
+
+                                const html =
+                                    await response.text();
+
+
+                                const trimmedHtml =
+                                    html.trim();
+
+
+                                const parser =
+                                    new DOMParser();
+
+
+                                const parsedDocument =
+                                    parser.parseFromString(
+                                        trimmedHtml,
+                                        "text/html"
+                                    );
+
+
+                                const hasFeedItems =
+                                    parsedDocument.querySelector(
+                                        ".feed-item"
+                                    ) !== null;
+
+
+                                // ======================================================
+                                // NO SEARCH RESULTS
+                                // ======================================================
+
+                                if (
+                                    search !== "" &&
+                                    !hasFeedItems
+                                ) {
+
+                                    feedContainer.innerHTML = `
+                                                                <div class="petfeed-search-empty">
+
+                                                                    <div class="petfeed-search-empty-icon">
+                                                                        <i data-lucide="search-x"></i>
+                                                                    </div>
+
+                                                                    <h3>
+                                                                        No results found
+                                                                    </h3>
+
+                                                                    <p>
+                                                                        We couldn't find anything matching
+                                                                        "<strong>${escapeHtml(search)}</strong>".
+                                                                    </p>
+
+                                                                    <span>
+                                                                        Try another keyword.
+                                                                    </span>
+
+                                                                </div>
+                                                            `;
+
+                                }
+                                else {
+
+                                    feedContainer.innerHTML =
+                                        trimmedHtml;
+
+
+                                    initializePetFeedCards(
+                                        feedContainer
+                                    );
+
+                                }
+
+
+                                if (
+                                    typeof lucide !== "undefined"
+                                ) {
+
+                                    lucide.createIcons();
+                                }
+
+
+                                /*
+                                 * Search always starts from page 1.
+                                 */
+                                currentPage = 1;
+
+
+                                /*
+                                 * While searching, infinite scroll
+                                 * should not fetch normal feed pages.
+                                 */
+                                if (search !== "") {
+
+                                    hasMorePosts = false;
+
+                                }
+                                else {
+
+                                    isPetFeedSearchActive = false;
+
+                                    hasMorePosts = true;
+
+                                    /*
+                                     * The normal first page has returned,
+                                     * so it is safe to save again.
+                                     */
+                                    saveFeedState();
+                                }
+
+                            }
+                            catch (error) {
+
+                                console.error(
+                                    "Error searching PetFeed:",
+                                    error
+                                );
+
+                            }
+                            finally {
+
+                                petFeedIsSearching = false;
+
+                            }
+
+                        },
+                        300
+                    );
+
+            }
+        );
+    }
+
+    // ==========================================================
     // PETFEED STATE
     // ==========================================================
 
-    // This unique key identifies the saved PetFeed state in sessionStorage.
-    // sessionStorage keeps the data while the current browser tab/session
-    // remains active.
-    const feedStateKey = "pethub_petfeed_state";
+    const feedStateKey =
+        "pethub_petfeed_state";
 
-    // The first batch of posts is rendered by Feed.cshtml.
-    // Therefore, the next page that should be requested is page 2.
     let currentPage = 1;
 
-    // Prevent multiple LoadMore requests from running at the same time.
     let isLoading = false;
 
-    // Becomes false when the server tells us that there are no more posts.
     let hasMorePosts = true;
 
-    // Stores the random seed used by the current PetFeed.
-    // The controller uses this same value to keep pagination in a stable order.
+    let isPetFeedSearchActive = false;
+
     let feedSeed =
         feedContainer.dataset.feedSeed || "";
 
-    // Identifies who this page was actually rendered for ("" for
-    // anonymous visitors). Used to make sure cached feed state is never
-    // restored for a different person than who saved it.
     const currentUserId =
         feedContainer.dataset.userId || "";
 
-    // Used to prevent sessionStorage from being written on every single
-    // scroll event. Scroll events can fire many times per second.
     let saveStateTimeout = null;
 
 
@@ -51,134 +414,137 @@ document.addEventListener("DOMContentLoaded", function () {
     // DETECT PAGE REFRESH
     // ==========================================================
 
-    // PerformanceNavigationTiming is a browser API that tells us how the
-    // current document was opened.
     const navigationEntry =
         performance.getEntriesByType("navigation")[0];
 
-    // A navigation type of "reload" means the user refreshed the page.
-    // In that situation we intentionally start with a fresh PetFeed.
     const isPageRefresh =
         navigationEntry &&
         navigationEntry.type === "reload";
 
-    // When PetFeed is refreshed, remove the previous saved feed state and
-    // force the browser back to the top of the page. This ensures a refresh
-    // behaves like a completely fresh PetFeed visit.
-    if (isPageRefresh) {
-        sessionStorage.removeItem(feedStateKey);
 
-        // Disable the browser's automatic scroll restoration so it does not
-        // return to the previous position after the page reloads.
+    if (isPageRefresh) {
+
+        sessionStorage.removeItem(
+            feedStateKey
+        );
+
         if ("scrollRestoration" in history) {
-            history.scrollRestoration = "manual";
+
+            history.scrollRestoration =
+                "manual";
         }
 
-        // Run after the page has loaded so the browser cannot restore the
-        // previous scroll position afterward.
         window.scrollTo(0, 0);
     }
 
-    // When the user refreshes PetFeed, remove the previously saved state.
-    // This ensures the refreshed page starts completely fresh and that the
-    // old feed cannot be restored later when the user navigates away and
-    // returns to PetFeed.
-    if (isPageRefresh) {
-        sessionStorage.removeItem(feedStateKey);
-    }
 
     // ==========================================================
     // RESTORE PREVIOUS PETFEED STATE
     // ==========================================================
 
-    // Only restore state when the user returned through normal navigation.
-    // A browser refresh intentionally starts a fresh PetFeed.
     if (!isPageRefresh) {
 
-        // Retrieve the previously saved PetFeed state from this browser tab.
         const savedState =
-            sessionStorage.getItem(feedStateKey);
+            sessionStorage.getItem(
+                feedStateKey
+            );
 
-        // Only attempt restoration when saved state exists.
+
         if (savedState) {
 
             try {
 
-                // Convert the JSON string stored by sessionStorage back
-                // into a JavaScript object.
-                const state = JSON.parse(savedState);
+                const state =
+                    JSON.parse(savedState);
 
-                // Reject state saved under a different identity. Without
-                // this check, a Member's cached feed (their own Paw
-                // states, "Remove Paw" labels, etc.) could be restored
-                // for an anonymous visitor, or for a different Member,
-                // after a login/logout/account switch in the same tab.
+
                 const savedUserId =
-                    typeof state.userId === "string" ? state.userId : "";
+                    typeof state.userId === "string"
+                        ? state.userId
+                        : "";
 
+
+                // Never restore another user's cached PetFeed.
                 if (savedUserId !== currentUserId) {
 
-                    sessionStorage.removeItem(feedStateKey);
+                    sessionStorage.removeItem(
+                        feedStateKey
+                    );
+
                 }
                 else {
 
-                    // Restore all feed cards that were already loaded.
-                    // This prevents the server-rendered first page from replacing
-                    // the feed the user previously built through pagination.
-                    if (typeof state.feedHtml === "string") {
-                        feedContainer.innerHTML = state.feedHtml;
+                    if (
+                        typeof state.feedHtml ===
+                        "string"
+                    ) {
+
+                        feedContainer.innerHTML =
+                            state.feedHtml;
                     }
 
-                    // Restore the last successfully loaded page.
-                    // This allows the next pagination request to continue correctly.
-                    if (Number.isInteger(state.currentPage)) {
-                        currentPage = state.currentPage;
+
+                    if (
+                        Number.isInteger(
+                            state.currentPage
+                        )
+                    ) {
+
+                        currentPage =
+                            state.currentPage;
                     }
 
-                    // Restore the original random feed seed.
-                    // This is required so pagination after returning to PetFeed continues
-                    // using the same ordering as the original session.
-                    if (typeof state.feedSeed === "string" &&
-                        state.feedSeed.length > 0) {
 
-                        feedSeed = state.feedSeed;
+                    if (
+                        typeof state.feedSeed ===
+                        "string" &&
+                        state.feedSeed.length > 0
+                    ) {
+
+                        feedSeed =
+                            state.feedSeed;
                     }
 
-                    // Restore whether additional posts are available.
-                    if (typeof state.hasMorePosts === "boolean") {
-                        hasMorePosts = state.hasMorePosts;
+
+                    if (
+                        typeof state.hasMorePosts ===
+                        "boolean"
+                    ) {
+
+                        hasMorePosts =
+                            state.hasMorePosts;
                     }
 
-                    // Restore the user's previous scroll position.
-                    if (typeof state.scrollPosition === "number") {
 
-                        // requestAnimationFrame() waits for the browser to repaint
-                        // the restored feed before changing the scroll position.
-                        requestAnimationFrame(function () {
+                    if (
+                        typeof state.scrollPosition ===
+                        "number"
+                    ) {
 
-                            // Return the user to exactly where they left PetFeed.
-                            window.scrollTo(
-                                0,
-                                state.scrollPosition
-                            );
+                        requestAnimationFrame(
+                            function () {
 
-                        });
+                                window.scrollTo(
+                                    0,
+                                    state.scrollPosition
+                                );
+
+                            }
+                        );
                     }
-
                 }
 
             }
             catch (error) {
 
-                // If the saved JSON is invalid, remove it so the next
-                // PetFeed load can start normally instead of repeatedly
-                // failing to restore corrupted state.
                 console.error(
                     "Unable to restore PetFeed state:",
                     error
                 );
 
-                sessionStorage.removeItem(feedStateKey);
+                sessionStorage.removeItem(
+                    feedStateKey
+                );
             }
         }
     }
@@ -188,39 +554,42 @@ document.addEventListener("DOMContentLoaded", function () {
     // SAVE PETFEED STATE
     // ==========================================================
 
-    // Saves the current PetFeed state to sessionStorage.
-    // This includes the rendered posts, pagination position, and scroll.
     function saveFeedState() {
+
+        /*
+         * Search results are temporary.
+         * Never overwrite the normal saved PetFeed
+         * with filtered search results.
+         */
+        if (isPetFeedSearchActive) {
+            return;
+        }
+
 
         try {
 
-            // Store everything required to restore the exact PetFeed session.
             const state = {
 
-                // Store all currently rendered feed cards.
-                feedHtml: feedContainer.innerHTML,
+                feedHtml:
+                    feedContainer.innerHTML,
 
-                // Store the last successfully loaded pagination page.
-                currentPage: currentPage,
+                currentPage:
+                    currentPage,
 
-                // Store whether more posts are available.
-                hasMorePosts: hasMorePosts,
+                hasMorePosts:
+                    hasMorePosts,
 
-                // Store the user's exact vertical scroll position.
-                scrollPosition: window.scrollY,
+                scrollPosition:
+                    window.scrollY,
 
-                // Store the random seed used by the controller.
-                // This allows the restored feed to continue pagination using the
-                // same ordering as the original feed.
-                feedSeed: feedSeed,
+                feedSeed:
+                    feedSeed,
 
-                // Store who this state belongs to ("" for anonymous), so
-                // it is never restored for a different visitor later.
-                userId: currentUserId
+                userId:
+                    currentUserId
             };
 
-            // Convert the state object to JSON and store it in the current
-            // browser tab's sessionStorage.
+
             sessionStorage.setItem(
                 feedStateKey,
                 JSON.stringify(state)
@@ -229,8 +598,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         catch (error) {
 
-            // sessionStorage has limited storage space, so this catches
-            // storage failures without breaking the PetFeed itself.
             console.error(
                 "Unable to save PetFeed state:",
                 error
@@ -243,26 +610,25 @@ document.addEventListener("DOMContentLoaded", function () {
     // THROTTLED STATE SAVING
     // ==========================================================
 
-    // Schedule a state save without writing to sessionStorage for every
-    // individual scroll event.
     function scheduleStateSave() {
 
-        // If a save is already waiting to run, don't create another timer.
         if (saveStateTimeout !== null) {
             return;
         }
 
-        // setTimeout() delays the save by 250 milliseconds.
-        // This reduces unnecessary sessionStorage writes while scrolling.
-        saveStateTimeout = setTimeout(function () {
 
-            // Save the latest feed and scroll state.
-            saveFeedState();
+        saveStateTimeout =
+            setTimeout(
+                function () {
 
-            // Clear the timer reference so another save can be scheduled.
-            saveStateTimeout = null;
+                    saveFeedState();
 
-        }, 250);
+                    saveStateTimeout =
+                        null;
+
+                },
+                250
+            );
     }
 
 
@@ -270,81 +636,94 @@ document.addEventListener("DOMContentLoaded", function () {
     // LOAD MORE POSTS
     // ==========================================================
 
-    // Loads the next page of PetFeed posts from the existing controller.
     async function loadMorePosts() {
 
-        // Do nothing if a request is already running or the server has
-        // previously indicated that there are no more posts.
-        if (isLoading || !hasMorePosts) {
+        if (
+            isLoading ||
+            !hasMorePosts ||
+            petFeedIsSearching
+        ) {
             return;
         }
 
-        // Mark the request as active before making the HTTP request.
+
         isLoading = true;
 
-        // The next page is one higher than the page currently displayed.
-        const nextPage = currentPage + 1;
+
+        const nextPage =
+            currentPage + 1;
+
 
         try {
 
-            // Request the next page while supplying the same feed seed.
-            // The controller uses this seed to reproduce the same randomized ordering.
-            const response = await fetch(
-                `/PetFeeds/LoadMore?page=${nextPage}&feedSeed=${encodeURIComponent(feedSeed)}`, {
-                method: "GET",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest"
-                }
-            }
-            );
+            const response =
+                await fetch(
+                    `/PetFeeds/LoadMore?page=${nextPage}&feedSeed=${encodeURIComponent(feedSeed)}`,
+                    {
+                        method: "GET",
 
-            // Throw an error when the server returns an unsuccessful
-            // HTTP response such as 404 or 500.
+                        headers: {
+                            "X-Requested-With":
+                                "XMLHttpRequest"
+                        }
+                    }
+                );
+
+
             if (!response.ok) {
+
                 throw new Error(
                     `Failed to load feed page: ${response.status}`
                 );
             }
 
-            // Convert the HTTP response body into HTML text.
-            const html = await response.text();
 
-            // Remove whitespace so an empty response can be detected reliably.
-            const trimmedHtml = html.trim();
+            const html =
+                await response.text();
 
-            // An empty response means the server has no more feed items.
+
+            const trimmedHtml =
+                html.trim();
+
+
             if (!trimmedHtml) {
 
-                // Prevent future scroll events from repeatedly requesting
-                // pages that do not exist.
                 hasMorePosts = false;
 
-                // Save this state so returning to PetFeed knows that there
-                // are no additional pages available.
                 saveFeedState();
 
                 return;
             }
 
-            // Append the newly returned feed cards after the existing cards.
-            // insertAdjacentHTML() adds the HTML without replacing existing posts.
+
             feedContainer.insertAdjacentHTML(
                 "beforeend",
                 trimmedHtml
             );
 
-            // Update the current page only after the new HTML was successfully
-            // inserted into the feed.
+
+            /*
+             * Initialize UI behavior for newly loaded cards.
+             */
+            initializePetFeedCards(
+                feedContainer
+            );
+
+
+            if (
+                typeof lucide !== "undefined"
+            ) {
+                lucide.createIcons();
+            }
+
+
             currentPage = nextPage;
 
-            // Save the newly expanded feed immediately after pagination succeeds.
             saveFeedState();
 
         }
         catch (error) {
 
-            // Log the error in the browser console so controller, routing,
-            // or network problems can be diagnosed during testing.
             console.error(
                 "Error loading more PetFeed posts:",
                 error
@@ -353,438 +732,1055 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         finally {
 
-            // Allow another pagination request after the current request finishes.
             isLoading = false;
         }
     }
 
 
     // ==========================================================
-    // PAW / UNPAW (AJAX)
+    // ESCAPE USER-GENERATED TEXT
     // ==========================================================
 
-    // Intercepts the Paw/Unpaw form submit and sends it via fetch instead
-    // of letting the browser navigate. The server responds with the new
-    // paw count and pawed state, which are used to update just this
-    // post's button and count — no page reload, no scroll jump, no
-    // interaction with the pagination cache at all.
+    function escapeHtml(value) {
+
+        const element =
+            document.createElement("div");
+
+        element.textContent =
+            value ?? "";
+
+        return element.innerHTML;
+    }
+
+
     // ==========================================================
-    // PAW / UNPAW (AJAX)
+    // GET ANTI-FORGERY TOKEN
     // ==========================================================
 
-    feedContainer.addEventListener("submit", async function (event) {
+    function getAntiForgeryToken() {
 
-        const form = event.target;
+        const token =
+            document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
 
-        if (!(form instanceof HTMLFormElement)) {
-            return;
+        return token?.value ?? "";
+    }
+
+
+    // ==========================================================
+    // UPDATE PAW COUNT
+    // ==========================================================
+
+    function updatePetFeedPawCount(
+        petFeedId,
+        pawCount
+    ) {
+
+        /*
+         * In _FeedItems.cshtml these two attributes
+         * are on the SAME span:
+         *
+         * data-paw-count-for
+         * data-paw-count-value
+         */
+        const countValue =
+            feedContainer.querySelector(
+                `[data-paw-count-for="${petFeedId}"][data-paw-count-value]`
+            );
+
+
+        if (countValue) {
+
+            countValue.textContent =
+                pawCount;
         }
+    }
 
-        if (!form.hasAttribute("data-paw-form")) {
-            return;
-        }
 
-        // IMPORTANT:
-        // Stop the normal form submission.
-        // This prevents the page from refreshing.
-        event.preventDefault();
-        event.stopPropagation();
+    // ==========================================================
+    // UPDATE COMMENT COUNT
+    // ==========================================================
 
-        const button = form.querySelector("[data-paw-button]");
+    function updatePetFeedCommentCount(
+        petFeedId,
+        commentCount
+    ) {
 
-        if (!button) {
-            return;
-        }
+        /*
+         * First try the dedicated attributes if you added
+         * them to _FeedItems.cshtml.
+         */
+        let countValue =
+            feedContainer.querySelector(
+                `[data-comment-count-for="${petFeedId}"][data-comment-count-value]`
+            );
 
-        // Prevent double clicks while the request is processing.
-        if (button.disabled) {
-            return;
-        }
 
-        button.disabled = true;
+        /*
+         * Fallback for your original Razor markup.
+         * The comment count is the span inside the button
+         * with data-comment-toggle.
+         */
+        if (!countValue) {
 
-        try {
-
-            const formData = new FormData(form);
-
-            const response = await fetch(form.action, {
-                method: "POST",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest"
-                },
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error(
-                    `Paw request failed: ${response.status}`
+            const commentButton =
+                feedContainer.querySelector(
+                    `[data-comment-toggle="${petFeedId}"]`
                 );
-            }
-
-            const result = await response.json();
-
-            if (!result.success) {
-                return;
-            }
 
 
-            // ==================================================
-            // UPDATE PAW COUNT
-            // ==================================================
+            countValue =
+                commentButton?.querySelector(
+                    "span"
+                );
+        }
 
-            const countWrapper = feedContainer.querySelector(
-                `[data-paw-count-for="${result.petFeedId}"]`
+
+        if (countValue) {
+
+            countValue.textContent =
+                commentCount;
+        }
+    }
+
+
+    // ==========================================================
+    // GET / CREATE COMMENT LIST
+    // ==========================================================
+
+    function getOrCreateCommentList(
+        petFeedId
+    ) {
+
+        const section =
+            feedContainer.querySelector(
+                `[data-comments-for="${petFeedId}"]`
             );
 
-            if (countWrapper) {
 
-                const countValue = countWrapper.querySelector(
-                    "[data-paw-count-value]"
+        if (!section) {
+            return null;
+        }
+
+
+        let list =
+            section.querySelector(
+                "[data-comments-list]"
+            );
+
+
+        if (!list) {
+
+            list =
+                document.createElement(
+                    "div"
                 );
 
-                if (countValue) {
-                    countValue.textContent = result.pawCount;
-                }
-            }
 
-
-            // ==================================================
-            // UPDATE PAW ICON STATE
-            // ==================================================
-
-            button.classList.toggle(
-                "active",
-                result.isPawed
+            list.classList.add(
+                "feed-item-comments-list"
             );
 
 
-            // ==================================================
-            // UPDATE ARIA LABEL
-            // ==================================================
-
-            button.setAttribute(
-                "aria-label",
-                result.isPawed
-                    ? "Remove Paw"
-                    : "Paw"
+            list.setAttribute(
+                "data-comments-list",
+                ""
             );
 
 
-            // ==================================================
-            // UPDATE FORM ACTION
-            // ==================================================
+            const emptyMessage =
+                section.querySelector(
+                    "[data-empty-comments]"
+                );
 
-            if (result.isPawed) {
 
-                // Currently Pawed.
-                // Next click = Unpaw.
+            if (emptyMessage) {
 
-                form.action = form.dataset.unpawUrl;
+                emptyMessage.replaceWith(
+                    list
+                );
 
             }
             else {
 
-                // Currently Unpawed.
-                // Next click = Paw.
+                const heading =
+                    section.querySelector(
+                        ".feed-item-section-title"
+                    );
 
-                form.action = form.dataset.pawUrl;
+
+                if (heading) {
+
+                    heading.insertAdjacentElement(
+                        "afterend",
+                        list
+                    );
+                }
+            }
+
+        }
+        else {
+
+            const emptyMessage =
+                section.querySelector(
+                    "[data-empty-comments]"
+                );
+
+
+            if (emptyMessage) {
+
+                emptyMessage.remove();
+            }
+        }
+
+
+        return list;
+    }
+
+
+    // ==========================================================
+    // APPEND COMMENT
+    // ==========================================================
+
+    function appendPetFeedComment(
+        data,
+        canDelete = false
+    ) {
+
+        // Prevent duplicates when AJAX and SignalR overlap.
+        const existingComment =
+            feedContainer.querySelector(
+                `[data-comment-id="${data.commentId}"]`
+            );
+
+
+        if (existingComment) {
+            return;
+        }
+
+
+        const list =
+            getOrCreateCommentList(
+                data.petFeedId
+            );
+
+
+        if (!list) {
+            return;
+        }
+
+
+        const firstName =
+            data.firstName ?? "";
+
+        const lastName =
+            data.lastName ?? "";
+
+        const initial =
+            (firstName || "?")
+                .substring(0, 1);
+
+
+        const avatarHtml =
+            data.profilePicturePath
+
+                ? `
+                    <img src="${escapeHtml(data.profilePicturePath)}"
+                         alt="Profile picture" />
+                  `
+
+                : escapeHtml(initial);
+
+
+        let deleteButtonHtml = "";
+
+
+        if (canDelete) {
+
+            const token =
+                getAntiForgeryToken();
+
+
+            deleteButtonHtml = `
+                <form action="/PetFeeds/DeleteComment"
+                      method="post"
+                      class="feed-item-delete-form"
+                      data-delete-comment-form>
+
+                    <input type="hidden"
+                           name="__RequestVerificationToken"
+                           value="${escapeHtml(token)}" />
+
+                    <input type="hidden"
+                           name="id"
+                           value="${data.commentId}" />
+
+                    <input type="hidden"
+                           name="feedSeed"
+                           value="${escapeHtml(feedSeed)}" />
+
+                    <button type="submit"
+                            class="feed-item-button feed-item-delete-button"
+                            aria-label="Delete comment">
+
+                        <i data-lucide="trash-2"></i>
+
+                    </button>
+
+                </form>
+            `;
+        }
+
+
+        const commentHtml = `
+            <div class="feed-item-comment"
+                 data-comment-id="${data.commentId}">
+
+                <div class="feed-item-comment-header">
+
+                    <div class="feed-item-comment-author">
+
+                        <div class="feed-item-comment-avatar">
+                            ${avatarHtml}
+                        </div>
+
+                        <div class="feed-item-comment-author-info">
+
+                            <strong class="feed-item-comment-name">
+                                ${escapeHtml(firstName)}
+                                ${escapeHtml(lastName)}
+                            </strong>
+
+                            <small class="feed-item-comment-date">
+                                ${escapeHtml(data.datePosted)}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    ${deleteButtonHtml}
+
+                </div>
+
+                <p class="feed-item-comment-content">
+                    ${escapeHtml(data.content)}
+                </p>
+
+            </div>
+        `;
+
+
+        list.insertAdjacentHTML(
+            "beforeend",
+            commentHtml
+        );
+
+
+        if (
+            typeof lucide !==
+            "undefined"
+        ) {
+
+            lucide.createIcons();
+        }
+    }
+
+
+    // ==========================================================
+    // REMOVE COMMENT
+    // ==========================================================
+
+    function removePetFeedComment(data) {
+
+        const comment =
+            feedContainer.querySelector(
+                `[data-comment-id="${data.commentId}"]`
+            );
+
+
+        if (comment) {
+
+            comment.remove();
+        }
+
+
+        // There are still comments left.
+        if (Number(data.commentCount) !== 0) {
+            return;
+        }
+
+
+        const section =
+            feedContainer.querySelector(
+                `[data-comments-for="${data.petFeedId}"]`
+            );
+
+
+        const list =
+            section?.querySelector(
+                "[data-comments-list]"
+            );
+
+
+        if (!list) {
+            return;
+        }
+
+
+        const emptyMessage =
+            document.createElement("p");
+
+
+        emptyMessage.classList.add(
+            "feed-item-empty-comments"
+        );
+
+
+        emptyMessage.setAttribute(
+            "data-empty-comments",
+            ""
+        );
+
+
+        emptyMessage.textContent =
+            "No comments yet. Be the first to comment!";
+
+
+        list.replaceWith(
+            emptyMessage
+        );
+    }
+
+
+    // ==========================================================
+    // PETFEED FORM SUBMISSIONS
+    // ==========================================================
+
+    feedContainer.addEventListener(
+        "submit",
+        async function (event) {
+
+            const form =
+                event.target;
+
+
+            if (
+                !(form instanceof HTMLFormElement)
+            ) {
+                return;
             }
 
 
-            // ==================================================
-            // UPDATE CURRENT STATE
-            // ==================================================
+            // ======================================================
+            // PAW / UNPAW
+            // ======================================================
 
-            form.setAttribute(
-                "data-is-pawed",
-                result.isPawed
-                    ? "true"
-                    : "false"
+            if (
+                form.hasAttribute(
+                    "data-paw-form"
+                )
+            ) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+
+                const button =
+                    form.querySelector(
+                        "[data-paw-button]"
+                    );
+
+
+                if (
+                    !button ||
+                    button.disabled
+                ) {
+                    return;
+                }
+
+
+                button.disabled = true;
+
+
+                try {
+
+                    const formData =
+                        new FormData(form);
+
+
+                    const response =
+                        await fetch(
+                            form.action,
+                            {
+                                method:
+                                    "POST",
+
+                                headers: {
+                                    "X-Requested-With":
+                                        "XMLHttpRequest"
+                                },
+
+                                body:
+                                    formData
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            `Paw request failed: ${response.status}`
+                        );
+                    }
+
+
+                    const result =
+                        await response.json();
+
+
+                    if (!result.success) {
+                        return;
+                    }
+
+
+                    // Update sender's count immediately.
+                    updatePetFeedPawCount(
+                        result.petFeedId,
+                        result.pawCount
+                    );
+
+
+                    // Only the current member's Paw state changes.
+                    button.classList.toggle(
+                        "active",
+                        result.isPawed
+                    );
+
+
+                    button.setAttribute(
+                        "aria-label",
+                        result.isPawed
+                            ? "Remove Paw"
+                            : "Paw"
+                    );
+
+
+                    // Next click must perform the opposite action.
+                    form.action =
+                        result.isPawed
+
+                            ? form.dataset.unpawUrl
+
+                            : form.dataset.pawUrl;
+
+
+                    form.setAttribute(
+                        "data-is-pawed",
+                        result.isPawed
+                            ? "true"
+                            : "false"
+                    );
+
+
+                    saveFeedState();
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "Error submitting Paw/Unpaw:",
+                        error
+                    );
+
+                }
+                finally {
+
+                    button.disabled =
+                        false;
+                }
+
+
+                return;
+            }
+
+
+            // ======================================================
+            // ADD COMMENT
+            // ======================================================
+
+            if (
+                form.hasAttribute(
+                    "data-add-comment-form"
+                )
+            ) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+
+                const textarea =
+                    form.querySelector(
+                        "[data-comment-input]"
+                    );
+
+
+                const content =
+                    textarea
+                        ? textarea.value.trim()
+                        : "";
+
+
+                if (!content) {
+                    return;
+                }
+
+
+                const submitButton =
+                    form.querySelector(
+                        'button[type="submit"]'
+                    );
+
+
+                if (submitButton?.disabled) {
+                    return;
+                }
+
+
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        true;
+                }
+
+
+                try {
+
+                    const formData =
+                        new FormData(form);
+
+
+                    const response =
+                        await fetch(
+                            form.action,
+                            {
+                                method:
+                                    "POST",
+
+                                headers: {
+                                    "X-Requested-With":
+                                        "XMLHttpRequest"
+                                },
+
+                                body:
+                                    formData
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            `AddComment request failed: ${response.status}`
+                        );
+                    }
+
+
+                    const result =
+                        await response.json();
+
+
+                    if (!result.success) {
+                        return;
+                    }
+
+
+                    /*
+                     * Sender gets their comment immediately
+                     * through the AJAX response.
+                     */
+                    appendPetFeedComment(
+                        result,
+                        true
+                    );
+
+
+                    updatePetFeedCommentCount(
+                        result.petFeedId,
+                        result.commentCount
+                    );
+
+
+                    if (textarea) {
+
+                        textarea.value =
+                            "";
+                    }
+
+
+                    saveFeedState();
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "Error submitting AddComment:",
+                        error
+                    );
+
+                }
+                finally {
+
+                    if (submitButton) {
+
+                        submitButton.disabled =
+                            false;
+                    }
+                }
+
+
+                return;
+            }
+
+
+            // ======================================================
+            // DELETE COMMENT
+            // ======================================================
+
+            if (
+                form.hasAttribute(
+                    "data-delete-comment-form"
+                )
+            ) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+
+                const submitButton =
+                    form.querySelector(
+                        'button[type="submit"]'
+                    );
+
+
+                if (submitButton?.disabled) {
+                    return;
+                }
+
+
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        true;
+                }
+
+
+                try {
+
+                    const formData =
+                        new FormData(form);
+
+
+                    const response =
+                        await fetch(
+                            form.action,
+                            {
+                                method:
+                                    "POST",
+
+                                headers: {
+                                    "X-Requested-With":
+                                        "XMLHttpRequest"
+                                },
+
+                                body:
+                                    formData
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            `DeleteComment request failed: ${response.status}`
+                        );
+                    }
+
+
+                    const result =
+                        await response.json();
+
+
+                    if (!result.success) {
+                        return;
+                    }
+
+
+                    removePetFeedComment(
+                        result
+                    );
+
+
+                    updatePetFeedCommentCount(
+                        result.petFeedId,
+                        result.commentCount
+                    );
+
+
+                    saveFeedState();
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "Error submitting DeleteComment:",
+                        error
+                    );
+
+                    if (submitButton) {
+
+                        submitButton.disabled =
+                            false;
+                    }
+                }
+
+
+                return;
+            }
+
+        }
+    );
+
+
+    // ==========================================================
+    // PETFEED SIGNALR
+    // ==========================================================
+
+    /*
+     * SignalR is already loaded globally by _Layout.cshtml.
+     *
+     * Stop here only if the library somehow failed to load.
+     */
+    if (typeof signalR === "undefined") {
+
+        console.error(
+            "SignalR library is not available for PetFeed."
+        );
+
+        return;
+    }
+
+
+    const petFeedConnection =
+        new signalR.HubConnectionBuilder()
+            .withUrl("/petFeedHub")
+            .withAutomaticReconnect()
+            .build();
+
+
+    // ==========================================================
+    // SIGNALR - PAW COUNT UPDATED
+    // ==========================================================
+
+    petFeedConnection.on(
+        "PetFeedPawUpdated",
+        function (data) {
+
+            /*
+             * Every open PetFeed gets the new total count.
+             *
+             * We DO NOT change another member's button
+             * active/inactive state because paw ownership
+             * is different for every account.
+             */
+            updatePetFeedPawCount(
+                data.petFeedId,
+                data.pawCount
+            );
+
+
+            saveFeedState();
+        }
+    );
+
+
+    // ==========================================================
+    // SIGNALR - COMMENT ADDED
+    // ==========================================================
+
+    petFeedConnection.on(
+        "PetFeedCommentAdded",
+        function (data) {
+
+            /*
+             * The sender already inserted their comment
+             * from the AJAX response.
+             *
+             * Without this check, the sender would see
+             * their comment twice.
+             */
+            if (
+                data.senderUserId &&
+                data.senderUserId ===
+                currentUserId
+            ) {
+
+                return;
+            }
+
+
+            appendPetFeedComment(
+                data,
+                false
+            );
+
+
+            updatePetFeedCommentCount(
+                data.petFeedId,
+                data.commentCount
+            );
+
+
+            saveFeedState();
+        }
+    );
+
+
+    // ==========================================================
+    // SIGNALR - COMMENT DELETED
+    // ==========================================================
+
+    petFeedConnection.on(
+        "PetFeedCommentDeleted",
+        function (data) {
+
+            removePetFeedComment(
+                data
+            );
+
+
+            updatePetFeedCommentCount(
+                data.petFeedId,
+                data.commentCount
+            );
+
+
+            saveFeedState();
+        }
+    );
+
+
+    // ==========================================================
+    // SIGNALR CONNECTION STATE
+    // ==========================================================
+
+    petFeedConnection.onreconnecting(
+        function (error) {
+
+            console.warn(
+                "PetFeed SignalR reconnecting...",
+                error
+            );
+        }
+    );
+
+
+    petFeedConnection.onreconnected(
+        function () {
+
+            console.log(
+                "PetFeed SignalR reconnected."
+            );
+        }
+    );
+
+
+    petFeedConnection.onclose(
+        function (error) {
+
+            console.warn(
+                "PetFeed SignalR disconnected.",
+                error
+            );
+        }
+    );
+
+
+    // ==========================================================
+    // START SIGNALR
+    // ==========================================================
+
+    async function startPetFeedConnection() {
+
+        try {
+
+            await petFeedConnection.start();
+
+
+            console.log(
+                "PetFeed SignalR connected."
             );
 
         }
         catch (error) {
 
             console.error(
-                "Error submitting Paw/Unpaw:",
+                "PetFeed SignalR connection failed:",
                 error
             );
 
+
+            setTimeout(
+                startPetFeedConnection,
+                5000
+            );
         }
-        finally {
-
-            button.disabled = false;
-
-        }
-
-    });
+    }
 
 
-        // ======================================================
-        // ADD COMMENT (AJAX)
-        // ======================================================
-
-        if (form.hasAttribute("data-add-comment-form")) {
-
-            event.preventDefault();
-
-            const textarea = form.querySelector("[data-comment-input]");
-
-            const content = textarea ? textarea.value.trim() : "";
-
-            if (!content) {
-                return;
-            }
-
-            const formData = new FormData(form);
-
-            try {
-
-                const response = await fetch(form.action, {
-                    method: "POST",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    },
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error(
-                        `AddComment request failed: ${response.status}`
-                    );
-                }
-
-                const result = await response.json();
-
-                if (!result.success) {
-                    return;
-                }
-
-                const section = feedContainer.querySelector(
-                    `[data-comments-for="${result.petFeedId}"]`
-                );
-
-                if (!section) {
-                    return;
-                }
-
-                let list = section.querySelector("[data-comments-list]");
-
-                // If this is the post's first comment, the list wrapper
-                // does not exist yet in the DOM (it was never rendered by
-                // the server) and needs to be created before appending.
-                if (!list) {
-
-                    list = document.createElement("div");
-
-                    list.classList.add("feed-comments-list");
-
-                    list.setAttribute("data-comments-list", "");
-
-                    const emptyMessage = section.querySelector(
-                        "[data-empty-comments]"
-                    );
-
-                    if (emptyMessage) {
-                        emptyMessage.replaceWith(list);
-                    }
-                    else {
-
-                        const heading = section.querySelector(
-                            ".feed-section-title"
-                        );
-
-                        if (heading) {
-                            heading.insertAdjacentElement(
-                                "afterend",
-                                list
-                            );
-                        }
-                    }
-                }
-                else {
-
-                    const emptyMessage = section.querySelector(
-                        "[data-empty-comments]"
-                    );
-
-                    if (emptyMessage) {
-                        emptyMessage.remove();
-                    }
-                }
-
-                const initial =
-                    (result.firstName || "?").substring(0, 1);
-
-                const avatarHtml = result.profilePicturePath
-                    ? `<img src="${result.profilePicturePath}" alt="Profile picture" />`
-                    : initial;
-
-                const deleteButtonHtml = result.canDelete
-                    ? `
-                        <form asp-action="DeleteComment" method="post" data-delete-comment-form>
-                            <input type="hidden" name="id" value="${result.commentId}" />
-                            <input type="hidden" name="feedSeed" value="${feedSeed}" />
-                            <button type="submit" class="feed-delete-comment">Delete</button>
-                        </form>
-                      `
-                    : "";
-
-                const commentHtml = `
-                    <div class="feed-comment" data-comment-id="${result.commentId}">
-                        <div class="feed-comment-header">
-                            <div class="feed-comment-author">
-                                <div class="feed-comment-avatar">${avatarHtml}</div>
-                                <div>
-                                    <strong>${result.firstName ?? ""} ${result.lastName ?? ""}</strong>
-                                    <small>${result.datePosted}</small>
-                                </div>
-                            </div>
-                            ${deleteButtonHtml}
-                        </div>
-                        <p class="feed-comment-content">${result.content}</p>
-                    </div>
-                `;
-
-                list.insertAdjacentHTML("beforeend", commentHtml);
-
-                if (textarea) {
-                    textarea.value = "";
-                }
-
-            }
-            catch (error) {
-
-                console.error(
-                    "Error submitting AddComment:",
-                    error
-                );
-            }
-
-            return;
-        }
-
-
-        // ======================================================
-        // DELETE COMMENT (AJAX)
-        // ======================================================
-
-        if (form.hasAttribute("data-delete-comment-form")) {
-
-            event.preventDefault();
-
-            const formData = new FormData(form);
-
-            const commentEl = form.closest("[data-comment-id]");
-
-            try {
-
-                const response = await fetch(form.action, {
-                    method: "POST",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    },
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error(
-                        `DeleteComment request failed: ${response.status}`
-                    );
-                }
-
-                const result = await response.json();
-
-                if (!result.success) {
-                    return;
-                }
-
-                if (commentEl) {
-                    commentEl.remove();
-                }
-
-                // Show the "no comments yet" message again if that was the
-                // last comment on this post.
-                if (result.commentCount === 0) {
-
-                    const section = feedContainer.querySelector(
-                        `[data-comments-for="${result.petFeedId}"]`
-                    );
-
-                    const list = section?.querySelector(
-                        "[data-comments-list]"
-                    );
-
-                    if (list) {
-
-                        const emptyMessage = document.createElement("p");
-
-                        emptyMessage.classList.add("feed-empty-comments");
-
-                        emptyMessage.setAttribute(
-                            "data-empty-comments",
-                            ""
-                        );
-
-                        emptyMessage.textContent =
-                            "No comments yet. Be the first to comment!";
-
-                        list.replaceWith(emptyMessage);
-                    }
-                }
-
-            }
-            catch (error) {
-
-                console.error(
-                    "Error submitting DeleteComment:",
-                    error
-                );
-            }
-        }
-
-    });
+    startPetFeedConnection();
 
 
     // ==========================================================
     // SCROLL HANDLING
     // ==========================================================
 
-    // Listen for scrolling anywhere on the PetFeed page.
-    window.addEventListener("scroll", function () {
+    window.addEventListener(
+        "scroll",
+        function () {
 
-        // Calculate the remaining distance between the user's current
-        // position and the bottom of the document.
-        const distanceFromBottom =
-            document.documentElement.scrollHeight -
-            (window.innerHeight + window.scrollY);
+            const distanceFromBottom =
+                document.documentElement.scrollHeight -
+                (
+                    window.innerHeight +
+                    window.scrollY
+                );
 
-        // Request the next page when the user is within 400 pixels of
-        // the bottom of the feed.
-        if (distanceFromBottom <= 400) {
-            loadMorePosts();
+
+            if (
+                distanceFromBottom <= 400
+            ) {
+
+                loadMorePosts();
+            }
+
+
+            scheduleStateSave();
         }
-
-        // Save the latest scroll position using the throttled save function.
-        // This means the state is updated while the user is scrolling,
-        // without constantly writing to sessionStorage.
-        scheduleStateSave();
-
-    });
+    );
 
 
     // ==========================================================
     // NAVIGATION STATE SAVING
     // ==========================================================
 
-    // pagehide fires when the current document is being unloaded or
-    // moved into the browser's back/forward cache.
-    window.addEventListener("pagehide", function () {
+    window.addEventListener(
+        "pagehide",
+        function () {
 
-        // Save the final feed HTML, pagination state, and scroll position
-        // before navigating to another page.
-        saveFeedState();
-
-    });
+            saveFeedState();
+        }
+    );
 
 });

@@ -969,3 +969,20 @@
     transition: background-color 9999s ease-in-out 0s;
 }
 
+
+
+/* ===========================================================
+   ADMIN SETUP - CHROME AUTOFILL FIX
+=========================================================== */
+
+.admin-setup-page input:-webkit-autofill,
+.admin-setup-page input:-webkit-autofill:hover,
+.admin-setup-page input:-webkit-autofill:focus,
+.admin-setup-page input:-webkit-autofill:active {
+    -webkit-text-fill-color: #273142 !important;
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    box-shadow: 0 0 0 1000px #ffffff inset !important;
+    background-color: #ffffff !important;
+    transition: background-color 9999s ease-in-out 0s;
+}
+

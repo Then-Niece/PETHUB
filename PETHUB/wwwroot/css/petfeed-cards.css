@@ -2112,3 +2112,121 @@
         border-color: #76B968;
         transform: translateY(-1px);
     }
+
+
+/* ==========================================================
+   PETFEED MOBILE PAGE LAYOUT
+   Keeps cards away from screen edges and reduces
+   unnecessary space below the navbar.
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    .feed-container {
+        width: auto;
+        max-width: none;
+        margin-left: 12px;
+        margin-right: 12px;
+        padding-top: 8px;
+        padding-bottom: 30px;
+        box-sizing: border-box;
+    }
+
+    .feed-item {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 14px;
+        border-radius: 16px;
+    }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+   ========================================================== */
+
+@media (max-width: 480px) {
+
+    .feed-container {
+        margin-left: 8px;
+        margin-right: 8px;
+        padding-top: 6px;
+        padding-bottom: 24px;
+    }
+
+    .feed-item {
+        border-radius: 14px;
+    }
+}
+
+
+
+/* ==========================================================
+   PETFEED SEARCH - EMPTY RESULTS
+   ========================================================== */
+
+.petfeed-search-empty {
+    width: 100%;
+    max-width: 720px;
+    margin: 50px auto;
+    padding: 55px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: #FFFFFF;
+    border: 1px solid #E7EBE8;
+    border-radius: 20px;
+}
+
+
+.petfeed-search-empty-icon {
+    width: 58px;
+    height: 58px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #F1F7EF;
+    color: #5D9555;
+}
+
+
+    .petfeed-search-empty-icon svg {
+        width: 27px;
+        height: 27px;
+    }
+
+
+.petfeed-search-empty h3 {
+    margin: 0 0 8px;
+    color: #30363B;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+.petfeed-search-empty p {
+    margin: 0;
+    color: #67717A;
+    font-size: 14px;
+}
+
+
+.petfeed-search-empty span {
+    margin-top: 6px;
+    color: #929A9F;
+    font-size: 13px;
+}
+
+
+@media (max-width: 768px) {
+
+    .petfeed-search-empty {
+        margin: 28px 12px;
+        width: calc(100% - 24px);
+        padding: 45px 20px;
+    }
+}

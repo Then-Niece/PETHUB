@@ -1,0 +1,1403 @@
+﻿/* ==========================================================
+   PETHUB NAVBAR
+   ========================================================== */
+
+
+/* ==========================================================
+   LOGO / BRAND
+   ========================================================== */
+
+.navbar-logo {
+    height: 45px;
+    width: auto;
+    max-height: 50px;
+    min-height: 35px;
+    object-fit: contain;
+}
+
+
+.navbar-brand {
+    color: #273142 !important;
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+
+/* ==========================================================
+   NAVBAR
+   ========================================================== */
+
+.navbar-custom {
+    min-height: 72px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    z-index: 1100;
+}
+
+
+/* ==========================================================
+   NAVBAR ACTIONS
+   ========================================================== */
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 12px;
+}
+
+
+/* ==========================================================
+   SIDEBAR TOGGLE INSIDE NAVBAR
+   ========================================================== */
+
+#sidebarToggle {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .2s ease;
+}
+
+
+    #sidebarToggle:hover {
+        background: #F3FAF1;
+    }
+
+
+    #sidebarToggle:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+
+    #sidebarToggle i,
+    #sidebarToggle svg {
+        width: 22px;
+        height: 22px;
+    }
+
+
+/* ==========================================================
+   PETFEED NAVBAR SEARCH
+   ========================================================== */
+
+.navbar-search {
+    width: 420px;
+    max-width: 100%;
+}
+
+
+    .navbar-search .input-group {
+        width: 100%;
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
+
+    .navbar-search .input-group-text,
+    .navbar-search .form-control {
+        background: #F0F2F5;
+        border: none;
+    }
+
+
+    .navbar-search .input-group-text {
+        border-radius: 50px 0 0 50px;
+        padding-left: 16px;
+        color: #65676B;
+    }
+
+
+    .navbar-search .form-control {
+        border-radius: 0 50px 50px 0;
+        padding-left: .35rem;
+        box-shadow: none;
+    }
+
+
+        .navbar-search .form-control::placeholder {
+            color: #65676B;
+        }
+
+
+        .navbar-search .form-control:focus {
+            background: #F0F2F5;
+            box-shadow: none;
+        }
+
+
+/* ==========================================================
+   NAVBAR ICON BUTTON
+   ========================================================== */
+
+.navbar-icon-btn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: #F2F3F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6B7280;
+    transition: all .2s ease;
+}
+
+
+    .navbar-icon-btn i,
+    .navbar-icon-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2.2;
+    }
+
+
+    .navbar-icon-btn:hover,
+    .navbar-icon-btn.active {
+        background: #F3FAF1;
+        color: #8ACE79;
+    }
+
+
+        .navbar-icon-btn:hover i,
+        .navbar-icon-btn:hover svg,
+        .navbar-icon-btn.active i,
+        .navbar-icon-btn.active svg {
+            color: #8ACE79;
+        }
+
+
+/* ==========================================================
+   PROFILE BUTTON
+   ========================================================== */
+
+.profile-button {
+    border: none;
+    background: transparent;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
+    .profile-button:hover {
+        background: transparent;
+    }
+
+
+/* ==========================================================
+   PROFILE AVATAR
+   ========================================================== */
+
+.profile-avatar {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+
+    .profile-avatar img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        margin: 0 !important;
+        object-fit: cover;
+    }
+
+
+.profile-avatar-large {
+    width: 55px;
+    height: 55px;
+}
+
+
+.profile-chevron {
+    width: 16px !important;
+    height: 16px !important;
+    color: #6B7280;
+}
+
+
+/* ==========================================================
+   DROPDOWN LAYERING
+   ========================================================== */
+
+.navbar-custom .dropdown {
+    position: relative;
+    z-index: 1110;
+}
+
+
+.navbar-custom .dropdown-menu {
+    z-index: 1120;
+}
+
+
+/* ==========================================================
+   PROFILE DROPDOWN
+   ========================================================== */
+
+.profile-dropdown {
+    min-width: 260px;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .12);
+    padding: 8px;
+}
+
+
+    /* ==========================================================
+   PROFILE DROPDOWN ITEMS
+   ========================================================== */
+
+    .profile-dropdown .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        padding: .75rem .9rem;
+        border-radius: 12px;
+        color: #2D3748;
+        font-weight: 500;
+        transition: all .2s ease;
+    }
+
+
+        .profile-dropdown .dropdown-item i,
+        .profile-dropdown .dropdown-item svg {
+            width: 20px;
+            height: 20px;
+            color: #6B7280;
+            transition: all .2s ease;
+        }
+
+
+        .profile-dropdown .dropdown-item:hover {
+            background: #F3FAF1;
+            color: #8ACE79;
+        }
+
+
+            .profile-dropdown .dropdown-item:hover i,
+            .profile-dropdown .dropdown-item:hover svg {
+                color: #8ACE79;
+            }
+
+
+/* ==========================================================
+   NOTIFICATION BADGE
+   ========================================================== */
+
+#notificationBadge {
+    border: 2px solid #FFFFFF;
+    font-size: 10px;
+    font-weight: 700;
+    z-index: 2;
+}
+
+
+/* ==========================================================
+   LEGACY / COMPONENT NOTIFICATION BELL
+   ========================================================== */
+
+.notification-bell {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: #EEF9E9;
+    color: #7ACB63;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+
+.notification-badge {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    min-width: 20px;
+    height: 20px;
+    padding: 2px 5px;
+    background: #DC3545;
+    color: #FFFFFF;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #FFFFFF;
+}
+
+
+    .notification-badge:empty {
+        display: none;
+    }
+
+
+/* ==========================================================
+   NOTIFICATION DROPDOWN
+   ========================================================== */
+
+.notification-dropdown {
+    width: min(560px, calc(100vw - 24px));
+    max-height: min(520px, 70vh);
+    overflow-y: auto;
+    padding: 0;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .14);
+    background: #FFFFFF;
+}
+
+
+.notification-item {
+    position: relative;
+    padding: 16px 18px;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+
+    .notification-item:last-child {
+        border-bottom: none;
+    }
+
+
+    .notification-item.unread {
+        background-color: #F5FBF3;
+    }
+
+
+.notification-link {
+    display: block;
+}
+
+
+/* ==========================================================
+   DELETE NOTIFICATION
+   ========================================================== */
+
+.delete-notification {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important;
+    background: transparent;
+    color: #DC3545 !important;
+    font-size: 16px;
+    opacity: .7;
+    cursor: pointer;
+}
+
+
+    .delete-notification:hover {
+        opacity: 1;
+        background: #FFEAEA !important;
+        border-radius: 50%;
+    }
+
+
+/* ==========================================================
+   TABLET
+   ========================================================== */
+
+@media (max-width: 992px) {
+
+    .navbar-custom .container-fluid {
+        gap: 12px;
+    }
+
+
+    .navbar-search {
+        width: min(38vw, 340px);
+    }
+
+
+    .navbar-actions {
+        gap: 8px;
+        margin-right: 0;
+    }
+
+
+    .navbar-brand {
+        font-size: 1.5rem !important;
+    }
+
+
+    .navbar-logo {
+        height: 40px;
+    }
+}
+
+
+/* ==========================================================
+   MOBILE NAVBAR
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    .navbar-custom {
+        min-height: 72px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        z-index: 1100;
+    }
+
+
+        .navbar-custom .container-fluid {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px 10px;
+            padding-left: 14px !important;
+            padding-right: 14px !important;
+        }
+
+
+            /* ======================================================
+       LEFT SIDE
+       ====================================================== */
+
+            .navbar-custom .container-fluid > .d-flex:first-child {
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+
+
+    #sidebarToggle {
+        width: 38px;
+        height: 38px;
+        margin-right: 6px !important;
+        flex-shrink: 0;
+    }
+
+
+        #sidebarToggle i,
+        #sidebarToggle svg {
+            width: 21px;
+            height: 21px;
+        }
+
+
+    .navbar-brand {
+        font-size: 1.25rem !important;
+        min-width: 0;
+        margin-right: 0;
+    }
+
+
+    .navbar-logo {
+        width: 38px;
+        height: 38px;
+        min-height: 38px;
+        max-height: 38px;
+        flex-shrink: 0;
+    }
+
+
+    /* ======================================================
+       RIGHT SIDE
+       ====================================================== */
+
+    .navbar-actions {
+        order: 2;
+        margin-left: auto;
+        margin-right: 0;
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+
+    .navbar-icon-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+
+        .navbar-icon-btn i,
+        .navbar-icon-btn svg {
+            width: 19px;
+            height: 19px;
+        }
+
+
+    .profile-avatar {
+        width: 38px;
+        height: 38px;
+    }
+
+
+    .profile-chevron {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+
+    /* ======================================================
+       CENTER SECTION
+       ====================================================== */
+
+    .navbar-custom .container-fluid > .flex-grow-1 {
+        order: 3;
+        flex-grow: 0 !important;
+        flex-shrink: 0 !important;
+        flex-basis: 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+    }
+
+    /* ======================================================
+   PETFEED SEARCH
+   ====================================================== */
+
+    .navbar-search {
+        display: block;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 1px;
+    }
+
+        .navbar-search .input-group {
+            display: flex;
+            width: 100% !important;
+        }
+
+        .navbar-search .input-group-text {
+            padding-left: 16px;
+        }
+
+        .navbar-search .form-control {
+            flex: 1 1 auto;
+            width: 1%;
+            min-width: 0;
+            padding-top: 9px;
+            padding-bottom: 9px;
+        }
+
+    /* ======================================================
+       MOBILE DROPDOWNS
+       ====================================================== */
+
+    .profile-dropdown {
+        width: min(280px, calc(100vw - 24px));
+        min-width: 0;
+        margin-top: 8px !important;
+        border-radius: 16px;
+    }
+
+
+    .notification-dropdown {
+        width: calc(100vw - 24px);
+        max-width: 560px;
+        max-height: 65vh;
+        margin-top: 8px !important;
+        border-radius: 16px;
+    }
+
+
+    .navbar-custom .dropdown-menu {
+        z-index: 1120 !important;
+    }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+   ========================================================== */
+
+@media (max-width: 576px) {
+
+    .navbar-custom .container-fluid {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        gap: 7px 8px;
+    }
+
+
+    #sidebarToggle {
+        width: 36px;
+        height: 36px;
+    }
+
+
+        #sidebarToggle i,
+        #sidebarToggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+
+    .navbar-brand {
+        font-size: 1.15rem !important;
+    }
+
+
+    .navbar-logo {
+        width: 35px;
+        height: 35px;
+        min-height: 35px;
+        max-height: 35px;
+        margin-right: 6px !important;
+    }
+
+
+    .navbar-actions {
+        gap: 4px;
+    }
+
+
+    .navbar-icon-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+
+        .navbar-icon-btn i,
+        .navbar-icon-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+
+    .profile-avatar {
+        width: 36px;
+        height: 36px;
+    }
+
+
+    .profile-chevron {
+        display: none;
+    }
+
+
+    .navbar-search .input-group-text {
+        padding-left: 14px;
+    }
+
+
+    .navbar-search .form-control {
+        font-size: .9rem;
+    }
+
+
+    .profile-dropdown {
+        width: min(270px, calc(100vw - 20px));
+    }
+
+
+    .notification-dropdown {
+        width: calc(100vw - 20px);
+    }
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+   ========================================================== */
+
+@media (max-width: 400px) {
+
+    .navbar-custom .container-fluid {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+
+    #sidebarToggle {
+        width: 34px;
+        height: 34px;
+    }
+
+
+    .navbar-logo {
+        width: 33px;
+        height: 33px;
+        min-height: 33px;
+        max-height: 33px;
+    }
+
+
+    .navbar-brand {
+        font-size: 1.05rem !important;
+    }
+
+
+    .navbar-icon-btn {
+        width: 34px;
+        height: 34px;
+    }
+
+
+    .profile-avatar {
+        width: 34px;
+        height: 34px;
+    }
+
+
+    .profile-dropdown {
+        width: calc(100vw - 16px);
+    }
+
+
+    .notification-dropdown {
+        width: calc(100vw - 16px);
+    }
+}
+
+
+
+/* ==========================================================
+   NOTIFICATION PANEL
+   ========================================================== */
+
+.notification-panel {
+    width: 100%;
+    background: #FFFFFF;
+}
+
+
+.notification-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid #EEF0F2;
+}
+
+
+.notification-panel-title {
+    margin: 0;
+    color: #273142;
+    font-size: 1rem;
+    font-weight: 750;
+}
+
+
+.notification-panel-subtitle {
+    margin: 3px 0 0;
+    color: #8A949C;
+    font-size: .78rem;
+}
+
+
+/* ==========================================================
+   NOTIFICATION LIST
+   ========================================================== */
+
+.notification-panel-list {
+    max-height: 440px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+
+    .notification-panel-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+
+    .notification-panel-list::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+
+    .notification-panel-list::-webkit-scrollbar-thumb {
+        background: #D8DDE2;
+        border-radius: 999px;
+    }
+
+
+/* ==========================================================
+   NOTIFICATION ITEM
+   ========================================================== */
+
+.notification-item {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    padding: 0;
+    border-bottom: 1px solid #F0F1F2;
+    background: #FFFFFF;
+    transition: background-color .2s ease;
+}
+
+
+    .notification-item:last-child {
+        border-bottom: none;
+    }
+
+
+    .notification-item:hover {
+        background: #FAFBFA;
+    }
+
+
+    .notification-item.unread {
+        background: #F5FBF3;
+    }
+
+
+        .notification-item.unread:hover {
+            background: #EFF8EC;
+        }
+
+
+/* ==========================================================
+   NOTIFICATION LINK
+   ========================================================== */
+
+.notification-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+    padding: 15px 12px 15px 16px;
+    color: inherit;
+    text-decoration: none;
+}
+
+
+    .notification-link:hover {
+        color: inherit;
+    }
+
+
+/* ==========================================================
+   NOTIFICATION MEDIA
+   ========================================================== */
+
+.notification-media {
+    flex-shrink: 0;
+}
+
+
+.notification-image,
+.notification-icon-placeholder {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+
+.notification-image {
+    display: block;
+    object-fit: cover;
+    border: 1px solid #E5E7EB;
+}
+
+
+.notification-icon-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #EAF8E6;
+    color: #6FB965;
+}
+
+
+    .notification-icon-placeholder svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2;
+    }
+
+
+/* ==========================================================
+   NOTIFICATION CONTENT
+   ========================================================== */
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+
+.notification-title-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+}
+
+
+.notification-title {
+    margin: 0;
+    color: #2D3748;
+    font-size: .9rem;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.notification-unread-dot {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #8ACE79;
+}
+
+
+.notification-message {
+    display: -webkit-box;
+    margin: 4px 0 5px;
+    color: #68737D;
+    font-size: .8rem;
+    line-height: 1.45;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+
+.notification-date {
+    color: #9AA2A9;
+    font-size: .72rem;
+}
+
+
+/* ==========================================================
+   DELETE NOTIFICATION
+   ========================================================== */
+
+.delete-notification {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    align-self: center;
+    margin-right: 12px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important;
+    border-radius: 50%;
+    background: transparent;
+    color: #A0A7AE !important;
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity .2s ease, background-color .2s ease, color .2s ease;
+}
+
+
+.notification-item:hover
+.delete-notification {
+    opacity: 1;
+}
+
+
+.delete-notification:hover {
+    background: #FFF0F0 !important;
+    color: #D64545 !important;
+    opacity: 1;
+}
+
+
+.delete-notification svg {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* ==========================================================
+   EMPTY NOTIFICATIONS
+   ========================================================== */
+
+.notification-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 34px 20px;
+    text-align: center;
+}
+
+
+.notification-empty-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #F3FAF1;
+    color: #8ACE79;
+}
+
+
+    .notification-empty-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+
+.notification-empty-state h6 {
+    margin: 0;
+    color: #2D3748;
+    font-size: .9rem;
+    font-weight: 700;
+}
+
+
+.notification-empty-state p {
+    margin: 4px 0 0;
+    color: #8A949C;
+    font-size: .78rem;
+}
+
+
+/* ==========================================================
+   NOTIFICATION MOBILE
+   ========================================================== */
+
+@media (max-width: 576px) {
+
+    .notification-panel-header {
+        padding: 15px 16px 12px;
+    }
+
+
+    .notification-panel-list {
+        max-height: 60vh;
+    }
+
+
+    .notification-link {
+        gap: 10px;
+        padding: 13px 10px 13px 14px;
+    }
+
+
+    .notification-image,
+    .notification-icon-placeholder {
+        width: 42px;
+        height: 42px;
+    }
+
+
+    .notification-title {
+        font-size: .84rem;
+    }
+
+
+    .notification-message {
+        font-size: .76rem;
+    }
+
+
+    .delete-notification {
+        margin-right: 8px;
+        opacity: 1;
+    }
+}
+
+
+/* ==========================================================
+   FIX MOBILE NOTIFICATION DROPDOWN POSITION
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    .notification-dropdown {
+        position: fixed !important;
+        top: calc(var(--navbar-height) + 6px) !important;
+        left: 12px !important;
+        right: 12px !important;
+        width: auto !important;
+        max-width: none !important;
+        margin: 0 !important;
+        transform: none !important;
+        max-height: calc(100vh - var(--navbar-height) - 18px);
+        overflow-y: auto;
+        border-radius: 16px;
+        z-index: 1200 !important;
+    }
+}
+
+
+
+/* ==========================================================
+   NOTIFICATION HEADER WITH FILTER
+   ========================================================== */
+
+.notification-panel-header {
+    gap: 16px;
+}
+
+
+.notification-panel-heading {
+    min-width: 0;
+}
+
+
+.notification-filter {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+    padding: 3px;
+    border-radius: 999px;
+    background: #F1F3F2;
+}
+
+
+.notification-filter-button {
+    min-height: 28px;
+    padding: 5px 11px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: #718096;
+    font-size: .72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s ease, color .2s ease;
+}
+
+
+    .notification-filter-button:hover {
+        color: #4D8F45;
+    }
+
+
+    .notification-filter-button.active {
+        background: #FFFFFF;
+        color: #4D8F45;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+    }
+
+
+/* ==========================================================
+   NOTIFICATION PAGINATION
+   ========================================================== */
+
+.notification-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-top: 1px solid #EEF0F2;
+    background: #FFFFFF;
+}
+
+
+.notification-page-button {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #F3F5F4;
+    color: #68737D;
+    cursor: pointer;
+    transition: background-color .2s ease, color .2s ease;
+}
+
+
+    .notification-page-button:hover:not(:disabled) {
+        background: #F0F8EE;
+        color: #4D8F45;
+    }
+
+
+    .notification-page-button:disabled {
+        opacity: .35;
+        cursor: default;
+    }
+
+
+    .notification-page-button svg {
+        width: 16px;
+        height: 16px;
+    }
+
+
+.notification-page-info {
+    min-width: 90px;
+    color: #8A949C;
+    font-size: .72rem;
+    text-align: center;
+}
+
+
+/* ==========================================================
+   NOTIFICATION OVERLAY SYSTEM
+   ========================================================== */
+
+/*
+ * Darkens the page behind the notification panel.
+ *
+ * IMPORTANT:
+ * This sits BELOW the navbar.
+ * The navbar gets its own internal dark layer while
+ * notifications are open.
+ */
+.notification-screen-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1090;
+    background: rgba(15, 23, 20, 0.42);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .2s ease, visibility .2s ease;
+}
+
+
+    /*
+ * No blur.
+ * The darker transparent background is enough.
+ */
+    .notification-screen-backdrop.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+
+/* ==========================================================
+   DARKEN NAVBAR WHILE NOTIFICATIONS ARE OPEN
+   ========================================================== */
+
+.navbar-custom.notification-open {
+    z-index: 1100;
+}
+
+
+    /*
+ * Dark layer INSIDE the navbar.
+ *
+ * This covers:
+ * - logo
+ * - search
+ * - menu button
+ * - profile
+ *
+ * while the notification dropdown stays above it.
+ */
+    .navbar-custom.notification-open::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        background: rgba(15, 23, 20, 0.42);
+        pointer-events: auto;
+    }
+
+
+/* ==========================================================
+   NOTIFICATION HOST
+   ========================================================== */
+
+/*
+ * The notification dropdown's parent must sit above
+ * the navbar's internal dark layer.
+ */
+.navbar-custom .notification-dropdown-host {
+    position: relative;
+    z-index: 10;
+}
+
+
+/*
+ * Bell should remain visible while notifications are open.
+ */
+.navbar-custom.notification-open
+.notification-dropdown-host
+.navbar-icon-btn {
+    position: relative;
+    z-index: 11;
+}
+
+
+/* ==========================================================
+   NOTIFICATION DROPDOWN
+   ========================================================== */
+
+.notification-dropdown {
+    z-index: 20 !important;
+    background: #FFFFFF;
+}
+
+
+.notification-panel {
+    position: relative;
+    z-index: 1;
+    background: #FFFFFF;
+}
+
+
+/* ==========================================================
+   MOBILE / TABLET NOTIFICATION PANEL
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    /*
+     * The notification panel begins underneath the
+     * FIRST navbar row instead of below the search.
+     *
+     * This means it physically covers the search bar.
+     */
+    .notification-dropdown {
+        position: fixed !important;
+        top: 70px !important;
+        left: 12px !important;
+        right: 12px !important;
+        width: auto !important;
+        max-width: none !important;
+        margin: 0 !important;
+        transform: none !important;
+        max-height: calc(100vh - 82px);
+        overflow-y: auto;
+        border-radius: 16px;
+        z-index: 20 !important;
+        box-shadow: 0 14px 38px rgba(0, 0, 0, .18);
+    }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+   ========================================================== */
+
+@media (max-width: 480px) {
+
+    .notification-dropdown {
+        top: 66px !important;
+        left: 8px !important;
+        right: 8px !important;
+        max-height: calc(100vh - 74px);
+    }
+}
+
+

@@ -107,19 +107,36 @@
 
  
         <!-- SEARCH -->
-        <form method="get" class="marketplace-search">
+        <form asp-controller="Listings"
+              asp-action="Marketplace"
+              method="get"
+              class="marketplace-search">
+
+            <!-- Keep currently selected filters -->
+            <input type="hidden"
+                   name="listingType"
+                   value="@Context.Request.Query["listingType"]" />
+
+            <input type="hidden"
+                   name="petType"
+                   value="@Context.Request.Query["petType"]" />
+
+
             <div class="marketplace-search-wrapper">
 
                 <i data-lucide="search"
-                   class="marketplace-search-icon"></i>
+                   class="marketplace-search-icon">
+                </i>
 
                 <input type="text"
                        name="search"
+                       id="marketplaceSearchInput"
                        value="@Context.Request.Query["search"]"
                        class="marketplace-search-input"
-                       placeholder="Search listings..." />
-
+                       placeholder="Search listings..."
+                       autocomplete="off" />
             </div>
+
         </form>
 
 
@@ -356,7 +373,8 @@
              MARKETPLACE LISTING COUNT
         ====================================================== -->
 
-        <div class="marketplace-filter-count">
+       <div class="marketplace-filter-count"
+            id="marketplaceResultCount">
 
             <strong>
                 @listingCount
@@ -378,7 +396,8 @@
      MARKETPLACE LISTING CARDS
 ========================================================== -->
 
-<div class="row mt-4 marketplace-card-grid">
+<div class="row mt-4 marketplace-card-grid"
+     id="marketplaceResults">
 
     @foreach (var item in Model.Items)
     {
@@ -578,7 +597,9 @@ Kept as a comment so the original programmer
 
 </div>
 
-<partial name="_Pagination" model="Model" />
+<div id="marketplacePagination">
+    <partial name="_Pagination" model="Model" />
+</div>
 
 
 
@@ -695,8 +716,6 @@ else
 
 </div>
 
-
-
 @section Scripts {
 
     <script>
@@ -704,10 +723,211 @@ else
         document.addEventListener("DOMContentLoaded", function () {
 
             if (typeof lucide !== "undefined") {
-
                 lucide.createIcons();
-
             }
+
+
+            const searchInput =
+                document.getElementById("marketplaceSearchInput");
+
+            const resultsContainer =
+                document.getElementById("marketplaceResults");
+
+            const resultCount =
+                document.getElementById("marketplaceResultCount");
+
+            const pagination =
+                document.getElementById("marketplacePagination");
+
+
+            if (!searchInput || !resultsContainer) {
+                return;
+            }
+
+
+            let searchTimer;
+
+
+            searchInput.addEventListener("input", function () {
+
+                clearTimeout(searchTimer);
+
+                const searchValue =
+                    this.value.trim();
+
+
+                searchTimer = setTimeout(
+                    async function () {
+
+                        try {
+
+                            // -----------------------------------------
+                            // PRESERVE CURRENT FILTERS
+                            // -----------------------------------------
+
+                            const params =
+                                new URLSearchParams(
+                                    window.location.search
+                                );
+
+
+                            // Always go back to page 1 while searching.
+                            params.delete("page");
+
+
+                            if (searchValue) {
+
+                                params.set(
+                                    "search",
+                                    searchValue
+                                );
+
+                            }
+                            else {
+
+                                params.delete(
+                                    "search"
+                                );
+
+                            }
+
+
+                            const url =
+                                `${window.location.pathname}?${params.toString()}`;
+
+
+                            // -----------------------------------------
+                            // GET UPDATED MARKETPLACE PAGE
+                            // -----------------------------------------
+
+                            const response =
+                                await fetch(
+                                    url,
+                                    {
+                                        headers: {
+                                            "X-Requested-With":
+                                                "XMLHttpRequest"
+                                        }
+                                    }
+                                );
+
+
+                            if (!response.ok) {
+                                return;
+                            }
+
+
+                            const html =
+                                await response.text();
+
+
+                            // Convert returned HTML into a document.
+                            const parser =
+                                new DOMParser();
+
+
+                            const documentResult =
+                                parser.parseFromString(
+                                    html,
+                                    "text/html"
+                                );
+
+
+                            // -----------------------------------------
+                            // UPDATE CARDS
+                            // -----------------------------------------
+
+                            const newResults =
+                                documentResult.getElementById(
+                                    "marketplaceResults"
+                                );
+
+
+                            if (newResults) {
+
+                                resultsContainer.innerHTML =
+                                    newResults.innerHTML;
+
+                            }
+
+
+                            // -----------------------------------------
+                            // UPDATE COUNT
+                            // -----------------------------------------
+
+                            const newCount =
+                                documentResult.getElementById(
+                                    "marketplaceResultCount"
+                                );
+
+
+                            if (
+                                resultCount &&
+                                newCount
+                            ) {
+
+                                resultCount.innerHTML =
+                                    newCount.innerHTML;
+
+                            }
+
+
+                            // -----------------------------------------
+                            // UPDATE PAGINATION
+                            // -----------------------------------------
+
+                            const newPagination =
+                                documentResult.getElementById(
+                                    "marketplacePagination"
+                                );
+
+
+                            if (
+                                pagination &&
+                                newPagination
+                            ) {
+
+                                pagination.innerHTML =
+                                    newPagination.innerHTML;
+
+                            }
+
+
+                            // -----------------------------------------
+                            // RE-RENDER LUCIDE ICONS
+                            // -----------------------------------------
+
+                            if (window.lucide) {
+                                lucide.createIcons();
+                            }
+
+
+                            // -----------------------------------------
+                            // UPDATE BROWSER URL
+                            // WITHOUT RELOADING
+                            // -----------------------------------------
+
+                            window.history.replaceState(
+                                {},
+                                "",
+                                url
+                            );
+
+                        }
+                        catch (error) {
+
+                            console.error(
+                                "Marketplace search failed:",
+                                error
+                            );
+
+                        }
+
+                    },
+                    300
+                );
+
+            });
 
         });
 

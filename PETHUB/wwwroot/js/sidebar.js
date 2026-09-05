@@ -26,6 +26,213 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const sidebarWrapper = document.getElementById("sidebar-wrapper");
 
+    // ==========================================================
+    // DYNAMIC NAVBAR HEIGHT
+    // ==========================================================
+
+    function updateNavbarHeight() {
+
+        const navbar =
+            document.querySelector(".navbar-custom");
+
+
+        if (!navbar) {
+
+            document.body.style.setProperty(
+                "--navbar-height",
+                "0px"
+            );
+
+            return;
+        }
+
+
+        document.body.style.setProperty(
+            "--navbar-height",
+            `${navbar.offsetHeight}px`
+        );
+    }
+
+
+    updateNavbarHeight();
+
+
+    window.addEventListener(
+        "resize",
+        updateNavbarHeight
+    );
+
+
+
+    // ==========================================================
+    // CLOSE MOBILE SIDEBAR WHEN NAVBAR DROPDOWN OPENS
+    // ==========================================================
+
+    const mobileNavbarDropdownButtons =
+        document.querySelectorAll(
+            ".navbar-icon-btn[data-bs-toggle='dropdown'], " +
+            ".profile-button[data-bs-toggle='dropdown']"
+        );
+
+
+    function closeMobileSidebar() {
+
+        if (window.innerWidth > 768) {
+            return;
+        }
+
+
+        sidebarWrapper?.classList.remove(
+            "mobile-open"
+        );
+
+
+        const overlay =
+            document.getElementById(
+                "sidebarOverlay"
+            );
+
+
+        overlay?.classList.remove(
+            "open"
+        );
+    }
+
+
+    mobileNavbarDropdownButtons.forEach(
+        function (button) {
+
+            button.addEventListener(
+                "show.bs.dropdown",
+                function () {
+
+                    closeMobileSidebar();
+
+                }
+            );
+
+        }
+    );
+
+    // ==========================================================
+    // NOTIFICATION BACKDROP
+    // ==========================================================
+
+    const notificationButton =
+        document.querySelector(
+            ".navbar-icon-btn[data-bs-toggle='dropdown']"
+        );
+
+
+    const navbar =
+        document.querySelector(
+            ".navbar-custom"
+        );
+
+
+    let notificationBackdrop =
+        document.querySelector(
+            ".notification-screen-backdrop"
+        );
+
+
+    if (!notificationBackdrop) {
+
+        notificationBackdrop =
+            document.createElement("div");
+
+
+        notificationBackdrop.className =
+            "notification-screen-backdrop";
+
+
+        document.body.appendChild(
+            notificationBackdrop
+        );
+    }
+
+
+    /*
+     * Give the notification Bootstrap dropdown wrapper
+     * its own class so CSS can keep it above the
+     * navbar's dark overlay.
+     */
+    const notificationDropdownHost =
+        notificationButton?.closest(
+            ".dropdown"
+        );
+
+
+    notificationDropdownHost?.classList.add(
+        "notification-dropdown-host"
+    );
+
+
+    if (notificationButton) {
+
+        // ======================================================
+        // OPEN
+        // ======================================================
+
+        notificationButton.addEventListener(
+            "show.bs.dropdown",
+            function () {
+
+                notificationBackdrop.classList.add(
+                    "show"
+                );
+
+
+                navbar?.classList.add(
+                    "notification-open"
+                );
+
+            }
+        );
+
+
+        // ======================================================
+        // CLOSE
+        // ======================================================
+
+        notificationButton.addEventListener(
+            "hidden.bs.dropdown",
+            function () {
+
+                notificationBackdrop.classList.remove(
+                    "show"
+                );
+
+
+                navbar?.classList.remove(
+                    "notification-open"
+                );
+
+            }
+        );
+
+
+        // ======================================================
+        // CLICK DARK BACKGROUND TO CLOSE
+        // ======================================================
+
+        notificationBackdrop.addEventListener(
+            "click",
+            function () {
+
+                const dropdown =
+                    bootstrap.Dropdown.getOrCreateInstance(
+                        notificationButton
+                    );
+
+
+                dropdown.hide();
+
+            }
+        );
+
+    }
+
     // ==========================================
     // STORAGE KEYS
     // ==========================================

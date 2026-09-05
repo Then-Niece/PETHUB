@@ -105,11 +105,13 @@
                 <i data-lucide="search"
                    class="lost-found-search-icon"></i>
 
-                <input type="text"
-                       name="search"
-                       value="@Context.Request.Query["search"]"
-                       class="lost-found-search-input"
-                       placeholder="Search reports..." />
+            <input type="text"
+                   name="search"
+                   id="lostFoundSearchInput"
+                   value="@Context.Request.Query["search"]"
+                   class="lost-found-search-input"
+                   placeholder="Search reports..."
+                   autocomplete="off" />
 
             </div>
 
@@ -315,7 +317,8 @@
              REPORT COUNT
         ====================================================== -->
 
-        <div class="lost-found-filter-count">
+        <div class="lost-found-filter-count"
+             id="lostFoundResultCount">
 
             <strong>
                 @reportCount
@@ -376,7 +379,8 @@ else
 
 ========================================================== -->
 
-<div class="row mt-4 lost-found-card-grid">
+<div class="row mt-4 lost-found-card-grid"
+     id="lostFoundResults">
 
     @foreach (var item in Model.Items)
     {
@@ -618,7 +622,9 @@ ORIGINAL PROGRAMMER LOGIC PRESERVED.
 
 </div>
 
-<partial name="_Pagination" model="Model" />
+<div id="lostFoundPagination">
+    <partial name="_Pagination" model="Model" />
+</div>
 
 
 
@@ -736,26 +742,216 @@ KEPT AS YOUR ORIGINAL.
 
 </div>
 
-
-
 @section Scripts {
 
     <script>
 
         document.addEventListener("DOMContentLoaded", function () {
 
-            /*
-             * Lucide icon initialization.
-             *
-             * The reusable dropdown JavaScript continues
-             * to handle the filter dropdown behavior.
-             */
-
             if (typeof lucide !== "undefined") {
-
                 lucide.createIcons();
-
             }
+
+
+            const searchInput =
+                document.getElementById("lostFoundSearchInput");
+
+            const resultsContainer =
+                document.getElementById("lostFoundResults");
+
+            const resultCount =
+                document.getElementById("lostFoundResultCount");
+
+            const pagination =
+                document.getElementById("lostFoundPagination");
+
+
+            if (!searchInput || !resultsContainer) {
+                return;
+            }
+
+
+            let searchTimer;
+
+
+            searchInput.addEventListener("input", function () {
+
+                clearTimeout(searchTimer);
+
+                const searchValue =
+                    this.value.trim();
+
+
+                searchTimer = setTimeout(
+                    async function () {
+
+                        try {
+
+                            // -----------------------------------------
+                            // PRESERVE CURRENT FILTERS
+                            // -----------------------------------------
+
+                            const params =
+                                new URLSearchParams(
+                                    window.location.search
+                                );
+
+
+                            // Return to page 1 while searching.
+                            params.delete("page");
+
+
+                            if (searchValue) {
+
+                                params.set(
+                                    "search",
+                                    searchValue
+                                );
+
+                            }
+                            else {
+
+                                params.delete(
+                                    "search"
+                                );
+
+                            }
+
+
+                            const url =
+                                `${window.location.pathname}?${params.toString()}`;
+
+
+                            // -----------------------------------------
+                            // GET UPDATED LOST & FOUND PAGE
+                            // -----------------------------------------
+
+                            const response =
+                                await fetch(
+                                    url,
+                                    {
+                                        headers: {
+                                            "X-Requested-With":
+                                                "XMLHttpRequest"
+                                        }
+                                    }
+                                );
+
+
+                            if (!response.ok) {
+                                return;
+                            }
+
+
+                            const html =
+                                await response.text();
+
+
+                            const parser =
+                                new DOMParser();
+
+
+                            const documentResult =
+                                parser.parseFromString(
+                                    html,
+                                    "text/html"
+                                );
+
+
+                            // -----------------------------------------
+                            // UPDATE CARDS
+                            // -----------------------------------------
+
+                            const newResults =
+                                documentResult.getElementById(
+                                    "lostFoundResults"
+                                );
+
+
+                            if (newResults) {
+
+                                resultsContainer.innerHTML =
+                                    newResults.innerHTML;
+
+                            }
+
+
+                            // -----------------------------------------
+                            // UPDATE COUNT
+                            // -----------------------------------------
+
+                            const newCount =
+                                documentResult.getElementById(
+                                    "lostFoundResultCount"
+                                );
+
+
+                            if (
+                                resultCount &&
+                                newCount
+                            ) {
+
+                                resultCount.innerHTML =
+                                    newCount.innerHTML;
+
+                            }
+
+
+                            // -----------------------------------------
+                            // UPDATE PAGINATION
+                            // -----------------------------------------
+
+                            const newPagination =
+                                documentResult.getElementById(
+                                    "lostFoundPagination"
+                                );
+
+
+                            if (
+                                pagination &&
+                                newPagination
+                            ) {
+
+                                pagination.innerHTML =
+                                    newPagination.innerHTML;
+
+                            }
+
+
+                            // -----------------------------------------
+                            // RE-RENDER ICONS
+                            // -----------------------------------------
+
+                            if (window.lucide) {
+                                lucide.createIcons();
+                            }
+
+
+                            // -----------------------------------------
+                            // UPDATE URL WITHOUT RELOAD
+                            // -----------------------------------------
+
+                            window.history.replaceState(
+                                {},
+                                "",
+                                url
+                            );
+
+                        }
+                        catch (error) {
+
+                            console.error(
+                                "Lost & Found search failed:",
+                                error
+                            );
+
+                        }
+
+                    },
+                    300
+                );
+
+            });
 
         });
 

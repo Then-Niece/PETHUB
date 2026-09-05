@@ -164,9 +164,11 @@
                                     <i data-lucide="search"></i>
                                 </span>
 
-                                <input class="form-control"
+                               <input id="petFeedSearchInput"
+                                       class="form-control"
                                        type="text"
-                                       placeholder="Search PetHub..." />
+                                       placeholder="Search PetHub..."
+                                       autocomplete="off" />
 
                             </div>
                         </div>
@@ -301,10 +303,11 @@
                     <!-- Profile -->
                     <div class="dropdown">
 
-                        <button class="profile-button"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false">
+                    <button id="profileDropdownToggle"
+                            class="profile-button"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
 
                             <div class="profile-avatar">
 

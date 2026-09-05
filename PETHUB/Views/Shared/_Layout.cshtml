@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/navbar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/admin-dashboard.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/admin-member-crud.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/messages.css" asp-append-version="true" />
@@ -23,7 +24,6 @@
           asp-append-version="true" />
 
     <!-- PetFeed styles from both branches -->
-    <link rel="stylesheet" href="~/css/PetFeed.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/petfeed-cards.css" asp-append-version="true" />
 
     <!-- Profile / Logs / Gallery styles preserved from the other branch -->
@@ -103,8 +103,8 @@
            SIDEBAR
            ===================================================== *@
 
-        @if (!(ViewData["HideSidebar"] as bool? ?? false)
-            && User.Identity?.IsAuthenticated == true)
+        @if (User.Identity?.IsAuthenticated == true &&
+             !(ViewData["HideSidebar"] as bool? ?? false))
         {
             <div id="sidebar-wrapper">
 
@@ -122,7 +122,6 @@
                 </aside>
 
             </div>
-
 
             <div id="sidebarOverlay"
                  class="sidebar-overlay">
@@ -311,7 +310,23 @@
         // FORM SUBMISSION
         // =========================================================
 
-        document.addEventListener("submit", function () {
+       document.addEventListener("submit", function (event) {
+
+            const form = event.target;
+
+
+            // Forms below use AJAX/fetch and do not navigate.
+            // Therefore the page loader must not appear.
+            if (
+                form.id === "messageSendForm" ||
+                form.hasAttribute("data-paw-form") ||
+                form.hasAttribute("data-add-comment-form") ||
+                form.hasAttribute("data-delete-comment-form")
+            ) {
+                return;
+            }
+
+
             showLoader();
         });
 
@@ -327,7 +342,7 @@
     });
 </script>
 
-
+<div id="profileDropdownOverlay" class="profile-dropdown-overlay"></div>
 </body>
 
 </html>

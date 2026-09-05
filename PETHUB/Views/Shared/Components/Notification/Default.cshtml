@@ -2,133 +2,460 @@
 
 @Html.AntiForgeryToken()
 
-@if (!Model.Any())
-{
-    <div class="p-3 text-center text-muted">
-        No notifications yet.
+<div class="notification-panel">
+
+    <!-- ==========================================================
+         HEADER
+         ========================================================== -->
+
+    <div class="notification-panel-header">
+
+        <div class="notification-panel-heading">
+
+            <h6 class="notification-panel-title">
+                Notifications
+            </h6>
+
+            <p class="notification-panel-subtitle">
+                Recent activity in PetHub
+            </p>
+
+        </div>
+
+
+        <!-- FILTER -->
+
+        <div class="notification-filter">
+
+            <button type="button"
+                    class="notification-filter-button active"
+                    data-notification-filter="all">
+
+                All
+
+            </button>
+
+            <button type="button"
+                    class="notification-filter-button"
+                    data-notification-filter="unread">
+
+                Unread
+
+            </button>
+
+        </div>
+
     </div>
-}
-else
-{
-    foreach (var notification in Model)
-    {
-        <div class="notification-item @(notification.IsRead ? "" : "bg-light")"
-             data-notification-id="@notification.NotificationId">
-
-            <div class="d-flex gap-3 align-items-start">
-
-                @* IMAGE *@
-                @if (!string.IsNullOrEmpty(notification.ImagePath))
-                {
-                    <img src="@notification.ImagePath"
-                         class="rounded-circle flex-shrink-0"
-                         style="width:50px;
-                    height:50px;
-                    object-fit:cover;" />
-                }
-                else
-                {
-                    <div class="rounded-circle
-                        d-flex
-                        align-items-center
-                        justify-content-center
-                        flex-shrink-0"
-                         style="width:50px;
-                        height:50px;
-                        background:#EAF8E6;">
-
-                        <i data-lucide="bell"></i>
-
-                    </div>
-                }
 
 
-                @* CONTENT *@
-                <div class="flex-grow-1">
+    <!-- ==========================================================
+         LIST
+         ========================================================== -->
+
+    <div class="notification-panel-list"
+         id="notificationList">
+
+        @if (!Model.Any())
+        {
+            <div class="notification-empty-state"
+                 data-notification-empty>
+
+                <div class="notification-empty-icon">
+                    <i data-lucide="bell-off"></i>
+                </div>
+
+                <h6>
+                    No notifications yet
+                </h6>
+
+                <p>
+                    New activity will appear here.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            foreach (var notification in Model)
+            {
+                <div class="notification-item @(notification.IsRead ? "" : "unread")"
+                     data-notification-item
+                     data-is-read="@notification.IsRead.ToString().ToLower()"
+                     data-notification-id="@notification.NotificationId">
+
+                    <!-- LINK -->
 
                     <a href="@(notification.RedirectUrl ?? "#")"
-                       class="notification-link text-decoration-none text-dark"
+                       class="notification-link"
                        data-notification-id="@notification.NotificationId">
 
-                        <div class="d-flex align-items-center gap-2">
+                        <!-- IMAGE -->
 
-                            <h6 class="mb-1 fw-bold">
-                                @notification.Title
-                            </h6>
+                        <div class="notification-media">
 
-                            @if (!notification.IsRead)
+                            @if (!string.IsNullOrEmpty(notification.ImagePath))
                             {
-                                <span class="bg-primary rounded-circle"
-                                      style="
-                                    width:8px;
-                                    height:8px;
-                                    display:inline-block;"
-                                      title="Unread">
-                                </span>
+                                <img src="@notification.ImagePath"
+                                     class="notification-image"
+                                     alt="Notification image" />
+                            }
+                            else
+                            {
+                                <div class="notification-icon-placeholder">
+
+                                    <i data-lucide="bell"></i>
+
+                                </div>
                             }
 
                         </div>
 
-                        <p class="small text-muted mb-1">
-                            @notification.Message
-                        </p>
 
-                        <small class="text-muted">
-                            @notification.CreatedAt.ToString("MMM dd")
-                        </small>
+                        <!-- CONTENT -->
+
+                        <div class="notification-content">
+
+                            <div class="notification-title-row">
+
+                                <h6 class="notification-title">
+                                    @notification.Title
+                                </h6>
+
+                                @if (!notification.IsRead)
+                                {
+                                    <span class="notification-unread-dot"
+                                          title="Unread">
+                                    </span>
+                                }
+
+                            </div>
+
+
+                            <p class="notification-message">
+                                @notification.Message
+                            </p>
+
+
+                            <small class="notification-date">
+                                @notification.CreatedAt.ToString("MMM dd")
+                            </small>
+
+                        </div>
 
                     </a>
 
+
+                    <!-- DELETE -->
+
+                    <button type="button"
+                            class="delete-notification"
+                            data-notification-id="@notification.NotificationId"
+                            title="Delete notification"
+                            aria-label="Delete notification">
+
+                        <i data-lucide="trash-2"></i>
+
+                    </button>
+
                 </div>
+            }
+        }
+
+    </div>
 
 
-                @* DELETE BUTTON *@
-                <button type="button"
-                        class="delete-notification"
-                        data-notification-id="@notification.NotificationId"
-                        title="Delete notification">
+    <!-- ==========================================================
+         PAGINATION
+         ========================================================== -->
 
-                    <i data-lucide="trash-2"></i>
+    <div class="notification-pagination"
+         id="notificationPagination">
 
-                </button>
+        <button type="button"
+                class="notification-page-button"
+                id="notificationPreviousPage"
+                aria-label="Previous notifications">
 
-            </div>
+            <i data-lucide="chevron-left"></i>
 
-        </div>
-    }
-}
+        </button>
+
+
+        <span class="notification-page-info"
+              id="notificationPageInfo">
+        </span>
+
+
+        <button type="button"
+                class="notification-page-button"
+                id="notificationNextPage"
+                aria-label="Next notifications">
+
+            <i data-lucide="chevron-right"></i>
+
+        </button>
+
+    </div>
+
+</div>
 
 
 <script>
 
-    /*
-     * Get Anti-Forgery Token
-     */
-    
+    // ==========================================================
+    // NOTIFICATION STATE
+    // ==========================================================
+
+    const notificationPageSize = 10;
+
+    let notificationCurrentPage = 1;
+
+    let notificationCurrentFilter = "all";
+
+
+    // ==========================================================
+    // ANTI-FORGERY TOKEN
+    // ==========================================================
+
     function getAntiForgeryToken() {
 
-        const token = document.querySelector('input[name="__RequestVerificationToken"]');
+        const token =
+            document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
 
-        return token ? token.value : "";
+        return token
+            ? token.value
+            : "";
     }
 
 
-    /*
-     * UPDATE NOTIFICATION BADGE
-     */
+    // ==========================================================
+    // GET FILTERED NOTIFICATIONS
+    // ==========================================================
+
+    function getFilteredNotifications() {
+
+        const items =
+            Array.from(
+                document.querySelectorAll(
+                    "[data-notification-item]"
+                )
+            );
+
+
+        if (
+            notificationCurrentFilter ===
+            "unread"
+        ) {
+
+            return items.filter(
+                item =>
+                    item.dataset.isRead ===
+                    "false"
+            );
+        }
+
+
+        return items;
+    }
+
+
+    // ==========================================================
+    // RENDER PAGINATION
+    // ==========================================================
+
+    function renderNotifications() {
+
+        const allItems =
+            document.querySelectorAll(
+                "[data-notification-item]"
+            );
+
+
+        allItems.forEach(
+            item => {
+
+                item.style.display =
+                    "none";
+
+            }
+        );
+
+
+        const filteredItems =
+            getFilteredNotifications();
+
+
+        const totalPages =
+            Math.max(
+                1,
+                Math.ceil(
+                    filteredItems.length /
+                    notificationPageSize
+                )
+            );
+
+
+        if (
+            notificationCurrentPage >
+            totalPages
+        ) {
+
+            notificationCurrentPage =
+                totalPages;
+        }
+
+
+        const startIndex =
+            (
+                notificationCurrentPage -
+                1
+            )
+            *
+            notificationPageSize;
+
+
+        const endIndex =
+            startIndex +
+            notificationPageSize;
+
+
+        filteredItems
+            .slice(
+                startIndex,
+                endIndex
+            )
+            .forEach(
+                item => {
+
+                    item.style.display =
+                        "";
+
+                }
+            );
+
+
+        const pagination =
+            document.getElementById(
+                "notificationPagination"
+            );
+
+
+        const pageInfo =
+            document.getElementById(
+                "notificationPageInfo"
+            );
+
+
+        const previousButton =
+            document.getElementById(
+                "notificationPreviousPage"
+            );
+
+
+        const nextButton =
+            document.getElementById(
+                "notificationNextPage"
+            );
+
+
+        if (
+            filteredItems.length === 0
+        ) {
+
+            if (pageInfo) {
+
+                pageInfo.textContent =
+                    "No notifications";
+
+            }
+
+
+            if (previousButton) {
+
+                previousButton.disabled =
+                    true;
+
+            }
+
+
+            if (nextButton) {
+
+                nextButton.disabled =
+                    true;
+
+            }
+
+            return;
+        }
+
+
+        if (pageInfo) {
+
+            pageInfo.textContent =
+                `Page ${notificationCurrentPage} of ${totalPages}`;
+
+        }
+
+
+        if (previousButton) {
+
+            previousButton.disabled =
+                notificationCurrentPage <= 1;
+
+        }
+
+
+        if (nextButton) {
+
+            nextButton.disabled =
+                notificationCurrentPage >=
+                totalPages;
+
+        }
+
+
+        if (pagination) {
+
+            pagination.style.display =
+                filteredItems.length >
+                    notificationPageSize
+                    ? "flex"
+                    : "none";
+
+        }
+    }
+
+
+    // ==========================================================
+    // UPDATE BADGE
+    // ==========================================================
+
     async function updateNotificationBadge() {
 
         try {
 
-            const response = await fetch('/Notifications/GetUnreadNotificationCount');
+            const response =
+                await fetch(
+                    "/Notifications/GetUnreadNotificationCount"
+                );
+
 
             if (!response.ok) {
                 return;
             }
 
-            const count = await response.json();
 
-            const badge = document.getElementById("notificationBadge");
+            const count =
+                await response.json();
+
+
+            const badge =
+                document.getElementById(
+                    "notificationBadge"
+                );
+
 
             if (!badge) {
                 return;
@@ -137,16 +464,22 @@ else
 
             if (count > 0) {
 
-                badge.textContent = count > 99 ? "99+" : count;
+                badge.textContent =
+                    count > 99
+                        ? "99+"
+                        : count;
 
-                badge.style.display = "inline-block";
+                badge.style.display =
+                    "inline-block";
 
             }
             else {
 
-                badge.textContent = "";
+                badge.textContent =
+                    "";
 
-                badge.style.display = "none";
+                badge.style.display =
+                    "none";
 
             }
 
@@ -162,76 +495,151 @@ else
     }
 
 
-    /*
-     * SETUP NOTIFICATION BUTTONS
-     */
+    // ==========================================================
+    // FILTER BUTTONS
+    // ==========================================================
+
+   function setupNotificationFilters() {
+
+    const buttons =
+        document.querySelectorAll(
+            "[data-notification-filter]"
+        );
+
+
+    buttons.forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+
+                    notificationCurrentFilter =
+                        this.dataset.notificationFilter;
+
+
+                    notificationCurrentPage = 1;
+
+
+                    buttons.forEach(
+                        btn =>
+                            btn.classList.remove(
+                                "active"
+                            )
+                    );
+
+
+                    this.classList.add(
+                        "active"
+                    );
+
+
+                    renderNotifications();
+
+                }
+            );
+
+        }
+    );
+}
+
+
+    // ==========================================================
+    // PAGINATION BUTTONS
+    // ==========================================================
+
+   function setupNotificationPagination() {
+
+    const previousButton =
+        document.getElementById(
+            "notificationPreviousPage"
+        );
+
+
+    const nextButton =
+        document.getElementById(
+            "notificationNextPage"
+        );
+
+
+    previousButton?.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+
+            if (notificationCurrentPage > 1) {
+
+                notificationCurrentPage--;
+
+                renderNotifications();
+            }
+        }
+    );
+
+
+    nextButton?.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+
+            const filtered =
+                getFilteredNotifications();
+
+
+            const totalPages =
+                Math.ceil(
+                    filtered.length /
+                    notificationPageSize
+                );
+
+
+            if (
+                notificationCurrentPage <
+                totalPages
+            ) {
+
+                notificationCurrentPage++;
+
+                renderNotifications();
+            }
+        }
+    );
+}
+
+
+    // ==========================================================
+    // NOTIFICATION EVENTS
+    // ==========================================================
+
     function setupNotificationEvents() {
 
+        // ======================================================
+        // MARK AS READ
+        // ======================================================
 
-        /*
-         * MARK NOTIFICATION AS READ
-         */
-        document.querySelectorAll(".notification-link")
-            .forEach(function (link) {
+        document.querySelectorAll(
+            ".notification-link"
+        )
+        .forEach(
+            function (link) {
 
-                link.addEventListener("click", async function () {
-
-                    const notificationId = this.dataset.notificationId;
-
-                    const token = getAntiForgeryToken();
-
-
-                    try {
-
-                        await fetch(`/Notifications/MarkNotificationRead?id=${notificationId}`,
-                            {
-                                method: "POST",
-
-                                headers: {
-                                    "RequestVerificationToken": token
-                                }
-                            }
-                        );
-
-
-                        // Update badge immediately
-                        updateNotificationBadge();
-
-                    }
-                    catch (error) {
-
-                        console.error(
-                            "Could not mark notification as read:",
-                            error
-                        );
-
-                    }
-
-                });
-
-            });
-
-
-        /*
-         * DELETE NOTIFICATION
-         */
-        document.querySelectorAll(".delete-notification")
-            .forEach(function (button) {
-
-                button.addEventListener(
+                link.addEventListener(
                     "click",
-                    async function (event) {
-
-                        /*
-                         * Prevent the notification link
-                         * or dropdown from being triggered
-                         */
-                        event.preventDefault();
-                        event.stopPropagation();
-
+                    async function () {
 
                         const notificationId =
                             this.dataset.notificationId;
+
 
                         const token =
                             getAntiForgeryToken();
@@ -239,47 +647,127 @@ else
 
                         try {
 
-                            const response = await fetch(
-                                `/Notifications/DeleteNotification?id=${notificationId}`,
+                            await fetch(
+                                `/Notifications/MarkNotificationRead?id=${notificationId}`,
                                 {
-                                    method: "POST",
+                                    method:
+                                        "POST",
 
                                     headers: {
-                                        "RequestVerificationToken": token
+                                        "RequestVerificationToken":
+                                            token
                                     }
                                 }
                             );
 
 
-                            if (response.ok) {
-
-                                /*
-                                 * Remove notification
-                                 * from the screen
-                                 */
-                                const notification =
-                                    this.closest(
-                                        ".notification-item"
-                                    );
-
-                                if (notification) {
-                                    notification.remove();
-                                }
+                            const item =
+                                this.closest(
+                                    ".notification-item"
+                                );
 
 
-                                /*
-                                 * Update unread count
-                                 */
-                                updateNotificationBadge();
+                            if (item) {
+
+                                item.classList.remove(
+                                    "unread"
+                                );
+
+
+                                item.dataset.isRead =
+                                    "true";
+
+
+                                item.querySelector(
+                                    ".notification-unread-dot"
+                                )?.remove();
 
                             }
-                            else {
+
+
+                            updateNotificationBadge();
+
+                            renderNotifications();
+
+                        }
+                        catch (error) {
+
+                            console.error(
+                                "Could not mark notification as read:",
+                                error
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+        // ======================================================
+        // DELETE
+        // ======================================================
+
+        document.querySelectorAll(
+            ".delete-notification"
+        )
+        .forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    async function (event) {
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+
+                        const notificationId =
+                            this.dataset.notificationId;
+
+
+                        const token =
+                            getAntiForgeryToken();
+
+
+                        try {
+
+                            const response =
+                                await fetch(
+                                    `/Notifications/DeleteNotification?id=${notificationId}`,
+                                    {
+                                        method:
+                                            "POST",
+
+                                        headers: {
+                                            "RequestVerificationToken":
+                                                token
+                                        }
+                                    }
+                                );
+
+
+                            if (!response.ok) {
 
                                 console.error(
                                     "Could not delete notification."
                                 );
 
+                                return;
                             }
+
+
+                            this.closest(
+                                ".notification-item"
+                            )?.remove();
+
+
+                            updateNotificationBadge();
+
+                            renderNotifications();
 
                         }
                         catch (error) {
@@ -294,25 +782,56 @@ else
                     }
                 );
 
-            });
+            }
+        );
 
     }
 
 
-    /*
-     * PAGE LOAD
-     */
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
+    // ==========================================================
+    // INITIALIZE
+    // ==========================================================
 
-            // Load unread count
-            updateNotificationBadge();
+    function initializeNotifications() {
 
-            // Setup notification buttons
-            setupNotificationEvents();
+        setupNotificationEvents();
+
+        setupNotificationFilters();
+
+        setupNotificationPagination();
+
+        renderNotifications();
+
+        updateNotificationBadge();
+
+
+        if (
+            typeof lucide !==
+            "undefined"
+        ) {
+
+            lucide.createIcons();
 
         }
-    );
+
+    }
+
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeNotifications
+        );
+
+    }
+    else {
+
+        initializeNotifications();
+
+    }
 
 </script>
