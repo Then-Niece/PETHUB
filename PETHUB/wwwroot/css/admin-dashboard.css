@@ -1621,7 +1621,6 @@
         color: #4d8f45;
     }
 
-
 /* ==========================================================
    APPROVAL STATUS
 ========================================================== */
@@ -1630,15 +1629,30 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 82px;
+    gap: 7px;
+    min-width: 92px;
     min-height: 30px;
-    padding: 5px 14px;
+    padding: 5px 12px;
     border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.78rem;
+    font-weight: 600;
     line-height: 1.2;
     white-space: nowrap;
+    box-sizing: border-box;
 }
+
+
+    /* ==========================================================
+   STATUS DOT
+========================================================== */
+
+    .admin-lost-found-status::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        flex-shrink: 0;
+        border-radius: 50%;
+    }
 
 
 /* ==========================================================
@@ -1646,10 +1660,14 @@
 ========================================================== */
 
 .admin-lost-found-status-pending {
-    background-color: #fff8e8;
-    border: 1px solid #f0dca7;
-    color: #a66a00;
+    background-color: #fff7df;
+    border: none;
+    color: #b87900;
 }
+
+    .admin-lost-found-status-pending::before {
+        background-color: #e3a000;
+    }
 
 
 /* ==========================================================
@@ -1657,10 +1675,14 @@
 ========================================================== */
 
 .admin-lost-found-status-approved {
-    background-color: #eef8f0;
-    border: 1px solid #c9e4cf;
-    color: #3f8b50;
+    background-color: #eaf8e8;
+    border: none;
+    color: #3f9144;
 }
+
+    .admin-lost-found-status-approved::before {
+        background-color: #5baa55;
+    }
 
 
 /* ==========================================================
@@ -1669,10 +1691,13 @@
 
 .admin-lost-found-status-rejected {
     background-color: #fff0f0;
-    border: 1px solid #efcaca;
-    color: #b64242;
+    border: none;
+    color: #c44d4d;
 }
 
+    .admin-lost-found-status-rejected::before {
+        background-color: #d85c5c;
+    }
 
 /* ==========================================================
    RESPONSIVE — TABLET
@@ -2271,8 +2296,6 @@
         background-color: #f3f8f1;
         color: #4d8f45;
     }
-
-
 /* ==========================================================
    APPROVAL STATUS
 ========================================================== */
@@ -2281,15 +2304,30 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 82px;
+    gap: 7px;
+    min-width: 92px;
     min-height: 30px;
-    padding: 5px 14px;
+    padding: 5px 12px;
     border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.78rem;
+    font-weight: 600;
     line-height: 1.2;
     white-space: nowrap;
+    box-sizing: border-box;
 }
+
+
+    /* ==========================================================
+   STATUS DOT
+========================================================== */
+
+    .admin-marketplace-status::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        flex-shrink: 0;
+        border-radius: 50%;
+    }
 
 
 /* ==========================================================
@@ -2297,10 +2335,14 @@
 ========================================================== */
 
 .admin-marketplace-status-pending {
-    background-color: #fff8e8;
-    border: 1px solid #f0dca7;
-    color: #a66a00;
+    background-color: #fff7df;
+    border: none;
+    color: #b87900;
 }
+
+    .admin-marketplace-status-pending::before {
+        background-color: #e3a000;
+    }
 
 
 /* ==========================================================
@@ -2308,10 +2350,14 @@
 ========================================================== */
 
 .admin-marketplace-status-approved {
-    background-color: #eef8f0;
-    border: 1px solid #c9e4cf;
-    color: #3f8b50;
+    background-color: #eaf8e8;
+    border: none;
+    color: #3f9144;
 }
+
+    .admin-marketplace-status-approved::before {
+        background-color: #5baa55;
+    }
 
 
 /* ==========================================================
@@ -2320,10 +2366,13 @@
 
 .admin-marketplace-status-rejected {
     background-color: #fff0f0;
-    border: 1px solid #efcaca;
-    color: #b64242;
+    border: none;
+    color: #c44d4d;
 }
 
+    .admin-marketplace-status-rejected::before {
+        background-color: #d85c5c;
+    }
 
 /* ==========================================================
    RESPONSIVE — TABLET

@@ -644,8 +644,8 @@
 
 
             <!-- =================================================
-                 LISTING STATUS
-            ================================================== -->
+     LISTING STATUS
+================================================== -->
 
             <section class="listing-info-section">
 
@@ -658,58 +658,61 @@
                 </h3>
 
 
-                <div class="my-post-status">
+                <div class="listing-details-table">
 
+                    <div class="listing-details-row">
 
-                    @if (Model.Status == ListApprovalStatus.Pending)
-                    {
-                        <span class="my-post-status-badge pending">
+                        <div class="listing-details-label">
 
-                            Pending Approval
-
-                        </span>
-                    }
-                    else if (Model.Status == ListApprovalStatus.Rejected)
-                    {
-                        <span class="my-post-status-badge rejected">
-
-                            Rejected
-
-                        </span>
-                    }
-                    else if (Model.Status == ListApprovalStatus.Approved)
-                    {
-                        @if (Model.ListStatus == ListingStatus.Sold)
-                        {
-                            <span class="my-post-status-badge completed">
-
-                                Sold
-
+                            <span>
+                                Status
                             </span>
-                        }
-                        else if (Model.ListStatus == ListingStatus.Adopted)
-                        {
-                            <span class="my-post-status-badge completed">
 
-                                Adopted
+                        </div>
 
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="my-post-status-badge approved">
+                        <div class="listing-details-value">
 
-                                Approved
+                            @if (Model.Status == ListApprovalStatus.Pending)
+                            {
+                                <span class="my-post-status-badge pending">
+                                    Pending
+                                </span>
+                            }
+                            else if (Model.Status == ListApprovalStatus.Rejected)
+                            {
+                                <span class="my-post-status-badge rejected">
+                                    Rejected
+                                </span>
+                            }
+                            else if (Model.Status == ListApprovalStatus.Approved)
+                            {
+                                @if (Model.ListStatus == ListingStatus.Sold)
+                                {
+                                    <span class="my-post-status-badge completed">
+                                        Sold
+                                    </span>
+                                }
+                                else if (Model.ListStatus == ListingStatus.Adopted)
+                                {
+                                    <span class="my-post-status-badge completed">
+                                        Adopted
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="my-post-status-badge approved">
+                                        Approved
+                                    </span>
+                                }
+                            }
 
-                            </span>
-                        }
-                    }
+                        </div>
 
+                    </div>
 
                 </div>
 
             </section>
-
 
 
             <!-- ======================================================

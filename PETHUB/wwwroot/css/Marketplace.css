@@ -2386,7 +2386,6 @@
         stroke-width: 2;
     }
 
-
 /* ==========================================================
    LISTING STATUS
 ========================================================== */
@@ -2407,13 +2406,28 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 36px;
-    padding: 8px 16px;
+    gap: 7px;
+    min-height: 30px;
+    padding: 5px 12px;
     border-radius: 999px;
-    font-size: 0.9rem;
+    font-size: 0.78rem;
     font-weight: 600;
     line-height: 1.2;
+    white-space: nowrap;
 }
+
+
+    /* ==========================================================
+   STATUS DOT
+========================================================== */
+
+    .my-post-status-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        flex-shrink: 0;
+        border-radius: 50%;
+    }
 
 
     /* ==========================================================
@@ -2421,10 +2435,14 @@
 ========================================================== */
 
     .my-post-status-badge.pending {
-        color: #8A6814;
-        background: #FFF8DF;
-        border: 1px solid #F1DEA0;
+        color: #B87900;
+        background: #FFF7DF;
+        border: none;
     }
+
+        .my-post-status-badge.pending::before {
+            background: #E3A000;
+        }
 
 
     /* ==========================================================
@@ -2432,10 +2450,14 @@
 ========================================================== */
 
     .my-post-status-badge.rejected {
-        color: #A33A3A;
+        color: #C44D4D;
         background: #FFF0F0;
-        border: 1px solid #F0C7C7;
+        border: none;
     }
+
+        .my-post-status-badge.rejected::before {
+            background: #D85C5C;
+        }
 
 
     /* ==========================================================
@@ -2443,10 +2465,29 @@
 ========================================================== */
 
     .my-post-status-badge.approved {
-        color: #4D8E45;
-        background: #F1F8EF;
-        border: 1px solid #D5EBD0;
+        color: #3F9144;
+        background: #EAF8E8;
+        border: none;
     }
+
+        .my-post-status-badge.approved::before {
+            background: #5BAA55;
+        }
+
+
+    /* ==========================================================
+   COMPLETED — SOLD / ADOPTED
+========================================================== */
+
+    .my-post-status-badge.completed {
+        color: #3F9144;
+        background: #EAF8E8;
+        border: none;
+    }
+
+        .my-post-status-badge.completed::before {
+            background: #5BAA55;
+        }
 
 
     /* ==========================================================
@@ -3978,6 +4019,7 @@
     padding-bottom: 24px;
     margin-bottom: 32px;
     border-bottom: 1px solid #e8e8e8;
+
 }
 
 .admin-review-header-content {
@@ -3986,19 +4028,18 @@
 
 .admin-review-header h1 {
     margin: 0;
-    color: #172033;
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.2;
+    color: #172b4d;
 }
 
 .admin-review-header p {
-    margin: 7px 0 0;
-    color: #737987;
+    margin: 6px 0 0;
     font-size: 0.95rem;
-    line-height: 1.5;
+    font-weight: 400;
+    color: #52627a;
 }
-
 
 /* ==========================================================
    STATUS
@@ -4011,35 +4052,39 @@
 .admin-status-badge {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
+    gap: 7px;
+    min-height: 30px;
+    padding: 5px 12px;
     border-radius: 999px;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    box-sizing: border-box;
 }
 
     .admin-status-badge.pending {
-        background: #fff4d6;
-        color: #a66b00;
+        background: #fff7df;
+        color: #b87900;
     }
 
     .admin-status-badge.approved {
-        background: #e8f6e5;
-        color: #4f9147;
+        background: #eaf8e8;
+        color: #3f9144;
     }
 
     .admin-status-badge.rejected {
-        background: #fde8e8;
-        color: #b42318;
+        background: #fff0f0;
+        color: #c44d4d;
     }
 
 .status-dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
     border-radius: 50%;
     background: currentColor;
 }
-
 
 /* ==========================================================
    TWO COLUMN LAYOUT
