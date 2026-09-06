@@ -461,20 +461,20 @@
     font-size: .92rem;
 }
 
-        
+
     #StreetAddress::placeholder {
         color: #9CA3AF;
         opacity: 1;
     }
 
-    
+
     #Province:has(option:checked[value=""]),
     #City:has(option:checked[value=""]),
     #Barangay:has(option:checked[value=""]) {
         color: #9CA3AF;
     }
 
-    
+
     #Province option,
     #City option,
     #Barangay option {
@@ -2386,6 +2386,7 @@
         stroke-width: 2;
     }
 
+
 /* ==========================================================
    LISTING STATUS
 ========================================================== */
@@ -2406,28 +2407,13 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
-    min-height: 30px;
-    padding: 5px 12px;
+    min-height: 36px;
+    padding: 8px 16px;
     border-radius: 999px;
-    font-size: 0.78rem;
+    font-size: 0.9rem;
     font-weight: 600;
     line-height: 1.2;
-    white-space: nowrap;
 }
-
-
-    /* ==========================================================
-   STATUS DOT
-========================================================== */
-
-    .my-post-status-badge::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        flex-shrink: 0;
-        border-radius: 50%;
-    }
 
 
     /* ==========================================================
@@ -2435,14 +2421,10 @@
 ========================================================== */
 
     .my-post-status-badge.pending {
-        color: #B87900;
-        background: #FFF7DF;
-        border: none;
+        color: #8A6814;
+        background: #FFF8DF;
+        border: 1px solid #F1DEA0;
     }
-
-        .my-post-status-badge.pending::before {
-            background: #E3A000;
-        }
 
 
     /* ==========================================================
@@ -2450,14 +2432,10 @@
 ========================================================== */
 
     .my-post-status-badge.rejected {
-        color: #C44D4D;
+        color: #A33A3A;
         background: #FFF0F0;
-        border: none;
+        border: 1px solid #F0C7C7;
     }
-
-        .my-post-status-badge.rejected::before {
-            background: #D85C5C;
-        }
 
 
     /* ==========================================================
@@ -2465,29 +2443,10 @@
 ========================================================== */
 
     .my-post-status-badge.approved {
-        color: #3F9144;
-        background: #EAF8E8;
-        border: none;
+        color: #4D8E45;
+        background: #F1F8EF;
+        border: 1px solid #D5EBD0;
     }
-
-        .my-post-status-badge.approved::before {
-            background: #5BAA55;
-        }
-
-
-    /* ==========================================================
-   COMPLETED — SOLD / ADOPTED
-========================================================== */
-
-    .my-post-status-badge.completed {
-        color: #3F9144;
-        background: #EAF8E8;
-        border: none;
-    }
-
-        .my-post-status-badge.completed::before {
-            background: #5BAA55;
-        }
 
 
     /* ==========================================================
@@ -2825,9 +2784,6 @@
     .listing-contact-number {
         font-size: 1rem;
     }
-
-
-    
 }
 
 
@@ -3926,7 +3882,6 @@
         background-color: #F3F4F6;
         border-color: #D1D5DB;
         color: #374151;
-        
     }
 
 /* ==========================================================
@@ -4019,7 +3974,6 @@
     padding-bottom: 24px;
     margin-bottom: 32px;
     border-bottom: 1px solid #e8e8e8;
-
 }
 
 .admin-review-header-content {
@@ -4028,18 +3982,19 @@
 
 .admin-review-header h1 {
     margin: 0;
+    color: #172033;
     font-size: 2rem;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.2;
-    color: #172b4d;
 }
 
 .admin-review-header p {
-    margin: 6px 0 0;
+    margin: 7px 0 0;
+    color: #737987;
     font-size: 0.95rem;
-    font-weight: 400;
-    color: #52627a;
+    line-height: 1.5;
 }
+
 
 /* ==========================================================
    STATUS
@@ -4052,39 +4007,35 @@
 .admin-status-badge {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    min-height: 30px;
-    padding: 5px 12px;
+    gap: 8px;
+    padding: 8px 14px;
     border-radius: 999px;
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    line-height: 1.2;
-    white-space: nowrap;
-    box-sizing: border-box;
 }
 
     .admin-status-badge.pending {
-        background: #fff7df;
-        color: #b87900;
+        background: #fff4d6;
+        color: #a66b00;
     }
 
     .admin-status-badge.approved {
-        background: #eaf8e8;
-        color: #3f9144;
+        background: #e8f6e5;
+        color: #4f9147;
     }
 
     .admin-status-badge.rejected {
-        background: #fff0f0;
-        color: #c44d4d;
+        background: #fde8e8;
+        color: #b42318;
     }
 
 .status-dot {
-    width: 6px;
-    height: 6px;
-    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: currentColor;
 }
+
 
 /* ==========================================================
    TWO COLUMN LAYOUT
@@ -6173,3 +6124,308 @@
         }
 }
 
+
+
+/* ==========================================================
+   FINAL MARKETPLACE BROWSE CARD GRID RESPONSIVE OVERRIDE
+   Matches the Lost & Found card-grid behavior.
+   Only controls Marketplace Browse card positioning/layout.
+========================================================== */
+
+/* ==========================================================
+   CARD GRID BASE
+========================================================== */
+
+.marketplace-card-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 280px);
+    justify-content: space-between;
+    width: 100%;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+    column-gap: 20px;
+    row-gap: 20px;
+    box-sizing: border-box;
+}
+
+    /* ==========================================================
+   CARD GRID COLUMN RESET
+   Prevents Bootstrap .col-md-3 from changing card position.
+========================================================== */
+
+    .marketplace-card-grid > .col-md-3 {
+        width: 280px !important;
+        max-width: 280px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        flex: none !important;
+        min-width: 0 !important;
+    }
+
+/* ==========================================================
+   DESKTOP - SIDEBAR COLLAPSED
+   Shows 4 cards per row.
+========================================================== */
+
+@media (min-width: 992px) {
+
+    #sidebar-wrapper.collapsed ~ #mainContent .marketplace-card-grid {
+        grid-template-columns: repeat(4, 280px) !important;
+        justify-content: space-between !important;
+        column-gap: 20px !important;
+        row-gap: 20px !important;
+    }
+
+        #sidebar-wrapper.collapsed ~ #mainContent .marketplace-card-grid > .col-md-3 {
+            width: 280px !important;
+            max-width: 280px !important;
+        }
+
+    /* ==========================================================
+       DESKTOP - SIDEBAR EXPANDED
+       Shows 3 cards per row.
+    ========================================================== */
+
+    #sidebar-wrapper:not(.collapsed) ~ #mainContent .marketplace-card-grid {
+        grid-template-columns: repeat(3, 280px) !important;
+        justify-content: center !important;
+        column-gap: 40px !important;
+        row-gap: 40px !important;
+    }
+
+        #sidebar-wrapper:not(.collapsed) ~ #mainContent .marketplace-card-grid > .col-md-3 {
+            width: 280px !important;
+            max-width: 280px !important;
+        }
+}
+
+/* ==========================================================
+   TABLET
+   Shows 2 cards per row.
+========================================================== */
+
+@media (max-width: 991px) and (min-width: 768px) {
+
+    #mainContent .marketplace-card-grid {
+        grid-template-columns: repeat(2, 280px) !important;
+        justify-content: center !important;
+        column-gap: 24px !important;
+        row-gap: 20px !important;
+    }
+
+        #mainContent .marketplace-card-grid > .col-md-3 {
+            width: 280px !important;
+            max-width: 280px !important;
+        }
+}
+
+/* ==========================================================
+   MOBILE
+   Matches Lost & Found: 2 cards per row.
+========================================================== */
+
+@media (max-width: 767px) {
+
+    #mainContent .marketplace-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        justify-content: center !important;
+        column-gap: 12px !important;
+        row-gap: 20px !important;
+        width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+        #mainContent .marketplace-card-grid > .col-md-3 {
+            width: auto !important;
+            max-width: none !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+}
+
+/* ==========================================================
+   SMALL MOBILE
+   Matches Lost & Found: tighter 2-card spacing.
+========================================================== */
+
+@media (max-width: 480px) {
+
+    #mainContent .marketplace-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        column-gap: 10px !important;
+        row-gap: 18px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+        #mainContent .marketplace-card-grid > .col-md-3 {
+            width: auto !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+}
+
+/* ==========================================================
+   MARKETPLACE ADDRESS FIELDS
+   Match Province / City / Barangay / Street Address
+   with the same size as the other form fields.
+========================================================== */
+
+#listingForm .pethub-select-trigger,
+#listingForm #StreetAddress {
+    width: 100%;
+    height: 44px !important;
+    min-height: 44px !important;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================================
+   STREET ADDRESS
+========================================================== */
+
+#listingForm #StreetAddress {
+    padding: 0 12px !important;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+    background: #FFFFFF;
+    color: #374151;
+    font-size: .92rem;
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   ADDRESS SELECT TRIGGERS
+========================================================== */
+
+#listingForm .pethub-select-trigger {
+    padding: 0 12px !important;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================================
+   STREET ADDRESS PLACEHOLDER
+========================================================== */
+
+#listingForm #StreetAddress::placeholder {
+    color: #9CA3AF;
+    opacity: 1;
+}
+
+
+/* ==========================================================
+   STREET ADDRESS FOCUS
+========================================================== */
+
+#listingForm #StreetAddress:focus {
+    border-color: #8ACE79;
+    box-shadow: 0 0 0 .18rem rgba(138, 206, 121, .15);
+    outline: none;
+}
+
+/* ==========================================================
+   MARKETPLACE ADDRESS FIELDS
+   Match Province / City / Barangay / Street Address
+   with the same size as the other form fields.
+========================================================== */
+
+#listingForm .pethub-select-trigger,
+#listingForm #StreetAddress {
+    width: 100%;
+    height: 44px !important;
+    min-height: 44px !important;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================================
+   STREET ADDRESS
+========================================================== */
+
+#listingForm #StreetAddress {
+    padding: 0 12px !important;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+    background: #FFFFFF;
+    color: #374151;
+    font-size: .92rem;
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   ADDRESS SELECT TRIGGERS
+========================================================== */
+
+#listingForm .pethub-select-trigger {
+    padding: 0 12px !important;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================================
+   STREET ADDRESS PLACEHOLDER
+========================================================== */
+
+#listingForm #StreetAddress::placeholder {
+    color: #9CA3AF;
+    opacity: 1;
+}
+
+
+/* ==========================================================
+   STREET ADDRESS FOCUS
+========================================================== */
+
+#listingForm #StreetAddress:focus {
+    border-color: #8ACE79;
+    box-shadow: 0 0 0 .18rem rgba(138, 206, 121, .15);
+    outline: none;
+}
+
+
+/* MARKETPLACE EDIT ADDRESS FIELDS */
+#editListingForm .pethub-select-trigger,
+#editListingForm #StreetAddress {
+    width: 100%;
+    height: 44px !important;
+    min-height: 44px !important;
+    box-sizing: border-box;
+}
+
+#editListingForm #StreetAddress {
+    padding: 0 12px !important;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+    background: #FFFFFF;
+    color: #374151;
+    font-size: .92rem;
+    line-height: 1.5;
+}
+
+#editListingForm .pethub-select-trigger {
+    padding: 0 12px !important;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+#editListingForm #StreetAddress::placeholder {
+    color: #9CA3AF;
+    opacity: 1;
+}
+
+#editListingForm #StreetAddress:focus {
+    border-color: #8ACE79;
+    box-shadow: 0 0 0 .18rem rgba(138, 206, 121, .15);
+    outline: none;
+}

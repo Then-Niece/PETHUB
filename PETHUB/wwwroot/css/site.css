@@ -2944,67 +2944,121 @@ a {
     font-weight: 500;
 }
 
-
-
 /* =========================================================
-   PUBLIC LAYOUT
-   Keeps public pages below the navbar
+   FOOTER
 ========================================================= */
 
-.public-main {
-    padding-top: 72px;
-}
-
-/* =========================================================
-   TERMS & CONDITIONS MODAL
-   Keep modal below the fixed public navbar
-========================================================= */
-
-/*
-   Only affect the Bootstrap modal that contains .terms-modal.
-   Other modals are untouched.
-*/
-.modal:has(.terms-modal) {
-    padding-top: 72px !important;
+.landing-footer {
+    width: 100%;
+    margin-top: 0;
+    padding: 24px 0;
+    background: #ffffff;
+    border-top: 1px solid #e8ece9;
 }
 
 
-    /* Modal dialog uses only the viewport space below navbar */
-    .modal:has(.terms-modal) .modal-dialog {
+.landing-footer-content {
+    width: 100%;
+    margin: 0;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   FOOTER BRAND
+========================================================= */
+
+.landing-footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+
+.landing-footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #273142;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+
+    .landing-footer-logo img {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        display: block;
+        object-fit: contain;
+    }
+
+
+.landing-footer-brand p {
+    margin: 0;
+    color: #7b8490;
+    font-size: .82rem;
+}
+
+
+/* =========================================================
+   FOOTER COPYRIGHT
+========================================================= */
+
+.landing-footer-copyright {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #7b8490;
+    font-size: .78rem;
+    white-space: nowrap;
+}
+
+
+.landing-footer-separator {
+    color: #b3b9be;
+}
+
+
+/* =========================================================
+   FOOTER - MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .landing-footer {
+        padding: 20px 0;
+    }
+
+
+    .landing-footer-content {
         width: calc(100% - 32px);
-        max-width: 760px;
-        height: calc(100vh - 104px);
-        margin: 16px auto !important;
-        display: flex;
-        align-items: stretch;
-    }
-
-
-    /* Actual terms modal */
-    .modal:has(.terms-modal) .terms-modal {
-        width: 100%;
-        max-height: 100%;
-        display: flex;
         flex-direction: column;
-        overflow: hidden;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-align: center;
     }
 
 
-    /* Header stays visible */
-    .modal:has(.terms-modal) .terms-modal-header {
-        flex-shrink: 0;
+    .landing-footer-brand {
+        flex-direction: column;
+        gap: 7px;
     }
 
 
-    /* Only the terms text scrolls */
-    .modal:has(.terms-modal) .terms-modal-body {
-        flex: 1 1 auto;
-        min-height: 0;
-        overflow-y: auto;
+    .landing-footer-logo img {
+        width: 34px;
+        height: 34px;
     }
 
 
-    /* Footer / I Understand button stays visible */
-    .modal:has(.terms-modal) .terms-modal-footer {
-        flex-shrink: 0;
+    .landing-footer-copyright {
+        justify-content: center;
+        flex-wrap: wrap;
     }
+}

@@ -3112,3 +3112,381 @@
         font-size: 9px;
     }
 }
+
+
+/* ==========================================================
+   REJECT APPEAL MODAL
+=========================================================== */
+
+#rejectAppealModal {
+    z-index: 2000;
+}
+
+    #rejectAppealModal .admin-report-reject-dialog {
+        width: 100%;
+        max-width: 560px;
+        height: 440px;
+        max-height: calc(100vh - 105px);
+        /* Keep the modal below the navbar */
+        margin: 95px auto 15px !important;
+        min-height: 0;
+        display: flex;
+        align-items: stretch;
+    }
+
+
+    /* ==========================================================
+   REJECT APPEAL MODAL CONTENT
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-modal {
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        padding: 0;
+        background: #ffffff;
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.14);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+
+    /* ==========================================================
+   REJECT APPEAL HEADER
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-header {
+        flex: 0 0 auto;
+        padding: 20px 22px 16px;
+        background: #ffffff;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    #rejectAppealModal .admin-report-reject-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        /* ==========================================================
+   REJECT APPEAL ICON
+=========================================================== */
+
+        #rejectAppealModal .admin-report-reject-title svg {
+            width: 23px !important;
+            height: 23px !important;
+            flex-shrink: 0;
+            color: #c44d4d !important;
+            stroke: #c44d4d !important;
+            stroke-width: 2.3;
+            margin: 0;
+        }
+
+
+        #rejectAppealModal .admin-report-reject-title h2 {
+            margin: 0;
+            color: #c44d4d !important;
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+
+
+    #rejectAppealModal .admin-report-reject-subtitle {
+        margin: 6px 0 0 30px;
+        color: #888888;
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+
+    /* ==========================================================
+   REJECT APPEAL BODY
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 18px 22px 0;
+        background: #ffffff;
+        box-sizing: border-box;
+    }
+
+
+    /* ==========================================================
+   REJECT APPEAL SUMMARY
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-summary {
+        width: 100%;
+        margin-bottom: 18px;
+        padding: 14px 15px;
+        background: #fafafa;
+        border: 1px solid #e8e8e8;
+        border-radius: 12px;
+        box-sizing: border-box;
+    }
+
+
+    /* ==========================================================
+   REJECT APPEAL FIELDS
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-field {
+        width: 100%;
+    }
+
+        #rejectAppealModal .admin-report-reject-field + .admin-report-reject-field {
+            margin-top: 13px;
+        }
+
+    #rejectAppealModal .admin-report-reject-label {
+        display: block;
+        margin-bottom: 5px;
+        color: #777777;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    #rejectAppealModal .admin-report-reject-value {
+        color: #333333;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1.5;
+        word-break: break-word;
+    }
+
+    #rejectAppealModal .admin-report-reject-muted {
+        color: #999999;
+        font-weight: 400;
+    }
+
+
+    /* ==========================================================
+   REJECT APPEAL FORM
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-form {
+        width: 100%;
+        margin: 0;
+    }
+
+
+    /* ==========================================================
+   REJECT APPEAL INPUT
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-input-group {
+        width: 100%;
+    }
+
+    #rejectAppealModal .admin-report-reject-input-label {
+        display: block;
+        margin-bottom: 7px;
+        color: #333333;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+
+    /* ==========================================================
+   REJECT APPEAL TEXTAREA
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-textarea {
+        display: block;
+        width: 100%;
+        min-height: 105px;
+        padding: 10px 12px;
+        background: #ffffff;
+        border: 1px solid #dcdcdc;
+        border-radius: 10px;
+        color: #333333;
+        font-family: inherit;
+        font-size: 13px;
+        line-height: 1.5;
+        resize: vertical;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        #rejectAppealModal .admin-report-reject-textarea::placeholder {
+            color: #aaaaaa;
+        }
+
+        #rejectAppealModal .admin-report-reject-textarea:focus {
+            border-color: #c44d4d;
+            box-shadow: 0 0 0 3px rgba(196, 77, 77, 0.10);
+        }
+
+
+    /* ==========================================================
+   REJECT APPEAL HELP TEXT
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-help {
+        display: block;
+        margin-top: 7px;
+        color: #888888;
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+
+    /* ==========================================================
+   REJECT APPEAL ACTIONS
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        margin: 18px -22px 0;
+        padding: 12px 22px 18px;
+        background: #ffffff;
+        border-top: 1px solid #eeeeee;
+    }
+
+
+    /* ==========================================================
+   REJECT APPEAL CANCEL
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-cancel {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 36px;
+        padding: 7px 18px;
+        background: #ffffff;
+        border: 1px solid #d8d8d8;
+        border-radius: 999px;
+        color: #555555;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.2;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+        #rejectAppealModal .admin-report-reject-cancel:hover {
+            background: #f7f7f7;
+            border-color: #cccccc;
+            color: #444444;
+        }
+
+
+    /* ==========================================================
+   REJECT APPEAL SUBMIT
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 36px;
+        padding: 7px 18px;
+        background: #c44d4d;
+        border: 1px solid #c44d4d;
+        border-radius: 999px;
+        color: #ffffff;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.2;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+        #rejectAppealModal .admin-report-reject-submit:hover {
+            background: #b54141;
+            border-color: #b54141;
+        }
+
+
+    /* ==========================================================
+   REJECT APPEAL SCROLLBAR
+=========================================================== */
+
+    #rejectAppealModal .admin-report-reject-body::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #rejectAppealModal .admin-report-reject-body::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    #rejectAppealModal .admin-report-reject-body::-webkit-scrollbar-thumb {
+        background: #d6d6d6;
+        border-radius: 999px;
+    }
+
+        #rejectAppealModal .admin-report-reject-body::-webkit-scrollbar-thumb:hover {
+            background: #c2c2c2;
+        }
+
+
+
+
+/* ==========================================================
+   REJECT APPEAL RESPONSIVE
+=========================================================== */
+
+@media (max-width: 576px) {
+
+    #rejectAppealModal .admin-report-reject-dialog {
+        max-width: calc(100% - 24px);
+        height: 440px;
+        max-height: calc(100vh - 90px);
+        margin: 85px auto 12px !important;
+    }
+
+    #rejectAppealModal .admin-report-reject-modal {
+        border-radius: 18px;
+    }
+
+    #rejectAppealModal .admin-report-reject-header {
+        padding: 18px 18px 14px;
+    }
+
+    #rejectAppealModal .admin-report-reject-title h2 {
+        font-size: 18px;
+    }
+
+    #rejectAppealModal .admin-report-reject-subtitle {
+        margin-left: 30px;
+    }
+
+    #rejectAppealModal .admin-report-reject-body {
+        padding: 16px 18px 0;
+    }
+
+    #rejectAppealModal .admin-report-reject-summary {
+        padding: 13px 14px;
+    }
+
+    #rejectAppealModal .admin-report-reject-actions {
+        margin-left: -18px;
+        margin-right: -18px;
+        padding: 12px 18px 16px;
+    }
+
+    #rejectAppealModal .admin-report-reject-cancel,
+    #rejectAppealModal .admin-report-reject-submit {
+        min-height: 36px;
+        padding: 7px 15px;
+    }
+}
