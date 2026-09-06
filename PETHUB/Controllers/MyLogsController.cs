@@ -26,16 +26,20 @@ namespace PETHUB.Controllers
             _userManager = userManager;
             _context = context;
         }
-
-        // Displays activity logs based on the role of the currently authenticated user.
-        // Members see only their own logs, while Admins see all Admin activity.
         [HttpGet]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(
+    string? search,
+    string? category,
+    string? month,
+    int page = 1)
         {
-            // Retrieves the currently authenticated ApplicationUser.
-            var user = await _userManager.GetUserAsync(User);
+            // =========================================================
+            // CURRENT USER
+            // =========================================================
 
-            // Stop if the authenticated user cannot be found.
+            var user =
+                await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 return Unauthorized();
@@ -43,7 +47,7 @@ namespace PETHUB.Controllers
 
 
             // =========================================================
-            // PAGINATION SETTINGS
+            // PAGINATION
             // =========================================================
 
             const int pageSize = 25;
@@ -54,94 +58,321 @@ namespace PETHUB.Controllers
             }
 
 
+            // Clean filter values.
+            search = search?.Trim();
+            category = category?.Trim();
+            month = month?.Trim();
+
+
             // =========================================================
-            // ADMIN LOGS
+            // SAVE CURRENT FILTERS FOR THE VIEW
             // =========================================================
 
+            ViewBag.Search = search;
+            ViewBag.Category = category;
+            ViewBag.Month = month;
+
+
+            // =========================================================
+            // BASE QUERY
+            // =========================================================
+
+            IQueryable<AuditLog> query =
+                _context.AuditLogs;
+
+
+            // Admin sees all Admin logs.
             if (User.IsInRole("Admin"))
             {
-                // Retrieves all logs created by Admin accounts.
-                // The newest activity appears first.
-                var query = _context.AuditLogs
-                    .Where(log => log.Role == "Admin")
-                    .OrderByDescending(log => log.CreatedAt);
+                query =
+                    query.Where(log =>
+                        log.Role == "Admin");
+            }
+            else
+            {
+                // Members only see their own logs.
+                query =
+                    query.Where(log =>
+                        log.UserId == user.Id);
+            }
 
 
-                // Total number of Admin logs.
-                var totalItems = await query.CountAsync();
+            // =========================================================
+            // SEARCH
+            //
+            // Admin:
+            // - Admin first name
+            // - Admin middle name
+            // - Admin last name
+            // - Action
+            //
+            // Member:
+            // - Action
+            // =========================================================
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                if (User.IsInRole("Admin"))
+                {
+                    // Find Admin IDs whose names match the search.
+                    var matchingAdminIds =
+                        await _userManager.Users
+                            .Where(u =>
+                                (u.FirstName != null &&
+                                 u.FirstName.Contains(search))
+                                ||
+                                (u.MiddleName != null &&
+                                 u.MiddleName.Contains(search))
+                                ||
+                                (u.LastName != null &&
+                                 u.LastName.Contains(search))
+                                ||
+                                (
+                                    (
+                                        (u.FirstName ?? "") + " " +
+                                        (u.MiddleName ?? "") + " " +
+                                        (u.LastName ?? "")
+                                    ).Contains(search)
+                                )
+                            )
+                            .Select(u => u.Id)
+                            .ToListAsync();
 
 
-                // Retrieves only the logs needed for the current page.
-                var adminLogs = await query
+                    query =
+                        query.Where(log =>
+                            log.Action.Contains(search)
+                            ||
+                            matchingAdminIds.Contains(log.UserId));
+                }
+                else
+                {
+                    query =
+                        query.Where(log =>
+                            log.Action.Contains(search));
+                }
+            }
+
+
+            // =========================================================
+            // CATEGORY FILTER
+            // =========================================================
+
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                switch (category.ToLower())
+                {
+                    // -----------------------------------------------------
+                    // LOGGED
+                    // -----------------------------------------------------
+
+                    case "logged":
+
+                        query =
+                            query.Where(log =>
+                                log.Action == "Logged In"
+                                ||
+                                log.Action == "Logged Out");
+
+                        break;
+
+
+                    // -----------------------------------------------------
+                    // POSTS
+                    //
+                    // Examples:
+                    // Created Post
+                    // Edited Post
+                    // Deleted Post
+                    // Approved Post
+                    // Rejected Post
+                    // -----------------------------------------------------
+
+                    case "posts":
+
+                        query =
+                            query.Where(log =>
+                                log.Action.Contains("Post"));
+
+                        break;
+
+
+                    // -----------------------------------------------------
+                    // REPORTS
+                    //
+                    // Supports moderation activity such as:
+                    // Appeal Approved
+                    // Appeal Rejected
+                    // Violation Approved
+                    // Report Dismissed
+                    // etc.
+                    // -----------------------------------------------------
+
+                    case "reports":
+
+                        query =
+                            query.Where(log =>
+                                log.Action.Contains("Report")
+                                ||
+                                log.Action.Contains("Appeal")
+                                ||
+                                log.Action.Contains("Violation")
+                                ||
+                                log.Action.Contains("Dismiss"));
+
+                        break;
+                }
+            }
+
+
+            // =========================================================
+            // MONTH FILTER
+            //
+            // Example:
+            //
+            // month = "2026-09"
+            //
+            // Philippine date range:
+            // September 1, 2026 12:00 AM
+            // through
+            // October 1, 2026 12:00 AM
+            //
+            // AuditLog timestamps are UTC, so Philippine UTC+8
+            // boundaries are converted to UTC before querying.
+            // =========================================================
+
+            if (!string.IsNullOrWhiteSpace(month))
+            {
+                if (DateTime.TryParseExact(
+                    month,
+                    "yyyy-MM",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out var selectedMonth))
+                {
+                    var localStart =
+                        new DateTime(
+                            selectedMonth.Year,
+                            selectedMonth.Month,
+                            1,
+                            0,
+                            0,
+                            0,
+                            DateTimeKind.Unspecified);
+
+                    var localEnd =
+                        localStart.AddMonths(1);
+
+
+                    // Philippines is UTC+8.
+                    var startUtc =
+                        DateTime.SpecifyKind(
+                            localStart - TimeSpan.FromHours(8),
+                            DateTimeKind.Utc);
+
+                    var endUtc =
+                        DateTime.SpecifyKind(
+                            localEnd - TimeSpan.FromHours(8),
+                            DateTimeKind.Utc);
+
+
+                    query =
+                        query.Where(log =>
+                            log.CreatedAt >= startUtc
+                            &&
+                            log.CreatedAt < endUtc);
+                }
+            }
+
+
+            // =========================================================
+            // SORT
+            // =========================================================
+
+            query =
+                query.OrderByDescending(log =>
+                    log.CreatedAt);
+
+
+            // =========================================================
+            // COUNT AFTER FILTERING
+            // =========================================================
+
+            var totalItems =
+                await query.CountAsync();
+
+
+            var totalPages =
+                (int)Math.Ceiling(
+                    totalItems / (double)pageSize);
+
+
+            if (totalPages > 0 &&
+                page > totalPages)
+            {
+                page = totalPages;
+            }
+
+
+            // =========================================================
+            // CURRENT PAGE
+            // =========================================================
+
+            var logs =
+                await query
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
 
 
-                // Retrieves the Identity users whose IDs appear
-                // in the Admin logs on the current page.
-                var adminUserIds = adminLogs
-                    .Select(log => log.UserId)
-                    .Distinct()
-                    .ToList();
+            // =========================================================
+            // ADMIN INFORMATION
+            //
+            // Needed for:
+            // - Admin name
+            // - Profile picture
+            // =========================================================
+
+            if (User.IsInRole("Admin"))
+            {
+                var adminUserIds =
+                    logs
+                        .Select(log => log.UserId)
+                        .Distinct()
+                        .ToList();
 
 
-                var adminUsers = await _userManager.Users
-                    .Where(u => adminUserIds.Contains(u.Id))
-                    .ToDictionaryAsync(u => u.Id);
+                var adminUsers =
+                    await _userManager.Users
+                        .Where(u =>
+                            adminUserIds.Contains(u.Id))
+                        .ToDictionaryAsync(
+                            u => u.Id);
 
 
-                // Sends the matching Admin users to the View.
-                ViewBag.AdminUsers = adminUsers;
-
-
-                // Creates the same pagination model used
-                // by the other PETHUB pages.
-                var model = new PaginationViewModel<AuditLog>
-                {
-                    Items = adminLogs,
-                    CurrentPage = page,
-                    PageSize = pageSize,
-                    TotalItems = totalItems
-                };
-
-
-                return View(model);
+                ViewBag.AdminUsers =
+                    adminUsers;
             }
 
 
             // =========================================================
-            // MEMBER LOGS
+            // MODEL
             // =========================================================
 
-            // Members can only see their own activity.
-            var memberQuery = _context.AuditLogs
-                .Where(log => log.UserId == user.Id)
-                .OrderByDescending(log => log.CreatedAt);
+            var model =
+                new PaginationViewModel<AuditLog>
+                {
+                    Items = logs,
+
+                    CurrentPage = page,
+
+                    PageSize = pageSize,
+
+                    TotalItems = totalItems
+                };
 
 
-            // Total number of logs belonging to the member.
-            var memberTotalItems = await memberQuery.CountAsync();
-
-
-            // Retrieves only the logs needed for the current page.
-            var memberLogs = await memberQuery
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-
-            // Creates the pagination model for the member.
-            var memberModel = new PaginationViewModel<AuditLog>
-            {
-                Items = memberLogs,
-                CurrentPage = page,
-                PageSize = pageSize,
-                TotalItems = memberTotalItems
-            };
-
-
-            return View(memberModel);
+            return View(model);
         }
     }
 }

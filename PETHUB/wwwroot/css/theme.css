@@ -3697,3 +3697,27 @@ html.dark-mode .pagination-button.disabled {
 
     color: #666666 !important;
 }
+
+
+/* ==========================================================
+   ADMIN LOGS - NEW FILTERS DARK MODE
+========================================================== */
+
+html.dark-mode .logs-month-filter {
+    background: #242424 !important;
+    border-color: #404040 !important;
+}
+
+html.dark-mode .logs-month-input {
+    color: #f1f1f1 !important;
+}
+
+html.dark-mode .logs-month-filter > svg {
+    color: #b0b0b0 !important;
+}
+
+html.dark-mode .logs-category-trigger {
+    background: #242424 !important;
+    border-color: #404040 !important;
+    color: #f1f1f1 !important;
+}

@@ -1,21 +1,63 @@
 ﻿@model PETHUB.ViewModels.PaginationViewModel<PETHUB.Models.AuditLog>
 
 @{
-    ViewData["Title"] = User.IsInRole("Admin") ? "Admin Logs" : "My Logs";
+    ViewData["Title"] =
+        User.IsInRole("Admin")
+            ? "Admin Logs"
+            : "My Logs";
 
-    // Gets the Admin user dictionary supplied by MyLogsController.
-    // It is only needed when the current viewer is an Admin.
-    var adminUsers = ViewBag.AdminUsers
+
+    // =========================================================
+    // ADMIN USERS
+    // =========================================================
+    //
+    // The controller sends a dictionary containing the
+    // ApplicationUser records for Admins shown in the table.
+    //
+    // This lets the view display:
+    // - Full name
+    // - Profile picture
+    // - Initials fallback
+    // =========================================================
+
+    var adminUsers =
+        ViewBag.AdminUsers
         as Dictionary<string, PETHUB.Models.ApplicationUser>;
+
+
+    // =========================================================
+    // CURRENT FILTER VALUES
+    // =========================================================
+
+    var currentSearch =
+        ViewBag.Search as string ?? "";
+
+    var currentCategory =
+        ViewBag.Category as string ?? "";
+
+    var currentMonth =
+        ViewBag.Month as string ?? "";
+
+
+    // =========================================================
+    // PAGINATION
+    // =========================================================
+
+    var totalPages =
+        Model.PageSize > 0
+            ? (int)Math.Ceiling(
+                Model.TotalItems /
+                (double)Model.PageSize)
+            : 0;
 }
 
 
 <div class="logs-page">
 
 
-    <!-- ========================================================= -->
-    <!-- PAGE HEADER                                                -->
-    <!-- ========================================================= -->
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
 
     <div class="logs-header">
 
@@ -43,51 +85,173 @@
     </div>
 
 
-    <!-- ========================================================= -->
-    <!-- SEARCH / FILTER / TOTAL                                    -->
-    <!-- ========================================================= -->
 
-    <div class="logs-toolbar">
+    <!-- =========================================================
+         SEARCH / FILTER / TOTAL
+    ========================================================== -->
+
+    <form asp-controller="MyLogs"
+          asp-action="Index"
+          method="get"
+          class="logs-toolbar">
+
 
         <div class="logs-toolbar-left">
 
-            <!-- Search UI only.
-                 Search functionality is not currently implemented. -->
+
+            <!-- =================================================
+                 SEARCH
+            ================================================== -->
 
             <div class="logs-search">
 
                 <i data-lucide="search"
-                   class="logs-search-icon"></i>
+                   class="logs-search-icon">
+                </i>
+
 
                 <input type="text"
+                       name="search"
+                       value="@currentSearch"
                        class="logs-search-input"
-                       placeholder="Search logs..."
-                       disabled />
+                       placeholder="Search admin or action..." />
 
             </div>
 
 
-            <!-- Filter UI only.
-                 Filter functionality is not currently implemented. -->
 
-            <button type="button"
-                    class="logs-filter-button"
-                    disabled>
+            <!-- =================================================
+                 CATEGORY FILTER
+            ================================================== -->
+
+            <div class="logs-filter-field">
+
+
+                <div class="pethub-select-wrapper">
+
+
+                    <!-- REAL SELECT -->
+
+                    <select name="category"
+                            id="logsCategorySelect"
+                            class="pethub-select-native">
+
+                        <option value=""
+                                selected="@(string.IsNullOrWhiteSpace(currentCategory))">
+                            All Activity
+                        </option>
+
+                        <option value="logged"
+                                selected="@(currentCategory == "logged")">
+                            Logged
+                        </option>
+
+                        <option value="posts"
+                                selected="@(currentCategory == "posts")">
+                            Posts
+                        </option>
+
+                        <option value="reports"
+                                selected="@(currentCategory == "reports")">
+                            Reports
+                        </option>
+
+                    </select>
+
+
+                    <!-- VISIBLE CUSTOM SELECT -->
+
+                    <button type="button"
+                            class="pethub-select-trigger logs-category-trigger"
+                            data-select-target="logsCategorySelect">
+
+                        <span class="pethub-select-text">
+                            All Activity
+                        </span>
+
+                        <i data-lucide="chevron-down"></i>
+
+                    </button>
+
+
+                    <!-- CUSTOM MENU -->
+
+                    <div class="pethub-select-menu"
+                         data-menu-for="logsCategorySelect">
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MONTH FILTER
+            ================================================== -->
+
+            <div class="logs-month-filter">
+
+                <i data-lucide="calendar-days"></i>
+
+
+                <input type="month"
+                       name="month"
+                       value="@currentMonth"
+                       class="logs-month-input" />
+
+            </div>
+
+
+
+            <!-- =================================================
+                 APPLY FILTER
+            ================================================== -->
+
+            <button type="submit"
+                    class="logs-apply-filter">
+
+                <i data-lucide="sliders-horizontal"></i>
 
                 <span>
-                    Filter
-                </span>
-
-                <span class="logs-filter-arrow">
-                    &#9662;
+                    Apply
                 </span>
 
             </button>
 
+
+
+            <!-- =================================================
+                 CLEAR FILTER
+            ================================================== -->
+
+            @if (
+                !string.IsNullOrWhiteSpace(currentSearch)
+                ||
+                !string.IsNullOrWhiteSpace(currentCategory)
+                ||
+                !string.IsNullOrWhiteSpace(currentMonth)
+            )
+            {
+                <a asp-controller="MyLogs"
+                   asp-action="Index"
+                   class="logs-clear-filter">
+
+                    Clear
+
+                </a>
+            }
+
+
         </div>
 
 
-        <!-- Total log count -->
+
+        <!-- =====================================================
+             TOTAL
+        ====================================================== -->
 
         <div class="logs-total">
 
@@ -101,51 +265,37 @@
 
         </div>
 
-    </div>
+
+    </form>
 
 
-    <!-- ========================================================= -->
-    <!-- FUTURE SEARCH / FILTER LOGIC                               -->
-    <!-- ========================================================= -->
-    @*
-        ===========================================================
-        FUTURE SEARCH / FILTER IMPLEMENTATION
-        ===========================================================
 
-        Search and filter functionality is not currently
-        implemented by the programmer.
+    <!-- =========================================================
+         LOG TABLE
+    ========================================================== -->
 
-        The controls above are intentionally visual only.
-
-        When the programmer adds the actual functionality,
-        the following can be implemented here:
-
-        SEARCH
-        - Search by Admin
-        - Search by Action
-
-        FILTER
-        - Filter by Admin
-        - Filter by Action
-        - Filter by Date
-
-        Do not add filtering logic until it is implemented
-        in the controller/programmer code.
-    *@
-
-
-    <!-- ========================================================= -->
-    <!-- LOG TABLE                                                  -->
-    <!-- ========================================================= -->
     @if (!Model.Items.Any())
     {
-        <!-- Displays a message when there are no recorded activities. -->
+
+        <!-- =====================================================
+             EMPTY RESULT
+        ====================================================== -->
 
         <div class="logs-empty-card">
 
             <p>
 
-                @if (User.IsInRole("Admin"))
+                @if (
+                    !string.IsNullOrWhiteSpace(currentSearch)
+                    ||
+                    !string.IsNullOrWhiteSpace(currentCategory)
+                    ||
+                    !string.IsNullOrWhiteSpace(currentMonth)
+                )
+                {
+                    @:No logs match the selected search or filters.
+                }
+                else if (User.IsInRole("Admin"))
                 {
                     @:There are no administrator activity logs yet.
                 }
@@ -157,112 +307,191 @@
             </p>
 
         </div>
+
     }
     else
     {
-        <!-- Makes the table responsive on smaller screens. -->
+
+        <!-- =====================================================
+             TABLE CARD
+        ====================================================== -->
 
         <div class="logs-card">
 
+
             <div class="logs-table-wrapper">
 
+
                 <table class="logs-table">
+
+
+                    <!-- =============================================
+                         TABLE HEADER
+                    ============================================== -->
 
                     <thead>
 
                         <tr>
 
+
                             @if (User.IsInRole("Admin"))
                             {
-                                <!-- Displays which Admin performed the activity. -->
-
                                 <th class="logs-admin-column">
                                     Admin
                                 </th>
                             }
 
 
-                            <!-- Displays the general activity that occurred. -->
-
                             <th class="logs-action-column">
                                 Action
                             </th>
 
-
-                            <!-- Displays the date when the activity occurred. -->
 
                             <th class="logs-date-column">
                                 Date
                             </th>
 
 
-                            <!-- Displays the time when the activity occurred. -->
-
                             <th class="logs-time-column">
                                 Time
                             </th>
+
 
                         </tr>
 
                     </thead>
 
 
+
+                    <!-- =============================================
+                         TABLE BODY
+                    ============================================== -->
+
                     <tbody>
+
 
                         @foreach (var log in Model.Items)
                         {
+
                             <tr>
+
+
+                                <!-- =================================
+                                     ADMIN
+                                ================================== -->
 
                                 @if (User.IsInRole("Admin"))
                                 {
-                                    <!-- ================================================= -->
-                                    <!-- ADMIN                                           -->
-                                    <!-- ================================================= -->
 
                                     <td class="logs-admin-cell">
 
+
                                         <div class="logs-admin">
+
+
+                                            <!-- =============================
+                                                 PROFILE PICTURE
+                                            ============================== -->
 
                                             <div class="logs-avatar">
 
-                                                @if (adminUsers != null &&
-                                                     adminUsers.TryGetValue(log.UserId, out var avatarAdmin))
+
+                                                @if (
+                                                    adminUsers != null
+                                                    &&
+                                                    adminUsers.TryGetValue(
+                                                        log.UserId,
+                                                        out var avatarAdmin)
+                                                )
                                                 {
-                                                    @(
-                                                        $"{avatarAdmin.FirstName?.FirstOrDefault()}{avatarAdmin.LastName?.FirstOrDefault()}"
+
+                                                    @if (
+                                                        !string.IsNullOrWhiteSpace(
+                                                            avatarAdmin.ProfilePicturePath)
                                                     )
+                                                    {
+
+                                                        <img src="@avatarAdmin.ProfilePicturePath"
+                                                             alt="@avatarAdmin.FirstName"
+                                                             class="logs-avatar-image" />
+
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <span>
+
+                                                            @(
+                                                                $"{avatarAdmin.FirstName?.FirstOrDefault()}{avatarAdmin.LastName?.FirstOrDefault()}"
+                                                            )
+
+                                                        </span>
+
+                                                    }
+
                                                 }
                                                 else
                                                 {
-                                                    @("?")
+
+                                                    <span>
+                                                        ?
+                                                    </span>
+
                                                 }
+
 
                                             </div>
 
+
+
+                                            <!-- =============================
+                                                 ADMIN NAME
+                                            ============================== -->
 
                                             <div class="logs-admin-name">
 
-                                                @if (adminUsers != null &&
-                                                     adminUsers.TryGetValue(log.UserId, out var adminUser))
+
+                                                @if (
+                                                    adminUsers != null
+                                                    &&
+                                                    adminUsers.TryGetValue(
+                                                        log.UserId,
+                                                        out var adminUser)
+                                                )
                                                 {
-                                                    @($"{adminUser.FirstName} {adminUser.MiddleName} {adminUser.LastName}")
+
+                                                    @(
+                                                        $"{adminUser.FirstName} {adminUser.MiddleName} {adminUser.LastName}"
+                                                            .Replace(
+                                                                "  ",
+                                                                " ")
+                                                            .Trim()
+                                                    )
+
                                                 }
                                                 else
                                                 {
+
                                                     @("Unknown Admin")
+
                                                 }
+
 
                                             </div>
 
+
                                         </div>
 
+
                                     </td>
+
                                 }
 
 
-                                <!-- ===================================================== -->
-                                <!-- ACTION                                              -->
-                                <!-- ===================================================== -->
+
+                                <!-- =================================
+                                     ACTION
+                                ================================== -->
 
                                 <td class="logs-action-cell">
 
@@ -273,45 +502,257 @@
                                 </td>
 
 
-                                <!-- ===================================================== -->
-                                <!-- DATE                                                -->
-                                <!-- ===================================================== -->
+
+                                <!-- =================================
+                                     DATE
+                                ================================== -->
 
                                 <td class="logs-date-cell">
 
-                                    @(log.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy"))
+                                    @(
+                                        log.CreatedAt
+                                            .ToLocalTime()
+                                            .ToString("MMM dd, yyyy")
+                                    )
 
                                 </td>
 
 
-                                <!-- ===================================================== -->
-                                <!-- TIME                                                -->
-                                <!-- ===================================================== -->
+
+                                <!-- =================================
+                                     TIME
+                                ================================== -->
 
                                 <td class="logs-time-cell">
 
-                                    @(log.CreatedAt.ToLocalTime().ToString("hh:mm tt"))
+                                    @(
+                                        log.CreatedAt
+                                            .ToLocalTime()
+                                            .ToString("hh:mm tt")
+                                    )
 
                                 </td>
 
+
                             </tr>
+
                         }
+
 
                     </tbody>
 
+
                 </table>
+
 
             </div>
 
+
         </div>
+
     }
 
 
-    <!-- ========================================================= -->
-    <!-- PAGINATION                                                  -->
-    <!-- ========================================================= -->
 
-    <partial name="_Pagination" model="Model" />
+    <!-- =========================================================
+         PAGINATION
+    ========================================================== -->
+
+    @if (totalPages > 1)
+    {
+
+        <div class="pagination-container">
+
+
+            <!-- =====================================================
+                 PAGE SUMMARY
+            ====================================================== -->
+
+            <div class="pagination-summary">
+
+                Page
+
+                <strong>
+                    @Model.CurrentPage
+                </strong>
+
+                of
+
+                <strong>
+                    @totalPages
+                </strong>
+
+            </div>
+
+
+
+            <!-- =====================================================
+                 PAGE CONTROLS
+            ====================================================== -->
+
+            <div class="pagination-controls">
+
+
+                <!-- PREVIOUS -->
+
+                @if (Model.CurrentPage > 1)
+                {
+
+                    <a asp-controller="MyLogs"
+                       asp-action="Index"
+                       asp-route-page="@(Model.CurrentPage - 1)"
+                       asp-route-search="@currentSearch"
+                       asp-route-category="@currentCategory"
+                       asp-route-month="@currentMonth"
+                       class="pagination-button">
+
+                        &lsaquo;
+
+                    </a>
+
+                }
+                else
+                {
+
+                    <span class="pagination-button disabled">
+                        &lsaquo;
+                    </span>
+
+                }
+
+
+
+                <!-- =================================================
+                     PAGE NUMBERS
+                ================================================== -->
+
+                @{
+                    var startPage =
+                        Math.Max(
+                            1,
+                            Model.CurrentPage - 2);
+
+                    var endPage =
+                        Math.Min(
+                            totalPages,
+                            Model.CurrentPage + 2);
+                }
+
+
+                @if (startPage > 1)
+                {
+
+                    <a asp-controller="MyLogs"
+                       asp-action="Index"
+                       asp-route-page="1"
+                       asp-route-search="@currentSearch"
+                       asp-route-category="@currentCategory"
+                       asp-route-month="@currentMonth"
+                       class="pagination-button">
+
+                        1
+
+                    </a>
+
+
+                    @if (startPage > 2)
+                    {
+
+                        <span class="pagination-ellipsis">
+                            ...
+                        </span>
+
+                    }
+
+                }
+
+
+                @for (
+                    var i = startPage;
+                    i <= endPage;
+                    i++
+                )
+                {
+
+                    <a asp-controller="MyLogs"
+                       asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-search="@currentSearch"
+                       asp-route-category="@currentCategory"
+                       asp-route-month="@currentMonth"
+                       class="pagination-button @(i == Model.CurrentPage ? "active" : "")">
+
+                        @i
+
+                    </a>
+
+                }
+
+
+                @if (endPage < totalPages)
+                {
+
+                    @if (endPage < totalPages - 1)
+                    {
+
+                        <span class="pagination-ellipsis">
+                            ...
+                        </span>
+
+                    }
+
+
+                    <a asp-controller="MyLogs"
+                       asp-action="Index"
+                       asp-route-page="@totalPages"
+                       asp-route-search="@currentSearch"
+                       asp-route-category="@currentCategory"
+                       asp-route-month="@currentMonth"
+                       class="pagination-button">
+
+                        @totalPages
+
+                    </a>
+
+                }
+
+
+
+                <!-- NEXT -->
+
+                @if (Model.CurrentPage < totalPages)
+                {
+
+                    <a asp-controller="MyLogs"
+                       asp-action="Index"
+                       asp-route-page="@(Model.CurrentPage + 1)"
+                       asp-route-search="@currentSearch"
+                       asp-route-category="@currentCategory"
+                       asp-route-month="@currentMonth"
+                       class="pagination-button">
+
+                        &rsaquo;
+
+                    </a>
+
+                }
+                else
+                {
+
+                    <span class="pagination-button disabled">
+                        &rsaquo;
+                    </span>
+
+                }
+
+
+            </div>
+
+
+        </div>
+
+    }
+
 
 </div>
 
@@ -321,13 +762,19 @@
 
     <script>
 
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
 
-            if (typeof lucide !== "undefined") {
-                lucide.createIcons();
+                // Re-render Lucide icons.
+                if (typeof lucide !== "undefined") {
+
+                    lucide.createIcons();
+
+                }
+
             }
-
-        });
+        );
 
     </script>
 
