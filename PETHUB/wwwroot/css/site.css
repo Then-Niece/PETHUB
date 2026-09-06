@@ -2943,3 +2943,122 @@ a {
     font-size: 0.9rem;
     font-weight: 500;
 }
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.landing-footer {
+    width: 100%;
+    margin-top: 0;
+    padding: 24px 0;
+    background: #ffffff;
+    border-top: 1px solid #e8ece9;
+}
+
+
+.landing-footer-content {
+    width: 100%;
+    margin: 0;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   FOOTER BRAND
+========================================================= */
+
+.landing-footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+
+.landing-footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #273142;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+
+    .landing-footer-logo img {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        display: block;
+        object-fit: contain;
+    }
+
+
+.landing-footer-brand p {
+    margin: 0;
+    color: #7b8490;
+    font-size: .82rem;
+}
+
+
+/* =========================================================
+   FOOTER COPYRIGHT
+========================================================= */
+
+.landing-footer-copyright {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #7b8490;
+    font-size: .78rem;
+    white-space: nowrap;
+}
+
+
+.landing-footer-separator {
+    color: #b3b9be;
+}
+
+
+/* =========================================================
+   FOOTER - MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .landing-footer {
+        padding: 20px 0;
+    }
+
+
+    .landing-footer-content {
+        width: calc(100% - 32px);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-align: center;
+    }
+
+
+    .landing-footer-brand {
+        flex-direction: column;
+        gap: 7px;
+    }
+
+
+    .landing-footer-logo img {
+        width: 34px;
+        height: 34px;
+    }
+
+
+    .landing-footer-copyright {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
