@@ -2946,3 +2946,65 @@ a {
 
 
 
+/* =========================================================
+   PUBLIC LAYOUT
+   Keeps public pages below the navbar
+========================================================= */
+
+.public-main {
+    padding-top: 72px;
+}
+
+/* =========================================================
+   TERMS & CONDITIONS MODAL
+   Keep modal below the fixed public navbar
+========================================================= */
+
+/*
+   Only affect the Bootstrap modal that contains .terms-modal.
+   Other modals are untouched.
+*/
+.modal:has(.terms-modal) {
+    padding-top: 72px !important;
+}
+
+
+    /* Modal dialog uses only the viewport space below navbar */
+    .modal:has(.terms-modal) .modal-dialog {
+        width: calc(100% - 32px);
+        max-width: 760px;
+        height: calc(100vh - 104px);
+        margin: 16px auto !important;
+        display: flex;
+        align-items: stretch;
+    }
+
+
+    /* Actual terms modal */
+    .modal:has(.terms-modal) .terms-modal {
+        width: 100%;
+        max-height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+
+    /* Header stays visible */
+    .modal:has(.terms-modal) .terms-modal-header {
+        flex-shrink: 0;
+    }
+
+
+    /* Only the terms text scrolls */
+    .modal:has(.terms-modal) .terms-modal-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+
+    /* Footer / I Understand button stays visible */
+    .modal:has(.terms-modal) .terms-modal-footer {
+        flex-shrink: 0;
+    }

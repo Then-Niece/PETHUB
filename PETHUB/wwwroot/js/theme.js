@@ -7,52 +7,201 @@
                 "darkModeToggle"
             );
 
-        const themeStorageKey =
-            "pethubTheme";
+
+        // Dark mode toggle only exists
+        // on the Settings page.
+        if (!darkModeToggle) {
+            return;
+        }
 
 
-        // Match the toggle with the current theme.
-        if (darkModeToggle) {
+        // =====================================================
+        // MATCH TOGGLE WITH CURRENT SAVED THEME
+        // =====================================================
 
-            darkModeToggle.checked =
-                document.documentElement
-                    .classList
-                    .contains("dark-mode");
+        darkModeToggle.checked =
+            document.documentElement
+                .classList
+                .contains("dark-mode");
 
 
-            darkModeToggle.addEventListener(
-                "change",
-                function () {
+        // =====================================================
+        // DARK MODE TOGGLE
+        // =====================================================
 
-                    if (darkModeToggle.checked) {
+        darkModeToggle.addEventListener(
+            "change",
+            async function () {
 
-                        document.documentElement
-                            .classList.add(
-                                "dark-mode"
-                            );
+                const wantsDarkMode =
+                    darkModeToggle.checked;
 
-                        localStorage.setItem(
-                            themeStorageKey,
-                            "dark"
+
+                const newTheme =
+                    wantsDarkMode
+                        ? "Dark"
+                        : "Light";
+
+
+                // Remember the previous state
+                // in case saving fails.
+                const previousTheme =
+                    wantsDarkMode
+                        ? "Light"
+                        : "Dark";
+
+
+                // =================================================
+                // APPLY THEME IMMEDIATELY
+                // =================================================
+
+                if (wantsDarkMode) {
+
+                    document.documentElement
+                        .classList
+                        .add("dark-mode");
+
+                }
+                else {
+
+                    document.documentElement
+                        .classList
+                        .remove("dark-mode");
+
+                }
+
+
+                // =================================================
+                // GET ANTI-FORGERY TOKEN
+                // =================================================
+
+                const token =
+                    document.querySelector(
+                        "#themeTokenForm " +
+                        "input[name='__RequestVerificationToken']"
+                    )?.value;
+
+
+                if (!token) {
+
+                    console.error(
+                        "Theme anti-forgery token was not found."
+                    );
+
+                    restorePreviousTheme(
+                        previousTheme
+                    );
+
+                    return;
+                }
+
+
+                // =================================================
+                // PREPARE FORM DATA
+                // =================================================
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "theme",
+                    newTheme
+                );
+
+
+                formData.append(
+                    "__RequestVerificationToken",
+                    token
+                );
+
+
+                // =================================================
+                // SAVE THEME TO DATABASE
+                // =================================================
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "/UserAccount/UpdateTheme",
+                            {
+                                method: "POST",
+                                body: formData
+                            }
                         );
 
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Unable to save theme preference."
+                        );
                     }
-                    else {
 
-                        document.documentElement
-                            .classList.remove(
-                                "dark-mode"
-                            );
 
-                        localStorage.setItem(
-                            themeStorageKey,
-                            "light"
+                    const result =
+                        await response.json();
+
+
+                    if (!result.success) {
+
+                        throw new Error(
+                            result.message ||
+                            "Unable to save theme preference."
                         );
-
                     }
 
                 }
-            );
+                catch (error) {
+
+                    console.error(
+                        "Theme save failed:",
+                        error
+                    );
+
+
+                    restorePreviousTheme(
+                        previousTheme
+                    );
+
+                }
+
+            }
+        );
+
+
+        // =====================================================
+        // RESTORE THEME IF DATABASE SAVE FAILS
+        // =====================================================
+
+        function restorePreviousTheme(
+            previousTheme
+        ) {
+
+            const wasDark =
+                previousTheme === "Dark";
+
+
+            darkModeToggle.checked =
+                wasDark;
+
+
+            if (wasDark) {
+
+                document.documentElement
+                    .classList
+                    .add("dark-mode");
+
+            }
+            else {
+
+                document.documentElement
+                    .classList
+                    .remove("dark-mode");
+
+            }
+
         }
 
     }

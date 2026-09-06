@@ -2,6 +2,11 @@
     ViewData["Title"] = "Settings";
 }
 
+<form id="themeTokenForm"
+      class="d-none">
+    @Html.AntiForgeryToken()
+</form>
+
 <div class="settings-page">
 
     <!-- =====================================================

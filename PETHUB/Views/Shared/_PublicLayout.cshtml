@@ -13,20 +13,34 @@
     <link rel="stylesheet"
           href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
-    <link rel="stylesheet"
-          href="~/css/site.css"
-          asp-append-version="true" />
+<link rel="stylesheet"  href="~/css/site.css" asp-append-version="true" />
 
-    <link rel="stylesheet"
-      href="~/css/navbar.css"
+<link rel="stylesheet"  href="~/css/navbar.css"  asp-append-version="true" />
+
+
+<!-- Shared form components used by public/account pages -->
+<link rel="stylesheet"
+      href="~/css/custom-select.css"
       asp-append-version="true" />
+
+<link rel="stylesheet"
+      href="~/css/date-fields.css"
+      asp-append-version="true" />
+
+<link rel="stylesheet" href="~/css/image-preview.css" asp-append-version="true" />
+
+<link rel="stylesheet" href="~/css/system-modal.css" asp-append-version="true" />
+
+<link rel="stylesheet" href="~/PETHUB.styles.css" asp-append-version="true" />
 
 </head>
 
 <body>
     @await Component.InvokeAsync("Navigation")    
 
+    <main class="public-main">
     @RenderBody()
+    </main>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -35,9 +49,19 @@
 
     <script src="https://unpkg.com/lucide@latest"></script>
 
+
+    <script src="~/js/custom-select.js" asp-append-version="true"></script>
+
+    <script src="~/js/date-fields.js" asp-append-version="true"></script>
+
+    <script src="~/js/imagePreviewHelper.js" asp-append-version="true"></script>
+
+    <script src="~/js/system-modal.js" asp-append-version="true"></script>
+     
     <script>
         lucide.createIcons();
     </script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 

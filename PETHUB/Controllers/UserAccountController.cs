@@ -1292,6 +1292,65 @@ namespace PETHUB.Controllers
         }
 
 
+        // =========================================================
+        // UPDATE THEME PREFERENCE
+        // =========================================================
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateTheme(
+            string theme)
+        {
+            var user =
+                await _userManager.GetUserAsync(User);
+
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+
+            if (theme != "Dark" &&
+                theme != "Light")
+            {
+                return BadRequest(
+                    new
+                    {
+                        success = false,
+                        message = "Invalid theme."
+                    });
+            }
+
+
+            user.ThemePreference = theme;
+
+
+            var result =
+                await _userManager.UpdateAsync(user);
+
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(
+                    new
+                    {
+                        success = false,
+                        message =
+                            "Unable to save theme preference."
+                    });
+            }
+
+
+            return Json(
+                new
+                {
+                    success = true,
+                    theme = user.ThemePreference
+                });
+        }
+
     }
 
 

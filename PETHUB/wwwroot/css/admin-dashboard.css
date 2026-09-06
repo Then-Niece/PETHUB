@@ -4457,68 +4457,216 @@
             color: #76B968;
         }
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* ==========================================================
+   RESPONSIVE - TABLET
+========================================================== */
 
 @media (max-width: 900px) {
 
-    .admin-petfeed-details-layout {
+    .admin-my-post-details-page {
+        width: 100%;
+        max-width: 100%;
+        padding: 12px 20px 30px;
+    }
+
+
+    /* Stack image and details */
+
+    .admin-my-post-details-layout {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
 
-    .admin-petfeed-details-panel {
+
+    /* Responsive image instead of fixed 500px height */
+
+    .admin-my-post-details-gallery {
+        width: 100%;
         height: auto;
-        max-height: 700px;
+        min-height: 0;
+        aspect-ratio: 16 / 10;
+        border-radius: 18px;
     }
 
-    .admin-petfeed-details-main-image,
-    .admin-petfeed-details-no-image {
-        height: 450px;
+    .admin-my-post-details-carousel {
+        width: 100%;
+        height: 100%;
+        border-radius: 18px;
+    }
+
+        .admin-my-post-details-carousel .carousel-inner,
+        .admin-my-post-details-carousel .carousel-item {
+            width: 100%;
+            height: 100%;
+        }
+
+    .admin-my-post-details-main-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+
+    /* Do not create a second scrollbar on tablet */
+
+    .admin-my-post-details-panel {
+        width: 100%;
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        border-radius: 14px;
+    }
+
+    .admin-my-post-details-panel-content {
+        padding: 22px;
+    }
+
+
+    /* Comments also grow naturally */
+
+    .admin-my-post-details-comments-scroll {
+        height: auto;
+        max-height: none;
+        overflow: visible;
     }
 }
 
+
+/* ==========================================================
+   RESPONSIVE - MOBILE
+========================================================== */
 
 @media (max-width: 576px) {
 
-    .admin-petfeed-details-page {
-        padding: 20px 12px;
+    .admin-my-post-details-page {
+        padding: 10px 12px 24px;
     }
 
-    .admin-petfeed-details-panel-content {
+
+        /* Back link */
+
+        .admin-my-post-details-page > .mb-3 {
+            margin-bottom: 14px !important;
+        }
+
+            .admin-my-post-details-page > .mb-3 a {
+                font-size: 0.85rem;
+            }
+
+
+    /* Smaller space between image and information */
+
+    .admin-my-post-details-layout {
+        gap: 16px;
+    }
+
+
+    /* Mobile image */
+
+    .admin-my-post-details-gallery {
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 4 / 3;
+        border-radius: 16px;
+    }
+
+    .admin-my-post-details-carousel {
+        border-radius: 16px;
+    }
+
+
+    /* Details card */
+
+    .admin-my-post-details-panel {
+        border-radius: 12px;
+    }
+
+    .admin-my-post-details-panel-content {
         padding: 18px;
     }
 
-    .admin-petfeed-details-main-image,
-    .admin-petfeed-details-no-image {
-        height: 350px;
+
+    /* Header */
+
+    .admin-my-post-details-header {
+        gap: 10px;
     }
 
-    .admin-petfeed-details-title {
-        font-size: 1.4rem;
+    .admin-my-post-details-author {
+        gap: 9px;
+        min-width: 0;
+    }
+
+    .admin-my-post-details-profile-picture {
+        width: 42px;
+        height: 42px;
+    }
+
+    .admin-my-post-details-author-info {
+        min-width: 0;
+    }
+
+        .admin-my-post-details-author-info h4 {
+            font-size: 0.9rem;
+        }
+
+
+    /* Date + post type */
+
+    .admin-my-post-details-meta {
+        flex-wrap: wrap;
+        gap: 5px;
+        font-size: 0.72rem;
+    }
+
+
+    /* Title */
+
+    .admin-my-post-details-title {
+        font-size: 1.35rem;
+        line-height: 1.3;
+    }
+
+
+    /* Sections */
+
+    .admin-my-post-details-section {
+        margin-top: 20px;
+        padding-top: 18px;
+    }
+
+
+    /* Activity statistics */
+
+    .admin-my-post-details-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .admin-my-post-details-stat {
+        padding: 14px 6px;
+    }
+
+        .admin-my-post-details-stat strong {
+            font-size: 0.95rem;
+        }
+
+        .admin-my-post-details-stat span {
+            font-size: 0.72rem;
+        }
+
+
+    /* Comments */
+
+    .admin-my-post-details-comments-section {
+        margin-top: 20px;
+        padding-top: 18px;
+    }
+
+    .admin-my-post-details-comment-content {
+        margin-left: 0;
+        margin-top: 8px;
     }
 }
-
-.admin-petfeed-details-meta {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    margin-top: 3px;
-    font-size: 0.8rem;
-    color: #777;
-}
-
-.admin-petfeed-details-meta-dot {
-    color: #999;
-}
-
-.admin-petfeed-details-meta .admin-petfeed-type-status {
-    min-height: 24px;
-    padding: 3px 10px;
-    font-size: 0.72rem;
-    font-weight: 500;
-}
-
 /* ==========================================================
    HIDE SCROLLBARS
 ========================================================== */
@@ -5028,52 +5176,277 @@
     border-radius: 10px;
 }
 
-
 /* ==========================================================
-   RESPONSIVE
+   ADMIN MY POSTS DETAILS - RESPONSIVE TABLET
 ========================================================== */
 
 @media (max-width: 900px) {
 
+    .admin-my-post-details-page {
+        width: 100%;
+        max-width: 100%;
+        padding: 12px 18px 30px;
+    }
+
+
+    /* Stack image above details */
+
     .admin-my-post-details-layout {
         grid-template-columns: 1fr;
+        gap: 18px;
     }
 
-    .admin-my-post-details-panel {
-        height: auto;
-        max-height: 700px;
-    }
+
+    /* Image gallery */
 
     .admin-my-post-details-gallery {
-        height: min(65vh, 500px);
-        min-height: 350px;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 16 / 10;
+        border-radius: 18px;
+    }
+
+    .admin-my-post-details-carousel {
+        width: 100%;
+        height: 100%;
+        border-radius: 18px;
+    }
+
+        .admin-my-post-details-carousel .carousel-inner,
+        .admin-my-post-details-carousel .carousel-item {
+            width: 100%;
+            height: 100%;
+        }
+
+    .admin-my-post-details-main-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+
+    /* Details panel */
+
+    .admin-my-post-details-panel {
+        width: 100%;
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        border-radius: 14px;
+    }
+
+    .admin-my-post-details-panel-content {
+        padding: 22px;
+    }
+
+
+    /* Let comments grow with page */
+
+    .admin-my-post-details-comments-scroll {
+        height: auto;
+        max-height: none;
+        overflow: visible;
     }
 }
 
 
+/* ==========================================================
+   ADMIN MY POSTS DETAILS - RESPONSIVE MOBILE
+========================================================== */
+
 @media (max-width: 576px) {
 
     .admin-my-post-details-page {
-        padding: 12px 12px 30px;
+        padding: 10px 10px 24px;
     }
 
- 
+
+        /* Back link */
+
+        .admin-my-post-details-page > .mb-3 {
+            margin-bottom: 12px !important;
+        }
+
+            .admin-my-post-details-page > .mb-3 a {
+                font-size: 0.82rem;
+            }
+
+
+    /* Stack spacing */
+
+    .admin-my-post-details-layout {
+        gap: 14px;
+    }
+
+
+    /* Image */
 
     .admin-my-post-details-gallery {
-        height: 350px;
-        min-height: 350px;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 4 / 3;
+        border-radius: 14px;
     }
 
-    .admin-my-post-details-title {
-        font-size: 1.4rem;
+    .admin-my-post-details-carousel {
+        border-radius: 14px;
     }
+
+
+    /* Details card */
+
+    .admin-my-post-details-panel {
+        border-radius: 12px;
+    }
+
+    .admin-my-post-details-panel-content {
+        padding: 16px;
+    }
+
+
+    /* Header */
 
     .admin-my-post-details-header {
         gap: 8px;
     }
 
+    .admin-my-post-details-author {
+        gap: 8px;
+        min-width: 0;
+    }
+
+    .admin-my-post-details-profile-picture {
+        width: 40px;
+        height: 40px;
+    }
+
+    .admin-my-post-details-author-info {
+        min-width: 0;
+    }
+
+        .admin-my-post-details-author-info h4 {
+            font-size: 0.88rem;
+        }
+
+
+    /* Date + type */
+
     .admin-my-post-details-meta {
         flex-wrap: wrap;
+        gap: 4px;
+        font-size: 0.7rem;
+    }
+
+
+    /* Three dots */
+
+    .admin-my-post-details-more-button {
+        width: 32px;
+        height: 32px;
+    }
+
+
+    /* Title */
+
+    .admin-my-post-details-title {
+        font-size: 1.3rem;
+        line-height: 1.3;
+    }
+
+
+    /* Sections */
+
+    .admin-my-post-details-section {
+        margin-top: 18px;
+        padding-top: 16px;
+    }
+
+        .admin-my-post-details-section h3,
+        .admin-my-post-details-comments-header h3 {
+            font-size: 0.88rem;
+        }
+
+    .admin-my-post-details-content {
+        font-size: 0.84rem;
+        line-height: 1.55;
+    }
+
+
+    /* Activity */
+
+    .admin-my-post-details-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .admin-my-post-details-stat {
+        padding: 12px 5px;
+    }
+
+        .admin-my-post-details-stat strong {
+            font-size: 0.92rem;
+        }
+
+        .admin-my-post-details-stat span {
+            font-size: 0.68rem;
+        }
+
+
+    /* Comments */
+
+    .admin-my-post-details-comments-section {
+        margin-top: 18px;
+        padding-top: 16px;
+    }
+
+    .admin-my-post-details-comments-scroll {
+        height: auto;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .admin-my-post-details-comment-content {
+        margin: 8px 0 0;
+        font-size: 0.82rem;
+    }
+}
+
+
+/* ==========================================================
+   ADMIN MY POSTS DETAILS - VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .admin-my-post-details-page {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .admin-my-post-details-panel-content {
+        padding: 14px;
+    }
+
+    .admin-my-post-details-gallery {
+        aspect-ratio: 1 / 1;
+    }
+
+    .admin-my-post-details-profile-picture {
+        width: 36px;
+        height: 36px;
+    }
+
+    .admin-my-post-details-author-info h4 {
+        font-size: 0.82rem;
+    }
+
+    .admin-my-post-details-meta {
+        font-size: 0.66rem;
+    }
+
+    .admin-my-post-details-title {
+        font-size: 1.2rem;
     }
 }
 
@@ -5250,7 +5623,8 @@
 ========================================================== */
 
 .create-photos {
-    min-height: 410px;
+    min-height: 0;
+    height: fit-content;
     padding: 22px;
     border: 1px solid #d8dee3;
     border-radius: 14px;
@@ -5490,7 +5864,7 @@
     background: #FFFFFF;
     border: 1px solid #E8ECEF;
     border-radius: 18px;
-    padding: 32px;
+    padding: 28px 30px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, .05);
 }
 
@@ -5500,7 +5874,7 @@
 ========================================================== */
 
 .petfeed-edit-header {
-    margin-bottom: 26px;
+    margin-bottom: 22px;
 }
 
     .petfeed-edit-header h2 {
@@ -5519,71 +5893,6 @@
 
 
 /* ==========================================================
-   FORM LABELS
-========================================================== */
-
-.petfeed-edit-fields .form-label {
-    display: block;
-    margin-bottom: 8px;
-    color: #374151;
-    font-size: .92rem;
-    font-weight: 600;
-}
-
-
-/* ==========================================================
-   FORM CONTROLS
-========================================================== */
-
-.petfeed-edit-fields .form-control,
-.petfeed-edit-fields .form-select {
-    width: 100%;
-    height: 44px;
-    min-height: 44px;
-    padding: 9px 12px;
-    border: 1px solid #D1D5DB;
-    border-radius: 10px;
-    background: #FFFFFF;
-    color: #374151;
-    font-size: .92rem;
-    transition: border-color .2s ease, box-shadow .2s ease;
-}
-
-    .petfeed-edit-fields .form-control::placeholder {
-        color: #9CA3AF;
-    }
-
-    .petfeed-edit-fields .form-control:focus,
-    .petfeed-edit-fields .form-select:focus {
-        border-color: #8ACE79;
-        box-shadow: 0 0 0 .18rem rgba(138, 206, 121, .15);
-        outline: none;
-    }
-
-
-/* ==========================================================
-   CONTENT TEXTAREA
-========================================================== */
-
-.petfeed-edit-fields textarea.form-control {
-    min-height: 150px;
-    height: auto;
-    padding-top: 10px;
-    resize: vertical;
-    line-height: 1.5;
-}
-
-
-/* ==========================================================
-   POST TYPE DROPDOWN
-========================================================== */
-
-.petfeed-edit-fields .form-select {
-    cursor: pointer;
-}
-
-
-/* ==========================================================
    VALIDATION
 ========================================================== */
 
@@ -5599,18 +5908,19 @@
 ========================================================== */
 
 .petfeed-edit-photo-card {
-    height: 100%;
-    min-height: 600px;
     padding: 18px;
     background: #FAFAFA;
     border: 1px solid #E5E5E5;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
+    height: fit-content;
+    min-height: 0;
+    align-self: flex-start;
 }
 
     .petfeed-edit-photo-card > h5 {
-        margin: 0 0 18px;
+        margin: 0 0 16px;
         color: #1F2937;
         font-size: 1rem;
         font-weight: 700;
@@ -5618,30 +5928,13 @@
 
 
 /* ==========================================================
-   CURRENT IMAGES SECTION
+   CURRENT IMAGES
 ========================================================== */
 
-.petfeed-edit-current-section {
-    margin-bottom: 24px;
-}
-
-    .petfeed-edit-current-section h6,
-    .petfeed-edit-add-section h6 {
-        margin: 0 0 12px;
-        color: #374151;
-        font-size: .88rem;
-        font-weight: 600;
-    }
-
-
-/* ==========================================================
-   CURRENT IMAGE GRID
-========================================================== */
-
-.petfeed-edit-image-grid {
+.petfeed-edit-current-images {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
 }
 
 
@@ -5662,7 +5955,7 @@
 .petfeed-edit-image {
     display: block;
     width: 100%;
-    height: 130px;
+    height: 105px;
     object-fit: cover;
     border: 1px solid #E5E7EB;
     border-radius: 10px;
@@ -5673,19 +5966,16 @@
    REMOVE IMAGE BUTTON
 ========================================================== */
 
-.petfeed-edit-image-item form {
-    margin-top: 7px;
-}
-
 .petfeed-edit-remove-button {
     width: 100%;
-    height: 32px;
-    padding: 0 10px;
+    height: 30px;
+    margin-top: 5px;
+    padding: 0 8px;
     border: 1px solid #E0B7B7;
     border-radius: 7px;
     background: #FFFFFF;
     color: #B84C4C;
-    font-size: .76rem;
+    font-size: .74rem;
     font-weight: 500;
     cursor: pointer;
     transition: background-color .2s ease, border-color .2s ease, color .2s ease;
@@ -5699,34 +5989,26 @@
 
 
 /* ==========================================================
-   NO IMAGES MESSAGE
+   UPLOAD AREA
 ========================================================== */
 
-.petfeed-edit-no-images {
-    padding: 24px 12px;
-    border: 1px dashed #D5DADD;
-    border-radius: 9px;
-    background: #FFFFFF;
-    color: #7A8490;
-    font-size: .8rem;
-    text-align: center;
+.petfeed-edit-upload {
+    margin-top: 14px;
 }
 
-
-/* ==========================================================
-   ADD MORE IMAGES
-========================================================== */
-
-.petfeed-edit-add-section {
-    margin-top: 4px;
-}
+    .petfeed-edit-upload p {
+        margin: 9px 0 0;
+        color: #6B7280;
+        font-size: .82rem;
+    }
 
 
 /* ==========================================================
    FILE INPUT
 ========================================================== */
 
-.petfeed-edit-photo-card .form-control[type="file"] {
+.petfeed-edit-photo-card
+.form-control[type="file"] {
     width: 100%;
     height: 44px;
     min-height: 44px;
@@ -5740,13 +6022,15 @@
     overflow: hidden;
 }
 
-    .petfeed-edit-photo-card .form-control[type="file"]:focus {
+    .petfeed-edit-photo-card
+    .form-control[type="file"]:focus {
         border-color: #D1D5DB !important;
         box-shadow: none !important;
         outline: none;
     }
 
-    .petfeed-edit-photo-card .form-control[type="file"]::file-selector-button {
+    .petfeed-edit-photo-card
+    .form-control[type="file"]::file-selector-button {
         height: 42px;
         margin-right: 15px;
         padding: 0 18px;
@@ -5756,24 +6040,12 @@
         color: #374151;
         font-weight: 500;
         cursor: pointer;
-        transition: background .2s ease;
     }
 
-        .petfeed-edit-photo-card .form-control[type="file"]::file-selector-button:hover {
+        .petfeed-edit-photo-card
+        .form-control[type="file"]::file-selector-button:hover {
             background: #E5E7EB;
         }
-
-
-/* ==========================================================
-   FILE INPUT HELP TEXT
-========================================================== */
-
-.petfeed-edit-photo-card .text-muted {
-    display: block;
-    margin: 8px 0 0;
-    color: #6B7280 !important;
-    font-size: .82rem;
-}
 
 
 /* ==========================================================
@@ -5782,10 +6054,9 @@
 
 .petfeed-edit-preview-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
     margin-top: 10px;
-    min-height: 100px;
     align-content: start;
 }
 
@@ -5797,7 +6068,7 @@
     .petfeed-edit-preview-grid img {
         display: block;
         width: 100%;
-        height: 130px;
+        height: 105px;
         object-fit: cover;
         border: 1px solid #E5E7EB;
         border-radius: 10px;
@@ -5810,18 +6081,17 @@
 
     .petfeed-edit-preview-grid .more-images {
         width: 100%;
-        height: 130px;
+        height: 105px;
         display: flex;
         align-items: center;
         justify-content: center;
-        text-align: center;
         padding: 10px;
         background: #000000;
         color: #FFFFFF;
         border-radius: 10px;
-        font-size: .9rem;
+        text-align: center;
+        font-size: .85rem;
         font-weight: 600;
-        line-height: 1.4;
     }
 
 
@@ -5830,7 +6100,7 @@
 ========================================================== */
 
 .petfeed-edit-card hr {
-    margin: 25px 0 20px;
+    margin: 24px 0 18px;
     border: 0;
     border-top: 1px solid #E5E7EB;
     opacity: 1;
@@ -5853,7 +6123,8 @@
    CANCEL BUTTON
 ========================================================== */
 
-    .petfeed-edit-footer .btn-outline-secondary {
+    .petfeed-edit-footer
+    .btn-outline-secondary {
         min-width: 105px;
         height: 42px;
         padding: 0 20px;
@@ -5867,10 +6138,10 @@
         font-size: .9rem;
         font-weight: 600;
         text-decoration: none;
-        transition: all .2s ease;
     }
 
-        .petfeed-edit-footer .btn-outline-secondary:hover {
+        .petfeed-edit-footer
+        .btn-outline-secondary:hover {
             background: #F3F4F6;
             border-color: #D1D5DB;
             color: #374151;
@@ -5878,10 +6149,11 @@
 
 
     /* ==========================================================
-   SAVE CHANGES BUTTON
+   SAVE BUTTON
 ========================================================== */
 
-    .petfeed-edit-footer .btn-success {
+    .petfeed-edit-footer
+    .btn-success {
         min-width: 125px;
         height: 42px;
         padding: 0 21px;
@@ -5891,10 +6163,10 @@
         color: #FFFFFF;
         font-size: .9rem;
         font-weight: 600;
-        transition: all .2s ease;
     }
 
-        .petfeed-edit-footer .btn-success:hover {
+        .petfeed-edit-footer
+        .btn-success:hover {
             background: #8ACE79;
             border-color: #8ACE79;
             color: #FFFFFF;
@@ -5914,7 +6186,6 @@
     }
 
     .petfeed-edit-photo-card {
-        min-height: auto;
         margin-top: 4px;
     }
 }
@@ -5938,15 +6209,6 @@
 
     .petfeed-edit-header h2 {
         font-size: 1.5rem;
-    }
-
-    .petfeed-edit-photo-card {
-        padding: 18px;
-    }
-
-    .petfeed-edit-image-grid,
-    .petfeed-edit-preview-grid {
-        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -5976,30 +6238,29 @@
         font-size: .85rem;
     }
 
-    .petfeed-edit-photo-card {
-        padding: 16px;
+    .petfeed-edit-current-images,
+    .petfeed-edit-preview-grid {
+        grid-template-columns: 1fr;
     }
 
-    .petfeed-edit-image {
-        height: 110px;
-    }
-
-    .petfeed-edit-preview-grid img,
-    .petfeed-edit-preview-grid .more-images {
-        height: 110px;
-    }
+        .petfeed-edit-image,
+        .petfeed-edit-preview-grid img,
+        .petfeed-edit-preview-grid .more-images {
+            height: 120px;
+        }
 
     .petfeed-edit-footer {
         justify-content: stretch;
     }
 
-        .petfeed-edit-footer .btn-outline-secondary,
-        .petfeed-edit-footer .btn-success {
+        .petfeed-edit-footer
+        .btn-outline-secondary,
+        .petfeed-edit-footer
+        .btn-success {
             flex: 1;
             min-width: 0;
         }
 }
-
 
 
 /* ==========================================================
@@ -6637,15 +6898,92 @@
         cursor: default;
     }
 
+/* ==========================================================
+   BIO
+   ========================================================== */
 
-/* Bio */
-
-.admin-edit-profile-information-item textarea.form-control {
-    min-height: 120px;
-    resize: vertical;
-    line-height: 1.5;
+.admin-profile-bio {
+    color: #1f2937;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    word-break: break-word;
 }
 
+
+/* ==========================================================
+   ADMIN PROFILE ACTIONS
+   ========================================================== */
+
+.admin-profile-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.admin-profile-actions-header {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.admin-profile-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.admin-profile-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    height: 42px;
+    padding: 0 20px;
+    border: 1px solid #d9e2d6;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #4b5563;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+    .admin-profile-secondary-button:hover {
+        background: #f3f8f1;
+        border-color: #8ACE79;
+        color: #5fa653;
+        text-decoration: none;
+    }
+
+.admin-profile-actions .admin-profile-edit-button {
+    width: auto;
+    min-width: 150px;
+    padding: 0 24px;
+}
+
+
+/* ==========================================================
+   ACTIONS RESPONSIVE
+   ========================================================== */
+
+@media (max-width: 767.98px) {
+
+    .admin-profile-actions-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-profile-actions {
+        width: 100%;
+    }
+
+        .admin-profile-secondary-button,
+        .admin-profile-actions .admin-profile-edit-button {
+            flex: 1;
+        }
+}
 
 /* Validation */
 
@@ -6989,3 +7327,1024 @@
 
 
 
+/* ==========================================================
+   ==========================================================
+   ADMIN RESPONSIVE FINAL OVERRIDES
+   Keep this section at the VERY BOTTOM of admin-dashboard.css
+   ==========================================================
+   ========================================================== */
+
+
+/* ==========================================================
+   LARGE TABLET / SMALL LAPTOP
+   769px - 1100px
+   ========================================================== */
+
+@media (max-width: 1100px) {
+
+    /* ----------------------------------------------------------
+       GENERAL ADMIN PAGE SPACING
+       ---------------------------------------------------------- */
+
+    .admin-dashboard-page,
+    .admin-petfeed-page,
+    .admin-lost-found-page,
+    .admin-marketplace-page,
+    .admin-my-posts-page,
+    .admin-my-post-details-page,
+    .admin-petfeed-details-page {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+
+    /* ----------------------------------------------------------
+       DASHBOARD
+       ---------------------------------------------------------- */
+
+    .admin-dashboard-statistics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .admin-dashboard-main {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .admin-dashboard-summary-card,
+    .admin-dashboard-queue-card {
+        width: 100%;
+    }
+
+
+    /* ----------------------------------------------------------
+       PROFILE / EDIT PROFILE
+       ---------------------------------------------------------- */
+
+    .admin-profile-layout,
+    .admin-edit-profile-layout {
+        grid-template-columns: 280px minmax(0, 1fr);
+        gap: 20px;
+    }
+
+
+    /* ----------------------------------------------------------
+       CREATE POST
+       ---------------------------------------------------------- */
+
+    .create-form {
+        grid-template-columns: minmax(0, 1fr) 300px;
+        gap: 20px;
+    }
+}
+
+
+/* ==========================================================
+   TABLET
+   Up to 900px
+   ========================================================== */
+
+@media (max-width: 900px) {
+
+    /* ----------------------------------------------------------
+       PAGE CONTAINERS
+       ---------------------------------------------------------- */
+
+    .admin-dashboard-page,
+    .admin-petfeed-page,
+    .admin-lost-found-page,
+    .admin-marketplace-page,
+    .admin-my-posts-page,
+    .admin-my-post-details-page,
+    .admin-petfeed-details-page {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+
+    /* ==========================================================
+       MEMBERS / ADMINS TABLE
+       ========================================================== */
+
+    .admin-card {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .admin-table {
+        min-width: 760px;
+    }
+
+
+    /* ==========================================================
+       DASHBOARD
+       ========================================================== */
+
+    .admin-dashboard-statistics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .admin-dashboard-stat-card {
+        min-height: 100px;
+        padding: 16px;
+    }
+
+    .admin-dashboard-main {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .admin-dashboard-charts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        padding: 18px;
+    }
+
+    .admin-dashboard-chart-container {
+        width: min(100%, 210px);
+        height: 210px;
+    }
+
+
+    /* ==========================================================
+       PETFEED / LOST FOUND / MARKETPLACE LIST FILTERS
+       ========================================================== */
+
+    .admin-petfeed-filter-card,
+    .admin-lost-found-filter-card,
+    .admin-marketplace-filter-card {
+        gap: 14px;
+        align-items: flex-end;
+    }
+
+    .admin-petfeed-filters,
+    .admin-lost-found-filters,
+    .admin-marketplace-filters {
+        flex: 1;
+        overflow-x: auto;
+        overflow-y: visible;
+        padding-bottom: 3px;
+        scrollbar-width: none;
+    }
+
+        .admin-petfeed-filters::-webkit-scrollbar,
+        .admin-lost-found-filters::-webkit-scrollbar,
+        .admin-marketplace-filters::-webkit-scrollbar {
+            display: none;
+        }
+
+
+    /* ==========================================================
+       ADMIN PROFILE
+       ========================================================== */
+
+    .admin-profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-profile-left-column {
+        position: static;
+        display: grid;
+        grid-template-columns: minmax(240px, .8fr) minmax(280px, 1.2fr);
+        gap: 18px;
+    }
+
+    .admin-profile-right-column {
+        width: 100%;
+    }
+
+
+    /* ==========================================================
+       ADMIN EDIT PROFILE
+       ========================================================== */
+
+    .admin-edit-profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-edit-profile-left-column {
+        position: static;
+        display: grid;
+        grid-template-columns: minmax(240px, .8fr) minmax(280px, 1.2fr);
+        gap: 18px;
+    }
+
+    .admin-edit-profile-right-column {
+        width: 100%;
+    }
+
+
+    /* ==========================================================
+       CREATE PETFEED
+       ========================================================== */
+
+    .create-form {
+        grid-template-columns: 1fr;
+    }
+
+    .create-photos {
+        min-height: 0;
+    }
+
+    /* ==========================================================
+   CREATE PETFEED - CUSTOM SELECT SIZE
+========================================================== */
+
+    .create-fields .pethub-select-trigger {
+        height: 50px;
+        min-height: 50px;
+        padding: 0 15px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+    }
+
+
+    /* ==========================================================
+       ADMIN PETFEED DETAILS
+       ========================================================== */
+
+    .admin-petfeed-details-layout {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .admin-petfeed-details-gallery {
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 16 / 10;
+    }
+
+    .admin-petfeed-details-carousel,
+    .admin-petfeed-details-carousel .carousel-inner,
+    .admin-petfeed-details-carousel .carousel-item {
+        width: 100%;
+        height: 100%;
+    }
+
+    .admin-petfeed-details-panel {
+        height: auto;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .admin-petfeed-details-comments-scroll {
+        height: auto;
+        max-height: none;
+        overflow: visible;
+    }
+
+
+    /* ==========================================================
+       ADMIN MY POSTS DETAILS
+       This overrides ALL older duplicate responsive rules.
+       ========================================================== */
+
+    .admin-my-post-details-layout {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .admin-my-post-details-gallery {
+        width: 100%;
+        height: auto !important;
+        min-height: 0 !important;
+        aspect-ratio: 16 / 10;
+        border-radius: 18px;
+    }
+
+    .admin-my-post-details-carousel,
+    .admin-my-post-details-carousel .carousel-inner,
+    .admin-my-post-details-carousel .carousel-item {
+        width: 100%;
+        height: 100%;
+    }
+
+    .admin-my-post-details-main-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .admin-my-post-details-panel {
+        width: 100%;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .admin-my-post-details-comments-scroll {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
+
+/* ==========================================================
+   MOBILE / SMALL TABLET
+   Up to 768px
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    /* ==========================================================
+       GENERAL PAGE SPACING
+       ========================================================== */
+
+    .admin-dashboard-page,
+    .admin-petfeed-page,
+    .admin-lost-found-page,
+    .admin-marketplace-page,
+    .admin-my-posts-page,
+    .admin-my-post-details-page,
+    .admin-petfeed-details-page {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+
+    /* ==========================================================
+       GENERIC ADMIN HEADER
+       ========================================================== */
+
+    .admin-header {
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .admin-title {
+        font-size: 1.65rem;
+    }
+
+    .admin-subtitle {
+        font-size: .88rem;
+    }
+
+
+    /* ==========================================================
+       MEMBERS CARD HEADER
+       ========================================================== */
+
+    .admin-card-header {
+        padding: 18px;
+        gap: 14px;
+    }
+
+    .search-box {
+        max-width: 240px;
+        height: 44px;
+    }
+
+
+    /* ==========================================================
+       DASHBOARD
+       ========================================================== */
+
+    .admin-dashboard-heading {
+        margin-top: 1.25rem;
+        margin-bottom: 1.1rem;
+    }
+
+        .admin-dashboard-heading h2 {
+            font-size: 1.65rem;
+        }
+
+        .admin-dashboard-heading p {
+            font-size: .88rem;
+        }
+
+    .admin-dashboard-statistics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .admin-dashboard-stat-card {
+        min-height: 92px;
+        padding: 14px;
+        gap: 11px;
+    }
+
+    .admin-dashboard-stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .admin-dashboard-stat-value {
+        font-size: 1.3rem;
+    }
+
+    .admin-dashboard-stat-label {
+        font-size: .73rem;
+    }
+
+    .admin-dashboard-card-header {
+        padding: 17px 18px;
+    }
+
+    .admin-dashboard-charts {
+        grid-template-columns: 1fr;
+        padding: 18px;
+        gap: 24px;
+    }
+
+    .admin-dashboard-chart-container {
+        width: min(100%, 230px);
+        height: 230px;
+    }
+
+    .admin-dashboard-queue {
+        padding: 14px;
+    }
+
+    .admin-dashboard-queue-item {
+        padding: 15px;
+    }
+
+
+    /* ==========================================================
+       PETFEED / LOST FOUND / MARKETPLACE HEADERS
+       ========================================================== */
+
+    .admin-petfeed-header,
+    .admin-lost-found-header,
+    .admin-marketplace-header {
+        margin-top: 1.3rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .admin-petfeed-header-text h1,
+    .admin-lost-found-header-text h1,
+    .admin-marketplace-header-text h1 {
+        font-size: 1.6rem;
+    }
+
+
+    /* ==========================================================
+       FILTER CARDS
+       ========================================================== */
+
+    .admin-petfeed-filter-card,
+    .admin-lost-found-filter-card,
+    .admin-marketplace-filter-card {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .admin-petfeed-filters,
+    .admin-lost-found-filters,
+    .admin-marketplace-filters {
+        width: 100%;
+    }
+
+    .admin-petfeed-total,
+    .admin-lost-found-total,
+    .admin-marketplace-total {
+        margin-left: 0;
+        margin-bottom: 0;
+        align-self: flex-end;
+    }
+
+
+    /* ==========================================================
+       PETFEED / LOST FOUND / MARKETPLACE CARDS
+       ========================================================== */
+
+    .admin-petfeed-image-container,
+    .admin-lost-found-image-container,
+    .admin-marketplace-image-container {
+        width: 100px;
+        height: 100px;
+    }
+
+    .admin-petfeed-content,
+    .admin-lost-found-content,
+    .admin-marketplace-content {
+        padding: 12px;
+    }
+
+    .admin-petfeed-actions,
+    .admin-lost-found-actions,
+    .admin-marketplace-actions {
+        min-width: 76px;
+        padding: 8px;
+    }
+
+
+    /* ==========================================================
+       ADMIN PROFILE
+       ========================================================== */
+
+    .admin-profile-left-column {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .admin-profile-information-card {
+        padding: 20px;
+    }
+
+    .admin-profile-information-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-profile-actions-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-profile-actions {
+        width: 100%;
+    }
+
+        .admin-profile-secondary-button,
+        .admin-profile-actions .admin-profile-edit-button {
+            flex: 1;
+        }
+
+
+    /* ==========================================================
+       ADMIN EDIT PROFILE
+       ========================================================== */
+
+    .admin-edit-profile-left-column {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .admin-edit-profile-information-card {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .admin-edit-profile-information-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .admin-edit-profile-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .admin-edit-profile-cancel-button,
+    .admin-edit-profile-save-button {
+        width: 100%;
+    }
+
+
+    /* ==========================================================
+       ADMIN MY POSTS
+       ========================================================== */
+
+    .admin-my-posts-header-text h1 {
+        font-size: 1.6rem;
+    }
+
+    .admin-my-posts-card {
+        min-height: 120px;
+    }
+
+    .admin-my-posts-image-container {
+        width: 125px;
+        min-width: 125px;
+        padding: 10px;
+    }
+
+    .admin-my-posts-image {
+        width: 105px;
+        height: 100px;
+    }
+
+    .admin-my-posts-content {
+        padding: 14px 10px;
+    }
+
+    .admin-my-posts-actions {
+        width: 90px;
+        min-width: 90px;
+    }
+
+
+    /* ==========================================================
+       PETFEED CREATE
+       ========================================================== */
+
+    .create-card {
+        padding: 22px 20px;
+    }
+
+    .create-form {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .create-photos {
+        min-height: 0;
+        padding: 18px;
+    }
+
+
+    /* ==========================================================
+       PETFEED EDIT
+       ========================================================== */
+
+    .petfeed-edit-page {
+        max-width: 100%;
+        margin: 20px auto;
+        padding: 0 12px;
+    }
+
+    .petfeed-edit-card {
+        padding: 22px;
+    }
+
+
+    /* ==========================================================
+       DETAILS PAGES
+       ========================================================== */
+
+    .admin-my-post-details-panel-content,
+    .admin-petfeed-details-panel-content {
+        padding: 18px;
+    }
+
+    .admin-my-post-details-gallery,
+    .admin-petfeed-details-gallery {
+        aspect-ratio: 4 / 3;
+    }
+}
+
+
+/* ==========================================================
+   PHONE
+   Up to 576px
+   ========================================================== */
+
+@media (max-width: 576px) {
+
+    /* ==========================================================
+       HEADERS
+       ========================================================== */
+
+    .admin-header {
+        flex-direction: column;
+    }
+
+    .admin-add-btn {
+        width: 100%;
+    }
+
+    .admin-card-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box {
+        max-width: none;
+        width: 100%;
+    }
+
+
+    /* ==========================================================
+       DASHBOARD
+       ========================================================== */
+
+    .admin-dashboard-statistics {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-dashboard-stat-card {
+        min-height: 84px;
+    }
+
+    .admin-dashboard-chart-container {
+        width: min(100%, 210px);
+        height: 210px;
+    }
+
+    .admin-dashboard-chart-legend {
+        flex-wrap: wrap !important;
+        gap: 8px 12px !important;
+        white-space: normal !important;
+    }
+
+    .admin-dashboard-queue-top {
+        gap: 10px;
+    }
+
+
+    /* ==========================================================
+       LIST PAGE HEADERS
+       ========================================================== */
+
+    .admin-petfeed-header,
+    .admin-lost-found-header,
+    .admin-marketplace-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .admin-petfeed-header-action {
+        width: 100%;
+    }
+
+    .admin-petfeed-create-button {
+        width: 100%;
+    }
+
+
+    /* ==========================================================
+       LIST CARDS
+       ========================================================== */
+
+    .admin-petfeed-card,
+    .admin-lost-found-card,
+    .admin-marketplace-card {
+        align-items: stretch;
+    }
+
+    .admin-petfeed-image-container,
+    .admin-lost-found-image-container,
+    .admin-marketplace-image-container {
+        width: 88px;
+        height: 88px;
+        margin: 7px 0 7px 7px;
+    }
+
+    .admin-petfeed-content,
+    .admin-lost-found-content,
+    .admin-marketplace-content {
+        padding: 10px;
+    }
+
+    .admin-petfeed-title,
+    .admin-lost-found-title,
+    .admin-marketplace-title {
+        font-size: .9rem;
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .admin-petfeed-actions,
+    .admin-lost-found-actions,
+    .admin-marketplace-actions {
+        min-width: 62px;
+        padding: 7px;
+    }
+
+
+    /* ==========================================================
+       PROFILE
+       ========================================================== */
+
+    .admin-profile-page-container {
+        padding-top: 14px;
+        padding-bottom: 18px;
+    }
+
+    .admin-profile-information-card {
+        padding: 17px;
+        margin-bottom: 16px;
+    }
+
+    .admin-profile-activity-card {
+        padding: 18px;
+    }
+
+    .admin-profile-actions {
+        flex-direction: column;
+    }
+
+        .admin-profile-secondary-button,
+        .admin-profile-actions .admin-profile-edit-button {
+            width: 100%;
+        }
+
+
+    /* ==========================================================
+       EDIT PROFILE
+       ========================================================== */
+
+    .admin-edit-profile-layout,
+    .admin-profile-layout {
+        gap: 16px;
+    }
+
+    .admin-edit-profile-information-card {
+        padding: 17px;
+        margin-bottom: 16px;
+    }
+
+    .admin-edit-profile-actions-card {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+
+    /* ==========================================================
+       MY POSTS
+       ========================================================== */
+
+    .admin-my-posts-page {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .admin-my-posts-card {
+        display: grid;
+        grid-template-columns: 92px minmax(0, 1fr) 65px;
+        min-height: 110px;
+    }
+
+    .admin-my-posts-image-container {
+        width: 92px;
+        min-width: 0;
+        padding: 8px;
+    }
+
+    .admin-my-posts-image {
+        width: 76px;
+        height: 88px;
+    }
+
+    .admin-my-posts-content {
+        padding: 10px 6px;
+    }
+
+    .admin-my-posts-actions {
+        width: auto;
+        min-width: 0;
+        padding: 7px;
+    }
+
+    .admin-my-posts-type-status {
+        max-width: 60px;
+        padding: 4px 6px;
+        overflow: hidden;
+        font-size: .62rem;
+        text-overflow: ellipsis;
+    }
+
+
+    /* ==========================================================
+       CREATE / EDIT
+       ========================================================== */
+
+    .create-card,
+    .petfeed-edit-card {
+        padding: 18px;
+        border-radius: 14px;
+    }
+
+    .image-preview-grid,
+    .petfeed-edit-current-images,
+    .petfeed-edit-preview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .create-footer,
+    .petfeed-edit-footer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+        .create-footer .btn,
+        .petfeed-edit-footer .btn {
+            width: 100%;
+            min-width: 0;
+        }
+
+
+    /* ==========================================================
+       MY POSTS DETAILS / PETFEED DETAILS
+       ========================================================== */
+
+    .admin-my-post-details-page,
+    .admin-petfeed-details-page {
+        padding: 10px 10px 24px;
+    }
+
+    .admin-my-post-details-layout,
+    .admin-petfeed-details-layout {
+        gap: 14px;
+    }
+
+    .admin-my-post-details-gallery,
+    .admin-petfeed-details-gallery {
+        height: auto !important;
+        min-height: 0 !important;
+        aspect-ratio: 4 / 3;
+        border-radius: 14px;
+    }
+
+    .admin-my-post-details-panel,
+    .admin-petfeed-details-panel {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        border-radius: 12px;
+    }
+
+    .admin-my-post-details-panel-content,
+    .admin-petfeed-details-panel-content {
+        padding: 16px;
+    }
+
+    .admin-my-post-details-profile-picture,
+    .admin-petfeed-details-profile-picture {
+        width: 40px;
+        height: 40px;
+    }
+
+    .admin-my-post-details-title,
+    .admin-petfeed-details-title {
+        font-size: 1.3rem;
+    }
+
+    .admin-my-post-details-comments-scroll,
+    .admin-petfeed-details-comments-scroll {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .admin-my-post-details-comment-content,
+    .admin-petfeed-comment-content {
+        margin-left: 0;
+    }
+}
+
+
+/* ==========================================================
+   VERY SMALL PHONE
+   Up to 400px
+   ========================================================== */
+
+@media (max-width: 400px) {
+
+    .admin-dashboard-page,
+    .admin-petfeed-page,
+    .admin-lost-found-page,
+    .admin-marketplace-page,
+    .admin-my-posts-page,
+    .admin-my-post-details-page,
+    .admin-petfeed-details-page {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+
+    /* Dashboard */
+
+    .admin-dashboard-heading h2 {
+        font-size: 1.45rem;
+    }
+
+    .admin-dashboard-stat-card {
+        padding: 13px;
+    }
+
+
+    /* My Posts */
+
+    .admin-my-posts-card {
+        grid-template-columns: 82px minmax(0, 1fr) 58px;
+    }
+
+    .admin-my-posts-image-container {
+        width: 82px;
+    }
+
+    .admin-my-posts-image {
+        width: 68px;
+        height: 80px;
+    }
+
+
+    /* Details image */
+
+    .admin-my-post-details-gallery,
+    .admin-petfeed-details-gallery {
+        aspect-ratio: 1 / 1;
+    }
+
+
+    /* Cards */
+
+    .admin-profile-information-card,
+    .admin-edit-profile-information-card {
+        padding: 14px;
+    }
+}

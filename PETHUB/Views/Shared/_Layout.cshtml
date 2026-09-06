@@ -1,5 +1,22 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using Microsoft.AspNetCore.Identity
+@using PETHUB.Models
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ApplicationUser? currentThemeUser = null;
+
+    if (User.Identity?.IsAuthenticated == true)
+    {
+        currentThemeUser =
+            await UserManager.GetUserAsync(User);
+    }
+
+    var useDarkMode =
+        currentThemeUser?.ThemePreference == "Dark";
+}
+<!DOCTYPE html>
+<html lang="en" class="@(useDarkMode ? "dark-mode" : "")">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,19 +24,6 @@
     <link rel="icon" type="image/png" href="~/images/PETHUB-LOGO.png" />
 
     <script type="importmap"></script>
-
-    <script>
-    (function () {
-
-        const savedTheme =
-            localStorage.getItem("pethubTheme");
-
-        if (savedTheme === "dark") {
-            document.documentElement.classList.add("dark-mode");
-        }
-
-    })();
-</script>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -214,7 +218,11 @@
     <!-- Preserved from the other branch -->
     <script src="~/js/imageGallery.js" asp-append-version="true"></script>
     <!-- For changing theme feature js -->
+    @if (User.Identity?.IsAuthenticated == true)
+{
+    <!-- Dark mode is available only to logged-in users -->
     <script src="~/js/theme.js" asp-append-version="true"></script>
+}
 
 
     <!-- =========================================================

@@ -2487,3 +2487,1213 @@ html.dark-mode * {
    This file only replaces light surfaces with dark surfaces
    and dark text with readable light text.
 */
+
+
+/* ==========================================================
+   DARK MODE - LOGS PAGINATION
+   ========================================================== */
+
+html.dark-mode .logs-page .pagination-summary {
+    color: #8f96a3;
+}
+
+    html.dark-mode .logs-page .pagination-summary strong {
+        color: #d9dde5;
+    }
+
+
+/* Normal pagination buttons */
+
+html.dark-mode .logs-page .pagination-button {
+    background: #1c1c1c;
+    border-color: #353535;
+    color: #d9dde5;
+}
+
+
+    /* Hover */
+
+    html.dark-mode .logs-page .pagination-button:hover {
+        background: #252525;
+        border-color: #8ACE79;
+        color: #8ACE79;
+    }
+
+
+    /* Current page */
+
+    html.dark-mode .logs-page .pagination-button.active {
+        background: #8ACE79;
+        border-color: #8ACE79;
+        color: #ffffff;
+    }
+
+
+    /* Disabled previous / next */
+
+    html.dark-mode .logs-page .pagination-button.disabled {
+        background: #181818;
+        border-color: #303030;
+        color: #666666;
+    }
+
+
+/* ==========================================================
+   DARK MODE - ADMIN MY POSTS
+   ========================================================== */
+
+/* Main profile card */
+html.dark-mode .admin-profile-card,
+html.dark-mode .member-profile-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+    color: #f1f1f1 !important;
+}
+
+
+    /* Profile name / text */
+    html.dark-mode .admin-profile-card h1,
+    html.dark-mode .admin-profile-card h2,
+    html.dark-mode .admin-profile-card h3,
+    html.dark-mode .member-profile-card h1,
+    html.dark-mode .member-profile-card h2,
+    html.dark-mode .member-profile-card h3 {
+        color: #f1f1f1 !important;
+    }
+
+    html.dark-mode .admin-profile-card p,
+    html.dark-mode .member-profile-card p {
+        color: #a9a9a9 !important;
+    }
+
+
+/* Stats section */
+html.dark-mode .admin-profile-stats,
+html.dark-mode .member-profile-stats {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+html.dark-mode .admin-profile-stat,
+html.dark-mode .member-profile-stat {
+    border-color: #303030 !important;
+}
+
+html.dark-mode .admin-profile-stat-number,
+html.dark-mode .member-profile-stat-number {
+    color: #f1f1f1 !important;
+}
+
+html.dark-mode .admin-profile-stat-label,
+html.dark-mode .member-profile-stat-label {
+    color: #a9a9a9 !important;
+}
+
+
+/* My Posts heading */
+html.dark-mode .admin-my-posts-title,
+html.dark-mode .member-my-posts-title {
+    color: #f1f1f1 !important;
+}
+
+html.dark-mode .admin-my-posts-subtitle,
+html.dark-mode .member-my-posts-subtitle {
+    color: #9b9b9b !important;
+}
+
+
+/* Post count bar */
+html.dark-mode .admin-my-posts-count,
+html.dark-mode .member-my-posts-count {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+    color: #b8b8b8 !important;
+}
+
+
+/* Individual post card */
+html.dark-mode .admin-my-post-card,
+html.dark-mode .member-my-post-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+
+/* Post title */
+html.dark-mode .admin-my-post-card-title,
+html.dark-mode .member-my-post-card-title {
+    color: #f1f1f1 !important;
+}
+
+
+/* Post metadata */
+html.dark-mode .admin-my-post-card-date,
+html.dark-mode .member-my-post-card-date,
+html.dark-mode .admin-my-post-card-meta,
+html.dark-mode .member-my-post-card-meta {
+    color: #9b9b9b !important;
+}
+
+
+/* Post icons / counts */
+html.dark-mode .admin-my-post-card svg,
+html.dark-mode .member-my-post-card svg {
+    color: #a9a9a9 !important;
+}
+
+
+/* Three-dot menu */
+html.dark-mode .admin-my-post-card .dropdown-toggle,
+html.dark-mode .member-my-post-card .dropdown-toggle,
+html.dark-mode .admin-profile-card .dropdown-toggle,
+html.dark-mode .member-profile-card .dropdown-toggle {
+    color: #d0d0d0 !important;
+}
+
+
+/* Announcement / Pet Tip badges stay meaningful */
+html.dark-mode .admin-my-post-card .badge,
+html.dark-mode .member-my-post-card .badge {
+    background-color: inherit;
+}
+
+
+/* ==========================================================
+   DARK MODE - ADMIN MY POSTS
+   ========================================================== */
+
+html.dark-mode .admin-my-posts-page {
+    color: #f1f1f1;
+}
+
+
+/* ==========================================================
+   PAGE HEADER
+   ========================================================== */
+
+html.dark-mode .admin-my-posts-header h1 {
+    color: #f1f1f1;
+}
+
+html.dark-mode .admin-my-posts-header p {
+    color: #9ca3af;
+}
+
+
+/* ==========================================================
+   FILTER / TOTAL CARD
+   ========================================================== */
+
+html.dark-mode .admin-my-posts-filter-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+html.dark-mode .admin-my-posts-total {
+    color: #b0b0b0 !important;
+}
+
+
+/* ==========================================================
+   POST CARD
+   ========================================================== */
+
+html.dark-mode .admin-my-posts-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+
+/* ==========================================================
+   POST TITLE
+   ========================================================== */
+
+html.dark-mode .admin-my-posts-title {
+    color: #f1f1f1 !important;
+}
+
+
+/* ==========================================================
+   DATE
+   ========================================================== */
+
+html.dark-mode .admin-my-posts-date {
+    color: #a0a0a0 !important;
+}
+
+
+/* ==========================================================
+   ENGAGEMENT
+   ========================================================== */
+
+html.dark-mode .admin-my-posts-engagement {
+    color: #b0b0b0 !important;
+}
+
+    html.dark-mode .admin-my-posts-engagement span {
+        color: #b0b0b0 !important;
+    }
+
+    html.dark-mode .admin-my-posts-engagement svg {
+        color: #b0b0b0 !important;
+    }
+
+
+/* ==========================================================
+   THREE-DOT BUTTON
+   ========================================================== */
+
+html.dark-mode .admin-my-posts-more-button {
+    color: #b8b8b8 !important;
+}
+
+    html.dark-mode .admin-my-posts-more-button:hover {
+        background: #292929 !important;
+        color: #ffffff !important;
+    }
+
+
+/* ==========================================================
+   DROPDOWN
+   ========================================================== */
+
+html.dark-mode .admin-my-posts-card .dropdown-menu {
+    background: #202020 !important;
+    border-color: #353535 !important;
+}
+
+html.dark-mode .admin-my-posts-card .dropdown-item {
+    color: #e5e5e5 !important;
+}
+
+    html.dark-mode .admin-my-posts-card .dropdown-item:hover {
+        background: #2b2b2b !important;
+    }
+
+
+/* ==========================================================
+   EMPTY STATE
+   ========================================================== */
+
+html.dark-mode .admin-my-posts-empty {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+    html.dark-mode .admin-my-posts-empty h3 {
+        color: #f1f1f1 !important;
+    }
+
+    html.dark-mode .admin-my-posts-empty p {
+        color: #9ca3af !important;
+    }
+
+/* ==========================================================
+   DARK MODE - ADMIN PROFILE STAT NUMBERS
+   Must stay at the bottom of theme.css
+   ========================================================== */
+
+html.dark-mode body
+.admin-my-posts-page
+.admin-profile-card
+.admin-profile-stats
+.admin-profile-stat > strong {
+    color: #F1F1F1 !important;
+}
+
+
+/* Stat labels */
+
+html.dark-mode body
+.admin-my-posts-page
+.admin-profile-card
+.admin-profile-stats
+.admin-profile-stat > span {
+    color: #A7A7A7 !important;
+}
+
+
+/* ==========================================================
+   DARK MODE - ADMIN MY PROFILE
+   ========================================================== */
+
+
+/* ==========================================================
+   ACTIVITY CARD
+   ========================================================== */
+
+html.dark-mode .admin-profile-activity-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+
+    /* Activity header */
+
+    html.dark-mode .admin-profile-activity-card
+    .admin-profile-section-header h3,
+    html.dark-mode .admin-profile-activity-card
+    .admin-profile-section-header h4 {
+        color: #f1f1f1 !important;
+    }
+
+    html.dark-mode .admin-profile-activity-card
+    .admin-profile-section-header p {
+        color: #9ca3af !important;
+    }
+
+
+/* Activity rows */
+
+html.dark-mode .admin-profile-activity-item {
+    border-color: #303030 !important;
+}
+
+
+/* Activity numbers */
+
+html.dark-mode .admin-profile-activity-content strong {
+    color: #f1f1f1 !important;
+}
+
+
+/* Activity labels */
+
+html.dark-mode .admin-profile-activity-content span {
+    color: #a7a7a7 !important;
+}
+
+
+/* ==========================================================
+   INFORMATION CARDS
+   Personal Information / Account Information / About Me
+   ========================================================== */
+
+html.dark-mode .admin-profile-information-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+
+    /* Section headers */
+
+    html.dark-mode .admin-profile-information-card
+    .admin-profile-section-header h3,
+    html.dark-mode .admin-profile-information-card
+    .admin-profile-section-header h4 {
+        color: #f1f1f1 !important;
+    }
+
+    html.dark-mode .admin-profile-information-card
+    .admin-profile-section-header p {
+        color: #9ca3af !important;
+    }
+
+
+/* ==========================================================
+   SUBSECTION TITLES
+   Name / Contact Details / Account / Account Status
+   ========================================================== */
+
+html.dark-mode .admin-profile-subsection-title {
+    color: #e5e5e5 !important;
+    border-color: #303030 !important;
+}
+
+
+/* ==========================================================
+   INFORMATION FIELD BOXES
+   ========================================================== */
+
+html.dark-mode .admin-profile-information-item {
+    background: #242424 !important;
+    border-color: #353535 !important;
+}
+
+
+/* Small field labels */
+
+html.dark-mode .admin-profile-information-label {
+    color: #a7a7a7 !important;
+}
+
+
+/* Actual values */
+
+html.dark-mode .admin-profile-information-value {
+    color: #f1f1f1 !important;
+}
+
+
+/* "Not specified" Bootstrap text-muted */
+
+html.dark-mode .admin-profile-information-item .text-muted {
+    color: #858585 !important;
+}
+
+
+/* ==========================================================
+   BIO
+   ========================================================== */
+
+html.dark-mode .admin-profile-bio {
+    color: #e5e5e5 !important;
+}
+
+
+/* ==========================================================
+   DARK MODE - ADMIN EDIT PROFILE
+   ========================================================== */
+
+
+/* ==========================================================
+   PROFILE CARD
+   ========================================================== */
+
+html.dark-mode .admin-edit-profile-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+
+/* Keep PetHub green */
+
+html.dark-mode .admin-edit-profile-cover {
+    background: #8ACE79 !important;
+}
+
+
+/* Profile name */
+
+html.dark-mode .admin-edit-profile-name {
+    color: #f1f1f1 !important;
+}
+
+
+/* Role / joined date */
+
+html.dark-mode .admin-edit-profile-role {
+    color: #a7a7a7 !important;
+}
+
+html.dark-mode .admin-edit-profile-joined {
+    color: #8f96a3 !important;
+}
+
+
+/* ==========================================================
+   ACTIVITY CARD
+   ========================================================== */
+
+html.dark-mode .admin-edit-profile-activity-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+
+    /* Activity header */
+
+    html.dark-mode .admin-edit-profile-activity-card h3,
+    html.dark-mode .admin-edit-profile-activity-card h4 {
+        color: #f1f1f1 !important;
+    }
+
+    html.dark-mode .admin-edit-profile-activity-card p {
+        color: #9ca3af !important;
+    }
+
+
+/* Activity rows */
+
+html.dark-mode .admin-edit-profile-activity-item {
+    border-color: #303030 !important;
+}
+
+html.dark-mode .admin-edit-profile-activity-content strong {
+    color: #f1f1f1 !important;
+}
+
+html.dark-mode .admin-edit-profile-activity-content span {
+    color: #a7a7a7 !important;
+}
+
+
+/* ==========================================================
+   INFORMATION CARDS
+   About Me / Personal Information / Account Information
+   ========================================================== */
+
+html.dark-mode .admin-edit-profile-information-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+
+/* Card headings */
+
+html.dark-mode .admin-edit-profile-section-header h3,
+html.dark-mode .admin-edit-profile-section-header h4 {
+    color: #f1f1f1 !important;
+}
+
+html.dark-mode .admin-edit-profile-section-header p {
+    color: #9ca3af !important;
+}
+
+
+/* ==========================================================
+   SUBSECTION TITLES
+   Biography / Name / Contact Details / Account
+   ========================================================== */
+
+html.dark-mode .admin-edit-profile-subsection-title {
+    color: #e5e5e5 !important;
+    border-color: #303030 !important;
+}
+
+
+/* ==========================================================
+   FIELD LABELS
+   ========================================================== */
+
+html.dark-mode .admin-edit-profile-information-label {
+    color: #b0b0b0 !important;
+}
+
+
+/* ==========================================================
+   INPUTS / SELECTS / TEXTAREA
+   ========================================================== */
+
+html.dark-mode .admin-edit-profile-information-item .form-control,
+html.dark-mode .admin-edit-profile-information-item .form-select,
+html.dark-mode .admin-edit-profile-information-item textarea {
+    background-color: #242424 !important;
+    border-color: #3a3a3a !important;
+    color: #f1f1f1 !important;
+}
+
+
+    /* Placeholder text */
+
+    html.dark-mode
+    .admin-edit-profile-information-item
+    .form-control::placeholder,
+    html.dark-mode
+    .admin-edit-profile-information-item
+    textarea::placeholder {
+        color: #777777 !important;
+    }
+
+
+    /* Focus */
+
+    html.dark-mode .admin-edit-profile-information-item .form-control:focus,
+    html.dark-mode .admin-edit-profile-information-item .form-select:focus,
+    html.dark-mode .admin-edit-profile-information-item textarea:focus {
+        background-color: #242424 !important;
+        border-color: #8ACE79 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.15) !important;
+    }
+
+
+    /* Readonly fields */
+
+    html.dark-mode
+    .admin-edit-profile-information-item
+    .form-control[readonly] {
+        background-color: #202020 !important;
+        border-color: #353535 !important;
+        color: #a7a7a7 !important;
+    }
+
+
+/* ==========================================================
+   ACTIONS CARD
+   ========================================================== */
+
+html.dark-mode .admin-edit-profile-actions-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+
+/* Cancel / Back */
+
+html.dark-mode .admin-edit-profile-cancel-button {
+    background: #242424 !important;
+    border-color: #353535 !important;
+    color: #d9d9d9 !important;
+}
+
+    html.dark-mode .admin-edit-profile-cancel-button:hover,
+    html.dark-mode .admin-edit-profile-cancel-button:focus {
+        background: #2b2b2b !important;
+        border-color: #8ACE79 !important;
+        color: #8ACE79 !important;
+    }
+
+
+/* Save button stays green */
+
+html.dark-mode .admin-edit-profile-save-button {
+    background: #8ACE79 !important;
+    border-color: #8ACE79 !important;
+    color: #ffffff !important;
+}
+
+
+/* ==========================================================
+   PROFILE PHOTO MODAL
+   ========================================================== */
+
+html.dark-mode .admin-edit-profile-photo-modal-content {
+    background: #1c1c1c !important;
+    border: 1px solid #303030 !important;
+}
+
+html.dark-mode .admin-edit-profile-photo-modal-header {
+    border-color: #303030 !important;
+}
+
+    html.dark-mode .admin-edit-profile-photo-modal-header h4 {
+        color: #f1f1f1 !important;
+    }
+
+html.dark-mode .admin-edit-profile-photo-modal-button {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+    color: #d9d9d9 !important;
+}
+
+    html.dark-mode .admin-edit-profile-photo-modal-button:hover {
+        background: #292929 !important;
+    }
+
+
+/* Remove Photo stays red */
+
+html.dark-mode .admin-edit-profile-photo-remove-button {
+    color: #e27b7b !important;
+}
+
+
+/* Modal cancel */
+
+html.dark-mode .admin-edit-profile-photo-cancel-button {
+    color: #a7a7a7 !important;
+}
+
+
+
+/* ==========================================================
+   DARK MODE - ADMIN MY POSTS DETAILS
+   ========================================================== */
+
+
+/* Main right-side panel */
+
+html.dark-mode .admin-my-post-details-panel {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+
+/* Inner panel content */
+
+html.dark-mode .admin-my-post-details-panel-content {
+    color: #f1f1f1 !important;
+}
+
+
+/* ==========================================================
+   AUTHOR / META
+   ========================================================== */
+
+html.dark-mode .admin-my-post-details-author-info h4 {
+    color: #f1f1f1 !important;
+}
+
+html.dark-mode .admin-my-post-details-meta {
+    color: #a7a7a7 !important;
+}
+
+    html.dark-mode .admin-my-post-details-meta span {
+        color: #a7a7a7 !important;
+    }
+
+
+/* ==========================================================
+   TITLE
+   ========================================================== */
+
+html.dark-mode .admin-my-post-details-title {
+    color: #f1f1f1 !important;
+}
+
+
+/* ==========================================================
+   SECTIONS
+   ========================================================== */
+
+html.dark-mode .admin-my-post-details-section {
+    border-color: #303030 !important;
+}
+
+    html.dark-mode .admin-my-post-details-section h3 {
+        color: #8ACE79 !important;
+    }
+
+html.dark-mode .admin-my-post-details-content {
+    color: #d9d9d9 !important;
+}
+
+
+/* ==========================================================
+   POST ACTIVITY
+   ========================================================== */
+
+html.dark-mode .admin-my-post-details-stats {
+    background: #242424 !important;
+    border-color: #353535 !important;
+}
+
+html.dark-mode .admin-my-post-details-stat {
+    border-color: #353535 !important;
+}
+
+    html.dark-mode .admin-my-post-details-stat strong {
+        color: #f1f1f1 !important;
+    }
+
+    html.dark-mode .admin-my-post-details-stat span {
+        color: #a7a7a7 !important;
+    }
+
+
+/* ==========================================================
+   COMMENTS
+   ========================================================== */
+
+html.dark-mode .admin-my-post-details-comments-section {
+    border-color: #303030 !important;
+}
+
+html.dark-mode .admin-my-post-details-comments-header h3 {
+    color: #8ACE79 !important;
+}
+
+
+/* Empty comments */
+
+html.dark-mode .admin-my-post-details-no-comments {
+    background: #242424 !important;
+    color: #a7a7a7 !important;
+}
+
+
+/* Actual comment card */
+
+html.dark-mode .admin-my-post-details-comment {
+    background: #242424 !important;
+    border-color: #353535 !important;
+}
+
+html.dark-mode .admin-my-post-details-comment-member strong {
+    color: #f1f1f1 !important;
+}
+
+html.dark-mode .admin-my-post-details-comment-member span {
+    color: #8f96a3 !important;
+}
+
+html.dark-mode .admin-my-post-details-comment-content {
+    color: #d9d9d9 !important;
+}
+
+
+/* ==========================================================
+   THREE-DOT MENU
+   ========================================================== */
+
+html.dark-mode .admin-my-post-details-more-button {
+    color: #b8b8b8 !important;
+}
+
+    html.dark-mode .admin-my-post-details-more-button:hover {
+        background: #292929 !important;
+        color: #ffffff !important;
+    }
+
+
+/* Dropdown */
+
+html.dark-mode .admin-my-post-details-panel .dropdown-menu {
+    background: #202020 !important;
+    border-color: #353535 !important;
+}
+
+html.dark-mode .admin-my-post-details-panel .dropdown-item {
+    color: #e5e5e5 !important;
+}
+
+    html.dark-mode .admin-my-post-details-panel .dropdown-item:hover {
+        background: #2b2b2b !important;
+        color: #ffffff !important;
+    }
+
+
+/* ==========================================================
+   NO IMAGE
+   ========================================================== */
+
+html.dark-mode .admin-my-post-details-no-image {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+    color: #a7a7a7 !important;
+}
+
+
+/* ==========================================================
+   DARK MODE - PETFEED EDIT
+   ========================================================== */
+
+
+/* Main form card */
+
+html.dark-mode .petfeed-edit-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+html.dark-mode .petfeed-edit-header h2 {
+    color: #f1f1f1 !important;
+}
+
+html.dark-mode .petfeed-edit-header p,
+html.dark-mode .petfeed-edit-header .text-muted {
+    color: #9ca3af !important;
+}
+
+
+/* ==========================================================
+   FORM LABELS
+   ========================================================== */
+
+html.dark-mode .petfeed-edit-card .form-label {
+    color: #d9d9d9 !important;
+}
+
+
+/* ==========================================================
+   FORM CONTROLS
+   ========================================================== */
+
+html.dark-mode .petfeed-edit-card .form-control,
+html.dark-mode .petfeed-edit-card .form-select {
+    background-color: #242424 !important;
+    border-color: #3a3a3a !important;
+    color: #f1f1f1 !important;
+}
+
+    html.dark-mode .petfeed-edit-card .form-control::placeholder {
+        color: #777777 !important;
+    }
+
+
+    /* Focus */
+
+    html.dark-mode .petfeed-edit-card .form-control:focus,
+    html.dark-mode .petfeed-edit-card .form-select:focus {
+        background-color: #242424 !important;
+        border-color: #8ACE79 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 0 .18rem rgba(138, 206, 121, .15) !important;
+    }
+
+
+/* Select dropdown arrow / option area */
+
+html.dark-mode .petfeed-edit-card .form-select {
+    color-scheme: dark;
+}
+
+
+/* ==========================================================
+   PHOTO CARD
+   ========================================================== */
+
+html.dark-mode .petfeed-edit-photo-card {
+    background: #202020 !important;
+    border-color: #353535 !important;
+}
+
+    html.dark-mode .petfeed-edit-photo-card > h5 {
+        color: #f1f1f1 !important;
+    }
+
+
+    /* Upload helper text */
+
+    html.dark-mode .petfeed-edit-upload p,
+    html.dark-mode .petfeed-edit-photo-card .text-muted {
+        color: #8f96a3 !important;
+    }
+
+
+    /* ==========================================================
+   FILE INPUT
+   ========================================================== */
+
+    html.dark-mode
+    .petfeed-edit-photo-card
+    .form-control[type="file"] {
+        background: #242424 !important;
+        border-color: #3a3a3a !important;
+        color: #e5e5e5 !important;
+    }
+
+        html.dark-mode
+        .petfeed-edit-photo-card
+        .form-control[type="file"]::file-selector-button {
+            background: #303030 !important;
+            border-color: #444444 !important;
+            color: #f1f1f1 !important;
+        }
+
+            html.dark-mode
+            .petfeed-edit-photo-card
+            .form-control[type="file"]::file-selector-button:hover {
+                background: #3a3a3a !important;
+            }
+
+
+/* ==========================================================
+   EXISTING IMAGE REMOVE BUTTON
+   Keep red meaning
+   ========================================================== */
+
+html.dark-mode .petfeed-edit-remove-button {
+    background: #242424 !important;
+    border-color: #c75b5b !important;
+    color: #e77b7b !important;
+}
+
+    html.dark-mode .petfeed-edit-remove-button:hover {
+        background: #312020 !important;
+        border-color: #e77b7b !important;
+        color: #ff9292 !important;
+    }
+
+
+/* ==========================================================
+   DIVIDER
+   ========================================================== */
+
+html.dark-mode .petfeed-edit-card hr {
+    border-color: #353535 !important;
+}
+
+
+/* ==========================================================
+   CANCEL BUTTON
+   ========================================================== */
+
+html.dark-mode
+.petfeed-edit-footer
+.btn-outline-secondary {
+    background: #242424 !important;
+    border-color: #3a3a3a !important;
+    color: #d9d9d9 !important;
+}
+
+    html.dark-mode
+    .petfeed-edit-footer
+    .btn-outline-secondary:hover {
+        background: #2b2b2b !important;
+        border-color: #8ACE79 !important;
+        color: #8ACE79 !important;
+    }
+
+
+/* ==========================================================
+   SAVE BUTTON
+   Keep PetHub green
+   ========================================================== */
+
+html.dark-mode
+.petfeed-edit-footer
+.btn-success {
+    background: #8ACE79 !important;
+    border-color: #8ACE79 !important;
+    color: #ffffff !important;
+}
+
+
+/* ==========================================================
+   DARK MODE - CREATE PETFEED POST
+   ========================================================== */
+
+html.dark-mode .create-card {
+    background: #1c1c1c !important;
+    border-color: #303030 !important;
+}
+
+
+/* Header */
+
+html.dark-mode .create-header h2 {
+    color: #f1f1f1 !important;
+}
+
+html.dark-mode .create-header p {
+    color: #9ca3af !important;
+}
+
+
+/* Labels */
+
+html.dark-mode .create-fields .form-label {
+    color: #d9d9d9 !important;
+}
+
+
+/* Inputs */
+
+html.dark-mode .create-fields .form-control,
+html.dark-mode .create-fields .form-select {
+    background: #242424 !important;
+    border-color: #3a3a3a !important;
+    color: #f1f1f1 !important;
+}
+
+    html.dark-mode .create-fields .form-control::placeholder {
+        color: #8a8a8a !important;
+    }
+
+
+/* Photos card */
+
+html.dark-mode .create-photos {
+    background: #202020 !important;
+    border-color: #353535 !important;
+}
+
+    html.dark-mode .create-photos h5 {
+        color: #f1f1f1 !important;
+    }
+
+    html.dark-mode .create-photos .text-muted {
+        color: #8f96a3 !important;
+    }
+
+
+    /* File input */
+
+    html.dark-mode
+    .create-photos
+    .form-control[type="file"] {
+        background: #242424 !important;
+        border-color: #3a3a3a !important;
+        color: #e5e5e5 !important;
+    }
+
+        html.dark-mode
+        .create-photos
+        .form-control[type="file"]::file-selector-button {
+            background: #303030 !important;
+            border-color: #444444 !important;
+            color: #f1f1f1 !important;
+        }
+
+
+/* Divider */
+
+html.dark-mode .create-card hr {
+    border-color: #353535 !important;
+}
+
+
+/* Cancel */
+
+html.dark-mode .create-footer .btn-outline-secondary {
+    background: #242424 !important;
+    border-color: #3a3a3a !important;
+    color: #d9d9d9 !important;
+}
+
+
+/* Keep Create Post green */
+
+html.dark-mode .create-footer .btn-success {
+    background: #8ACE79 !important;
+    border-color: #8ACE79 !important;
+    color: #ffffff !important;
+}
+
+
+/* ==========================================================
+   DARK MODE - SHARED PAGINATION
+========================================================== */
+
+html.dark-mode .pagination-container {
+    color: #d5d5d5 !important;
+}
+
+html.dark-mode .pagination-summary {
+    color: #9ca3af !important;
+}
+
+html.dark-mode .pagination-summary strong {
+    color: #f1f1f1 !important;
+}
+
+
+/* Normal page */
+
+html.dark-mode .pagination-button {
+    background: #242424 !important;
+
+    border-color: #3a3a3a !important;
+
+    color: #e5e5e5 !important;
+}
+
+
+/* Hover */
+
+html.dark-mode .pagination-button:hover {
+    background: #2d2d2d !important;
+
+    border-color: #8ACE79 !important;
+
+    color: #8ACE79 !important;
+}
+
+
+/* Current page stays green */
+
+html.dark-mode .pagination-button.active {
+    background: #8ACE79 !important;
+
+    border-color: #8ACE79 !important;
+
+    color: #ffffff !important;
+}
+
+
+/* Disabled */
+
+html.dark-mode .pagination-button.disabled {
+    background: #1f1f1f !important;
+
+    border-color: #303030 !important;
+
+    color: #666666 !important;
+}

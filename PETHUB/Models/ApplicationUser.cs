@@ -43,6 +43,8 @@ namespace PETHUB.Models
 
         // Navigation property for related notifications
         public ICollection<Notification>? Notifications { get; set; }
+
+        public string ThemePreference { get; set; } = "Light";
     }
 
     public enum UserStatus
