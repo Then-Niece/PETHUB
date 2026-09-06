@@ -66,56 +66,129 @@
 
 
                     <!-- ==================================================
-                         REASON
-                    =================================================== -->
+     REASON
+================================================== -->
 
                     <div class="report-field">
 
-                        <label for="reportReason"
+                        <label for="reportReasonDropdown"
                                class="report-label">
                             Reason
                         </label>
 
+                        <!-- ==================================================
+         CUSTOM REASON DROPDOWN
+    =================================================== -->
+
+                        <div class="report-custom-dropdown"
+                             id="reportReasonDropdown">
+
+                            <button type="button"
+                                    class="report-dropdown-trigger"
+                                    id="reportReasonTrigger"
+                                    aria-haspopup="listbox"
+                                    aria-expanded="false">
+
+                                <span id="reportReasonText">
+                                    Select a reason
+                                </span>
+
+                                <i data-lucide="chevron-down"></i>
+
+                            </button>
+
+
+                            <div class="report-dropdown-menu"
+                                 id="reportReasonMenu"
+                                 role="listbox"
+                                 aria-labelledby="reportReasonTrigger">
+
+                                <button type="button"
+                                        class="report-dropdown-option"
+                                        data-value="0"
+                                        role="option">
+                                    Scam / Fraud
+                                </button>
+
+                                <button type="button"
+                                        class="report-dropdown-option"
+                                        data-value="1"
+                                        role="option">
+                                    Inappropriate Content
+                                </button>
+
+                                <button type="button"
+                                        class="report-dropdown-option"
+                                        data-value="2"
+                                        role="option">
+                                    False Information
+                                </button>
+
+                                <button type="button"
+                                        class="report-dropdown-option"
+                                        data-value="3"
+                                        role="option">
+                                    Animal Abuse
+                                </button>
+
+                                <button type="button"
+                                        class="report-dropdown-option"
+                                        data-value="4"
+                                        role="option">
+                                    Duplicate Listing
+                                </button>
+
+                                <button type="button"
+                                        class="report-dropdown-option"
+                                        data-value="5"
+                                        role="option">
+                                    Already Sold / Adopted
+                                </button>
+
+                                <button type="button"
+                                        class="report-dropdown-option"
+                                        data-value="6"
+                                        role="option">
+                                    Suspicious Activity
+                                </button>
+
+                                <button type="button"
+                                        class="report-dropdown-option"
+                                        data-value="7"
+                                        role="option">
+                                    Other
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================================
+         HIDDEN BACKEND SELECT
+    =================================================== -->
+                        <!--
+        This select is kept for the existing ReportsController.
+        The custom dropdown above synchronizes its selected value
+        with this field before the form is submitted.
+    -->
+
                         <select id="reportReason"
                                 name="Reason"
-                                class="report-select"
-                                required>
+                                class="report-native-select"
+                                tabindex="-1"
+                                aria-hidden="true">
 
-                            <option value="">
-                                Select a reason
-                            </option>
+                            <option value="">Select a reason</option>
 
-                            <option value="0">
-                                Scam / Fraud
-                            </option>
-
-                            <option value="1">
-                                Inappropriate Content
-                            </option>
-
-                            <option value="2">
-                                False Information
-                            </option>
-
-                            <option value="3">
-                                Animal Abuse
-                            </option>
-
-                            <option value="4">
-                                Duplicate Listing
-                            </option>
-
-                            <option value="5">
-                                Already Sold / Adopted
-                            </option>
-
-                            <option value="6">
-                                Suspicious Activity
-                            </option>
-
-                            <option value="7">
-                                Other
-                            </option>
+                            <option value="0">Scam / Fraud</option>
+                            <option value="1">Inappropriate Content</option>
+                            <option value="2">False Information</option>
+                            <option value="3">Animal Abuse</option>
+                            <option value="4">Duplicate Listing</option>
+                            <option value="5">Already Sold / Adopted</option>
+                            <option value="6">Suspicious Activity</option>
+                            <option value="7">Other</option>
 
                         </select>
 

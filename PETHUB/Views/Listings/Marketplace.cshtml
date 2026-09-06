@@ -399,177 +399,179 @@
 <div class="row mt-4 marketplace-card-grid"
      id="marketplaceResults">
 
-    @foreach (var item in Model.Items)
+    @if (Model.Items != null && Model.Items.Any())
     {
-        <div class="col-md-3 mb-4">
-
-
-            <!-- =================================================
-                 MARKETPLACE CARD
-            ================================================== -->
-
-            <div class="marketplace-card h-100">
+        @foreach (var item in Model.Items)
+        {
+            <div class="col-md-3 mb-4">
 
 
                 <!-- =================================================
+                 MARKETPLACE CARD
+            ================================================== -->
+
+                <div class="marketplace-card h-100">
+
+
+                    <!-- =================================================
                      CARD LINK
 
 Existing programmer navigation preserved.
                 ================================================== -->
 
-                <a asp-action="MarketplaceDetails"
-                   asp-route-id="@item.ListingId"
-                   class="marketplace-card-link">
+                    <a asp-action="MarketplaceDetails"
+                       asp-route-id="@item.ListingId"
+                       class="marketplace-card-link">
 
 
-                    <!-- =================================================
+                        <!-- =================================================
                          IMAGE
                     ================================================== -->
 
-                    <div class="marketplace-card-image-wrapper">
+                        <div class="marketplace-card-image-wrapper">
 
-                        @if (item.Images != null && item.Images.Any())
-                        {
-                            <img src="@item.Images.First().ImagePath"
-                                 class="marketplace-card-image"
-                                 alt="Listing image" />
-                        }
-                        else
-                        {
-                            <img src="/images/no-image.png"
-                                 class="marketplace-card-image"
-                                 alt="No image" />
-                        }
+                            @if (item.Images != null && item.Images.Any())
+                            {
+                                <img src="@item.Images.First().ImagePath"
+                                     class="marketplace-card-image"
+                                     alt="Listing image" />
+                            }
+                            else
+                            {
+                                <img src="/images/no-image.png"
+                                     class="marketplace-card-image"
+                                     alt="No image" />
+                            }
 
 
                        
 
 
 
-                        <!-- =================================================
+                            <!-- =================================================
                              LISTING TYPE BADGE
                         ================================================== -->
-                        @if (item.Type == ListType.For_Adoption)
-                        {
-                            <span class="marketplace-listing-badge marketplace-listing-badge-adoption">
+                            @if (item.Type == ListType.For_Adoption)
+                            {
+                                <span class="marketplace-listing-badge marketplace-listing-badge-adoption">
 
-                                <i data-lucide="paw-print"></i>
+                                    <i data-lucide="paw-print"></i>
 
-                                Adoption
+                                    Adoption
 
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="marketplace-listing-badge marketplace-listing-badge-sale">
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="marketplace-listing-badge marketplace-listing-badge-sale">
 
-                                <i data-lucide="paw-print"></i>
+                                    <i data-lucide="paw-print"></i>
 
-                                For Sale
+                                    For Sale
 
-                            </span>
-                        }
+                                </span>
+                            }
 
 
 
-                        <!-- =================================================
+                            <!-- =================================================
                              PRICE BADGE
 
 Only shown for listings that are for sale.
                         ================================================== -->
-                        @if (item.Type != ListType.For_Adoption)
-                        {
-                            <span class="marketplace-price-badge">
+                            @if (item.Type != ListType.For_Adoption)
+                            {
+                                <span class="marketplace-price-badge">
 
-                                ₱ @item.Price.ToString("N0")
+                                    ₱ @item.Price.ToString("N0")
 
-                            </span>
-                        }
+                                </span>
+                            }
 
-                    </div>
+                        </div>
+
+
+
+                        <!-- =================================================
+                         CARD BODY
+                    ================================================== -->
+
+                        <div class="marketplace-card-body">
+
+
+                            <!-- =================================================
+                             TITLE
+                        ================================================== -->
+
+                            <h5 class="marketplace-card-title">
+
+                                @item.Title
+
+                            </h5>
+
+
+
+                            <!-- =================================================
+                             LOCATION
+                        ================================================== -->
+
+                            <div class="marketplace-card-location-row">
+
+                                <i data-lucide="map-pin"></i>
+
+                                <span>
+
+                                    @(string.IsNullOrEmpty(item.City)
+                                        ? "Not specified"
+                                        : item.City + ", " + item.Province)
+
+                                </span>
+
+                            </div>
+
+
+
+                            <!-- =================================================
+                             DESCRIPTION
+                        ================================================== -->
+
+                            <p class="marketplace-card-description">
+
+                                @item.Description
+
+                            </p>
+
+
+
+                            <!-- =================================================
+                             CARD FOOTER
+                        ================================================== -->
+
+                            <div class="marketplace-card-footer">
+
+                                <span class="marketplace-card-date">
+
+                                    <i data-lucide="calendar"></i>
+
+                                    @item.DatePosted.ToString("MMM dd, yyyy")
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </a>
 
 
 
                     <!-- =================================================
-                         CARD BODY
-                    ================================================== -->
-
-                    <div class="marketplace-card-body">
-
-
-                        <!-- =================================================
-                             TITLE
-                        ================================================== -->
-
-                        <h5 class="marketplace-card-title">
-
-                            @item.Title
-
-                        </h5>
-
-
-
-                        <!-- =================================================
-                             LOCATION
-                        ================================================== -->
-
-                        <div class="marketplace-card-location-row">
-
-                            <i data-lucide="map-pin"></i>
-
-                            <span>
-
-                                @(string.IsNullOrEmpty(item.City)
-                                    ? "Not specified"
-                                    : item.City + ", " + item.Province)
-
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- =================================================
-                             DESCRIPTION
-                        ================================================== -->
-
-                        <p class="marketplace-card-description">
-
-                            @item.Description
-
-                        </p>
-
-
-
-                        <!-- =================================================
-                             CARD FOOTER
-                        ================================================== -->
-
-                        <div class="marketplace-card-footer">
-
-                            <span class="marketplace-card-date">
-
-                                <i data-lucide="calendar"></i>
-
-                                @item.DatePosted.ToString("MMM dd, yyyy")
-
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </a>
-
-
-
-                <!-- =================================================
                      REPORT BUTTON
 
 Kept as a comment so the original programmer
                      logic is not deleted.
                 ================================================== -->
-                @*
+                    @*
                 @if (User.IsInRole("Member") &&
                      item.MemberId != User.FindFirst(
                          System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
@@ -590,10 +592,27 @@ Kept as a comment so the original programmer
                 }
                 *@
 
+                </div>
+
+            </div>
+        }
+    }
+    else
+    {
+        <div class="marketplace-empty-state">
+            <div class="marketplace-empty-icon">
+                <i data-lucide="file-x-2"></i>
             </div>
 
+            <h3>No Listings</h3>
+
+            <p>
+                There are currently no listings available.
+            </p>
         </div>
     }
+
+   
 
 </div>
 

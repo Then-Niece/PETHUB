@@ -398,17 +398,56 @@
 
 
                         <!-- VIEW DETAILS -->
+                        @if (Model.Appeal != null &&
+                             Model.Appeal.Status == PETHUB.Models.AppealStatus.Pending)
+                        {
+                            <button type="button"
+                                    class="admin-report-view-post"
+                                    onclick="alert('This post is currently under appeal and cannot be viewed.');">
 
-                        <a asp-controller="Listings"
-                           asp-action="Details"
-                           asp-route-id="@Model.Report.Listing.ListingId"
-                           class="admin-report-view-post">
+                                View Details
 
-                            View Details
+                                <i data-lucide="arrow-right"></i>
 
-                            <i data-lucide="arrow-right"></i>
+                            </button>
+                        }
+                        else if (Model.Report.Status == PETHUB.Models.UserReportStatus.Resolved)
+                        {
+                            <button type="button"
+                                    class="admin-report-view-post"
+                                    onclick="alert('This report has already been resolved. The post is no longer available to view.');">
 
-                        </a>
+                                View Details
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </button>
+                        }
+                        else if (Model.Report.Status == PETHUB.Models.UserReportStatus.Dismissed)
+                        {
+                            <button type="button"
+                                    class="admin-report-view-post"
+                                    onclick="alert('This report has already been dismissed. The post is no longer available to view.');">
+
+                                View Details
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </button>
+                        }
+                        else
+                        {
+                            <a asp-controller="Listings"
+                               asp-action="MarketplaceDetails"
+                               asp-route-id="@Model.Report.Listing.ListingId"
+                               class="admin-report-view-post">
+
+                                View Details
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </a>
+                        }
 
                     </div>
                 }
@@ -478,17 +517,56 @@
 
 
                         <!-- VIEW DETAILS -->
+                        @if (Model.Appeal != null &&
+                             Model.Appeal.Status == PETHUB.Models.AppealStatus.Pending)
+                        {
+                            <button type="button"
+                                    class="admin-report-view-post"
+                                    onclick="alert('This post is currently under appeal and cannot be viewed.');">
 
-                        <a asp-controller="LostFound"
-                           asp-action="Details"
-                           asp-route-id="@Model.Report.LostFound.LostFoundId"
-                           class="admin-report-view-post">
+                                View Details
 
-                            View Details
+                                <i data-lucide="arrow-right"></i>
 
-                            <i data-lucide="arrow-right"></i>
+                            </button>
+                        }
+                        else if (Model.Report.Status == PETHUB.Models.UserReportStatus.Resolved)
+                        {
+                            <button type="button"
+                                    class="admin-report-view-post"
+                                    onclick="alert('This report has already been resolved. The post is no longer available to view.');">
 
-                        </a>
+                                View Details
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </button>
+                        }
+                        else if (Model.Report.Status == PETHUB.Models.UserReportStatus.Dismissed)
+                        {
+                            <button type="button"
+                                    class="admin-report-view-post"
+                                    onclick="alert('This report has already been dismissed. The post is no longer available to view.');">
+
+                                View Details
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </button>
+                        }
+                        else
+                        {
+                            <a asp-controller="LostFound"
+                               asp-action="BrowseDetails"
+                               asp-route-id="@Model.Report.LostFound.LostFoundId"
+                               class="admin-report-view-post">
+
+                                View Details
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </a>
+                        }
 
                     </div>
                 }
@@ -1259,17 +1337,17 @@
     }
 
 
-@section Scripts
-{
-    <script>
+    @section Scripts
+    {
+        <script>
 
-        document.addEventListener("DOMContentLoaded", function() {
+                document.addEventListener("DOMContentLoaded", function() {
 
-            if (typeof lucide !== "undefined") {
-                lucide.createIcons();
-            }
+                    if (typeof lucide !== "undefined") {
+                        lucide.createIcons();
+                    }
 
-        });
+                });
 
-    </script>
-}
+        </script>
+    }

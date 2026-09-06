@@ -120,6 +120,12 @@
     margin: 0 16px 12px;
     overflow-x: auto;
     scrollbar-width: none;
+    /* Archive icon inside the conversation filter */
+    .conversation-filter svg[data-lucide="archive"] {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+    }
 }
 
 
@@ -243,6 +249,8 @@
         width: 24px;
         height: 24px;
     }
+
+
 
 /* =========================================================
    8. CONVERSATION CONTENT
@@ -1796,6 +1804,8 @@
         width: 17px;
         height: 17px;
     }
+
+
 
 .conversation-deactivated-label {
     font-size: 0.75rem;
