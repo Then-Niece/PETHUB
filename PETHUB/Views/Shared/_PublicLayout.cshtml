@@ -38,11 +38,20 @@
 </head>
 
 <body>
-    @await Component.InvokeAsync("Navigation")    
+
+    @await Component.InvokeAsync("Navigation")
 
     <main class="public-main">
-    @RenderBody()
+        @RenderBody()
     </main>
+
+
+    <!-- =========================================================
+         SHARED SYSTEM MODAL
+    ========================================================== -->
+
+    <partial name="_SystemModal" />
+
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -51,19 +60,21 @@
 
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <script src="~/js/custom-select.js"
+            asp-append-version="true"></script>
 
-    <script src="~/js/custom-select.js" asp-append-version="true"></script>
+    <script src="~/js/date-fields.js"
+            asp-append-version="true"></script>
 
-    <script src="~/js/date-fields.js" asp-append-version="true"></script>
+    <script src="~/js/imagePreviewHelper.js"
+            asp-append-version="true"></script>
 
-    <script src="~/js/imagePreviewHelper.js" asp-append-version="true"></script>
+    <script src="~/js/system-modal.js"
+            asp-append-version="true"></script>
 
-    <script src="~/js/system-modal.js" asp-append-version="true"></script>
-     
     <script>
         lucide.createIcons();
     </script>
-
 
     @await RenderSectionAsync("Scripts", required: false)
 
