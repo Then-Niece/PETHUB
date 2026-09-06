@@ -290,30 +290,55 @@
                                 <div class="lostfound-menu-divider"></div>
 
 
-                                <!-- =================================================
-                                     REPORT LISTING
-                                ================================================= -->
-                                @if (User.IsInRole("Member") &&
-                                                                     Model.UserId != User.FindFirst(
-                                                                         System.Security.Claims.ClaimTypes.NameIdentifier
-                                                                     )?.Value)
-                                {
-                                    <button type="button"
-                                            class="danger-action"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#reportModal"
-                                            data-report-type="LostFound"
-                                            data-report-id="@Model.LostFoundId"
-                                            data-report-title="@Model.Title">
+ <!-- =================================================
+     REPORT LISTING
+================================================= -->
+@if (User.IsInRole("Member") &&
+     Model.UserId != User.FindFirst(
+         System.Security.Claims.ClaimTypes.NameIdentifier
+     )?.Value)
+{
+    @if (string.IsNullOrEmpty(Model.UserId))
+    {
+        <!-- =================================================
+             GUEST-OWNED POST
+             Guest-created Lost & Found posts cannot be reported.
+        ================================================== -->
+        <button type="button"
+                class="danger-action"
+                onclick="alert('This post cannot be reported because it was posted by an unregistered user.');">
 
-                                        <i data-lucide="flag"></i>
+            <i data-lucide="flag"></i>
 
-                                        <span>
-                                            Report 
-                                        </span>
+            <span>
+                Report
+            </span>
 
-                                    </button>
-                                }
+        </button>
+    }
+    else
+    {
+        <!-- =================================================
+             REGISTERED-MEMBER POST
+             Normal reporting workflow.
+        ================================================== -->
+        <button type="button"
+                class="danger-action"
+                data-bs-toggle="modal"
+                data-bs-target="#reportModal"
+                data-report-type="LostFound"
+                data-report-id="@Model.LostFoundId"
+                data-report-title="@Model.Title">
+
+            <i data-lucide="flag"></i>
+
+            <span>
+                Report
+            </span>
+
+        </button>
+    }
+}
 
                             </div>
 

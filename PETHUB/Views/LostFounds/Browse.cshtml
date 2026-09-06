@@ -382,159 +382,112 @@ else
 <div class="row mt-4 lost-found-card-grid"
      id="lostFoundResults">
 
-    @foreach (var item in Model.Items)
+    @if (Model.Items != null && Model.Items.Any())
     {
-        var isLost = item.Type.ToString().Equals(
-            "Lost",
-            StringComparison.OrdinalIgnoreCase
-        );
+        @foreach (var item in Model.Items)
+        {
+            var isLost = item.Type.ToString().Equals(
+                "Lost",
+                StringComparison.OrdinalIgnoreCase
+            );
 
-        var location =
-            string.IsNullOrEmpty(item.City)
-                ? "Not specified"
-                : item.City + ", " + item.Province;
+            var location =
+                string.IsNullOrEmpty(item.City)
+                    ? "Not specified"
+                    : item.City + ", " + item.Province;
 
 
-        <div class="col-md-3 mb-4">
-
-
-            <!-- =================================================
-                 LOST & FOUND CARD
-            ================================================== -->
-
-            <div class="lost-found-card h-100 position-relative @(isLost ? "lost-card" : "found-card")">
+            <div class="col-md-3 mb-4">
 
 
                 <!-- =================================================
+                 LOST & FOUND CARD
+            ================================================== -->
+
+                <div class="lost-found-card h-100 position-relative @(isLost ? "lost-card" : "found-card")">
+
+
+                    <!-- =================================================
                      EXISTING DETAILS LINK
                 ================================================== -->
 
-                <a asp-action="BrowseDetails"
-                   asp-route-id="@item.LostFoundId"
-                   class="lost-found-card-link">
+                    <a asp-action="BrowseDetails"
+                       asp-route-id="@item.LostFoundId"
+                       class="lost-found-card-link">
 
 
-                    <article class="lost-found-card-inner">
+                        <article class="lost-found-card-inner">
 
 
-                        <!-- =================================================
+                            <!-- =================================================
                              STATUS RAIL
                         ================================================== -->
 
-                        <span class="lost-found-status-rail"></span>
+                            <span class="lost-found-status-rail"></span>
 
 
 
-                        <!-- =================================================
+                            <!-- =================================================
                              IMAGE
                         ================================================== -->
 
-                        <div class="lost-found-card-image-wrapper">
+                            <div class="lost-found-card-image-wrapper">
 
-                            @if (item.Images != null && item.Images.Any())
-                            {
-                                <img src="@Url.Content(item.Images.First().ImagePath)"
-                                     class="lost-found-card-image"
-                                     alt="@item.Title" />
-                            }
-                            else
-                            {
-                                <img src="@Url.Content("~/images/no-image.png")"
-                                     class="lost-found-card-image"
-                                     alt="No image" />
-                            }
-
-
-                            <!-- Image gradient -->
-
-                            <div class="lost-found-card-image-gradient"></div>
+                                @if (item.Images != null && item.Images.Any())
+                                {
+                                    <img src="@Url.Content(item.Images.First().ImagePath)"
+                                         class="lost-found-card-image"
+                                         alt="@item.Title" />
+                                }
+                                else
+                                {
+                                    <img src="@Url.Content("~/images/no-image.png")"
+                                         class="lost-found-card-image"
+                                         alt="No image" />
+                                }
 
 
+                                <!-- Image gradient -->
 
-                            <!-- =================================================
+                                <div class="lost-found-card-image-gradient"></div>
+
+
+
+                                <!-- =================================================
                                  LOST / FOUND BADGE
                             ================================================== -->
-                            @if (isLost)
-                            {
-                                <span class="lost-found-type-badge lost-found-type-badge-lost">
+                                @if (isLost)
+                                {
+                                    <span class="lost-found-type-badge lost-found-type-badge-lost">
 
-                                    <i data-lucide="search"></i>
+                                        <i data-lucide="search"></i>
 
-                                    LOST
+                                        LOST
 
-                                </span>
-                            }
-                            else
-                            {
-                                <span class="lost-found-type-badge lost-found-type-badge-found">
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="lost-found-type-badge lost-found-type-badge-found">
 
-                                    <i data-lucide="heart-handshake"></i>
+                                        <i data-lucide="heart-handshake"></i>
 
-                                    FOUND
+                                        FOUND
 
-                                </span>
-                            }
+                                    </span>
+                                }
 
 
 
-                            <!-- =================================================
+                                <!-- =================================================
                                  PET TYPE BADGE
                             ================================================== -->
 
-                            <span class="lost-found-pet-badge">
+                                <span class="lost-found-pet-badge">
 
-                                <i data-lucide="paw-print"></i>
+                                    <i data-lucide="paw-print"></i>
 
-                                @item.PetType
-
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- =================================================
-                             CARD BODY
-                        ================================================== -->
-
-                        <div class="lost-found-card-body">
-
-
-                            <!-- =================================================
-                                 TITLE
-                            ================================================== -->
-
-                            <h3 class="lost-found-card-title">
-
-                                @item.Title
-
-                            </h3>
-
-
-
-                            <!-- =================================================
-                                 LOCATION
-                            ================================================== -->
-
-                            <div class="lost-found-card-location-row">
-
-                                <i data-lucide="map-pin"></i>
-
-                                <span>
-
-                                    <span class="lost-found-location-label">
-
-                                        @(isLost
-                                            ? "Last seen: "
-                                            : "Found in ")
-
-                                    </span>
-
-                                    <span class="lost-found-location-value">
-
-                                        @location
-
-                                    </span>
+                                    @item.PetType
 
                                 </span>
 
@@ -543,50 +496,99 @@ else
 
 
                             <!-- =================================================
+                             CARD BODY
+                        ================================================== -->
+
+                            <div class="lost-found-card-body">
+
+
+                                <!-- =================================================
+                                 TITLE
+                            ================================================== -->
+
+                                <h3 class="lost-found-card-title">
+
+                                    @item.Title
+
+                                </h3>
+
+
+
+                                <!-- =================================================
+                                 LOCATION
+                            ================================================== -->
+
+                                <div class="lost-found-card-location-row">
+
+                                    <i data-lucide="map-pin"></i>
+
+                                    <span>
+
+                                        <span class="lost-found-location-label">
+
+                                            @(isLost
+                                                ? "Last seen: "
+                                                : "Found in ")
+
+                                        </span>
+
+                                        <span class="lost-found-location-value">
+
+                                            @location
+
+                                        </span>
+
+                                    </span>
+
+                                </div>
+
+
+
+                                <!-- =================================================
                                  DESCRIPTION
                             ================================================== -->
 
-                            <p class="lost-found-card-description">
+                                <p class="lost-found-card-description">
 
-                                @item.Description
+                                    @item.Description
 
-                            </p>
+                                </p>
 
 
 
-                            <!-- =================================================
+                                <!-- =================================================
                                  FOOTER
 
                             ================================================== -->
 
-                            <div class="lost-found-card-footer">
+                                <div class="lost-found-card-footer">
 
-                                <span class="lost-found-card-date">
+                                    <span class="lost-found-card-date">
 
-                                    <i data-lucide="clock"></i>
+                                        <i data-lucide="clock"></i>
 
-                                    @item.DateReported.ToString("MMM dd, yyyy")
+                                        @item.DateReported.ToString("MMM dd, yyyy")
 
-                                </span>
+                                    </span>
+
+                                </div>
 
                             </div>
 
-                        </div>
+                        </article>
 
-                    </article>
-
-                </a>
+                    </a>
 
 
 
-                <!-- =================================================
+                    <!-- =================================================
                      REPORT BUTTON
 
 COMMENTED OUT.
 
 ORIGINAL PROGRAMMER LOGIC PRESERVED.
                 ================================================== -->
-                @*
+                    @*
                 @if (User.IsInRole("Member") &&
                      !string.IsNullOrEmpty(item.UserId) &&
                      item.UserId != User.FindFirst(
@@ -615,10 +617,28 @@ ORIGINAL PROGRAMMER LOGIC PRESERVED.
                 }
                 *@
 
+                </div>
+
+            </div>
+        }
+    }
+    else
+    {
+        <div class="lost-found-empty-state">
+            <div class="lost-found-empty-icon">
+                <i data-lucide="file-x-2"></i>
             </div>
 
+            <h3>No Reports</h3>
+
+            <p>
+                There are currently no lost and found reports available.
+            </p>
         </div>
     }
+
+
+ 
 
 </div>
 

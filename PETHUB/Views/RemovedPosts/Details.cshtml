@@ -310,13 +310,12 @@
 
                         <!-- View Details -->
                         <a asp-controller="Listings"
-                           asp-action="Details"
+                           asp-action="MarketplaceDetails"
                            asp-route-id="@Model.Listing.ListingId"
                            class="removed-details-view-button">
 
                             <i data-lucide="external-link"></i>
                             View Details
-
                         </a>
 
                     </div>
@@ -614,7 +613,7 @@
 
                         <!-- View Details -->
                         <a asp-controller="LostFounds"
-                           asp-action="Details"
+                           asp-action="BrowseDetails"
                            asp-route-id="@Model.LostFound.LostFoundId"
                            class="removed-details-view-button">
 

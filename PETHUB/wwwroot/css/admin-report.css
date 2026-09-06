@@ -2147,7 +2147,7 @@
 
 .admin-report-confirm-dialog {
     max-width: 520px;
-    margin: 1.75rem auto;
+    margin: 65px auto 24px;
 }
 
 
@@ -3128,7 +3128,7 @@
         height: 440px;
         max-height: calc(100vh - 105px);
         /* Keep the modal below the navbar */
-        margin: 95px auto 15px !important;
+       margin: 140px auto 15px !important;
         min-height: 0;
         display: flex;
         align-items: stretch;
