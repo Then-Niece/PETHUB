@@ -13,6 +13,16 @@
     announcements
 )
 
+@if (User.IsInRole("Member"))
+{
+    <form class="feed-save-token-form"
+          style="display:none;">
+
+        @Html.AntiForgeryToken()
+
+    </form>
+}
+
 <div class="feed-container"
      data-feed-seed="@ViewData["FeedSeed"]"
      data-user-id="@(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "")">

@@ -13,19 +13,23 @@
         ================================================== -->
 
         <div class="create-header">
+
             <h2>Create Pet Feed Post</h2>
 
             <p>
                 Share an announcement or helpful pet tip with the community.
             </p>
+
         </div>
 
 
         <form asp-action="Create"
               method="post"
-              enctype="multipart/form-data">
+              enctype="multipart/form-data"
+              id="petFeedCreateForm">
 
             @Html.AntiForgeryToken()
+
 
             <div asp-validation-summary="ModelOnly"
                  class="text-danger mb-3">
@@ -33,18 +37,22 @@
 
 
             <!-- ==================================================
-                 FORM
+                 FORM GRID
             ================================================== -->
 
             <div class="create-form">
 
-                <!-- LEFT SIDE -->
+
+                <!-- ==================================================
+                     LEFT SIDE - POST INFORMATION
+                ================================================== -->
 
                 <div class="create-fields">
 
-                    <!-- Title -->
 
-                    <div class="mb-3">
+                    <!-- TITLE -->
+
+                    <div class="create-field">
 
                         <label asp-for="Title"
                                class="form-label">
@@ -62,9 +70,9 @@
                     </div>
 
 
-                    <!-- Content -->
+                    <!-- CONTENT -->
 
-                    <div class="mb-3">
+                    <div class="create-field">
 
                         <label asp-for="Content"
                                class="form-label">
@@ -72,8 +80,8 @@
                         </label>
 
                         <textarea asp-for="Content"
-                                  rows="4"
-                                  class="form-control"
+                                  rows="5"
+                                  class="form-control create-content-input"
                                   placeholder="Write something about your post..."></textarea>
 
                         <span asp-validation-for="Content"
@@ -82,82 +90,138 @@
 
                     </div>
 
-            <!-- ==================================================
-                 POST TYPE
-            ================================================== -->
 
-            <div class="mb-3">
+                    <!-- POST TYPE -->
 
-                <label asp-for="Type"
-                       class="form-label">
-                    Post Type
-                </label>
+                    <div class="create-field">
 
-
-                <div class="pethub-select-wrapper">
-
-                    <!-- Real select used for form submission -->
-                    <select asp-for="Type"
-                            id="petFeedTypeSelect"
-                            class="pethub-select-native"
-                            asp-items="Html.GetEnumSelectList<PETHUB.Models.PetFeedType>()">
-                    </select>
+                        <label asp-for="Type"
+                               class="form-label">
+                            Post Type
+                        </label>
 
 
-                    <!-- Visible custom dropdown -->
-                    <button type="button"
-                            class="pethub-select-trigger"
-                            data-select-target="petFeedTypeSelect">
+                        <div class="pethub-select-wrapper">
 
-                        <span class="pethub-select-text">
-                            Select Post Type
+                            <!-- Real select used during submit -->
+
+                            <select asp-for="Type"
+                                    id="petFeedTypeSelect"
+                                    class="pethub-select-native"
+                                    asp-items="Html.GetEnumSelectList<PETHUB.Models.PetFeedType>()">
+                            </select>
+
+
+                            <!-- Visible custom select -->
+
+                            <button type="button"
+                                    class="pethub-select-trigger"
+                                    data-select-target="petFeedTypeSelect">
+
+                                <span class="pethub-select-text">
+                                    Select Post Type
+                                </span>
+
+                                <i data-lucide="chevron-down"></i>
+
+                            </button>
+
+
+                            <div class="pethub-select-menu"
+                                 data-menu-for="petFeedTypeSelect">
+                            </div>
+
+                        </div>
+
+
+                        <span asp-validation-for="Type"
+                              class="text-danger">
                         </span>
 
-                        <i data-lucide="chevron-down"></i>
-
-                    </button>
-
-
-                    <!-- Options are generated by custom-select.js -->
-                    <div class="pethub-select-menu"
-                         data-menu-for="petFeedTypeSelect">
                     </div>
 
                 </div>
 
 
-                <span asp-validation-for="Type"
-                      class="text-danger">
-                </span>
-
-            </div>
-
-                <!-- RIGHT SIDE - PHOTOS -->
+                <!-- ==================================================
+                     RIGHT SIDE - PHOTOS
+                ================================================== -->
 
                 <div class="create-photos">
 
-                    <h5>Photos</h5>
+                    <div class="create-photos-header">
 
-                    <div class="mb-3">
+                        <div>
 
-                        <input type="file"
-                               id="imageInput"
-                               name="Images"
-                               multiple
-                               class="form-control"
-                               accept="image/*" />
+                            <h5>Photos</h5>
 
-                        <small class="text-muted">
-                            You can upload multiple images.
-                        </small>
+                            <p>
+                                Add photos to your post.
+                            </p>
 
+                        </div>
+
+                    </div>
+
+
+                    <!-- HIDDEN REAL FILE INPUT -->
+
+                    <input type="file"
+                           id="imageInput"
+                           name="Images"
+                           multiple
+                           hidden
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+
+
+                    <!-- CUSTOM UPLOAD CONTROL -->
+
+                    <div class="create-photo-upload-control">
+
+                        <button type="button"
+                                id="addPhotosButton"
+                                class="create-photo-upload-button">
+
+                            <i data-lucide="image-plus"></i>
+
+                            <span>Add Photos</span>
+
+                        </button>
+
+
+                        <span id="photoUploadCount"
+                              class="create-photo-upload-count">
+
+                            0 / 5 photos
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- HELP TEXT -->
+
+                    <p class="create-photo-upload-help">
+
+                        Upload up to 5 photos.<br />
+                        JPG, PNG or WEBP only.<br />
+                        Maximum 5 MB each.
+
+                    </p>
+
+
+                    <!-- ERROR -->
+
+                    <div id="imageUploadError"
+                         class="create-photo-upload-error text-danger">
                     </div>
 
 
                     <!-- IMAGE PREVIEW -->
 
                     <div id="imagePreviewContainer"
-                         class="image-preview-grid">
+                         class="image-preview-grid"
+                         data-count="0">
                     </div>
 
                 </div>
@@ -166,21 +230,24 @@
 
 
             <!-- ==================================================
-                 FORM ACTIONS
+                 ACTIONS
             ================================================== -->
-
-            <hr class="my-4" />
 
             <div class="create-footer">
 
                 <a asp-action="Index"
                    class="btn btn-outline-secondary">
+
                     Cancel
+
                 </a>
+
 
                 <button type="submit"
                         class="btn btn-success">
+
                     Create Post
+
                 </button>
 
             </div>
@@ -198,13 +265,143 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script src="~/js/imagePreviewHelper.js"></script>
-
-    <script>
-        setupImagePreview(
-            "imageInput",
-            "imagePreviewContainer"
-        );
+    <script src="~/js/imagePreviewHelper.js"
+            asp-append-version="true">
     </script>
 
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                /* ==============================================
+                   IMAGE PREVIEW / VALIDATION
+                ============================================== */
+
+                setupImagePreview(
+                    "imageInput",
+                    "imagePreviewContainer",
+                    {
+                        multiple: true,
+
+                        maxFiles: 5,
+
+                        maxFileSize:
+                            5 * 1024 * 1024,
+
+                        allowedTypes: [
+                            "image/jpeg",
+                            "image/png",
+                            "image/webp"
+                        ],
+
+                        previewWidth: null,
+                        previewHeight: null,
+
+                        countId:
+                            "photoUploadCount",
+
+                        errorId:
+                            "imageUploadError"
+                    }
+                );
+
+
+                /* ==============================================
+                   CUSTOM ADD PHOTOS BUTTON
+                ============================================== */
+
+                const imageInput =
+                    document.getElementById(
+                        "imageInput"
+                    );
+
+                const addPhotosButton =
+                    document.getElementById(
+                        "addPhotosButton"
+                    );
+
+
+                if (
+                    imageInput &&
+                    addPhotosButton
+                ) {
+
+                    addPhotosButton.addEventListener(
+                        "click",
+                        function () {
+
+                            imageInput.click();
+
+                        }
+                    );
+
+                }
+
+
+                /* ==============================================
+                   PREVENT ACCIDENTAL ENTER SUBMIT
+                ============================================== */
+
+                const form =
+                    document.getElementById(
+                        "petFeedCreateForm"
+                    );
+
+
+                if (form) {
+
+                    form.addEventListener(
+                        "keydown",
+                        function (event) {
+
+                            if (
+                                event.key !== "Enter"
+                            ) {
+                                return;
+                            }
+
+
+                            if (
+                                event.target.tagName ===
+                                "TEXTAREA"
+                            ) {
+                                return;
+                            }
+
+
+                            if (
+                                event.target.tagName ===
+                                "BUTTON" ||
+                                event.target.tagName ===
+                                "SELECT"
+                            ) {
+                                return;
+                            }
+
+
+                            event.preventDefault();
+
+                        }
+                    );
+
+                }
+
+
+                /* Refresh Lucide icons */
+
+                if (
+                    typeof lucide !== "undefined"
+                ) {
+
+                    lucide.createIcons();
+
+                }
+
+            }
+        );
+
+    </script>
 }

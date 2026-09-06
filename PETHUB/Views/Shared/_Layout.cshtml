@@ -58,8 +58,14 @@
 
     <link rel="stylesheet" href="~/PETHUB.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/price.css" asp-append-version="true" />
+
+    <!-- Saved Items styles -->
+    <link rel="stylesheet" href="~/css/saved-items.css" asp-append-version="true" />
+
     <!-- MUST BE LAST  para ma work and dark mode-->
     <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", required: false)
 
 
     <!-- ==========================================

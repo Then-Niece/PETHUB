@@ -91,5 +91,7 @@ namespace PETHUB.Models
         public ListType Type { get; set; }
         // Navigation property: one listing can have many images
         public ICollection<ListingImage>? Images { get; set; }
+
+        public ICollection<SavedListing> SavedByMembers { get; set; } = new List<SavedListing>();
     }
 }

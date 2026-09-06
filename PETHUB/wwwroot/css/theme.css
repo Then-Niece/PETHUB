@@ -3721,3 +3721,2289 @@ html.dark-mode .logs-category-trigger {
     border-color: #404040 !important;
     color: #f1f1f1 !important;
 }
+
+/* ==========================================================
+   DARK MODE - MARKETPLACE / LOST & FOUND DETAILS
+   Shared details layout
+========================================================== */
+
+
+/* ==========================================================
+   PAGE
+========================================================== */
+
+html.dark-mode .marketplace-details-page {
+    color: var(--dark-text) !important;
+}
+
+
+    /* ==========================================================
+   BACK LINK
+========================================================== */
+
+    html.dark-mode .marketplace-details-page > .mb-3 a {
+        color: #8FA0B2 !important;
+    }
+
+        html.dark-mode .marketplace-details-page > .mb-3 a:hover {
+            color: #8ACE79 !important;
+        }
+
+
+/* ==========================================================
+   MAIN IMAGE AREA
+========================================================== */
+
+html.dark-mode .listing-main-image,
+html.dark-mode .listing-no-image {
+    background: #181818 !important;
+}
+
+
+    /* Keep carousel arrows readable */
+
+    html.dark-mode .listing-main-image .carousel-control-prev,
+    html.dark-mode .listing-main-image .carousel-control-next {
+        background: rgba(245, 245, 245, .92) !important;
+    }
+
+        html.dark-mode .listing-main-image .carousel-control-prev:hover,
+        html.dark-mode .listing-main-image .carousel-control-next:hover {
+            background: rgba(255, 255, 255, .98) !important;
+        }
+
+
+    /* Bootstrap carousel icons remain dark on the light circular control */
+
+    html.dark-mode .listing-main-image .carousel-control-prev-icon,
+    html.dark-mode .listing-main-image .carousel-control-next-icon {
+        filter: invert(1) !important;
+    }
+
+
+/* ==========================================================
+   THUMBNAILS
+========================================================== */
+
+html.dark-mode .listing-thumbnail {
+    background: var(--dark-surface-2) !important;
+    border-color: transparent !important;
+}
+
+    html.dark-mode .listing-thumbnail:hover,
+    html.dark-mode .listing-thumbnail.active {
+        border-color: #8ACE79 !important;
+    }
+
+
+/* ==========================================================
+   DETAILS PANEL
+========================================================== */
+
+html.dark-mode .listing-info-panel {
+    background: transparent !important;
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   PROFILE
+========================================================== */
+
+html.dark-mode .listing-profile-name {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .listing-profile-meta {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .listing-profile-avatar {
+    background: var(--dark-surface-2) !important;
+}
+
+
+/* ==========================================================
+   PROFILE DIVIDER
+========================================================== */
+
+html.dark-mode .listing-profile-divider {
+    background: var(--dark-border) !important;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+html.dark-mode .listing-title-section h1 {
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+html.dark-mode .listing-description {
+    color: var(--dark-text-2) !important;
+}
+
+
+/* ==========================================================
+   SECTION HEADINGS
+   Keep PetHub green
+========================================================== */
+
+html.dark-mode .listing-info-section h3 {
+    color: #8ACE79 !important;
+}
+
+    html.dark-mode .listing-info-section h3 svg {
+        color: #8ACE79 !important;
+    }
+
+
+/* ==========================================================
+   DETAILS TABLE
+========================================================== */
+
+html.dark-mode .listing-details-table {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+
+/* Rows */
+
+html.dark-mode .listing-details-row {
+    background: var(--dark-surface) !important;
+    border-bottom-color: var(--dark-border) !important;
+}
+
+
+    /* Hover */
+
+    html.dark-mode .listing-details-row:hover {
+        background: var(--dark-surface-2) !important;
+    }
+
+
+/* Labels */
+
+html.dark-mode .listing-details-label {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* Values */
+
+html.dark-mode .listing-details-value {
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   THREE DOT BUTTON
+========================================================== */
+
+html.dark-mode .listing-more-btn {
+    color: #B9BFC2 !important;
+}
+
+    html.dark-mode .listing-more-btn:hover {
+        background: var(--dark-surface-2) !important;
+        color: #FFFFFF !important;
+    }
+
+
+/* ==========================================================
+   THREE DOT DROPDOWN
+========================================================== */
+
+html.dark-mode .listing-more-dropdown {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .35), 0 2px 8px rgba(0, 0, 0, .20) !important;
+}
+
+
+    /* Buttons */
+
+    html.dark-mode .listing-more-dropdown button,
+    html.dark-mode .listing-more-dropdown a {
+        color: var(--dark-text-2) !important;
+        background: transparent !important;
+    }
+
+
+        /* Normal hover */
+
+        html.dark-mode .listing-more-dropdown button:hover,
+        html.dark-mode .listing-more-dropdown a:hover {
+            background: var(--dark-surface-3) !important;
+            color: #8ACE79 !important;
+        }
+
+
+        /* Icons */
+
+        html.dark-mode .listing-more-dropdown button svg,
+        html.dark-mode .listing-more-dropdown a svg {
+            color: #B9BFC2 !important;
+        }
+
+        html.dark-mode .listing-more-dropdown button:hover svg,
+        html.dark-mode .listing-more-dropdown a:hover svg {
+            color: #8ACE79 !important;
+        }
+
+
+    /* Divider */
+
+    html.dark-mode .listing-more-dropdown .menu-divider {
+        background: var(--dark-border) !important;
+    }
+
+
+    /* Report / destructive action */
+
+    html.dark-mode .listing-more-dropdown .danger-action {
+        color: #EF7B7B !important;
+    }
+
+        html.dark-mode .listing-more-dropdown .danger-action svg {
+            color: #EF7B7B !important;
+        }
+
+        html.dark-mode .listing-more-dropdown .danger-action:hover {
+            background: var(--dark-red-surface) !important;
+            color: #FF8A8A !important;
+        }
+
+
+/* ==========================================================
+   ACTION BUTTONS
+========================================================== */
+
+/* Message button remains green */
+
+html.dark-mode .listing-message-btn {
+    background: #8ACE79 !important;
+    color: #FFFFFF !important;
+}
+
+    html.dark-mode .listing-message-btn:hover {
+        background: #73BE64 !important;
+        color: #FFFFFF !important;
+    }
+
+
+/* Favorite */
+
+html.dark-mode .listing-favorite-btn {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: #B5BABD !important;
+}
+
+    html.dark-mode .listing-favorite-btn:hover {
+        background: var(--dark-green-surface) !important;
+        border-color: #8ACE79 !important;
+        color: #8ACE79 !important;
+    }
+
+
+    /* Saved heart */
+
+    html.dark-mode .listing-favorite-btn.saved,
+    html.dark-mode .lostfound-favorite-button.saved {
+        background: #362124 !important;
+        border-color: #E35D6A !important;
+        color: #EF7D89 !important;
+    }
+
+        html.dark-mode .listing-favorite-btn.saved svg,
+        html.dark-mode .lostfound-favorite-button.saved svg {
+            fill: currentColor !important;
+        }
+
+
+/* ==========================================================
+   LISTING TYPE PILLS
+========================================================== */
+
+/* Adoption */
+
+html.dark-mode .listing-type-pill-adoption {
+    background: var(--dark-green-surface) !important;
+    border-color: #3C5A39 !important;
+    color: #8ACE79 !important;
+}
+
+
+/* Sale */
+
+html.dark-mode .listing-type-pill-sale {
+    background: var(--dark-yellow-surface) !important;
+    border-color: #5A4A2A !important;
+    color: #E4B85B !important;
+}
+
+
+/* ==========================================================
+   LOST & FOUND TYPE PILLS
+========================================================== */
+
+html.dark-mode .lostfound-type-pill-found {
+    background: var(--dark-green-surface) !important;
+    border-color: #3C5A39 !important;
+    color: #8ACE79 !important;
+}
+
+html.dark-mode .lostfound-type-pill-lost {
+    background: var(--dark-red-surface) !important;
+    border-color: #5A3939 !important;
+    color: #EF8585 !important;
+}
+
+
+/* ==========================================================
+   NO IMAGE TEXT
+========================================================== */
+
+html.dark-mode .listing-no-image {
+    color: var(--dark-text-3) !important;
+}
+
+/* ==========================================================
+   DARK MODE - MESSAGES COMPLETE FIX
+========================================================== */
+
+
+/* ==========================================================
+   MAIN MESSAGE SURFACES
+========================================================== */
+
+html.dark-mode .messages-page,
+html.dark-mode .messages-layout,
+html.dark-mode .messages-sidebar,
+html.dark-mode .messages-chat,
+html.dark-mode .chat-header,
+html.dark-mode .chat-messages,
+html.dark-mode .chat-input-area,
+html.dark-mode .typing-indicator,
+html.dark-mode .message-image-preview {
+    background: var(--dark-surface) !important;
+}
+
+
+/* ==========================================================
+   CHAT HEADER BORDER
+========================================================== */
+
+html.dark-mode .chat-header {
+    border-bottom-color: var(--dark-border) !important;
+}
+
+
+/* ==========================================================
+   HEADER USER
+========================================================== */
+
+html.dark-mode .chat-user-details h3 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .chat-context {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   VIEW LISTING / VIEW REPORT BUTTON
+========================================================== */
+
+html.dark-mode .chat-context-button {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .chat-context-button:hover {
+        background: var(--dark-surface-3) !important;
+        border-color: #8ACE79 !important;
+        color: #8ACE79 !important;
+    }
+
+    html.dark-mode .chat-context-button svg {
+        color: inherit !important;
+    }
+
+
+/* ==========================================================
+   ARCHIVE / UNARCHIVE BUTTON
+========================================================== */
+
+html.dark-mode .chat-archive-button {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: #B8BEC2 !important;
+}
+
+    html.dark-mode .chat-archive-button:hover {
+        background: var(--dark-surface-3) !important;
+        border-color: #8ACE79 !important;
+        color: #8ACE79 !important;
+    }
+
+    html.dark-mode .chat-archive-button svg {
+        color: inherit !important;
+    }
+
+
+/* ==========================================================
+   MESSAGE BUBBLES - INCOMING
+========================================================== */
+
+html.dark-mode .message-row.theirs .message-bubble {
+    background: #2A2A2A !important;
+    color: var(--dark-text) !important;
+    border-bottom-left-radius: 5px;
+}
+
+
+/* ==========================================================
+   MESSAGE BUBBLES - YOUR MESSAGES
+========================================================== */
+
+html.dark-mode .message-row.mine .message-bubble {
+    background: var(--dark-green-surface) !important;
+    color: var(--dark-text) !important;
+    border-bottom-right-radius: 5px;
+}
+
+
+/* ==========================================================
+   MESSAGE TEXT
+========================================================== */
+
+html.dark-mode .message-text {
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   MESSAGE TIME
+========================================================== */
+
+html.dark-mode .message-time {
+    color: var(--dark-text-4) !important;
+}
+
+
+/* Slightly different time color inside your green bubble */
+
+html.dark-mode .message-row.mine .message-time {
+    color: #A7B5A3 !important;
+}
+
+
+/* ==========================================================
+   SENT / SEEN
+========================================================== */
+
+html.dark-mode .message-delivery-status {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   MESSAGE INPUT AREA
+========================================================== */
+
+html.dark-mode .chat-input-area {
+    border-top-color: var(--dark-border) !important;
+}
+
+
+/* ==========================================================
+   MESSAGE INPUT
+========================================================== */
+
+html.dark-mode .chat-message-input {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .chat-message-input::placeholder {
+        color: #8F969A !important;
+    }
+
+    html.dark-mode .chat-message-input:focus {
+        background: var(--dark-surface-2) !important;
+        border-color: #8ACE79 !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, .12) !important;
+    }
+
+
+/* ==========================================================
+   IMAGE BUTTON
+========================================================== */
+
+html.dark-mode .chat-image-button {
+    background: transparent !important;
+    color: #B4BABD !important;
+}
+
+    html.dark-mode .chat-image-button:hover {
+        background: var(--dark-surface-3) !important;
+        color: #8ACE79 !important;
+    }
+
+
+/* ==========================================================
+   SEND BUTTON
+========================================================== */
+
+html.dark-mode .chat-send-button {
+    background: #8ACE79 !important;
+    color: #FFFFFF !important;
+}
+
+    html.dark-mode .chat-send-button:hover {
+        background: #73BE64 !important;
+        opacity: 1 !important;
+    }
+
+
+/* ==========================================================
+   TYPING INDICATOR
+========================================================== */
+
+html.dark-mode .typing-indicator {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   IMAGE PREVIEW
+========================================================== */
+
+html.dark-mode .message-image-preview {
+    background: var(--dark-surface) !important;
+}
+
+    html.dark-mode
+    .message-image-preview
+    .image-preview-item {
+        background: var(--dark-surface-2) !important;
+        border-color: var(--dark-border-strong) !important;
+    }
+
+
+/* ==========================================================
+   DISABLED CHAT MESSAGE
+========================================================== */
+
+html.dark-mode .chat-disabled-message {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   EMPTY CHAT
+========================================================== */
+
+html.dark-mode .chat-empty,
+html.dark-mode .chat-placeholder,
+html.dark-mode .messages-empty-list {
+    color: var(--dark-text-3) !important;
+}
+
+    html.dark-mode .chat-empty h4,
+    html.dark-mode .chat-placeholder h3 {
+        color: var(--dark-text) !important;
+    }
+
+
+/* ==========================================================
+   MOBILE BACK BUTTON
+========================================================== */
+
+html.dark-mode .mobile-chat-back {
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .mobile-chat-back:hover {
+        background: var(--dark-surface-3) !important;
+        color: #8ACE79 !important;
+    }
+
+
+/* ==========================================================
+   UNAVAILABLE CONTEXT
+========================================================== */
+
+html.dark-mode .chat-context-status {
+    color: var(--dark-text-2) !important;
+}
+
+html.dark-mode .chat-context-unavailable-text {
+    color: var(--dark-text-4) !important;
+}
+
+/* ==========================================================
+   DARK MODE - MESSAGES PLACEHOLDER ICON
+========================================================== */
+
+html.dark-mode .chat-placeholder-icon {
+    background: var(--dark-green-surface) !important;
+    color: #8ACE79 !important;
+}
+
+    html.dark-mode .chat-placeholder-icon svg {
+        color: #8ACE79 !important;
+    }
+
+html.dark-mode .chat-placeholder h3 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .chat-placeholder p {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   DARK MODE - REMOVED POSTS INDEX
+========================================================== */
+
+
+/* ==========================================================
+   PAGE
+========================================================== */
+
+html.dark-mode .removed-posts-page {
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   PAGE HEADER
+========================================================== */
+
+html.dark-mode .removed-posts-heading h2 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .removed-posts-heading p {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   FILTER / TOTAL TOOLBAR
+========================================================== */
+
+html.dark-mode .removed-posts-toolbar {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+    box-shadow: none !important;
+}
+
+
+/* Total post count */
+
+html.dark-mode .removed-posts-count {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   FILTER AREA
+   Future-proof for when filters are added
+========================================================== */
+
+html.dark-mode .removed-posts-filters {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .removed-post-filter {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+html.dark-mode .removed-posts-empty {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+    box-shadow: none !important;
+}
+
+
+    /* Empty title */
+
+    html.dark-mode .removed-posts-empty h3 {
+        color: var(--dark-text) !important;
+    }
+
+
+    /* Empty description */
+
+    html.dark-mode .removed-posts-empty p {
+        color: var(--dark-text-3) !important;
+    }
+
+
+/* ==========================================================
+   EMPTY STATE ICON
+========================================================== */
+
+html.dark-mode .removed-posts-empty-icon {
+    background: var(--dark-red-surface) !important;
+    color: #EF7B7B !important;
+}
+
+    html.dark-mode .removed-posts-empty-icon svg {
+        color: #EF7B7B !important;
+    }
+
+
+/* ==========================================================
+   RESULTS SECTION
+========================================================== */
+
+html.dark-mode .removed-posts-section {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .removed-posts-results {
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   REMOVED POST CARDS
+========================================================== */
+
+html.dark-mode .removed-post-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+    box-shadow: none !important;
+}
+
+    html.dark-mode .removed-post-card:hover {
+        background: var(--dark-surface-2) !important;
+        border-color: #444444 !important;
+    }
+
+
+/* ==========================================================
+   CARD IMAGE
+========================================================== */
+
+html.dark-mode .removed-post-card-image-wrapper {
+    background: var(--dark-surface-2) !important;
+}
+
+
+/* Do NOT recolor actual image */
+
+html.dark-mode .removed-post-card-image {
+    background: transparent !important;
+}
+
+
+/* ==========================================================
+   CARD CONTENT
+========================================================== */
+
+html.dark-mode .removed-post-card-content {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .removed-post-card-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .removed-post-card-type {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .removed-post-card-date {
+    color: var(--dark-text-4) !important;
+}
+
+
+/* ==========================================================
+   REMOVED STATUS
+========================================================== */
+
+html.dark-mode .removed-post-status-removed {
+    background: var(--dark-red-surface) !important;
+    border-color: #5A3535 !important;
+    color: #EF7B7B !important;
+}
+
+
+/* ==========================================================
+   DARK MODE - ADMIN REVIEW LISTING
+========================================================== */
+
+html.dark-mode .admin-review-page {
+    color: var(--dark-text) !important;
+}
+
+
+/* Main white review card */
+
+html.dark-mode .admin-review-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+
+/* Header */
+
+html.dark-mode .admin-review-header {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-review-header-content h1 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-review-header-content p {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* Section headings */
+
+html.dark-mode .admin-review-section h3 {
+    color: #8ACE79 !important;
+}
+
+
+/* Listing title/date */
+
+html.dark-mode .admin-listing-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-listing-date {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* Description */
+
+html.dark-mode .admin-description-box {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-description {
+    color: var(--dark-text-2) !important;
+}
+
+
+/* Member information card */
+
+html.dark-mode .admin-member-card {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+    html.dark-mode .admin-member-card .listing-profile-name {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .admin-member-card .listing-profile-meta {
+        color: var(--dark-text-3) !important;
+    }
+
+html.dark-mode .admin-member-contact {
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .admin-member-contact strong {
+        color: var(--dark-text-3) !important;
+    }
+
+    html.dark-mode .admin-member-contact span {
+        color: var(--dark-text) !important;
+    }
+
+
+/* Information cards */
+
+html.dark-mode .admin-information-card {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+html.dark-mode .admin-information-row {
+    background: var(--dark-surface-2) !important;
+    border-bottom-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .admin-information-row strong {
+        color: var(--dark-text-3) !important;
+    }
+
+    html.dark-mode .admin-information-row span {
+        color: var(--dark-text) !important;
+    }
+
+
+/* Listing type / adoption states */
+
+html.dark-mode .admin-type-pill {
+    background: var(--dark-green-surface) !important;
+    color: #8ACE79 !important;
+}
+
+html.dark-mode .admin-free-price {
+    color: #8ACE79 !important;
+}
+
+
+/* No image / no ID */
+
+html.dark-mode .admin-no-image,
+html.dark-mode .admin-no-id {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-3) !important;
+}
+
+
+/* Valid ID area */
+
+html.dark-mode .admin-valid-id-container {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+
+/* Decision section */
+
+html.dark-mode .admin-decision-section {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-back-btn {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .admin-back-btn:hover {
+        background: var(--dark-surface-3) !important;
+        border-color: #8ACE79 !important;
+        color: #8ACE79 !important;
+    }
+
+
+/* ==========================================================
+   DARK MODE - ADMIN REVIEW REPORT
+========================================================== */
+
+html.dark-mode .admin-report-details-page {
+    color: var(--dark-text) !important;
+}
+
+
+/* Page header */
+
+html.dark-mode .admin-report-details-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-report-details-subtitle {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-report-back {
+    color: #8FA0B2 !important;
+}
+
+    html.dark-mode .admin-report-back:hover {
+        color: #8ACE79 !important;
+    }
+
+
+/* Main cards */
+
+html.dark-mode .admin-report-details-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+
+/* Card headers */
+
+html.dark-mode .admin-report-details-card-header h2 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-report-details-card-icon {
+    background: var(--dark-red-surface) !important;
+}
+
+    html.dark-mode .admin-report-details-card-icon svg {
+        color: #EF7B7B !important;
+    }
+
+
+/* Report info rows */
+
+html.dark-mode .report-info-row {
+    border-bottom-color: var(--dark-border) !important;
+}
+
+html.dark-mode .report-info-row-icon {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .report-info-row-label {
+    color: var(--dark-text-4) !important;
+}
+
+html.dark-mode .report-info-row-value {
+    color: var(--dark-text) !important;
+}
+
+
+/* Report description */
+
+html.dark-mode .report-info-description {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .report-info-description-label {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .report-info-description-text {
+    color: var(--dark-text-2) !important;
+}
+
+html.dark-mode .report-info-muted {
+    color: var(--dark-text-4) !important;
+}
+
+
+/* Reported content */
+
+html.dark-mode .admin-report-content-preview {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-report-content-image-wrapper {
+    background: var(--dark-surface-2) !important;
+}
+
+html.dark-mode .admin-report-content-no-image,
+html.dark-mode .admin-report-content-unavailable {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-report-content-type {
+    background: var(--dark-green-surface) !important;
+    color: #8ACE79 !important;
+}
+
+    html.dark-mode .admin-report-content-type.lost-found {
+        background: var(--dark-red-surface) !important;
+        color: #EF8585 !important;
+    }
+
+html.dark-mode .admin-report-content-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-report-view-post {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: #8ACE79 !important;
+}
+
+    html.dark-mode .admin-report-view-post:hover {
+        background: var(--dark-green-surface) !important;
+    }
+
+
+/* Related reports */
+
+html.dark-mode .admin-report-related-summary {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-report-related-item {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+html.dark-mode .admin-report-related-reporter {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-report-related-date {
+    color: var(--dark-text-4) !important;
+}
+
+html.dark-mode .admin-report-related-reason {
+    color: var(--dark-text-2) !important;
+}
+
+html.dark-mode .admin-report-related-note {
+    background: var(--dark-surface-3) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-2) !important;
+}
+
+html.dark-mode .admin-report-related-note-label {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* Review actions */
+
+html.dark-mode .admin-report-actions-description {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-report-action-dismiss {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .admin-report-action-dismiss:hover {
+        background: var(--dark-surface-3) !important;
+        color: #FFFFFF !important;
+    }
+
+html.dark-mode .admin-report-action-remove {
+    background: #B84A4A !important;
+    border-color: #B84A4A !important;
+    color: #FFFFFF !important;
+}
+
+
+/* Completed review */
+
+html.dark-mode .admin-report-action-completed {
+    background: var(--dark-green-surface) !important;
+    border-color: #395338 !important;
+    color: #8ACE79 !important;
+}
+
+
+/* ==========================================================
+   REPORT / APPEAL MODALS
+========================================================== */
+
+html.dark-mode .admin-report-confirm-modal,
+html.dark-mode .admin-report-reject-modal {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-report-confirm-header,
+html.dark-mode .admin-report-reject-header {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-report-confirm-title h2,
+html.dark-mode .admin-report-reject-title h2 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-report-confirm-subtitle,
+html.dark-mode .admin-report-reject-subtitle {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* Modal summaries */
+
+html.dark-mode .admin-report-confirm-summary,
+html.dark-mode .admin-report-reject-summary {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-report-confirm-label,
+html.dark-mode .admin-report-reject-label {
+    color: var(--dark-text-4) !important;
+}
+
+html.dark-mode .admin-report-confirm-value,
+html.dark-mode .admin-report-reject-value,
+html.dark-mode .admin-report-confirm-note {
+    color: var(--dark-text) !important;
+}
+
+
+/* Textareas */
+
+html.dark-mode .admin-report-confirm-textarea,
+html.dark-mode .admin-report-reject-textarea {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .admin-report-confirm-textarea:focus,
+    html.dark-mode .admin-report-reject-textarea:focus {
+        border-color: #8ACE79 !important;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, .14) !important;
+    }
+
+
+/* Modal help text */
+
+html.dark-mode .admin-report-confirm-help,
+html.dark-mode .admin-report-reject-help {
+    color: var(--dark-text-4) !important;
+}
+
+
+/* Cancel buttons */
+
+html.dark-mode .admin-report-confirm-cancel,
+html.dark-mode .admin-report-reject-cancel {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-2) !important;
+}
+
+
+/* ==========================================================
+   OWNER APPEAL
+========================================================== */
+
+html.dark-mode .admin-report-appeal-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .admin-report-appeal-header h2 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .admin-report-appeal-header p {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .admin-report-appeal-message,
+html.dark-mode .admin-report-appeal-response {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-2) !important;
+}
+
+
+/* ==========================================================
+   DARK MODE - PETFEED SAVE HEART
+========================================================== */
+
+html.dark-mode .feed-item-save-button {
+    background: transparent !important;
+    border: 0 !important;
+    color: #8F969A !important;
+}
+
+    html.dark-mode .feed-item-save-button:hover {
+        background: var(--dark-surface-2) !important;
+        color: #8ACE79 !important;
+    }
+
+    html.dark-mode .feed-item-save-button.saved {
+        background: transparent !important;
+        color: #8ACE79 !important;
+    }
+
+        html.dark-mode .feed-item-save-button.saved svg {
+            fill: #8ACE79 !important;
+            stroke: #8ACE79 !important;
+        }
+
+
+/* ==========================================================
+   DARK MODE - UNIFIED PETFEED HEART
+========================================================== */
+
+html.dark-mode .feed-item-save-button {
+    width: 34px !important;
+    height: 34px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: #8F969A !important;
+}
+
+    html.dark-mode .feed-item-save-button:hover {
+        background: transparent !important;
+        color: #8ACE79 !important;
+    }
+
+    html.dark-mode .feed-item-save-button.saved {
+        background: transparent !important;
+        border: none !important;
+        color: #8ACE79 !important;
+    }
+
+    html.dark-mode .feed-item-save-button svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    html.dark-mode .feed-item-save-button.saved svg {
+        fill: #8ACE79 !important;
+        stroke: #8ACE79 !important;
+    }
+
+/* ==========================================================
+   DARK MODE - ADMIN PETFEED DETAILS
+========================================================== */
+
+html.dark-mode .admin-petfeed-details-page {
+    color: var(--dark-text) !important;
+}
+
+
+    /* Back */
+
+    html.dark-mode
+    .admin-petfeed-details-page
+    .mb-3 a {
+        color: #8fa0b2 !important;
+    }
+
+        html.dark-mode
+        .admin-petfeed-details-page
+        .mb-3 a:hover {
+            color: #8ACE79 !important;
+        }
+
+
+/* ==========================================================
+   LEFT IMAGE
+========================================================== */
+
+html.dark-mode .admin-petfeed-details-carousel,
+html.dark-mode .admin-petfeed-details-no-image {
+    background: var(--dark-surface-2) !important;
+}
+
+
+html.dark-mode .admin-petfeed-details-main-image {
+    background: var(--dark-surface-2) !important;
+}
+
+
+html.dark-mode .admin-petfeed-details-no-image {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* Keep carousel controls visible */
+
+html.dark-mode
+.admin-petfeed-details-carousel
+.carousel-control-prev,
+html.dark-mode
+.admin-petfeed-details-carousel
+.carousel-control-next {
+    opacity: 1 !important;
+}
+
+
+/* ==========================================================
+   RIGHT PANEL
+========================================================== */
+
+html.dark-mode .admin-petfeed-details-panel {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+
+html.dark-mode .admin-petfeed-details-panel-content {
+    background: transparent !important;
+}
+
+
+/* ==========================================================
+   AUTHOR
+========================================================== */
+
+html.dark-mode .admin-petfeed-details-header {
+    border-bottom-color: var(--dark-border) !important;
+}
+
+
+html.dark-mode
+.admin-petfeed-details-author-info h4 {
+    color: var(--dark-text) !important;
+}
+
+
+html.dark-mode .admin-petfeed-details-meta {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* Profile */
+
+html.dark-mode .admin-petfeed-details-profile-picture {
+    border-color: var(--dark-border) !important;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+html.dark-mode .admin-petfeed-details-title {
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   SECTIONS
+========================================================== */
+
+html.dark-mode
+.admin-petfeed-details-section h3,
+html.dark-mode
+.admin-petfeed-details-comments-header h3 {
+    color: #8ACE79 !important;
+}
+
+
+html.dark-mode .admin-petfeed-details-content {
+    color: var(--dark-text-2) !important;
+}
+
+
+/* ==========================================================
+   STATS
+========================================================== */
+
+html.dark-mode .admin-petfeed-details-stats {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+
+html.dark-mode .admin-petfeed-details-stat {
+    border-right-color: var(--dark-border) !important;
+}
+
+
+    html.dark-mode .admin-petfeed-details-stat strong {
+        color: #8ACE79 !important;
+    }
+
+
+    html.dark-mode .admin-petfeed-details-stat span {
+        color: var(--dark-text-3) !important;
+    }
+
+
+/* ==========================================================
+   COMMENTS
+========================================================== */
+
+html.dark-mode
+.admin-petfeed-details-comments-section {
+    border-top-color: var(--dark-border) !important;
+}
+
+
+html.dark-mode .admin-petfeed-comment {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+
+html.dark-mode
+.admin-petfeed-comment-member strong {
+    color: var(--dark-text) !important;
+}
+
+
+html.dark-mode
+.admin-petfeed-comment-member span {
+    color: var(--dark-text-4) !important;
+}
+
+
+html.dark-mode .admin-petfeed-comment-content {
+    color: var(--dark-text-2) !important;
+}
+
+
+html.dark-mode
+.admin-petfeed-details-no-comments {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   DARK MODE - REMOVED POST DETAILS
+========================================================== */
+
+html.dark-mode .removed-details-page {
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   REMOVED NOTICE
+========================================================== */
+
+html.dark-mode .removed-details-notice {
+    background: #2B1F1F !important;
+    border-color: #5A3434 !important;
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .removed-details-notice-title h2 {
+    color: #EF7B7B !important;
+}
+
+html.dark-mode .removed-details-notice-content p {
+    color: #D7B7B7 !important;
+}
+
+html.dark-mode .removed-details-notice-icon {
+    background: #3A2424 !important;
+    border-color: #674040 !important;
+    color: #EF7B7B !important;
+}
+
+    html.dark-mode .removed-details-notice-icon svg {
+        color: #EF7B7B !important;
+    }
+
+
+/* ==========================================================
+   LEFT COLUMN CARDS
+========================================================== */
+
+html.dark-mode .removed-details-reason-card,
+html.dark-mode .removed-details-actions-card,
+html.dark-mode .removed-details-appeal-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   SECTION HEADINGS
+========================================================== */
+
+html.dark-mode .removed-details-section-heading h2,
+html.dark-mode .removed-details-actions-text h3 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .removed-details-section-heading p,
+html.dark-mode .removed-details-actions-text p {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   REASON ICON
+========================================================== */
+
+html.dark-mode .removed-details-section-icon.removal {
+    background: var(--dark-red-surface) !important;
+    color: #EF7B7B !important;
+}
+
+    html.dark-mode .removed-details-section-icon.removal svg {
+        color: #EF7B7B !important;
+    }
+
+
+/* ==========================================================
+   CONTENT ICON
+========================================================== */
+
+html.dark-mode .removed-details-section-icon.content {
+    background: var(--dark-green-surface) !important;
+    color: #8ACE79 !important;
+}
+
+    html.dark-mode .removed-details-section-icon.content svg {
+        color: #8ACE79 !important;
+    }
+
+
+/* ==========================================================
+   APPEAL ICON
+========================================================== */
+
+html.dark-mode .removed-details-section-icon.appeal {
+    background: var(--dark-yellow-surface) !important;
+    color: #E0B85D !important;
+}
+
+    html.dark-mode .removed-details-section-icon.appeal svg {
+        color: #E0B85D !important;
+    }
+
+
+/* ==========================================================
+   REASON BOX
+========================================================== */
+
+html.dark-mode .removed-details-reason-box {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-2) !important;
+}
+
+html.dark-mode .removed-details-muted {
+    color: var(--dark-text-4) !important;
+}
+
+
+/* ==========================================================
+   ACTIONS CARD
+========================================================== */
+
+html.dark-mode .removed-details-actions-card {
+    background: var(--dark-surface) !important;
+}
+
+
+/* Edit button */
+
+html.dark-mode .removed-details-edit {
+    background: var(--dark-green-surface) !important;
+    border-color: #496346 !important;
+    color: #8ACE79 !important;
+}
+
+    html.dark-mode .removed-details-edit:hover {
+        background: #293A27 !important;
+        border-color: #8ACE79 !important;
+        color: #A2DF94 !important;
+    }
+
+
+/* Appeal button */
+
+html.dark-mode .removed-details-appeal {
+    background: transparent !important;
+    border-color: #C85C65 !important;
+    color: #EF7B84 !important;
+}
+
+    html.dark-mode .removed-details-appeal:hover:not(.disabled) {
+        background: #302020 !important;
+        border-color: #EF7B84 !important;
+    }
+
+    html.dark-mode .removed-details-appeal.disabled {
+        background: #222222 !important;
+        border-color: #3A3A3A !important;
+        color: #777777 !important;
+    }
+
+
+/* ==========================================================
+   REPORTED CONTENT CARD
+========================================================== */
+
+html.dark-mode .removed-details-content-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .removed-details-content-heading h2 {
+    color: var(--dark-text) !important;
+}
+
+
+/* Image area */
+
+html.dark-mode .removed-details-content-image {
+    background: var(--dark-surface-2) !important;
+}
+
+html.dark-mode .removed-details-no-image {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   VIEW DETAILS BUTTON
+========================================================== */
+
+html.dark-mode .removed-details-view-button {
+    background: rgba(138, 206, 121, .92) !important;
+    border-color: #8ACE79 !important;
+    color: #FFFFFF !important;
+}
+
+    html.dark-mode .removed-details-view-button:hover {
+        background: #73BE64 !important;
+        border-color: #73BE64 !important;
+        color: #FFFFFF !important;
+    }
+
+
+/* ==========================================================
+   CONTENT INFORMATION
+========================================================== */
+
+html.dark-mode .removed-details-content-info {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .removed-details-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .removed-details-date {
+    color: var(--dark-text-3) !important;
+}
+
+    html.dark-mode .removed-details-date svg {
+        color: var(--dark-text-3) !important;
+    }
+
+
+/* ==========================================================
+   TYPE BADGES
+========================================================== */
+
+html.dark-mode .removed-details-type.marketplace {
+    background: var(--dark-green-surface) !important;
+    color: #8ACE79 !important;
+}
+
+html.dark-mode .removed-details-type.lost-found {
+    background: var(--dark-red-surface) !important;
+    color: #EF8585 !important;
+}
+
+
+/* ==========================================================
+   APPEAL CARD
+========================================================== */
+
+html.dark-mode .removed-details-appeal-header {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .removed-details-appeal-message {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-2) !important;
+}
+
+
+/* Admin response */
+
+html.dark-mode .removed-details-admin-response {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .removed-details-admin-response span {
+        color: var(--dark-text-3) !important;
+    }
+
+    html.dark-mode .removed-details-admin-response p {
+        color: var(--dark-text-2) !important;
+    }
+
+
+/* Appeal statuses */
+
+html.dark-mode .removed-details-appeal-status.pending {
+    background: var(--dark-yellow-surface) !important;
+    color: #E5B85E !important;
+}
+
+html.dark-mode .removed-details-appeal-status.approved {
+    background: var(--dark-green-surface) !important;
+    color: #8ACE79 !important;
+}
+
+html.dark-mode .removed-details-appeal-status.rejected {
+    background: var(--dark-red-surface) !important;
+    color: #EF7B7B !important;
+}
+
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+html.dark-mode .removed-details-empty {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .removed-details-empty h3 {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .removed-details-empty p {
+        color: var(--dark-text-3) !important;
+    }
+
+html.dark-mode .removed-details-empty-icon {
+    background: var(--dark-yellow-surface) !important;
+    color: #E5B85E !important;
+}
+
+
+/* ==========================================================
+   DARK MODE - APPEAL REMOVED POST
+========================================================== */
+
+html.dark-mode .appeal-page {
+    color: var(--dark-text) !important;
+}
+
+
+/* Main card */
+
+html.dark-mode .appeal-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+html.dark-mode .appeal-header-content h1 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .appeal-header-content p {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .appeal-header-icon {
+    background: var(--dark-green-surface) !important;
+    border-color: #3E563B !important;
+    color: #8ACE79 !important;
+}
+
+    html.dark-mode .appeal-header-icon svg {
+        color: #8ACE79 !important;
+    }
+
+
+/* Divider */
+
+html.dark-mode .appeal-divider {
+    background: var(--dark-border) !important;
+    border-color: var(--dark-border) !important;
+}
+
+
+/* ==========================================================
+   APPEALED POST
+========================================================== */
+
+html.dark-mode .appeal-post-label {
+    color: var(--dark-text-2) !important;
+}
+
+html.dark-mode .appeal-post-card {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+html.dark-mode .appeal-post-content h2 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .appeal-post-meta {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .appeal-post-type {
+    color: #EF7B7B !important;
+}
+
+    html.dark-mode .appeal-post-type svg {
+        color: #EF7B7B !important;
+    }
+
+html.dark-mode .appeal-post-separator {
+    color: #666666 !important;
+}
+
+
+/* ==========================================================
+   APPEAL MESSAGE
+========================================================== */
+
+html.dark-mode .appeal-message-label {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .appeal-message-input {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .appeal-message-input::placeholder {
+        color: #8F969A !important;
+    }
+
+    html.dark-mode .appeal-message-input:focus {
+        background: var(--dark-surface-2) !important;
+        border-color: #8ACE79 !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, .13) !important;
+    }
+
+html.dark-mode .appeal-message-help {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .appeal-validation {
+    color: #EF7B7B !important;
+}
+
+
+/* ==========================================================
+   APPEAL BUTTONS
+========================================================== */
+
+html.dark-mode .appeal-cancel-btn {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .appeal-cancel-btn:hover {
+        background: var(--dark-surface-3) !important;
+        border-color: #8ACE79 !important;
+        color: #8ACE79 !important;
+    }
+
+html.dark-mode .appeal-submit-btn {
+    background: #8ACE79 !important;
+    border-color: #8ACE79 !important;
+    color: #FFFFFF !important;
+}
+
+    html.dark-mode .appeal-submit-btn:hover {
+        background: #73BE64 !important;
+        border-color: #73BE64 !important;
+    }
+
+
+/* ==========================================================
+   DARK MODE - MARKETPLACE / LOST & FOUND EDIT
+   Shared form fixes
+========================================================== */
+
+
+/* Main card */
+
+html.dark-mode .edit-listing-page .listing-form-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+
+    /* Main title */
+
+    html.dark-mode .edit-listing-page .listing-form-card h2 {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .edit-listing-page .listing-form-card > form > .mb-4 > p {
+        color: var(--dark-text-3) !important;
+    }
+
+
+/* ==========================================================
+   SECTION HEADINGS
+========================================================== */
+
+html.dark-mode .edit-listing-page h5 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .edit-listing-page .text-muted {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   LISTING / REPORT TYPE CARDS
+========================================================== */
+
+html.dark-mode .edit-listing-page .listing-type-card {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .edit-listing-page .listing-type-card h5 {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .edit-listing-page .listing-type-card small {
+        color: var(--dark-text-3) !important;
+    }
+
+
+    /* Active */
+
+    html.dark-mode .edit-listing-page .listing-type-card.active {
+        background: var(--dark-green-surface) !important;
+        border-color: #8ACE79 !important;
+    }
+
+        html.dark-mode .edit-listing-page .listing-type-card.active h5 {
+            color: #8ACE79 !important;
+        }
+
+        html.dark-mode .edit-listing-page .listing-type-card.active small {
+            color: #B8D7B1 !important;
+        }
+
+
+/* Icons */
+
+html.dark-mode .edit-listing-page .listing-type-icon {
+    color: #8ACE79 !important;
+}
+
+    html.dark-mode .edit-listing-page .listing-type-icon svg {
+        color: #8ACE79 !important;
+    }
+
+
+/* ==========================================================
+   LABELS
+========================================================== */
+
+html.dark-mode .edit-listing-page .form-label {
+    color: #D9D9D9 !important;
+}
+
+
+/* Radio text */
+
+html.dark-mode .edit-listing-page .form-check-label {
+    color: #D5D5D5 !important;
+}
+
+
+/* ==========================================================
+   RADIO BUTTONS
+========================================================== */
+
+html.dark-mode
+.edit-listing-page
+.form-check-input:not(:checked) {
+    background: var(--dark-surface-2) !important;
+    border-color: #666666 !important;
+}
+
+html.dark-mode
+.edit-listing-page
+.form-check-input:checked {
+    background-color: #8ACE79 !important;
+    border-color: #8ACE79 !important;
+}
+
+
+/* ==========================================================
+   INPUTS / TEXTAREA
+========================================================== */
+
+html.dark-mode .edit-listing-page .form-control,
+html.dark-mode .edit-listing-page .form-select {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .edit-listing-page .form-control::placeholder {
+        color: #858B8F !important;
+    }
+
+    html.dark-mode .edit-listing-page .form-control:focus,
+    html.dark-mode .edit-listing-page .form-select:focus {
+        background: var(--dark-surface-2) !important;
+        border-color: #8ACE79 !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, .12) !important;
+    }
+
+
+/* ==========================================================
+   PRICE
+========================================================== */
+
+html.dark-mode .edit-listing-page .price-input {
+    background: var(--dark-surface-2) !important;
+}
+
+html.dark-mode .edit-listing-page .peso-sign {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   PHOTO CARD
+========================================================== */
+
+html.dark-mode .edit-listing-page .photo-upload-card {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .edit-listing-page .photo-upload-card h5 {
+        color: var(--dark-text) !important;
+    }
+
+
+    /* Current native chooser */
+
+    html.dark-mode
+    .edit-listing-page
+    .photo-upload-card
+    .form-control[type="file"] {
+        background: var(--dark-surface-2) !important;
+        border-color: var(--dark-border-strong) !important;
+        color: var(--dark-text-2) !important;
+    }
+
+        html.dark-mode
+        .edit-listing-page
+        .photo-upload-card
+        .form-control[type="file"]::file-selector-button {
+            background: var(--dark-surface-3) !important;
+            border-color: #444444 !important;
+            color: var(--dark-text) !important;
+        }
+
+
+/* ==========================================================
+   PHOTO PREVIEWS
+========================================================== */
+
+html.dark-mode .edit-listing-page .edit-photo-item {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+
+/* ==========================================================
+   DIVIDER
+========================================================== */
+
+html.dark-mode .edit-listing-page hr {
+    border-color: var(--dark-border) !important;
+}
+
+
+/* ==========================================================
+   EDIT MARKETPLACE BOTTOM BUTTONS
+========================================================== */
+
+html.dark-mode
+.edit-listing-page
+.btn-outline-secondary {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode
+    .edit-listing-page
+    .btn-outline-secondary:hover {
+        background: var(--dark-surface-3) !important;
+        border-color: #8ACE79 !important;
+        color: #8ACE79 !important;
+    }
+
+html.dark-mode
+.edit-listing-page
+.btn-success {
+    background: #8ACE79 !important;
+    border-color: #8ACE79 !important;
+    color: #FFFFFF !important;
+}
+
+
+/* ==========================================================
+   LOST & FOUND EDIT ACTIONS
+========================================================== */
+
+html.dark-mode .lostfound-edit-actions {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .lostfound-cancel-btn {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .lostfound-cancel-btn:hover {
+        background: var(--dark-surface-3) !important;
+        border-color: #8ACE79 !important;
+        color: #8ACE79 !important;
+    }
+
+html.dark-mode .lostfound-save-btn {
+    background: #8ACE79 !important;
+    border-color: #8ACE79 !important;
+    color: #FFFFFF !important;
+}

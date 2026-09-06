@@ -1,0 +1,92 @@
+﻿/* ==========================================================
+   LOST & FOUND DETAILS
+   IMPORTANT:
+   The page intentionally reuses the exact Marketplace Details
+   classes from Marketplace.css so desktop/tablet/mobile behavior
+   stays identical to Marketplace.
+
+   This file only contains Lost & Found-specific differences.
+========================================================== */
+
+
+/* ==========================================================
+   FOUND / LOST PILLS
+========================================================== */
+
+.lostfound-marketplace-details .lostfound-type-pill-found {
+    color: #5A9E52;
+    background: #EFF9EC;
+    border: 1px solid #D2E9CD;
+}
+
+.lostfound-marketplace-details .lostfound-type-pill-lost {
+    color: #B45309;
+    background: #FFF7ED;
+    border: 1px solid #FED7AA;
+}
+
+
+/* ==========================================================
+   PROFILE IMAGE
+========================================================== */
+
+.lostfound-marketplace-details .listing-profile-avatar {
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+    .lostfound-marketplace-details .listing-profile-avatar img {
+        display: block;
+        width: 44px;
+        height: 44px;
+        object-fit: cover;
+    }
+
+
+/* ==========================================================
+   FAVORITE
+========================================================== */
+
+.lostfound-marketplace-details .lostfound-favorite-button.saved {
+    color: #E35D6A;
+    border-color: #E35D6A;
+    background: #FFF3F4;
+}
+
+    .lostfound-marketplace-details .lostfound-favorite-button.saved svg {
+        fill: currentColor;
+    }
+
+
+/* ==========================================================
+   DARK MODE - LOST/FOUND PILLS
+========================================================== */
+
+html.dark-mode
+.lostfound-marketplace-details
+.lostfound-type-pill-found {
+    color: #8ACE79;
+    background: rgba(138, 206, 121, .12);
+    border-color: rgba(138, 206, 121, .35);
+}
+
+html.dark-mode
+.lostfound-marketplace-details
+.lostfound-type-pill-lost {
+    color: #FDBA74;
+    background: rgba(251, 146, 60, .12);
+    border-color: rgba(251, 146, 60, .35);
+}
+
+
+/* ==========================================================
+   DARK MODE - SAVED HEART
+========================================================== */
+
+html.dark-mode
+.lostfound-marketplace-details
+.lostfound-favorite-button.saved {
+    color: #EF7D89;
+    border-color: #E35D6A;
+    background: #362124;
+}

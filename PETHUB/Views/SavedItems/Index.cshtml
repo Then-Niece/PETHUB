@@ -1,0 +1,568 @@
+﻿@model PETHUB.ViewModels.SavedItemsViewModel
+
+@{
+    ViewData["Title"] = "Saved Items";
+}
+
+<div class="saved-items-page">
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <div class="saved-items-header">
+
+        <div>
+            <h1>Saved Items</h1>
+
+            <p>
+                Keep track of listings, lost and found reports,
+                and PetFeed posts you want to revisit.
+            </p>
+        </div>
+
+        <div class="saved-items-total">
+            <i data-lucide="heart"></i>
+
+            <span>
+                @Model.TotalSaved saved
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         FILTER TABS
+    ========================================================== -->
+
+    <div class="saved-items-tabs">
+
+        <button type="button"
+                class="saved-tab active"
+                data-filter="all">
+
+            All
+
+            <span>
+                @Model.TotalSaved
+            </span>
+
+        </button>
+
+
+        <button type="button"
+                class="saved-tab"
+                data-filter="marketplace">
+
+            Marketplace
+
+            <span>
+                @Model.SavedListings.Count
+            </span>
+
+        </button>
+
+
+        <button type="button"
+                class="saved-tab"
+                data-filter="lostfound">
+
+            Lost &amp; Found
+
+            <span>
+                @Model.SavedLostFounds.Count
+            </span>
+
+        </button>
+
+
+        <button type="button"
+                class="saved-tab"
+                data-filter="petfeed">
+
+            PetFeed
+
+            <span>
+                @Model.SavedPetFeeds.Count
+            </span>
+
+        </button>
+
+    </div>
+
+
+    <!-- =========================================================
+         EMPTY STATE
+    ========================================================== -->
+    @if (Model.TotalSaved == 0)
+    {
+        <div class="saved-items-empty">
+
+            <div class="saved-items-empty-icon">
+                <i data-lucide="heart"></i>
+            </div>
+
+            <h3>
+                No saved items yet
+            </h3>
+
+            <p>
+                Save Marketplace listings, Lost &amp; Found reports,
+                or PetFeed posts and they will appear here.
+            </p>
+
+        </div>
+    }
+    else
+    {
+
+        <!-- =====================================================
+             SAVED ITEMS GRID
+        ====================================================== -->
+
+        <div class="saved-items-grid">
+
+
+            <!-- =================================================
+                 MARKETPLACE
+            ================================================== -->
+            @foreach (var saved in Model.SavedListings)
+            {
+                var listing = saved.Listing;
+
+                if (listing == null)
+                {
+                    continue;
+                }
+
+                var image =
+                    listing.Images != null &&
+                    listing.Images.Any()
+                        ? listing.Images.First().ImagePath
+                        : "/images/no-image.png";
+
+
+                <article class="saved-item-card"
+                         data-category="marketplace">
+
+                    <a asp-controller="Listings"
+                       asp-action="MarketplaceDetails"
+                       asp-route-id="@listing.ListingId"
+                       class="saved-item-image-link">
+
+                        <img src="@image"
+                             class="saved-item-image"
+                             alt="@listing.Title" />
+
+                    </a>
+
+
+                    <div class="saved-item-body">
+
+                        <div class="saved-item-top">
+
+                            <span class="saved-item-type marketplace">
+                                Marketplace
+                            </span>
+
+                            <span class="saved-item-date">
+                                Saved @saved.DateSaved.ToString("MMM dd, yyyy")
+                            </span>
+
+                        </div>
+
+
+                        <h3 class="saved-item-title">
+
+                            <a asp-controller="Listings"
+                               asp-action="MarketplaceDetails"
+                               asp-route-id="@listing.ListingId">
+
+                                @listing.Title
+
+                            </a>
+
+                        </h3>
+
+
+                        @if (
+                            !string.IsNullOrWhiteSpace(listing.City)
+                            ||
+                            !string.IsNullOrWhiteSpace(listing.Province)
+                        )
+                        {
+                            <div class="saved-item-meta">
+
+                                <i data-lucide="map-pin"></i>
+
+                                <span>
+                                    @if (!string.IsNullOrWhiteSpace(listing.City))
+                                    {
+                                        @listing.City
+                                    }
+
+                                    @if (
+                                        !string.IsNullOrWhiteSpace(listing.City)
+                                        &&
+                                        !string.IsNullOrWhiteSpace(listing.Province)
+                                    )
+                                    {
+                                        @(", ")
+                                    }
+
+                                    @if (!string.IsNullOrWhiteSpace(listing.Province))
+                                    {
+                                        @listing.Province
+                                    }
+                                </span>
+
+                            </div>
+                        }
+
+                        <div class="saved-item-footer">
+
+                            <a asp-controller="Listings"
+                               asp-action="Details"
+                               asp-route-id="@listing.ListingId"
+                               class="saved-item-view">
+
+                                View Listing
+
+                            </a>
+
+
+                            <button type="button"
+                                    class="saved-item-bookmark saved"
+                                    aria-label="Remove saved listing">
+
+                                <i data-lucide="heart"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            }
+
+
+            <!-- =================================================
+                 LOST & FOUND
+            ================================================== -->
+            @foreach (var saved in Model.SavedLostFounds)
+            {
+                var report = saved.LostFound;
+
+                if (report == null)
+                {
+                    continue;
+                }
+
+                var image =
+                    report.Images != null &&
+                    report.Images.Any()
+                        ? report.Images.First().ImagePath
+                        : "/images/no-image.png";
+
+
+                <article class="saved-item-card"
+                         data-category="lostfound">
+
+                    <a asp-controller="LostFounds"
+                       asp-action="BrowseDetails"
+                       asp-route-id="@report.LostFoundId"
+                       class="saved-item-image-link">
+
+                        <img src="@image"
+                             class="saved-item-image"
+                             alt="@report.Title" />
+
+                    </a>
+
+
+                    <div class="saved-item-body">
+
+                        <div class="saved-item-top">
+
+                            <span class="saved-item-type lostfound">
+                                Lost &amp; Found
+                            </span>
+
+                            <span class="saved-item-date">
+                                Saved @saved.DateSaved.ToString("MMM dd, yyyy")
+                            </span>
+
+                        </div>
+
+
+                        <h3 class="saved-item-title">
+
+                            <a asp-controller="LostFounds"
+                               asp-action="BrowseDetails"
+                               asp-route-id="@report.LostFoundId">
+
+                                @report.Title
+
+                            </a>
+
+                        </h3>
+
+
+                        @if (
+                            !string.IsNullOrWhiteSpace(report.City)
+                            ||
+                            !string.IsNullOrWhiteSpace(report.Province)
+                        )
+                        {
+                            <div class="saved-item-meta">
+
+                                <i data-lucide="map-pin"></i>
+
+                                <span>
+                                    @if (!string.IsNullOrWhiteSpace(report.City))
+                                    {
+                                        @report.City
+                                    }
+
+                                    @if (
+                                        !string.IsNullOrWhiteSpace(report.City)
+                                        &&
+                                        !string.IsNullOrWhiteSpace(report.Province)
+                                    )
+                                    {
+                                        @(", ")
+                                    }
+
+                                    @if (!string.IsNullOrWhiteSpace(report.Province))
+                                    {
+                                        @report.Province
+                                    }
+                                </span>
+
+                            </div>
+                        }
+
+
+                        <div class="saved-item-footer">
+
+                            <a asp-controller="LostFounds"
+                               asp-action="BrowseDetails"
+                               asp-route-id="@report.LostFoundId"
+                               class="saved-item-view">
+
+                                View Report
+
+                            </a>
+
+
+                            <button type="button"
+                                    class="saved-item-bookmark saved"
+                                    aria-label="Remove saved report">
+
+                                <i data-lucide="heart"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            }
+
+
+            <!-- =================================================
+                 PETFEED
+            ================================================== -->
+            @foreach (var saved in Model.SavedPetFeeds)
+            {
+                var post = saved.PetFeed;
+
+                if (post == null)
+                {
+                    continue;
+                }
+
+                var image =
+                    post.Images != null &&
+                    post.Images.Any()
+                        ? post.Images.First().ImagePath
+                        : "/images/PETHUB-LOGO.png";
+
+
+                <article class="saved-item-card"
+                         data-category="petfeed">
+
+                    <a asp-controller="PetFeeds"
+                       asp-action="Feed"
+                       asp-route-postId="@post.PetFeedId"
+                       asp-fragment="post-@post.PetFeedId"
+                       class="saved-item-image-link">
+
+                        <img src="@image"
+                             class="saved-item-image"
+                             alt="@post.Title" />
+
+                    </a>
+
+
+                    <div class="saved-item-body">
+
+                        <div class="saved-item-top">
+
+                            <span class="saved-item-type petfeed">
+                                PetFeed
+                            </span>
+
+                            <span class="saved-item-date">
+                                Saved
+                            </span>
+
+                        </div>
+
+
+                        <h3 class="saved-item-title">
+
+                            <a asp-controller="PetFeeds"
+                               asp-action="Feed"
+                               asp-route-postId="@post.PetFeedId"
+                               asp-fragment="post-@post.PetFeedId">
+
+                                @post.Title
+
+                            </a>
+
+                        </h3>
+
+
+                        <p class="saved-item-description">
+
+                            @(post.Content.Length > 100
+                                ? post.Content.Substring(0, 100) + "..."
+                                : post.Content)
+
+                        </p>
+
+
+                        <div class="saved-item-footer">
+
+                            <a asp-controller="PetFeeds"
+                               asp-action="Feed"
+                               asp-route-postId="@post.PetFeedId"
+                               asp-fragment="post-@post.PetFeedId"
+                               class="saved-item-view">
+
+                                View Post
+
+                            </a>
+
+
+                            <button type="button"
+                                    class="saved-item-bookmark saved"
+                                    aria-label="Remove saved PetFeed post">
+
+                                <i data-lucide="heart"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            }
+
+
+        </div>
+    }
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const tabs =
+                    document.querySelectorAll(
+                        ".saved-tab"
+                    );
+
+                const cards =
+                    document.querySelectorAll(
+                        ".saved-item-card"
+                    );
+
+
+                tabs.forEach(function (tab) {
+
+                    tab.addEventListener(
+                        "click",
+                        function () {
+
+                            const filter =
+                                tab.dataset.filter;
+
+
+                            tabs.forEach(
+                                function (item) {
+
+                                    item.classList.remove(
+                                        "active"
+                                    );
+
+                                }
+                            );
+
+
+                            tab.classList.add(
+                                "active"
+                            );
+
+
+                            cards.forEach(
+                                function (card) {
+
+                                    if (
+                                        filter === "all"
+                                        ||
+                                        card.dataset.category
+                                            === filter
+                                    ) {
+
+                                        card.style.display = "";
+
+                                    }
+                                    else {
+
+                                        card.style.display = "none";
+
+                                    }
+
+                                }
+                            );
+
+                        }
+                    );
+
+                });
+
+
+                if (typeof lucide !== "undefined") {
+
+                    lucide.createIcons();
+
+                }
+
+            }
+        );
+
+    </script>
+
+}

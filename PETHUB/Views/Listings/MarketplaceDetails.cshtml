@@ -605,13 +605,25 @@
 
                 <!-- Favorite -->
 
-                <button type="button"
-                        class="btn listing-favorite-btn"
-                        aria-label="Add to favorites">
+                @if (User.IsInRole("Member"))
+                {
+                    <form class="details-save-token-form"
+                          style="display:none;">
+                        @Html.AntiForgeryToken()
+                    </form>
 
-                    <i data-lucide="heart"></i>
+                    <button type="button"
+                            class="btn listing-favorite-btn @(ViewBag.IsSaved == true ? "saved" : "")"
+                            data-save-type="listing"
+                            data-save-id="@Model.ListingId"
+                            aria-label="@(ViewBag.IsSaved == true
+                                ? "Remove from saved"
+                                : "Add to favorites")">
 
-                </button>
+                        <i data-lucide="heart"></i>
+
+                    </button>
+                }
 
             </div>
 
@@ -637,6 +649,99 @@
 
         const copyLinkText =
         document.getElementById("copyListingLinkText");
+
+
+        const favoriteButton =
+            document.querySelector(
+                '.listing-favorite-btn[data-save-type="listing"]'
+            );
+
+        if (favoriteButton) {
+
+            favoriteButton.addEventListener(
+                "click",
+                async function () {
+
+                    if (favoriteButton.disabled) {
+                        return;
+                    }
+
+                    const token =
+                        document.querySelector(
+                            '.details-save-token-form input[name="__RequestVerificationToken"]'
+                        )?.value;
+
+                    if (!token) {
+                        console.error(
+                            "Anti-forgery token not found."
+                        );
+                        return;
+                    }
+
+                    const formData =
+                        new FormData();
+
+                    formData.append(
+                        "id",
+                        favoriteButton.dataset.saveId
+                    );
+
+                    formData.append(
+                        "__RequestVerificationToken",
+                        token
+                    );
+
+                    favoriteButton.disabled = true;
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                "/SavedItems/ToggleListing",
+                                {
+                                    method: "POST",
+                                    body: formData
+                                }
+                            );
+
+                        if (!response.ok) {
+                            throw new Error(
+                                "Unable to update favorite."
+                            );
+                        }
+
+                        const result =
+                            await response.json();
+
+                        favoriteButton.classList.toggle(
+                            "saved",
+                            result.saved
+                        );
+
+                        favoriteButton.setAttribute(
+                            "aria-label",
+                            result.saved
+                                ? "Remove from saved"
+                                : "Add to favorites"
+                        );
+
+                    }
+                    catch (error) {
+
+                        console.error(
+                            "Favorite error:",
+                            error
+                        );
+
+                    }
+                    finally {
+
+                        favoriteButton.disabled = false;
+
+                    }
+                }
+            );
+        }
 
 
         /* ==================================================

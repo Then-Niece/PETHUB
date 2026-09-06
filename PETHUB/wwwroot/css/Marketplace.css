@@ -6166,87 +6166,61 @@
     }
 
 /* ==========================================================
-   DESKTOP - SIDEBAR COLLAPSED
-   Shows 4 cards per row.
+   MARKETPLACE - SAFE RESPONSIVE GRID
 ========================================================== */
 
-@media (min-width: 992px) {
+.marketplace-card-grid {
+    display: grid !important;
+    grid-template-columns: repeat( auto-fit, minmax(240px, 280px) );
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
 
-    #sidebar-wrapper.collapsed ~ #mainContent .marketplace-card-grid {
-        grid-template-columns: repeat(4, 280px) !important;
-        justify-content: space-between !important;
-        column-gap: 20px !important;
-        row-gap: 20px !important;
+    .marketplace-card-grid > .col-md-3 {
+        width: 100% !important;
+        max-width: 280px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-width: 0;
     }
 
-        #sidebar-wrapper.collapsed ~ #mainContent .marketplace-card-grid > .col-md-3 {
-            width: 280px !important;
-            max-width: 280px !important;
-        }
 
-    /* ==========================================================
-       DESKTOP - SIDEBAR EXPANDED
-       Shows 3 cards per row.
-    ========================================================== */
+/* Narrow content area */
 
-    #sidebar-wrapper:not(.collapsed) ~ #mainContent .marketplace-card-grid {
-        grid-template-columns: repeat(3, 280px) !important;
-        justify-content: center !important;
-        column-gap: 40px !important;
-        row-gap: 40px !important;
+@media (max-width: 1100px) {
+
+    .marketplace-card-grid {
+        grid-template-columns: repeat( auto-fit, minmax(230px, 1fr) );
+        gap: 20px;
     }
 
-        #sidebar-wrapper:not(.collapsed) ~ #mainContent .marketplace-card-grid > .col-md-3 {
-            width: 280px !important;
-            max-width: 280px !important;
+        .marketplace-card-grid > .col-md-3 {
+            max-width: 100% !important;
         }
 }
 
-/* ==========================================================
-   TABLET
-   Shows 2 cards per row.
-========================================================== */
 
-@media (max-width: 991px) and (min-width: 768px) {
-
-    #mainContent .marketplace-card-grid {
-        grid-template-columns: repeat(2, 280px) !important;
-        justify-content: center !important;
-        column-gap: 24px !important;
-        row-gap: 20px !important;
-    }
-
-        #mainContent .marketplace-card-grid > .col-md-3 {
-            width: 280px !important;
-            max-width: 280px !important;
-        }
-}
-
-/* ==========================================================
-   MOBILE
-   Matches Lost & Found: 2 cards per row.
-========================================================== */
+/* Mobile */
 
 @media (max-width: 767px) {
 
-    #mainContent .marketplace-card-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        justify-content: center !important;
-        column-gap: 12px !important;
-        row-gap: 20px !important;
-        width: 100% !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
+    .marketplace-card-grid {
+        grid-template-columns: 1fr;
+        padding-left: 12px;
+        padding-right: 12px;
+        gap: 20px;
     }
 
-        #mainContent .marketplace-card-grid > .col-md-3 {
-            width: auto !important;
-            max-width: none !important;
-            min-width: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
+        .marketplace-card-grid > .col-md-3 {
+            width: 100% !important;
+            max-width: 100% !important;
         }
-}
+}}
 
 /* ==========================================================
    SMALL MOBILE
@@ -6429,3 +6403,197 @@
     box-shadow: 0 0 0 .18rem rgba(138, 206, 121, .15);
     outline: none;
 }
+
+
+/* ==========================================================
+   MARKETPLACE FILTER - RESPONSIVE FIX
+========================================================== */
+
+@media (max-width: 1200px) {
+
+    .marketplace-filter-container {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 16px;
+        padding-right: 16px;
+        box-sizing: border-box;
+    }
+
+    .marketplace-filter-bar {
+        width: 100%;
+        max-width: 100%;
+        display: grid;
+        grid-template-columns: minmax(180px, 1fr) minmax(170px, 190px) minmax(170px, 190px) auto;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    .marketplace-search {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .marketplace-search-input {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .marketplace-filter-controls {
+        display: contents;
+    }
+
+    .marketplace-filter-item,
+    .marketplace-dropdown {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .marketplace-dropdown-button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .marketplace-filter-count {
+        margin-left: 0;
+        padding-left: 4px;
+    }
+}
+
+
+/* ==========================================================
+   MEDIUM / NARROW DESKTOP
+========================================================== */
+
+@media (max-width: 950px) {
+
+    .marketplace-filter-bar {
+        grid-template-columns: minmax(0, 1fr) minmax(150px, .65fr);
+        gap: 10px;
+    }
+
+    .marketplace-search {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+    }
+
+    .marketplace-filter-controls {
+        display: grid;
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .marketplace-filter-count {
+        grid-column: 1 / -1;
+        width: 100%;
+        justify-content: flex-end;
+        padding: 0 2px;
+    }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 767px) {
+
+    .marketplace-filter-bar {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .marketplace-search {
+        width: 100%;
+    }
+
+    .marketplace-filter-controls {
+        display: grid;
+        width: 100%;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .marketplace-filter-count {
+        justify-content: flex-start;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .marketplace-filter-controls {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================
+   MARKETPLACE FILTER - DARK MODE
+========================================================== */
+
+html.dark-mode .marketplace-filter-bar {
+    background: rgba(27, 31, 28, .92);
+    border-color: #343b36;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .20);
+    backdrop-filter: blur(14px);
+}
+
+html.dark-mode .marketplace-search-input,
+html.dark-mode .marketplace-dropdown-button {
+    background: #202421;
+    border-color: #39413b;
+    color: #e5ebe6;
+}
+
+    html.dark-mode .marketplace-search-input::placeholder {
+        color: #8f9992;
+    }
+
+    html.dark-mode .marketplace-search-input:hover,
+    html.dark-mode .marketplace-dropdown-button:hover {
+        background: #252a26;
+        border-color: #4c574f;
+    }
+
+    html.dark-mode .marketplace-search-input:focus,
+    html.dark-mode .marketplace-dropdown.open
+    .marketplace-dropdown-button {
+        background: #252a26;
+        border-color: #8ace79;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, .13);
+    }
+
+html.dark-mode .marketplace-search-icon,
+html.dark-mode .marketplace-filter-select-icon,
+html.dark-mode .marketplace-dropdown-chevron {
+    color: #aab4ad;
+}
+
+html.dark-mode .marketplace-dropdown-menu {
+    background: #202421;
+    border-color: #39413b;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .30);
+}
+
+html.dark-mode .marketplace-dropdown-item {
+    color: #d7ddd8;
+}
+
+    html.dark-mode .marketplace-dropdown-item:hover,
+    html.dark-mode .marketplace-dropdown-item.active {
+        background: #293327;
+        color: #8ace79;
+    }
+
+html.dark-mode .marketplace-filter-count {
+    color: #9ca69f;
+}
+
+    html.dark-mode .marketplace-filter-count strong {
+        color: #e7ece8;
+    }

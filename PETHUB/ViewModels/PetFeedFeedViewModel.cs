@@ -139,6 +139,9 @@ namespace PETHUB.ViewModels
         // This allows Marketplace and Lost & Found cards to use the member's
         // profile information later in Feed.cshtml.
         public string? OwnerProfileImage { get; set; }
+
+
+        public bool IsSaved { get; set; }
     }
 
     // Identifies the source of an item in the combined PetFeed.

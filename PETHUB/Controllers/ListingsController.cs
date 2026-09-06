@@ -418,6 +418,20 @@ namespace PETHUB.Controllers
                 return NotFound();
             }
 
+            var currentMemberId = _userManager.GetUserId(User);
+
+            ViewBag.IsSaved = false;
+
+            if (
+                User.IsInRole("Member") &&
+                !string.IsNullOrWhiteSpace(currentMemberId)
+            )
+            {
+                ViewBag.IsSaved =
+                    await _context.SavedListings.AnyAsync(s =>
+                        s.MemberId == currentMemberId &&
+                        s.ListingId == listing.ListingId);
+            }
 
             return View(listing);
         }

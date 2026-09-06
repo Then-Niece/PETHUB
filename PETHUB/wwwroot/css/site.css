@@ -64,6 +64,19 @@ a {
 
 
 /* ==========================================================
+   PUBLIC PAGE LAYOUT
+   Prevent guest navbar from covering page content
+========================================================== */
+
+.public-main {
+    width: 100%;
+    min-height: calc(100vh - 72px);
+    padding-top: 72px;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================================
    MARKETPLACE - GENERAL CARD
    EXACT CARD STYLE / PROPORTIONS
 ========================================================== */

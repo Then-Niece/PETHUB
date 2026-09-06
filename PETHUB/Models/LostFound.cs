@@ -95,5 +95,7 @@ namespace PETHUB.Models
 
         public string? ClientIdImagePath { get; set; }
         public ReportStatus RStatus { get; set; } = ReportStatus.Active;
+
+        public ICollection<SavedLostFound> SavedByMembers { get; set; } = new List<SavedLostFound>();
     }
 }

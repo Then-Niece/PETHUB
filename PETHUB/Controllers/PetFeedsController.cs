@@ -1738,6 +1738,36 @@ public class PetFeedsController : Controller
             .Include(l => l.Images)
             .ToListAsync();
 
+        // ==========================================================
+        // LOAD SAVED STATES FOR CURRENT MEMBER
+        // ==========================================================
+
+        var savedPetFeedIds = await _context.SavedPetFeeds
+            .AsNoTracking()
+            .Where(s =>
+                s.MemberId == userId &&
+                petFeedIds.Contains(s.PetFeedId))
+            .Select(s => s.PetFeedId)
+            .ToListAsync();
+
+
+        var savedListingIds = await _context.SavedListings
+            .AsNoTracking()
+            .Where(s =>
+                s.MemberId == userId &&
+                listingIds.Contains(s.ListingId))
+            .Select(s => s.ListingId)
+            .ToListAsync();
+
+
+        var savedLostFoundIds = await _context.SavedLostFounds
+            .AsNoTracking()
+            .Where(s =>
+                s.MemberId == userId &&
+                lostFoundIds.Contains(s.LostFoundId))
+            .Select(s => s.LostFoundId)
+            .ToListAsync();
+
 
         // ==========================================================
         // BUILD FINAL VIEWMODEL LIST
@@ -1825,7 +1855,6 @@ public class PetFeedsController : Controller
                     PawCount =
                         post.Paws?.Count ??
                         0,
-
                     IsPawed =
                         userId != null &&
                         post.Paws != null &&
@@ -1833,11 +1862,14 @@ public class PetFeedsController : Controller
                             p => p.MemberId ==
                                  userId),
 
-                    // Feed() sets the actual highlighted state afterward.
-                    IsHighlighted =
+                                        IsSaved =
+                        savedPetFeedIds.Contains(
+                            post.PetFeedId),
+
+                                        IsHighlighted =
                         false,
 
-                    DetailsUrl =
+                                        DetailsUrl =
                         string.Empty
                 });
 
@@ -1931,13 +1963,13 @@ public class PetFeedsController : Controller
 
                     IsPawed = false,
 
+                    IsSaved = savedListingIds.Contains(listing.ListingId),
+
                     IsHighlighted = false,
 
-                    Comments =
-                        new List<PetFeedComment>(),
+                    Comments = new List<PetFeedComment>(),
 
-                    DetailsUrl =
-                     $"/Listings/MarketplaceDetails/{listing.ListingId}"
+                    DetailsUrl = $"/Listings/MarketplaceDetails/{listing.ListingId}"
                 });
 
                 // Continue to the next selected candidate.
@@ -2027,13 +2059,13 @@ public class PetFeedsController : Controller
 
                     IsPawed = false,
 
+                    IsSaved = savedLostFoundIds.Contains(report.LostFoundId),
+
                     IsHighlighted = false,
 
-                    Comments =
-                        new List<PetFeedComment>(),
+                    Comments = new List<PetFeedComment>(),
 
-                    DetailsUrl =
-                     $"/LostFounds/BrowseDetails/{report.LostFoundId}"
+                    DetailsUrl =  $"/LostFounds/BrowseDetails/{report.LostFoundId}"
                 });
             }
         }

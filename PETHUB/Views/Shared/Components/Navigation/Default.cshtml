@@ -7,6 +7,25 @@
     bool isAdmin = User.IsInRole("Admin");
     bool isMember = User.IsInRole("Member");
 
+    string logoController;
+    string logoAction;
+
+    if (!isAuthenticated)
+    {
+        logoController = "Home";
+        logoAction = "Index";
+    }
+    else if (isAdmin)
+    {
+        logoController = "AdminDashboard";
+        logoAction = "Index";
+    }
+    else
+    {
+        logoController = "PetFeeds";
+        logoAction = "Feed";
+    }
+
     bool isHome = controller == "Home" &&
               action == "Index";
 
@@ -38,8 +57,8 @@
 
                 <!-- Logo -->
                 <a class="navbar-brand d-flex align-items-center"
-                   asp-controller="Home"
-                   asp-action="PublicLandingPage">
+                   asp-controller="@logoController"
+                   asp-action="@logoAction">
 
                     <img src="/images/PETHUB-LOGO.png"
                          alt="PetHub Logo"
@@ -136,10 +155,10 @@
 
                     </button>
 
-                    <a class="navbar-brand fw-bold fs-3 d-flex align-items-center mb-0"
-                       asp-controller="Home"
-                       asp-action="PublicLandingPage"
-                       style="color:#2D3748;">
+                <a class="navbar-brand fw-bold fs-3 d-flex align-items-center mb-0"
+                   asp-controller="@logoController"
+                   asp-action="@logoAction"
+                   style="color:#2D3748;">
 
                         <img src="/images/PETHUB-LOGO.png"
                              class="navbar-logo me-2"

@@ -1,24 +1,11 @@
 ﻿/* ==========================================================
-   LOST & FOUND - CREATE PAGE
-   Matches the Marketplace Create layout
-========================================================== */
-
-
-/* ==========================================================
-   MAIN PAGE CONTAINER
+   CREATE + DETAILS
 ========================================================== */
 
 #reportTypeSelection,
 #reportForm {
     width: 100%;
 }
-
-
-/* ==========================================================
-   MAIN CREATE CARD
-
-   Same overall look as Marketplace Create.
-========================================================== */
 
 .lostfound-form-card {
     width: 100%;
@@ -32,24 +19,15 @@
     box-sizing: border-box;
 }
 
-
-/* ==========================================================
-   SELECTION SCREEN
-========================================================== */
-
 #reportTypeSelection {
     padding-top: 70px;
     padding-bottom: 70px;
 }
 
-
     #reportTypeSelection .lostfound-form-card {
         max-width: 760px;
         padding: 30px 34px 40px;
     }
-
-
-    /* Selection title */
 
     #reportTypeSelection h2 {
         margin: 0;
@@ -58,22 +36,11 @@
         font-weight: 700;
     }
 
-
-    /* Selection subtitle */
-
     #reportTypeSelection .text-muted {
         margin-top: 8px;
         color: #777 !important;
         font-size: 0.88rem;
     }
-
-
-/* ==========================================================
-   LOST / FOUND SELECTION CARDS
-
-   Same style as Marketplace:
-   For Adoption / For Sale
-========================================================== */
 
 .listing-type-card {
     display: flex;
@@ -91,9 +58,6 @@
     transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-
-    /* Icon */
-
     .listing-type-card svg {
         width: 38px;
         height: 38px;
@@ -101,9 +65,6 @@
         color: #6fba61;
         stroke-width: 2;
     }
-
-
-    /* Heading */
 
     .listing-type-card h5 {
         margin-top: 8px !important;
@@ -113,18 +74,12 @@
         font-weight: 700;
     }
 
-
-    /* Description */
-
     .listing-type-card small {
         max-width: 220px;
         color: #7c7c7c;
         font-size: 0.78rem;
         line-height: 1.4;
     }
-
-
-    /* Hover */
 
     .listing-type-card:hover {
         border-color: #8ace79;
@@ -133,20 +88,10 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     }
 
-
-/* ==========================================================
-   ACTUAL CREATE FORM
-========================================================== */
-
 #reportForm {
     padding-top: 40px;
     padding-bottom: 50px;
 }
-
-
-    /* ==========================================================
-   FORM HEADER
-========================================================== */
 
     #reportForm h2 {
         margin: 0;
@@ -155,17 +100,11 @@
         font-weight: 700;
     }
 
-
 #reportFormSubtitle {
     margin-top: 7px;
     color: #777 !important;
     font-size: 0.88rem;
 }
-
-
-/* ==========================================================
-   CHANGE REPORT TYPE BUTTON
-========================================================== */
 
 .lostfound-back-selection {
     display: inline-flex;
@@ -181,19 +120,10 @@
     transition: color 0.2s ease;
 }
 
-
     .lostfound-back-selection:hover {
         color: #4e9144;
         text-decoration: underline;
     }
-
-
-/* ==========================================================
-   IMPORTANT:
-   NO BOXES AROUND INFORMATION SECTIONS
-
-   The Marketplace form uses a clean open layout.
-========================================================== */
 
 .lostfound-section {
     margin-bottom: 25px;
@@ -203,9 +133,6 @@
     background: transparent;
     box-shadow: none;
 }
-
-
-/* Section headings */
 
 .lostfound-section-title {
     display: flex !important;
@@ -221,18 +148,10 @@
     letter-spacing: 0.045em;
 }
 
-
-    /* Remove the green vertical bar from previous design */
-
     .lostfound-section-title::before {
         display: none;
         content: none;
     }
-
-
-/* ==========================================================
-   FORM LABELS
-========================================================== */
 
 #reportForm .form-label {
     display: block;
@@ -241,13 +160,6 @@
     font-size: 0.87rem;
     font-weight: 500;
 }
-
-
-/* ==========================================================
-   INPUTS
-
-   Matches Marketplace screenshot.
-========================================================== */
 
 #reportForm .form-control {
     width: 100%;
@@ -263,36 +175,22 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-
-    /* Focus */
-
     #reportForm .form-control:focus {
         border-color: #8ace79;
         outline: none;
         box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.13);
     }
 
-
-    /* Placeholder */
-
     #reportForm .form-control::placeholder {
         color: #a5aec0;
         opacity: 1;
     }
-
-
-/* Textarea */
 
 #reportForm textarea.form-control {
     min-height: 105px;
     resize: vertical;
     line-height: 1.5;
 }
-
-
-/* ==========================================================
-   SELECTED REPORT TYPE
-========================================================== */
 
 .lostfound-selected-type {
     display: inline-flex;
@@ -302,11 +200,6 @@
     border: none;
     background: transparent;
 }
-
-
-/* ==========================================================
-   REPORT TYPE BADGE
-========================================================== */
 
 .lostfound-type-badge {
     display: inline-flex;
@@ -318,45 +211,24 @@
     font-weight: 600;
 }
 
-
-    /* Icon */
-
     .lostfound-type-badge svg {
         width: 15px;
         height: 15px;
     }
-
-
-    /* Lost */
 
     .lostfound-type-badge.lost {
         background: #fff1f1;
         color: #bd5d5d;
     }
 
-
-    /* Found */
-
     .lostfound-type-badge.found {
         background: #edf8ea;
         color: #5e9f55;
     }
 
-
-/* ==========================================================
-   LOST DATE
-========================================================== */
-
 #lostDateGroup {
     margin-top: 3px;
 }
-
-
-/* ==========================================================
-   PET TYPE / SEX RADIO BUTTONS
-
-   Matches the simple Marketplace radio layout.
-========================================================== */
 
 .lostfound-radio-group {
     display: flex;
@@ -365,9 +237,6 @@
     gap: 28px;
     margin-top: 3px;
 }
-
-
-/* Individual option */
 
 .lostfound-radio-option {
     position: relative;
@@ -383,9 +252,6 @@
     cursor: pointer;
 }
 
-
-    /* Hide native radio */
-
     .lostfound-radio-option input[type="radio"] {
         position: absolute;
         width: 1px;
@@ -393,9 +259,6 @@
         opacity: 0;
         pointer-events: none;
     }
-
-
-/* Custom circle */
 
 .lostfound-radio-circle {
     display: inline-block;
@@ -408,16 +271,10 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
-
-/* Hover */
-
 .lostfound-radio-option:hover
 .lostfound-radio-circle {
     border-color: #7cbd70;
 }
-
-
-/* Checked */
 
 .lostfound-radio-option:has( input[type="radio"]:checked )
 .lostfound-radio-circle {
@@ -425,29 +282,15 @@
     background: #ffffff;
 }
 
-
-/* Focus */
-
 .lostfound-radio-option:has( input[type="radio"]:focus-visible ) {
     outline: 2px solid rgba(111, 186, 97, 0.35);
     outline-offset: 4px;
     border-radius: 5px;
 }
 
-
-/* Label */
-
 .lostfound-radio-label {
     line-height: 1;
 }
-
-
-/* ==========================================================
-   PHOTO CARD
-
-   This is the ONLY boxed area on the right,
-   matching Marketplace Create.
-========================================================== */
 
 .photo-upload-card {
     width: 100%;
@@ -458,9 +301,6 @@
     box-sizing: border-box;
 }
 
-
-    /* Photos title */
-
     .photo-upload-card h5 {
         margin: 0 0 18px;
         color: #172b43;
@@ -468,16 +308,10 @@
         font-weight: 700;
     }
 
-
-    /* File input */
-
     .photo-upload-card .form-control {
         min-height: 44px;
         padding: 9px 11px;
     }
-
-
-    /* Helper text */
 
     .photo-upload-card small {
         display: block;
@@ -486,20 +320,12 @@
         font-size: 0.76rem;
     }
 
-
-/* ==========================================================
-   IMAGE PREVIEW
-========================================================== */
-
 .image-preview-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
     margin-top: 16px;
 }
-
-
-    /* Preview image */
 
     .image-preview-grid img {
         display: block;
@@ -510,18 +336,12 @@
         border-radius: 10px;
     }
 
-
-/* ==========================================================
-   CLIENT ID PREVIEW
-========================================================== */
-
 #idPhotoPreview {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 10px;
 }
-
 
     #idPhotoPreview img {
         width: 110px;
@@ -531,13 +351,6 @@
         border-radius: 10px;
     }
 
-
-/* ==========================================================
-   ADDRESS FIELDS
-
-   Keep these visually open like Marketplace.
-========================================================== */
-
 #reportForm .address-fields,
 #reportForm .address-section {
     padding: 0;
@@ -545,21 +358,9 @@
     background: transparent;
 }
 
-
-/* ==========================================================
-   CONTACT / CLIENT SECTION
-
-   No additional card.
-========================================================== */
-
 #reportForm .lostfound-section:has( #ClientIdImage ) {
     margin-top: 5px;
 }
-
-
-/* ==========================================================
-   VALIDATION
-========================================================== */
 
 #reportForm .text-danger {
     display: block;
@@ -568,11 +369,6 @@
     font-size: 0.76rem;
 }
 
-
-/* ==========================================================
-   DIVIDER ABOVE BUTTONS
-========================================================== */
-
 #reportForm hr {
     margin-top: 28px !important;
     margin-bottom: 20px !important;
@@ -580,13 +376,6 @@
     border-top: 1px solid #e4e6e9;
     opacity: 1;
 }
-
-
-/* ==========================================================
-   FORM BUTTONS
-
-   Rounded/oblong like Marketplace.
-========================================================== */
 
 #reportForm .btn {
     min-height: 40px;
@@ -597,15 +386,11 @@
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
 }
 
-
-/* Cancel */
-
 #reportForm .btn-outline-secondary {
     border-color: #d4d8dd;
     background: #ffffff;
     color: #596575;
 }
-
 
     #reportForm .btn-outline-secondary:hover {
         border-color: #c4c9cf;
@@ -613,15 +398,11 @@
         color: #414b57;
     }
 
-
-/* Submit */
-
 #reportForm .btn-success {
     border-color: #6fba61;
     background: #6fba61;
     color: #ffffff;
 }
-
 
     #reportForm .btn-success:hover {
         border-color: #5ca84f;
@@ -630,39 +411,6 @@
         transform: translateY(-1px);
     }
 
-
-/* ==========================================================
-   DESKTOP FORM SPACING
-========================================================== */
-
-@media (min-width: 992px) {
-
-    #reportForm .row {
-        align-items: flex-start;
-    }
-
-
-    #reportForm .col-lg-8 {
-        padding-right: 22px;
-    }
-
-
-    #reportForm .col-lg-4 {
-        padding-left: 22px;
-    }
-
-
-    .photo-upload-card {
-        position: sticky;
-        top: 90px;
-    }
-}
-
-
-/* ==========================================================
-   TABLET
-========================================================== */
-
 @media (max-width: 991.98px) {
 
     .lostfound-form-card {
@@ -670,16 +418,10 @@
         padding: 28px;
     }
 
-
     .photo-upload-card {
         margin-top: 20px;
     }
 }
-
-
-/* ==========================================================
-   MOBILE
-========================================================== */
 
 @media (max-width: 767.98px) {
 
@@ -689,63 +431,45 @@
         padding-bottom: 30px;
     }
 
-
     .lostfound-form-card {
         padding: 24px 20px;
         border-radius: 15px;
     }
 
-
     #reportTypeSelection .lostfound-form-card {
         padding: 25px 20px 30px;
     }
-
 
     #reportTypeSelection h2 {
         font-size: 1.3rem;
     }
 
-
     #reportForm h2 {
         font-size: 1.45rem;
     }
-
 
     .listing-type-card {
         height: 145px;
     }
 
-
     .lostfound-radio-group {
         gap: 18px;
     }
-
 
     .photo-upload-card {
         position: static;
         padding: 20px;
     }
 
-
-    /*
-       Stack buttons on small screens.
-    */
-
     #reportForm form > .d-flex {
         flex-direction: column-reverse;
         align-items: stretch;
     }
 
-
         #reportForm form > .d-flex .btn {
             width: 100%;
         }
 }
-
-
-/* ==========================================================
-   SMALL MOBILE
-========================================================== */
 
 @media (max-width: 480px) {
 
@@ -753,54 +477,41 @@
         padding: 20px 16px;
     }
 
-
     #reportTypeSelection .row {
         margin-left: 0;
         margin-right: 0;
     }
-
 
     .listing-type-card {
         height: 135px;
         padding: 18px 15px;
     }
 
-
         .listing-type-card svg {
             width: 34px;
             height: 34px;
         }
 
-
         .listing-type-card h5 {
             font-size: 0.9rem;
         }
-
 
         .listing-type-card small {
             font-size: 0.73rem;
         }
 
-
     .lostfound-radio-group {
         gap: 15px;
     }
-
 
     .image-preview-grid {
         grid-template-columns: 1fr;
     }
 
-
         .image-preview-grid img {
             height: 180px;
         }
 }
-
-
-/* ==========================================================
-   LOST & FOUND DETAILS PAGE
-========================================================== */
 
 .lostfound-details-page {
     width: 100%;
@@ -811,21 +522,11 @@
     overflow: hidden;
 }
 
-
-/* ==========================================================
-   MAIN CONTAINER
-========================================================== */
-
 .lostfound-details-container {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
 }
-
-
-/* ==========================================================
-   BACK TO REPORTS
-========================================================== */
 
 .lostfound-back-top {
     width: 100%;
@@ -858,15 +559,6 @@
         flex-shrink: 0;
     }
 
-
-/* ==========================================================
-   MAIN DETAILS ROW
-
-   IMPORTANT:
-   Override Bootstrap column sizing.
-   This prevents the 52% + 50% width problem.
-========================================================== */
-
 .lostfound-details-row {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -879,11 +571,6 @@
     box-sizing: border-box;
 }
 
-
-    /* ==========================================================
-   OVERRIDE BOOTSTRAP col-lg-6
-========================================================== */
-
     .lostfound-details-row > .lostfound-left-column,
     .lostfound-details-row > .lostfound-right-column {
         width: auto !important;
@@ -894,21 +581,11 @@
         min-width: 0;
     }
 
-
-/* ==========================================================
-   LEFT COLUMN
-========================================================== */
-
 .lostfound-left-column {
     width: 100%;
     min-width: 0;
     align-self: start;
 }
-
-
-/* ==========================================================
-   RIGHT COLUMN
-========================================================== */
 
 .lostfound-right-column {
     width: 100%;
@@ -917,19 +594,9 @@
     align-self: stretch;
 }
 
-
-/* ==========================================================
-   LEFT IMAGE / CAROUSEL
-========================================================== */
-
 .lostfound-carousel {
     position: relative;
     width: 100%;
-    /*
-       Fixed image height.
-
-       The right-side content does NOT affect this height.
-    */
     height: min(65vh, 620px);
     min-height: 400px;
     border-radius: 22px;
@@ -937,11 +604,6 @@
     background: #F4F6F5;
     box-sizing: border-box;
 }
-
-
-/* ==========================================================
-   CAROUSEL INNER
-========================================================== */
 
 .lostfound-carousel-inner {
     width: 100%;
@@ -953,13 +615,6 @@
     height: 100%;
 }
 
-
-/* ==========================================================
-   MAIN IMAGE
-
-   Never stretches.
-========================================================== */
-
 .lostfound-main-image {
     display: block;
     width: 100%;
@@ -968,11 +623,6 @@
     object-position: center;
     border-radius: 22px;
 }
-
-
-/* ==========================================================
-   CAROUSEL BUTTONS
-========================================================== */
 
 .lostfound-carousel-button {
     position: absolute;
@@ -1004,22 +654,12 @@
         transform: translateY(-50%) translateX(1px);
     }
 
-
-/* ==========================================================
-   LUCIDE ARROWS
-========================================================== */
-
 .lostfound-carousel-arrow {
     width: 24px;
     height: 24px;
     color: #111827;
     stroke-width: 2;
 }
-
-
-/* ==========================================================
-   THUMBNAILS
-========================================================== */
 
 .lostfound-thumbnail-container {
     display: flex;
@@ -1036,11 +676,6 @@
     .lostfound-thumbnail-container::-webkit-scrollbar {
         display: none;
     }
-
-
-/* ==========================================================
-   THUMBNAIL
-========================================================== */
 
 .lostfound-thumbnail {
     display: block;
@@ -1074,11 +709,6 @@
         box-shadow: 0 2px 8px rgba(118, 185, 104, 0.22);
     }
 
-
-/* ==========================================================
-   NO IMAGE
-========================================================== */
-
 .lostfound-no-image {
     display: flex;
     align-items: center;
@@ -1091,13 +721,6 @@
     color: #8A939D;
     text-align: center;
 }
-
-
-/* ==========================================================
-   RIGHT SIDE SCROLL AREA
-
-   ONLY THIS SIDE SCROLLS.
-========================================================== */
 
 .lostfound-details-scroll {
     width: 100%;
@@ -1116,11 +739,6 @@
         display: none;
     }
 
-
-/* ==========================================================
-   PROFILE SECTION
-========================================================== */
-
 .lostfound-profile-section {
     display: flex;
     align-items: center;
@@ -1129,11 +747,6 @@
     min-height: 54px;
     margin-bottom: 18px;
 }
-
-
-/* ==========================================================
-   PROFILE IMAGE
-========================================================== */
 
 .lostfound-profile-avatar {
     flex: 0 0 48px;
@@ -1151,11 +764,6 @@
         height: 100%;
         object-fit: cover;
     }
-
-
-/* ==========================================================
-   PROFILE DETAILS
-========================================================== */
 
 .lostfound-profile-details {
     flex: 1;
@@ -1188,11 +796,6 @@
     color: #A1A7AE;
 }
 
-
-/* ==========================================================
-   LOST / FOUND BADGE
-========================================================== */
-
 .lostfound-type-badge {
     display: inline-flex;
     align-items: center;
@@ -1216,11 +819,6 @@
         background: #EFF9EC;
         border: 1px solid #D5EBD0;
     }
-
-
-/* ==========================================================
-   THREE DOT MENU
-========================================================== */
 
 .lostfound-post-menu {
     position: relative;
@@ -1258,11 +856,6 @@
         display: none !important;
     }
 
-
-/* ==========================================================
-   DROPDOWN
-========================================================== */
-
 .lostfound-post-dropdown {
     min-width: 150px;
     margin-top: 6px !important;
@@ -1294,22 +887,12 @@
             height: 16px;
         }
 
-
-/* ==========================================================
-   DIVIDER
-========================================================== */
-
 .lostfound-divider {
     width: 100%;
     height: 1px;
     margin-bottom: 30px;
     background: #E0E3E6;
 }
-
-
-/* ==========================================================
-   TITLE
-========================================================== */
 
 .lostfound-title {
     margin: 0 0 28px !important;
@@ -1322,11 +905,6 @@
     overflow-wrap: anywhere;
 }
 
-
-/* ==========================================================
-   ABOUT THIS REPORT
-========================================================== */
-
 .lostfound-about-section {
     width: 100%;
     margin: 0 0 30px !important;
@@ -1338,11 +916,6 @@
     margin: 0 !important;
     padding: 0 !important;
 }
-
-
-/* ==========================================================
-   SECTION TITLE
-========================================================== */
 
 .lost-found-section-title {
     display: flex;
@@ -1366,11 +939,6 @@
         stroke-width: 2;
     }
 
-
-/* ==========================================================
-   REPORT DESCRIPTION
-========================================================== */
-
 .lostfound-description-wrapper {
     width: 100%;
     margin: 0 !important;
@@ -1388,21 +956,11 @@
     overflow-wrap: anywhere;
 }
 
-
-/* ==========================================================
-   INFORMATION SECTIONS
-========================================================== */
-
 .lostfound-information-section {
     width: 100%;
     margin: 0 0 26px;
     padding: 0;
 }
-
-
-/* ==========================================================
-   INFORMATION BOX
-========================================================== */
 
 .lostfound-information-box {
     width: 100%;
@@ -1411,11 +969,6 @@
     border-radius: 16px;
     background: #FFFFFF;
 }
-
-
-/* ==========================================================
-   INFORMATION ROW
-========================================================== */
 
 .lostfound-information-row {
     display: flex;
@@ -1433,11 +986,6 @@
         border-bottom: none;
     }
 
-
-/* ==========================================================
-   INFORMATION LABEL
-========================================================== */
-
 .lostfound-information-label {
     flex: 0 0 auto;
     color: #68788C;
@@ -1445,11 +993,6 @@
     font-weight: 500;
     line-height: 1.4;
 }
-
-
-/* ==========================================================
-   INFORMATION VALUE
-========================================================== */
 
 .lostfound-information-value {
     min-width: 0;
@@ -1460,11 +1003,6 @@
     text-align: right;
     overflow-wrap: anywhere;
 }
-
-
-/* ==========================================================
-   MESSAGE ME
-========================================================== */
 
 .lostfound-message-section {
     width: 100%;
@@ -1503,11 +1041,6 @@
         stroke-width: 2;
     }
 
-
-/* ==========================================================
-   NO HORIZONTAL OVERFLOW
-========================================================== */
-
 .lostfound-details-page,
 .lostfound-details-container,
 .lostfound-details-row,
@@ -1516,11 +1049,6 @@
 .lostfound-details-scroll {
     box-sizing: border-box;
 }
-
-
-/* ==========================================================
-   TABLET
-========================================================== */
 
 @media (max-width: 991.98px) {
 
@@ -1563,11 +1091,6 @@
         font-size: 2rem;
     }
 }
-
-
-/* ==========================================================
-   MOBILE
-========================================================== */
 
 @media (max-width: 576px) {
 
@@ -1651,11 +1174,6 @@
     }
 }
 
-
-/* ==========================================================
-   LOST & FOUND DETAILS PAGE
-========================================================== */
-
 .lostfound-details-page {
     width: 100%;
     max-width: 1280px;
@@ -1663,11 +1181,6 @@
     padding: 24px 20px 35px;
     box-sizing: border-box;
 }
-
-
-/* ==========================================================
-   MAIN TWO-COLUMN LAYOUT
-========================================================== */
 
 .lostfound-details-layout {
     display: grid;
@@ -1680,11 +1193,6 @@
     overflow: hidden;
 }
 
-
-/* ==========================================================
-   LEFT SIDE - GALLERY
-========================================================== */
-
 .lostfound-gallery {
     width: 100%;
     min-width: 0;
@@ -1693,11 +1201,6 @@
     flex-direction: column;
     overflow: hidden;
 }
-
-
-/* ==========================================================
-   MAIN IMAGE
-========================================================== */
 
 .lostfound-main-image {
     position: relative;
@@ -1710,22 +1213,12 @@
     flex-shrink: 0;
 }
 
-
-    /* ==========================================================
-   CAROUSEL
-========================================================== */
-
     .lostfound-main-image .carousel,
     .lostfound-main-image .carousel-inner,
     .lostfound-main-image .carousel-item {
         width: 100%;
         height: 100%;
     }
-
-
-        /* ==========================================================
-   MAIN IMAGE
-========================================================== */
 
         .lostfound-main-image .carousel-item img {
             display: block;
@@ -1735,11 +1228,6 @@
             object-position: center;
             border-radius: 22px;
         }
-
-
-    /* ==========================================================
-   PREVIOUS / NEXT ARROWS
-========================================================== */
 
     .lostfound-main-image .carousel-control-prev,
     .lostfound-main-image .carousel-control-next {
@@ -1755,36 +1243,23 @@
         transition: background-color 0.2s ease, transform 0.2s ease;
     }
 
-
         .lostfound-main-image .carousel-control-prev:hover,
         .lostfound-main-image .carousel-control-next:hover {
             background: rgba(255, 255, 255, 0.98);
         }
 
-
         .lostfound-main-image .carousel-control-prev:hover {
             transform: translateY(-50%) translateX(-1px);
         }
-
 
         .lostfound-main-image .carousel-control-next:hover {
             transform: translateY(-50%) translateX(1px);
         }
 
-
-    /* ==========================================================
-   CAROUSEL ICONS
-========================================================== */
-
     .lostfound-main-image .carousel-control-prev-icon,
     .lostfound-main-image .carousel-control-next-icon {
         filter: invert(1);
     }
-
-
-/* ==========================================================
-   NO IMAGE
-========================================================== */
 
 .lostfound-no-image {
     width: 100%;
@@ -1799,11 +1274,6 @@
     text-align: center;
 }
 
-
-/* ==========================================================
-   THUMBNAILS
-========================================================== */
-
 .lostfound-thumbnail-grid {
     display: flex;
     align-items: center;
@@ -1817,26 +1287,18 @@
     scrollbar-color: #D1D5DB transparent;
 }
 
-
     .lostfound-thumbnail-grid::-webkit-scrollbar {
         height: 5px;
     }
-
 
     .lostfound-thumbnail-grid::-webkit-scrollbar-track {
         background: transparent;
     }
 
-
     .lostfound-thumbnail-grid::-webkit-scrollbar-thumb {
         background: #D1D5DB;
         border-radius: 10px;
     }
-
-
-/* ==========================================================
-   THUMBNAIL
-========================================================== */
 
 .lostfound-thumbnail {
     flex: 0 0 72px;
@@ -1851,7 +1313,6 @@
     transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-
     .lostfound-thumbnail img {
         display: block;
         width: 100%;
@@ -1859,22 +1320,14 @@
         object-fit: cover;
     }
 
-
     .lostfound-thumbnail:hover {
         border-color: #8ACE79;
         transform: translateY(-1px);
     }
 
-
     .lostfound-thumbnail.active {
         border-color: #8ACE79;
     }
-
-
-/* ==========================================================
-   RIGHT SIDE
-   ONLY THIS PANEL SCROLLS
-========================================================== */
 
 .lostfound-info-panel {
     width: 100%;
@@ -1888,16 +1341,10 @@
     -ms-overflow-style: none;
 }
 
-
     .lostfound-info-panel::-webkit-scrollbar {
         width: 0;
         height: 0;
     }
-
-
-/* ==========================================================
-   PROFILE
-========================================================== */
 
 .lostfound-profile {
     position: relative;
@@ -1909,11 +1356,6 @@
     gap: 12px;
 }
 
-
-/* ==========================================================
-   PROFILE LEFT
-========================================================== */
-
 .lostfound-profile-main {
     display: flex;
     align-items: center;
@@ -1921,11 +1363,6 @@
     min-width: 0;
     flex: 1;
 }
-
-
-/* ==========================================================
-   PROFILE AVATAR
-========================================================== */
 
 .lostfound-profile-avatar {
     flex: 0 0 44px;
@@ -1936,7 +1373,6 @@
     background: #F5F6F7;
 }
 
-
     .lostfound-profile-avatar img {
         display: block;
         width: 44px;
@@ -1945,15 +1381,9 @@
         border-radius: 50%;
     }
 
-
-/* ==========================================================
-   PROFILE DETAILS
-========================================================== */
-
 .lostfound-profile-details {
     min-width: 0;
 }
-
 
 .lostfound-profile-name {
     margin: 0 0 4px;
@@ -1963,7 +1393,6 @@
     font-weight: 600;
     line-height: 1.2;
 }
-
 
 .lostfound-profile-meta {
     display: flex;
@@ -1975,15 +1404,9 @@
     line-height: 1.3;
 }
 
-
 .lostfound-meta-dot {
     color: #A0A6AD;
 }
-
-
-/* ==========================================================
-   LOST / FOUND BADGE
-========================================================== */
 
 .lostfound-type-badge {
     display: inline-flex;
@@ -1997,24 +1420,17 @@
     white-space: nowrap;
 }
 
-
     .lostfound-type-badge.lost {
         color: #C96A6A;
         background: #FFF0F0;
         border: 1px solid #F2D1D1;
     }
 
-
     .lostfound-type-badge.found {
         color: #5A9E52;
         background: #EFF9EC;
         border: 1px solid #D2E9CD;
     }
-
-
-/* ==========================================================
-   PROFILE DIVIDER
-========================================================== */
 
 .lostfound-profile-divider {
     width: 100%;
@@ -2023,22 +1439,11 @@
     background: #E5E7EB;
 }
 
-
-/* ==========================================================
-   THREE DOT MENU
-========================================================== */
-
 .lostfound-more-menu {
     position: relative;
     flex-shrink: 0;
     z-index: 20;
 }
-
-
-/* ==========================================================
-   THREE DOT BUTTON
-   NO CIRCLE BY DEFAULT
-========================================================== */
 
 .lostfound-more-button {
     width: 40px;
@@ -2056,37 +1461,21 @@
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-
-    /* ==========================================================
-   CIRCLE ONLY ON HOVER
-========================================================== */
-
     .lostfound-more-button:hover {
         background: #F3F4F6;
         color: #374151;
     }
-
 
     .lostfound-more-button:focus {
         outline: none;
         box-shadow: none;
     }
 
-
-    /* ==========================================================
-   THREE DOT ICON
-========================================================== */
-
     .lostfound-more-button svg {
         width: 21px;
         height: 21px;
         stroke-width: 2;
     }
-
-
-/* ==========================================================
-   DROPDOWN
-========================================================== */
 
 .lostfound-more-dropdown {
     position: absolute;
@@ -2102,30 +1491,14 @@
     display: none;
 }
 
-
-
-/* ==========================================================
-   SHOW DROPDOWN
-========================================================== */
-
 .lostfound-more-menu.show .lostfound-more-dropdown {
     display: block;
 }
-
-
-/* ==========================================================
-   DROPDOWN FORMS
-========================================================== */
 
 .lostfound-more-dropdown form {
     margin: 0;
     padding: 0;
 }
-
-
-/* ==========================================================
-   DROPDOWN ITEMS
-========================================================== */
 
 .lostfound-dropdown-item {
     width: 100%;
@@ -2150,85 +1523,56 @@
     transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-
-    /* ==========================================================
-   EDIT
-========================================================== */
-
     .lostfound-dropdown-item.edit-action {
         color: #374151;
     }
 
-
         .lostfound-dropdown-item.edit-action svg {
             color: #64748B;
         }
-
 
         .lostfound-dropdown-item.edit-action:hover {
             background: #F4F8F2;
             color: #4D8E45;
         }
 
-
             .lostfound-dropdown-item.edit-action:hover svg {
                 color: #76B968;
             }
-
-
-    /* ==========================================================
-   MARK AS FOUND / RESOLVED
-========================================================== */
 
     .lostfound-dropdown-item.resolve-action {
         color: #374151;
     }
 
-
         .lostfound-dropdown-item.resolve-action svg {
             color: #64748B;
         }
-
 
         .lostfound-dropdown-item.resolve-action:hover {
             background: #F4F8F2;
             color: #4D8E45;
         }
 
-
             .lostfound-dropdown-item.resolve-action:hover svg {
                 color: #76B968;
             }
-
-
-    /* ==========================================================
-   DELETE
-========================================================== */
 
     .lostfound-dropdown-item.delete-action {
         color: #C14B4B;
     }
 
-
         .lostfound-dropdown-item.delete-action svg {
             color: #C14B4B;
         }
-
 
         .lostfound-dropdown-item.delete-action:hover {
             background: #FFF0F0;
             color: #B43C3C;
         }
 
-
             .lostfound-dropdown-item.delete-action:hover svg {
                 color: #B43C3C;
             }
-
-
-    /* ==========================================================
-   DROPDOWN ICONS
-========================================================== */
 
     .lostfound-dropdown-item svg {
         flex: 0 0 auto;
@@ -2237,11 +1581,6 @@
         stroke-width: 2;
     }
 
-
-/* ==========================================================
-   DROPDOWN DIVIDER
-========================================================== */
-
 .lostfound-dropdown-divider {
     width: calc(100% - 8px);
     height: 1px;
@@ -2249,17 +1588,11 @@
     background: #E5E7EB;
 }
 
-
-/* ==========================================================
-   TITLE
-========================================================== */
-
 .lostfound-title-section {
     width: 100%;
     margin: 0 0 28px;
     padding: 0;
 }
-
 
     .lostfound-title-section h1 {
         margin: 0;
@@ -2272,22 +1605,11 @@
         overflow-wrap: anywhere;
     }
 
-
-/* ==========================================================
-   INFORMATION SECTIONS
-========================================================== */
-
 .lostfound-info-section {
     width: 100%;
     margin: 0 0 29px;
     padding: 0;
 }
-
-
-    /* ==========================================================
-   SECTION HEADINGS
-   ABOUT THIS REPORT / PET INFORMATION / WHERE TO FIND
-========================================================== */
 
     .lostfound-info-section > h2 {
         display: flex;
@@ -2303,11 +1625,6 @@
         text-transform: uppercase;
     }
 
-
-        /* ==========================================================
-   SECTION HEADING ICONS
-========================================================== */
-
         .lostfound-info-section > h2 svg {
             width: 17px;
             height: 17px;
@@ -2315,11 +1632,6 @@
             stroke: #6FB662;
             stroke-width: 2;
         }
-
-
-/* ==========================================================
-   DESCRIPTION
-========================================================== */
 
 .lostfound-description {
     margin: 0;
@@ -2331,11 +1643,6 @@
     overflow-wrap: anywhere;
 }
 
-
-/* ==========================================================
-   INFORMATION BOX
-========================================================== */
-
 .lostfound-information-box {
     width: 100%;
     overflow: hidden;
@@ -2343,11 +1650,6 @@
     border: 1px solid #DEDEDE;
     border-radius: 16px;
 }
-
-
-/* ==========================================================
-   INFORMATION ROW
-========================================================== */
 
 .lostfound-information-row {
     display: flex;
@@ -2361,15 +1663,9 @@
     border-bottom: 1px solid #E2E2E2;
 }
 
-
     .lostfound-information-row:last-child {
         border-bottom: none;
     }
-
-
-/* ==========================================================
-   INFORMATION LABEL
-========================================================== */
 
 .lostfound-information-label {
     flex: 0 0 auto;
@@ -2378,11 +1674,6 @@
     font-weight: 500;
     line-height: 1.4;
 }
-
-
-/* ==========================================================
-   INFORMATION VALUE
-========================================================== */
 
 .lostfound-information-value {
     min-width: 0;
@@ -2393,10 +1684,6 @@
     text-align: right;
     overflow-wrap: anywhere;
 }
-
-/* ==========================================================
-   REPORT STATUS BADGE
-========================================================== */
 
 .lostfound-status-badge {
     display: inline-flex;
@@ -2412,11 +1699,6 @@
     white-space: nowrap;
 }
 
-
-    /* ==========================================================
-   STATUS DOT
-========================================================== */
-
     .lostfound-status-badge::before {
         content: "";
         width: 6px;
@@ -2424,11 +1706,6 @@
         flex-shrink: 0;
         border-radius: 50%;
     }
-
-
-    /* ==========================================================
-   PENDING
-========================================================== */
 
     .lostfound-status-badge.pending {
         color: #B87900;
@@ -2440,11 +1717,6 @@
             background: #E3A000;
         }
 
-
-    /* ==========================================================
-   APPROVED
-========================================================== */
-
     .lostfound-status-badge.approved {
         color: #3F9144;
         background: #EAF8E8;
@@ -2454,11 +1726,6 @@
         .lostfound-status-badge.approved::before {
             background: #5BAA55;
         }
-
-
-    /* ==========================================================
-   REJECTED
-========================================================== */
 
     .lostfound-status-badge.rejected {
         color: #C44D4D;
@@ -2470,21 +1737,11 @@
             background: #D85C5C;
         }
 
-
-    /* ==========================================================
-   RESOLVED / FOUND
-========================================================== */
-
     .lostfound-status-badge.resolved {
         color: #4F9560;
         background: #EEF8F0;
         border: 1px solid #CEE5D2;
     }
-
-
-/* ==========================================================
-   BACK TO MY POSTS CONTAINER
-========================================================== */
 
 .my-post-back-container {
     display: flex;
@@ -2496,25 +1753,12 @@
     box-sizing: border-box;
 }
 
-
-/* ==========================================================
-   BACK TO MY POSTS BUTTON
-   FULL WIDTH OF THE INFORMATION CONTAINER
-========================================================== */
-
 .my-post-back-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     width: 100%;
-    /*
-       IMPORTANT:
-       No max-width here.
-       This allows the button to reach the
-       exact width of the container.
-    */
-
     min-height: 46px;
     padding: 11px 20px;
     box-sizing: border-box;
@@ -2528,7 +1772,6 @@
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-
     .my-post-back-btn:hover {
         background: #F5F7F7;
         border-color: #C8D0D5;
@@ -2536,17 +1779,11 @@
         text-decoration: none;
     }
 
-
     .my-post-back-btn svg {
         width: 18px;
         height: 18px;
         stroke-width: 2;
     }
-
-
-/* ==========================================================
-   DESKTOP
-========================================================== */
 
 @media (min-width: 992px) {
 
@@ -2557,17 +1794,11 @@
         padding-right: 20px;
     }
 
-
     .lostfound-details-layout {
         grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
         gap: 34px;
     }
 }
-
-
-/* ==========================================================
-   TABLET
-========================================================== */
 
 @media (max-width: 991.98px) {
 
@@ -2575,7 +1806,6 @@
         max-width: 900px;
         padding: 22px 18px 30px;
     }
-
 
     .lostfound-details-layout {
         display: flex;
@@ -2586,12 +1816,10 @@
         overflow: visible;
     }
 
-
     .lostfound-gallery {
         height: auto;
         overflow: visible;
     }
-
 
     .lostfound-main-image {
         height: auto;
@@ -2599,13 +1827,11 @@
         min-height: 0;
     }
 
-
     .lostfound-no-image {
         height: auto;
         aspect-ratio: 1.2 / 1;
         min-height: 0;
     }
-
 
     .lostfound-info-panel {
         height: auto;
@@ -2615,43 +1841,29 @@
     }
 }
 
-
-/* ==========================================================
-   MOBILE
-========================================================== */
-
 @media (max-width: 576px) {
 
     .lostfound-details-page {
         padding: 18px 14px 25px;
     }
 
-
     .lostfound-details-layout {
         gap: 26px;
     }
-
-
-    /* IMAGE */
 
     .lostfound-main-image {
         aspect-ratio: 1 / 1;
         border-radius: 18px;
     }
 
-
         .lostfound-main-image .carousel-item img {
             border-radius: 18px;
         }
-
 
     .lostfound-no-image {
         aspect-ratio: 1 / 1;
         border-radius: 18px;
     }
-
-
-    /* ARROWS */
 
     .lostfound-main-image .carousel-control-prev,
     .lostfound-main-image .carousel-control-next {
@@ -2660,22 +1872,15 @@
         margin: 0 10px;
     }
 
-
-    /* THUMBNAILS */
-
     .lostfound-thumbnail {
         flex: 0 0 68px;
         width: 68px;
         height: 68px;
     }
 
-
-    /* PROFILE */
-
     .lostfound-profile-main {
         gap: 9px;
     }
-
 
     .lostfound-profile-avatar {
         width: 42px;
@@ -2683,53 +1888,37 @@
         flex-basis: 42px;
     }
 
-
         .lostfound-profile-avatar img {
             width: 42px;
             height: 42px;
         }
 
-
     .lostfound-profile-name {
         font-size: 0.94rem;
     }
 
-
     .lostfound-profile-meta {
         font-size: 0.78rem;
     }
-
-
-    /* THREE DOTS */
 
     .lostfound-more-button {
         width: 38px;
         height: 38px;
     }
 
-
     .lostfound-more-dropdown {
         width: 185px;
     }
-
-
-    /* TITLE */
 
     .lostfound-title-section h1 {
         font-size: 1.7rem;
         line-height: 1.22;
     }
 
-
-    /* DESCRIPTION */
-
     .lostfound-description {
         font-size: 1rem;
         line-height: 1.6;
     }
-
-
-    /* INFORMATION ROWS */
 
     .lostfound-information-row {
         min-height: 50px;
@@ -2737,18 +1926,13 @@
         padding: 11px 13px;
     }
 
-
     .lostfound-information-label {
         font-size: 0.8rem;
     }
 
-
     .lostfound-information-value {
         font-size: 0.85rem;
     }
-
-
-    /* BACK BUTTON */
 
     .my-post-back-btn {
         width: 100%;
@@ -2757,18 +1941,8 @@
     }
 }
 
-
-
-
-
 /* ==========================================================
-   PETHUB — LOST & FOUND EDIT PAGE
-   FINAL CSS
-========================================================== */
-
-
-/* ==========================================================
-   PAGE
+   EDIT PAGE
 ========================================================== */
 
 .lostfound-edit-page {
@@ -2780,11 +1954,6 @@
     color: #263238;
 }
 
-
-/* ==========================================================
-   MAIN EDIT CARD
-========================================================== */
-
 .lostfound-edit-card {
     width: 100%;
     padding: 32px 32px 0;
@@ -2794,11 +1963,6 @@
     border-radius: 17px;
     box-shadow: 0 4px 16px rgba(31, 41, 55, 0.04);
 }
-
-
-/* ==========================================================
-   HEADER
-========================================================== */
 
 .lostfound-edit-header {
     margin: 0 0 25px;
@@ -2821,11 +1985,6 @@
         line-height: 1.45;
     }
 
-
-/* ==========================================================
-   MAIN CONTENT
-========================================================== */
-
 .lostfound-edit-content {
     display: grid;
     grid-template-columns: minmax(0, 1.35fr) minmax(285px, 0.65fr);
@@ -2834,20 +1993,10 @@
     width: 100%;
 }
 
-
-/* ==========================================================
-   LEFT SIDE
-========================================================== */
-
 .lostfound-edit-form-section {
     width: 100%;
     min-width: 0;
 }
-
-
-/* ==========================================================
-   REPORT TYPE
-========================================================== */
 
 .lostfound-report-type-section {
     width: 100%;
@@ -2872,11 +2021,6 @@
     font-weight: 400;
     line-height: 1.4;
 }
-
-
-/* ==========================================================
-   REPORT TYPE CARDS
-========================================================== */
 
 .lostfound-report-type-options {
     display: grid;
@@ -2903,11 +2047,6 @@
     transition: none;
 }
 
-
-/* ==========================================================
-   HIDDEN RADIO
-========================================================== */
-
 .lostfound-report-type-radio {
     position: absolute;
     width: 1px;
@@ -2916,22 +2055,11 @@
     pointer-events: none;
 }
 
-
-/* ==========================================================
-   SELECTED TYPE
-========================================================== */
-
 .lostfound-report-type-option.selected {
     border-color: #7ccc6d;
     background: #f4fcf1;
     box-shadow: 0 2px 7px rgba(124, 204, 109, 0.08);
 }
-
-
-/* ==========================================================
-   HOVER
-   UNSELECTED STAYS GRAY
-========================================================== */
 
 .lostfound-report-type-option:hover {
     border-color: #dce3e8;
@@ -2942,11 +2070,6 @@
     border-color: #7ccc6d;
     background: #f4fcf1;
 }
-
-
-/* ==========================================================
-   LUCIDE ICON
-========================================================== */
 
 .lostfound-report-type-icon {
     width: 45px;
@@ -2969,11 +2092,6 @@
     color: #63b957;
 }
 
-
-/* ==========================================================
-   TYPE TEXT
-========================================================== */
-
 .lostfound-report-type-option strong {
     display: block;
     margin: 0 0 4px;
@@ -2992,22 +2110,12 @@
     line-height: 1.35;
 }
 
-
-/* ==========================================================
-   VALIDATION
-========================================================== */
-
 .lostfound-report-type-section > .text-danger {
     display: block;
     margin-top: 5px;
     color: #dc2626;
     font-size: 0.72rem;
 }
-
-
-/* ==========================================================
-   FORM FIELDS
-========================================================== */
 
 .lostfound-edit-field {
     width: 100%;
@@ -3022,11 +2130,6 @@
         font-weight: 500;
         line-height: 1.35;
     }
-
-
-/* ==========================================================
-   INPUTS
-========================================================== */
 
 .lostfound-edit-input {
     display: block;
@@ -3052,11 +2155,6 @@
         outline: none;
     }
 
-
-/* ==========================================================
-   DESCRIPTION
-========================================================== */
-
 .lostfound-edit-textarea {
     height: 88px;
     min-height: 88px;
@@ -3065,11 +2163,6 @@
     line-height: 1.45;
 }
 
-
-/* ==========================================================
-   VALIDATION
-========================================================== */
-
 .lostfound-edit-field .text-danger {
     display: block;
     margin-top: 4px;
@@ -3077,11 +2170,6 @@
     font-size: 0.72rem;
     line-height: 1.3;
 }
-
-
-/* ==========================================================
-   LOCATION
-========================================================== */
 
 .lostfound-edit-location {
     width: 100%;
@@ -3102,11 +2190,6 @@
         font-size: 0.76rem;
         line-height: 1.4;
     }
-
-
-    /* ==========================================================
-   ADDRESS PARTIAL
-========================================================== */
 
     .lostfound-edit-location .form-group,
     .lostfound-edit-location .mb-3 {
@@ -3146,11 +2229,6 @@
             outline: none;
         }
 
-
-    /* ==========================================================
-   ADDRESS GRID
-========================================================== */
-
     .lostfound-edit-location .row {
         margin-left: -7px;
         margin-right: -7px;
@@ -3160,11 +2238,6 @@
             padding-left: 7px;
             padding-right: 7px;
         }
-
-
-/* ==========================================================
-   RIGHT SIDE — PHOTO CARD
-========================================================== */
 
 .lostfound-edit-photos-section {
     width: 100%;
@@ -3177,11 +2250,6 @@
     border-radius: 11px;
     align-self: stretch;
 }
-
-
-/* ==========================================================
-   PHOTO HEADER
-========================================================== */
 
 .lostfound-photos-header {
     margin: 0 0 13px;
@@ -3196,11 +2264,6 @@
         line-height: 1.3;
     }
 
-
-/* ==========================================================
-   UPLOAD SECTION
-========================================================== */
-
 .lostfound-upload-section {
     width: 100%;
     margin-bottom: 14px;
@@ -3213,11 +2276,6 @@
         font-size: 0.72rem;
         line-height: 1.35;
     }
-
-
-/* ==========================================================
-   FILE INPUT
-========================================================== */
 
 .lostfound-file-input {
     display: block;
@@ -3255,11 +2313,6 @@
         cursor: pointer;
     }
 
-
-/* ==========================================================
-   PHOTO GRID
-========================================================== */
-
 .lostfound-existing-images {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3267,11 +2320,6 @@
     width: 100%;
     margin-top: 12px;
 }
-
-
-/* ==========================================================
-   PHOTO ITEM
-========================================================== */
 
 .lostfound-edit-photo {
     position: relative;
@@ -3289,19 +2337,9 @@
         background: #f3f4f6;
     }
 
-
-    /* ==========================================================
-   REMOVED EXISTING PHOTO
-========================================================== */
-
     .lostfound-edit-photo.marked-for-removal {
         display: none !important;
     }
-
-
-/* ==========================================================
-   REMOVE IMAGE BUTTON
-========================================================== */
 
 .lostfound-remove-image {
     position: absolute;
@@ -3334,15 +2372,6 @@
         stroke-width: 2;
     }
 
-
-/* ==========================================================
-   NEW PHOTO PREVIEWS
-
-   The container uses display: contents in the CSHTML,
-   so these styles apply to the preview items generated
-   by imagePreviewHelper.js.
-========================================================== */
-
 .lostfound-image-preview-container {
     display: contents;
 }
@@ -3351,9 +2380,6 @@
         position: relative;
         min-width: 0;
     }
-
-
-    /* Preview images generated by helper */
 
     .lostfound-image-preview-container img {
         display: block;
@@ -3365,20 +2391,10 @@
         background: #f3f4f6;
     }
 
-
-    /* ==========================================================
-   NEW PHOTO PREVIEW WRAPPER
-========================================================== */
-
     .lostfound-image-preview-container .image-preview-item {
         position: relative;
         width: 100%;
     }
-
-
-    /* ==========================================================
-   MORE PHOTOS
-========================================================== */
 
     .lostfound-image-preview-container .more-images {
         display: flex;
@@ -3395,11 +2411,6 @@
         font-weight: 600;
         text-align: center;
     }
-
-
-/* ==========================================================
-   NO EXISTING PHOTOS
-========================================================== */
 
 .lostfound-no-existing-images {
     display: flex;
@@ -3418,11 +2429,6 @@
     text-align: center;
 }
 
-
-/* ==========================================================
-   BOTTOM ACTIONS
-========================================================== */
-
 .lostfound-edit-actions {
     display: flex;
     align-items: center;
@@ -3434,11 +2440,6 @@
     border-top: 1px solid #e5e7eb;
     box-sizing: border-box;
 }
-
-
-/* ==========================================================
-   CANCEL BUTTON
-========================================================== */
 
 .lostfound-cancel-btn {
     display: inline-flex;
@@ -3467,11 +2468,6 @@
         text-decoration: none;
     }
 
-
-/* ==========================================================
-   UPDATE REPORT BUTTON
-========================================================== */
-
 .lostfound-save-btn {
     display: inline-flex;
     align-items: center;
@@ -3497,11 +2493,6 @@
         box-shadow: 0 3px 8px rgba(138, 206, 121, 0.22);
     }
 
-
-/* ==========================================================
-   TABLET
-========================================================== */
-
 @media (max-width: 991px) {
 
     .lostfound-edit-page {
@@ -3524,11 +2515,6 @@
         padding: 15px;
     }
 }
-
-
-/* ==========================================================
-   MOBILE
-========================================================== */
 
 @media (max-width: 768px) {
 
@@ -3559,11 +2545,6 @@
         margin-top: 20px;
     }
 }
-
-
-/* ==========================================================
-   SMALL MOBILE
-========================================================== */
 
 @media (max-width: 480px) {
 
@@ -3623,16 +2604,8 @@
     }
 }
 
-
-
-
 /* ==========================================================
-   LOST & FOUND
-========================================================== */
-
-
-/* ==========================================================
-   HERO
+   BROWSE PAGE
 ========================================================== */
 
 .lost-found-hero {
@@ -3652,14 +2625,12 @@
     box-sizing: border-box;
 }
 
-
 .lost-found-hero-overlay {
     position: absolute;
     inset: 0;
     background: linear-gradient( to bottom, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.48) );
     z-index: 1;
 }
-
 
 .lost-found-hero-content {
     position: relative;
@@ -3669,7 +2640,6 @@
     text-align: center;
     color: #ffffff;
 }
-
 
 .lost-found-hero-title {
     margin: 0 0 10px;
@@ -3681,7 +2651,6 @@
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
-
 .lost-found-hero-description {
     max-width: 650px;
     margin: 0 auto;
@@ -3690,12 +2659,6 @@
     line-height: 1.6;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 }
-
-
-
-/* ==========================================================
-   FILTER CONTAINER
-========================================================== */
 
 .lost-found-filter-container {
     position: sticky;
@@ -3709,12 +2672,6 @@
     padding: 0 20px;
     box-sizing: border-box;
 }
-
-
-
-/* ==========================================================
-   FILTER BAR
-========================================================== */
 
 .lost-found-filter-bar {
     width: auto;
@@ -3734,21 +2691,15 @@
     -webkit-backdrop-filter: blur(14px);
 }
 
-/* ==========================================================
-   LOST & FOUND SEARCH
-========================================================== */
-
 .lost-found-search {
     flex: 1;
     min-width: 260px;
 }
 
-
 .lost-found-search-wrapper {
     position: relative;
     width: 100%;
 }
-
 
 .lost-found-search-icon {
     position: absolute;
@@ -3762,7 +2713,6 @@
     pointer-events: none;
     z-index: 1;
 }
-
 
 .lost-found-search-input {
     width: 100%;
@@ -3781,28 +2731,21 @@
     transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-
     .lost-found-search-input::placeholder {
         color: #667085;
         opacity: 1;
     }
-
 
     .lost-found-search-input:hover {
         border-color: #cbd5d0;
         background: #fbfdfb;
     }
 
-
     .lost-found-search-input:focus {
         border-color: #8ace79;
         background: #ffffff;
         box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
     }
-
-/* ==========================================================
-   FILTER LABEL
-========================================================== */
 
 .lost-found-filter-label {
     display: inline-flex;
@@ -3816,19 +2759,12 @@
     white-space: nowrap;
 }
 
-
     .lost-found-filter-label svg {
         width: 16px;
         height: 16px;
         color: #687783;
         stroke-width: 2;
     }
-
-
-
-/* ==========================================================
-   FILTER CONTROLS
-========================================================== */
 
 .lost-found-filter-controls {
     display: flex;
@@ -3838,27 +2774,14 @@
     min-width: 0;
 }
 
-
 .lost-found-filter-item {
     position: relative;
     flex-shrink: 0;
 }
 
-
-
-/* ==========================================================
-   DROPDOWN
-========================================================== */
-
 .lost-found-dropdown {
     position: relative;
 }
-
-
-
-/* ==========================================================
-   DROPDOWN BUTTON
-========================================================== */
 
 .lost-found-dropdown-button {
     position: relative;
@@ -3886,13 +2809,11 @@
         background: #fbfdfb;
     }
 
-
 .lost-found-dropdown.open
 .lost-found-dropdown-button {
     border-color: #8ace79;
     box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
 }
-
 
 .lost-found-dropdown-button-content {
     display: inline-flex;
@@ -3900,7 +2821,6 @@
     gap: 9px;
     min-width: 0;
 }
-
 
 .lost-found-filter-select-icon {
     flex-shrink: 0;
@@ -3910,13 +2830,11 @@
     stroke-width: 2;
 }
 
-
 .lost-found-dropdown-current {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
 
 .lost-found-dropdown-chevron {
     flex-shrink: 0;
@@ -3927,17 +2845,10 @@
     transition: transform 0.2s ease;
 }
 
-
 .lost-found-dropdown.open
 .lost-found-dropdown-chevron {
     transform: rotate(180deg);
 }
-
-
-
-/* ==========================================================
-   DROPDOWN MENU
-========================================================== */
 
 .lost-found-dropdown-menu {
     position: absolute;
@@ -3957,7 +2868,6 @@
     transition: opacity 0.16s ease, visibility 0.16s ease, transform 0.16s ease;
 }
 
-
 .lost-found-dropdown.open
 .lost-found-dropdown-menu {
     opacity: 1;
@@ -3965,12 +2875,6 @@
     transform: translateY(0);
     pointer-events: auto;
 }
-
-
-
-/* ==========================================================
-   DROPDOWN ITEM
-========================================================== */
 
 .lost-found-dropdown-item {
     display: flex;
@@ -3989,13 +2893,11 @@
     transition: background-color 0.18s ease, color 0.18s ease;
 }
 
-
     .lost-found-dropdown-item:hover {
         background: #eaf8e6;
         color: #4f8d42;
         text-decoration: none;
     }
-
 
     .lost-found-dropdown-item.active {
         color: #4f8d42;
@@ -4003,12 +2905,10 @@
         font-weight: 600;
     }
 
-
         .lost-found-dropdown-item.active:hover {
             background: #eaf8e6;
             color: #4f8d42;
         }
-
 
 .lost-found-dropdown-item-content {
     display: inline-flex;
@@ -4016,12 +2916,6 @@
     gap: 9px;
     width: 100%;
 }
-
-
-
-/* ==========================================================
-   FILTER COUNT
-========================================================== */
 
 .lost-found-filter-count {
     display: inline-flex;
@@ -4037,4124 +2931,11 @@
     white-space: nowrap;
 }
 
-
     .lost-found-filter-count strong {
         color: #344054;
         font-size: 0.9rem;
         font-weight: 700;
     }
-
-/* ==========================================================
-   LOST & FOUND - CREATE PAGE
-   Matches the Marketplace Create layout
-========================================================== */
-
-
-/* ==========================================================
-   MAIN PAGE CONTAINER
-========================================================== */
-
-#reportTypeSelection,
-#reportForm {
-    width: 100%;
-}
-
-
-/* ==========================================================
-   MAIN CREATE CARD
-
-   Same overall look as Marketplace Create.
-========================================================== */
-
-.lostfound-form-card {
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 32px 34px;
-    background: #ffffff;
-    border: 1px solid #e2e2e2;
-    border-radius: 18px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
-    box-sizing: border-box;
-}
-
-
-/* ==========================================================
-   SELECTION SCREEN
-========================================================== */
-
-#reportTypeSelection {
-    padding-top: 70px;
-    padding-bottom: 70px;
-}
-
-
-    #reportTypeSelection .lostfound-form-card {
-        max-width: 760px;
-        padding: 30px 34px 40px;
-    }
-
-
-    /* Selection title */
-
-    #reportTypeSelection h2 {
-        margin: 0;
-        color: #10243e;
-        font-size: 1.45rem;
-        font-weight: 700;
-    }
-
-
-    /* Selection subtitle */
-
-    #reportTypeSelection .text-muted {
-        margin-top: 8px;
-        color: #777 !important;
-        font-size: 0.88rem;
-    }
-
-
-/* ==========================================================
-   LOST / FOUND SELECTION CARDS
-
-   Same style as Marketplace:
-   For Adoption / For Sale
-========================================================== */
-
-.listing-type-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 145px;
-    padding: 20px;
-    border: 2px solid #dedede;
-    border-radius: 14px;
-    background: #ffffff;
-    text-align: center;
-    cursor: pointer;
-    box-sizing: border-box;
-    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-
-    /* Icon */
-
-    .listing-type-card svg {
-        width: 38px;
-        height: 38px;
-        margin-bottom: 2px;
-        color: #6fba61;
-        stroke-width: 2;
-    }
-
-
-    /* Heading */
-
-    .listing-type-card h5 {
-        margin-top: 8px !important;
-        margin-bottom: 3px;
-        color: #182b43;
-        font-size: 0.95rem;
-        font-weight: 700;
-    }
-
-
-    /* Description */
-
-    .listing-type-card small {
-        max-width: 220px;
-        color: #7c7c7c;
-        font-size: 0.78rem;
-        line-height: 1.4;
-    }
-
-
-    /* Hover */
-
-    .listing-type-card:hover {
-        border-color: #8ace79;
-        background: #fcfffb;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    }
-
-
-/* ==========================================================
-   ACTUAL CREATE FORM
-========================================================== */
-
-#reportForm {
-    padding-top: 40px;
-    padding-bottom: 50px;
-}
-
-
-    /* ==========================================================
-   FORM HEADER
-========================================================== */
-
-    #reportForm h2 {
-        margin: 0;
-        color: #10243e;
-        font-size: 1.65rem;
-        font-weight: 700;
-    }
-
-
-#reportFormSubtitle {
-    margin-top: 7px;
-    color: #777 !important;
-    font-size: 0.88rem;
-}
-
-
-/* ==========================================================
-   CHANGE REPORT TYPE BUTTON
-========================================================== */
-
-.lostfound-back-selection {
-    display: inline-flex;
-    align-items: center;
-    margin-bottom: 10px;
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: #69ad5c;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-
-    .lostfound-back-selection:hover {
-        color: #4e9144;
-        text-decoration: underline;
-    }
-
-
-/* ==========================================================
-   IMPORTANT:
-   NO BOXES AROUND INFORMATION SECTIONS
-
-   The Marketplace form uses a clean open layout.
-========================================================== */
-
-.lostfound-section {
-    margin-bottom: 25px;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-}
-
-
-/* Section headings */
-
-.lostfound-section-title {
-    display: flex !important;
-    align-items: center;
-    gap: 7px;
-    margin: 0 0 11px 0 !important;
-    padding: 0 !important;
-    color: #76B968;
-    font-size: 0.95rem;
-    font-weight: 700;
-    line-height: 1.35;
-    text-transform: uppercase;
-    letter-spacing: 0.045em;
-}
-
-
-    /* Remove the green vertical bar from previous design */
-
-    .lostfound-section-title::before {
-        display: none;
-        content: none;
-    }
-
-
-/* ==========================================================
-   FORM LABELS
-========================================================== */
-
-#reportForm .form-label {
-    display: block;
-    margin-bottom: 7px;
-    color: #1b3049;
-    font-size: 0.87rem;
-    font-weight: 500;
-}
-
-
-/* ==========================================================
-   INPUTS
-
-   Matches Marketplace screenshot.
-========================================================== */
-
-#reportForm .form-control {
-    width: 100%;
-    min-height: 44px;
-    padding: 10px 12px;
-    border: 1px solid #d3d8df;
-    border-radius: 10px;
-    background: #ffffff;
-    color: #23364e;
-    font-size: 0.87rem;
-    box-shadow: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-
-    /* Focus */
-
-    #reportForm .form-control:focus {
-        border-color: #8ace79;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.13);
-    }
-
-
-    /* Placeholder */
-
-    #reportForm .form-control::placeholder {
-        color: #a5aec0;
-        opacity: 1;
-    }
-
-
-/* Textarea */
-
-#reportForm textarea.form-control {
-    min-height: 105px;
-    resize: vertical;
-    line-height: 1.5;
-}
-
-
-/* ==========================================================
-   SELECTED REPORT TYPE
-========================================================== */
-
-.lostfound-selected-type {
-    display: inline-flex;
-    align-items: center;
-    min-height: 38px;
-    padding: 0;
-    border: none;
-    background: transparent;
-}
-
-
-/* ==========================================================
-   REPORT TYPE BADGE
-========================================================== */
-
-.lostfound-type-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 7px 13px;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 600;
-}
-
-
-    /* Icon */
-
-    .lostfound-type-badge svg {
-        width: 15px;
-        height: 15px;
-    }
-
-
-    /* Lost */
-
-    .lostfound-type-badge.lost {
-        background: #fff1f1;
-        color: #bd5d5d;
-    }
-
-
-    /* Found */
-
-    .lostfound-type-badge.found {
-        background: #edf8ea;
-        color: #5e9f55;
-    }
-
-
-/* ==========================================================
-   LOST DATE
-========================================================== */
-
-#lostDateGroup {
-    margin-top: 3px;
-}
-
-
-/* ==========================================================
-   PET TYPE / SEX RADIO BUTTONS
-
-   Matches the simple Marketplace radio layout.
-========================================================== */
-
-.lostfound-radio-group {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 28px;
-    margin-top: 3px;
-}
-
-
-/* Individual option */
-
-.lostfound-radio-option {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: #263a52;
-    font-size: 0.88rem;
-    font-weight: 400;
-    cursor: pointer;
-}
-
-
-    /* Hide native radio */
-
-    .lostfound-radio-option input[type="radio"] {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-
-/* Custom circle */
-
-.lostfound-radio-circle {
-    display: inline-block;
-    width: 17px;
-    height: 17px;
-    border: 1px solid #d5dce3;
-    border-radius: 50%;
-    background: #ffffff;
-    box-sizing: border-box;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}
-
-
-/* Hover */
-
-.lostfound-radio-option:hover
-.lostfound-radio-circle {
-    border-color: #7cbd70;
-}
-
-
-/* Checked */
-
-.lostfound-radio-option:has( input[type="radio"]:checked )
-.lostfound-radio-circle {
-    border: 5px solid #6fba61;
-    background: #ffffff;
-}
-
-
-/* Focus */
-
-.lostfound-radio-option:has( input[type="radio"]:focus-visible ) {
-    outline: 2px solid rgba(111, 186, 97, 0.35);
-    outline-offset: 4px;
-    border-radius: 5px;
-}
-
-
-/* Label */
-
-.lostfound-radio-label {
-    line-height: 1;
-}
-
-
-/* ==========================================================
-   PHOTO CARD
-
-   This is the ONLY boxed area on the right,
-   matching Marketplace Create.
-========================================================== */
-
-.photo-upload-card {
-    width: 100%;
-    padding: 24px;
-    border: 1px solid #dfe3e8;
-    border-radius: 14px;
-    background: #ffffff;
-    box-sizing: border-box;
-}
-
-
-    /* Photos title */
-
-    .photo-upload-card h5 {
-        margin: 0 0 18px;
-        color: #172b43;
-        font-size: 0.95rem;
-        font-weight: 700;
-    }
-
-
-    /* File input */
-
-    .photo-upload-card .form-control {
-        min-height: 44px;
-        padding: 9px 11px;
-    }
-
-
-    /* Helper text */
-
-    .photo-upload-card small {
-        display: block;
-        margin-top: 9px;
-        color: #777;
-        font-size: 0.76rem;
-    }
-
-
-/* ==========================================================
-   IMAGE PREVIEW
-========================================================== */
-
-.image-preview-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 16px;
-}
-
-
-    /* Preview image */
-
-    .image-preview-grid img {
-        display: block;
-        width: 100%;
-        height: 115px;
-        object-fit: cover;
-        border: 1px solid #e1e4e8;
-        border-radius: 10px;
-    }
-
-
-/* ==========================================================
-   CLIENT ID PREVIEW
-========================================================== */
-
-#idPhotoPreview {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-
-    #idPhotoPreview img {
-        width: 110px;
-        height: 110px;
-        object-fit: cover;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-    }
-
-
-/* ==========================================================
-   ADDRESS FIELDS
-
-   Keep these visually open like Marketplace.
-========================================================== */
-
-#reportForm .address-fields,
-#reportForm .address-section {
-    padding: 0;
-    border: none;
-    background: transparent;
-}
-
-
-/* ==========================================================
-   CONTACT / CLIENT SECTION
-
-   No additional card.
-========================================================== */
-
-#reportForm .lostfound-section:has( #ClientIdImage ) {
-    margin-top: 5px;
-}
-
-
-/* ==========================================================
-   VALIDATION
-========================================================== */
-
-#reportForm .text-danger {
-    display: block;
-    margin-top: 5px;
-    color: #d45c5c !important;
-    font-size: 0.76rem;
-}
-
-
-/* ==========================================================
-   DIVIDER ABOVE BUTTONS
-========================================================== */
-
-#reportForm hr {
-    margin-top: 28px !important;
-    margin-bottom: 20px !important;
-    border: 0;
-    border-top: 1px solid #e4e6e9;
-    opacity: 1;
-}
-
-
-/* ==========================================================
-   FORM BUTTONS
-
-   Rounded/oblong like Marketplace.
-========================================================== */
-
-#reportForm .btn {
-    min-height: 40px;
-    padding: 9px 21px;
-    border-radius: 999px;
-    font-size: 0.84rem;
-    font-weight: 600;
-    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
-}
-
-
-/* Cancel */
-
-#reportForm .btn-outline-secondary {
-    border-color: #d4d8dd;
-    background: #ffffff;
-    color: #596575;
-}
-
-
-    #reportForm .btn-outline-secondary:hover {
-        border-color: #c4c9cf;
-        background: #f7f7f7;
-        color: #414b57;
-    }
-
-
-/* Submit */
-
-#reportForm .btn-success {
-    border-color: #6fba61;
-    background: #6fba61;
-    color: #ffffff;
-}
-
-
-    #reportForm .btn-success:hover {
-        border-color: #5ca84f;
-        background: #5ca84f;
-        color: #ffffff;
-        transform: translateY(-1px);
-    }
-
-
-/* ==========================================================
-   DESKTOP FORM SPACING
-========================================================== */
-
-@media (min-width: 992px) {
-
-    #reportForm .row {
-        align-items: flex-start;
-    }
-
-
-    #reportForm .col-lg-8 {
-        padding-right: 22px;
-    }
-
-
-    #reportForm .col-lg-4 {
-        padding-left: 22px;
-    }
-
-
-    .photo-upload-card {
-        position: sticky;
-        top: 90px;
-    }
-}
-
-
-/* ==========================================================
-   TABLET
-========================================================== */
-
-@media (max-width: 991.98px) {
-
-    .lostfound-form-card {
-        max-width: 850px;
-        padding: 28px;
-    }
-
-
-    .photo-upload-card {
-        margin-top: 20px;
-    }
-}
-
-
-/* ==========================================================
-   MOBILE
-========================================================== */
-
-@media (max-width: 767.98px) {
-
-    #reportTypeSelection,
-    #reportForm {
-        padding-top: 25px;
-        padding-bottom: 30px;
-    }
-
-
-    .lostfound-form-card {
-        padding: 24px 20px;
-        border-radius: 15px;
-    }
-
-
-    #reportTypeSelection .lostfound-form-card {
-        padding: 25px 20px 30px;
-    }
-
-
-    #reportTypeSelection h2 {
-        font-size: 1.3rem;
-    }
-
-
-    #reportForm h2 {
-        font-size: 1.45rem;
-    }
-
-
-    .listing-type-card {
-        height: 145px;
-    }
-
-
-    .lostfound-radio-group {
-        gap: 18px;
-    }
-
-
-    .photo-upload-card {
-        position: static;
-        padding: 20px;
-    }
-
-
-    /*
-       Stack buttons on small screens.
-    */
-
-    #reportForm form > .d-flex {
-        flex-direction: column-reverse;
-        align-items: stretch;
-    }
-
-
-        #reportForm form > .d-flex .btn {
-            width: 100%;
-        }
-}
-
-
-/* ==========================================================
-   SMALL MOBILE
-========================================================== */
-
-@media (max-width: 480px) {
-
-    .lostfound-form-card {
-        padding: 20px 16px;
-    }
-
-
-    #reportTypeSelection .row {
-        margin-left: 0;
-        margin-right: 0;
-    }
-
-
-    .listing-type-card {
-        height: 135px;
-        padding: 18px 15px;
-    }
-
-
-        .listing-type-card svg {
-            width: 34px;
-            height: 34px;
-        }
-
-
-        .listing-type-card h5 {
-            font-size: 0.9rem;
-        }
-
-
-        .listing-type-card small {
-            font-size: 0.73rem;
-        }
-
-
-    .lostfound-radio-group {
-        gap: 15px;
-    }
-
-
-    .image-preview-grid {
-        grid-template-columns: 1fr;
-    }
-
-
-        .image-preview-grid img {
-            height: 180px;
-        }
-}
-
-
-/* ==========================================================
-   LOST & FOUND DETAILS PAGE
-========================================================== */
-
-.lostfound-details-page {
-    width: 100%;
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: 24px 20px 35px;
-    box-sizing: border-box;
-    overflow: hidden;
-}
-
-
-/* ==========================================================
-   MAIN CONTAINER
-========================================================== */
-
-.lostfound-details-container {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-
-/* ==========================================================
-   BACK TO REPORTS
-========================================================== */
-
-.lostfound-back-top {
-    width: 100%;
-    margin-bottom: 18px;
-}
-
-.lostfound-back-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: #5F6B7A;
-    font-size: 0.95rem;
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-    .lostfound-back-button:hover {
-        color: #76B968;
-    }
-
-    .lostfound-back-button i,
-    .lostfound-back-button svg {
-        width: 17px;
-        height: 17px;
-        flex-shrink: 0;
-    }
-
-
-/* ==========================================================
-   MAIN DETAILS ROW
-
-   IMPORTANT:
-   Override Bootstrap column sizing.
-   This prevents the 52% + 50% width problem.
-========================================================== */
-
-.lostfound-details-row {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 40px;
-    width: 100%;
-    max-width: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
-    align-items: start;
-    box-sizing: border-box;
-}
-
-
-    /* ==========================================================
-   OVERRIDE BOOTSTRAP col-lg-6
-========================================================== */
-
-    .lostfound-details-row > .lostfound-left-column,
-    .lostfound-details-row > .lostfound-right-column {
-        width: auto !important;
-        max-width: none !important;
-        flex: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        min-width: 0;
-    }
-
-
-/* ==========================================================
-   LEFT COLUMN
-========================================================== */
-
-.lostfound-left-column {
-    width: 100%;
-    min-width: 0;
-    align-self: start;
-}
-
-
-/* ==========================================================
-   RIGHT COLUMN
-========================================================== */
-
-.lostfound-right-column {
-    width: 100%;
-    min-width: 0;
-    height: calc(100vh - 125px);
-    align-self: stretch;
-}
-
-
-/* ==========================================================
-   LEFT IMAGE / CAROUSEL
-========================================================== */
-
-.lostfound-carousel {
-    position: relative;
-    width: 100%;
-    /*
-       Fixed image height.
-
-       The right-side content does NOT affect this height.
-    */
-    height: min(65vh, 620px);
-    min-height: 400px;
-    border-radius: 22px;
-    overflow: hidden;
-    background: #F4F6F5;
-    box-sizing: border-box;
-}
-
-
-/* ==========================================================
-   CAROUSEL INNER
-========================================================== */
-
-.lostfound-carousel-inner {
-    width: 100%;
-    height: 100%;
-}
-
-.lostfound-carousel .carousel-item {
-    width: 100%;
-    height: 100%;
-}
-
-
-/* ==========================================================
-   MAIN IMAGE
-
-   Never stretches.
-========================================================== */
-
-.lostfound-main-image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 22px;
-}
-
-
-/* ==========================================================
-   CAROUSEL BUTTONS
-========================================================== */
-
-.lostfound-carousel-button {
-    position: absolute;
-    top: 50%;
-    width: 44px;
-    height: 44px;
-    margin: 0 16px;
-    padding: 0;
-    border: none;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.90);
-    opacity: 1 !important;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-    .lostfound-carousel-button:hover {
-        background: rgba(255, 255, 255, 0.98);
-    }
-
-    .lostfound-carousel-button.carousel-control-prev:hover {
-        transform: translateY(-50%) translateX(-1px);
-    }
-
-    .lostfound-carousel-button.carousel-control-next:hover {
-        transform: translateY(-50%) translateX(1px);
-    }
-
-
-/* ==========================================================
-   LUCIDE ARROWS
-========================================================== */
-
-.lostfound-carousel-arrow {
-    width: 24px;
-    height: 24px;
-    color: #111827;
-    stroke-width: 2;
-}
-
-
-/* ==========================================================
-   THUMBNAILS
-========================================================== */
-
-.lostfound-thumbnail-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    margin-top: 12px;
-    padding-bottom: 4px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-    .lostfound-thumbnail-container::-webkit-scrollbar {
-        display: none;
-    }
-
-
-/* ==========================================================
-   THUMBNAIL
-========================================================== */
-
-.lostfound-thumbnail {
-    display: block;
-    flex: 0 0 72px;
-    width: 72px;
-    height: 72px;
-    padding: 2px;
-    border: 1px solid #D5DCE0;
-    border-radius: 10px;
-    background: #FFFFFF;
-    overflow: hidden;
-    cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-    .lostfound-thumbnail img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 7px;
-    }
-
-    .lostfound-thumbnail:hover {
-        border-color: #82C875;
-        transform: translateY(-1px);
-    }
-
-    .lostfound-thumbnail.active {
-        border: 2px solid #76B968;
-        box-shadow: 0 2px 8px rgba(118, 185, 104, 0.22);
-    }
-
-
-/* ==========================================================
-   NO IMAGE
-========================================================== */
-
-.lostfound-no-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: min(65vh, 620px);
-    min-height: 400px;
-    border-radius: 22px;
-    background: #F4F6F5;
-    color: #8A939D;
-    text-align: center;
-}
-
-
-/* ==========================================================
-   RIGHT SIDE SCROLL AREA
-
-   ONLY THIS SIDE SCROLLS.
-========================================================== */
-
-.lostfound-details-scroll {
-    width: 100%;
-    height: 100%;
-    min-width: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 15px;
-    padding-bottom: 40px;
-    box-sizing: border-box;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-    .lostfound-details-scroll::-webkit-scrollbar {
-        display: none;
-    }
-
-
-/* ==========================================================
-   PROFILE SECTION
-========================================================== */
-
-.lostfound-profile-section {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 13px;
-    min-height: 54px;
-    margin-bottom: 18px;
-}
-
-
-/* ==========================================================
-   PROFILE IMAGE
-========================================================== */
-
-.lostfound-profile-avatar {
-    flex: 0 0 48px;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: #F2F4F5;
-    border: 1px solid #E0E4E7;
-}
-
-    .lostfound-profile-avatar img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-
-/* ==========================================================
-   PROFILE DETAILS
-========================================================== */
-
-.lostfound-profile-details {
-    flex: 1;
-    min-width: 0;
-}
-
-.lostfound-profile-name {
-    margin: 0 0 3px;
-    color: #102B4A;
-    font-size: 0.96rem;
-    font-weight: 600;
-    line-height: 1.25;
-}
-
-.lostfound-profile-meta {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    color: #7B8490;
-    font-size: 0.82rem;
-    line-height: 1.3;
-}
-
-.lostfound-profile-date {
-    color: #7B8490;
-}
-
-.lostfound-meta-dot {
-    color: #A1A7AE;
-}
-
-
-/* ==========================================================
-   LOST / FOUND BADGE
-========================================================== */
-
-.lostfound-type-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px 11px;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    line-height: 1;
-    white-space: nowrap;
-}
-
-    .lostfound-type-badge.lost {
-        color: #C56A6A;
-        background: #FFF0F0;
-        border: 1px solid #F4D4D4;
-    }
-
-    .lostfound-type-badge.found {
-        color: #5C9E54;
-        background: #EFF9EC;
-        border: 1px solid #D5EBD0;
-    }
-
-
-/* ==========================================================
-   THREE DOT MENU
-========================================================== */
-
-.lostfound-post-menu {
-    position: relative;
-    flex: 0 0 auto;
-    margin-left: auto;
-}
-
-.lostfound-post-menu-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    border: none;
-    border-radius: 50%;
-    background: transparent;
-    color: #687688;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-    .lostfound-post-menu-button:hover {
-        background: #F2F4F5;
-    }
-
-    .lostfound-post-menu-button i,
-    .lostfound-post-menu-button svg {
-        width: 19px;
-        height: 19px;
-        stroke-width: 2;
-    }
-
-    .lostfound-post-menu-button.dropdown-toggle::after {
-        display: none !important;
-    }
-
-
-/* ==========================================================
-   DROPDOWN
-========================================================== */
-
-.lostfound-post-dropdown {
-    min-width: 150px;
-    margin-top: 6px !important;
-    padding: 6px;
-    border: 1px solid #E0E4E7;
-    border-radius: 10px;
-    background: #FFFFFF;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-    .lostfound-post-dropdown .dropdown-item {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        padding: 9px 11px;
-        border-radius: 7px;
-        color: #34475C;
-        font-size: 0.86rem;
-    }
-
-        .lostfound-post-dropdown .dropdown-item:hover {
-            background: #F4F6F7;
-            color: #26384F;
-        }
-
-        .lostfound-post-dropdown .dropdown-item i,
-        .lostfound-post-dropdown .dropdown-item svg {
-            width: 16px;
-            height: 16px;
-        }
-
-
-/* ==========================================================
-   DIVIDER
-========================================================== */
-
-.lostfound-divider {
-    width: 100%;
-    height: 1px;
-    margin-bottom: 30px;
-    background: #E0E3E6;
-}
-
-
-/* ==========================================================
-   TITLE
-========================================================== */
-
-.lostfound-title {
-    margin: 0 0 28px !important;
-    padding: 0 !important;
-    color: #102B4A;
-    font-size: 2.25rem;
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    overflow-wrap: anywhere;
-}
-
-
-/* ==========================================================
-   ABOUT THIS REPORT
-========================================================== */
-
-.lostfound-about-section {
-    width: 100%;
-    margin: 0 0 30px !important;
-    padding: 0 !important;
-}
-
-.lostfound-about-content {
-    width: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-
-/* ==========================================================
-   SECTION TITLE
-========================================================== */
-
-.lost-found-section-title {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    margin: 0 0 12px !important;
-    padding: 0 !important;
-    color: #76B968;
-    font-size: 0.95rem;
-    font-weight: 700;
-    line-height: 1.35;
-    text-transform: uppercase;
-    letter-spacing: 0.045em;
-}
-
-    .lost-found-section-title i,
-    .lost-found-section-title svg {
-        width: 17px;
-        height: 17px;
-        color: #76B968;
-        stroke-width: 2;
-    }
-
-
-/* ==========================================================
-   REPORT DESCRIPTION
-========================================================== */
-
-.lostfound-description-wrapper {
-    width: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.lostfound-description {
-    width: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
-    color: #304866;
-    font-size: 1.05rem;
-    font-weight: 400;
-    line-height: 1.62;
-    overflow-wrap: anywhere;
-}
-
-
-/* ==========================================================
-   INFORMATION SECTIONS
-========================================================== */
-
-.lostfound-information-section {
-    width: 100%;
-    margin: 0 0 26px;
-    padding: 0;
-}
-
-
-/* ==========================================================
-   INFORMATION BOX
-========================================================== */
-
-.lostfound-information-box {
-    width: 100%;
-    overflow: hidden;
-    border: 1px solid #DEDEDE;
-    border-radius: 16px;
-    background: #FFFFFF;
-}
-
-
-/* ==========================================================
-   INFORMATION ROW
-========================================================== */
-
-.lostfound-information-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    min-height: 54px;
-    gap: 25px;
-    padding: 13px 18px;
-    border-bottom: 1px solid #E2E2E2;
-    box-sizing: border-box;
-}
-
-    .lostfound-information-row:last-child {
-        border-bottom: none;
-    }
-
-
-/* ==========================================================
-   INFORMATION LABEL
-========================================================== */
-
-.lostfound-information-label {
-    flex: 0 0 auto;
-    color: #68788C;
-    font-size: 0.88rem;
-    font-weight: 500;
-    line-height: 1.4;
-}
-
-
-/* ==========================================================
-   INFORMATION VALUE
-========================================================== */
-
-.lostfound-information-value {
-    min-width: 0;
-    color: #152D48;
-    font-size: 0.92rem;
-    font-weight: 600;
-    line-height: 1.4;
-    text-align: right;
-    overflow-wrap: anywhere;
-}
-
-
-/* ==========================================================
-   MESSAGE ME
-========================================================== */
-
-.lostfound-message-section {
-    width: 100%;
-    margin: 5px 0 35px;
-}
-
-.lostfound-message-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    min-height: 49px;
-    padding: 11px 24px;
-    border: none;
-    border-radius: 999px;
-    background: #82CF73;
-    color: #FFFFFF;
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-    .lostfound-message-button:hover {
-        background: #70BD62;
-        color: #FFFFFF;
-        transform: translateY(-1px);
-    }
-
-    .lostfound-message-button i,
-    .lostfound-message-button svg {
-        width: 18px;
-        height: 18px;
-        stroke-width: 2;
-    }
-
-
-/* ==========================================================
-   NO HORIZONTAL OVERFLOW
-========================================================== */
-
-.lostfound-details-page,
-.lostfound-details-container,
-.lostfound-details-row,
-.lostfound-left-column,
-.lostfound-right-column,
-.lostfound-details-scroll {
-    box-sizing: border-box;
-}
-
-
-/* ==========================================================
-   TABLET
-========================================================== */
-
-@media (max-width: 991.98px) {
-
-    .lostfound-details-row {
-        display: flex !important;
-        flex-direction: column;
-        gap: 30px;
-    }
-
-    .lostfound-left-column,
-    .lostfound-right-column {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .lostfound-right-column {
-        height: auto;
-    }
-
-    .lostfound-details-scroll {
-        height: auto;
-        overflow: visible;
-        padding-right: 0;
-        padding-bottom: 20px;
-    }
-
-    .lostfound-carousel {
-        height: auto;
-        aspect-ratio: 1.3 / 1;
-        min-height: 0;
-    }
-
-    .lostfound-no-image {
-        height: auto;
-        aspect-ratio: 1.3 / 1;
-        min-height: 0;
-    }
-
-    .lostfound-title {
-        font-size: 2rem;
-    }
-}
-
-
-/* ==========================================================
-   MOBILE
-========================================================== */
-
-@media (max-width: 576px) {
-
-    .lostfound-details-page {
-        padding: 18px 14px 25px;
-    }
-
-    .lostfound-details-row {
-        gap: 25px;
-    }
-
-    .lostfound-carousel {
-        aspect-ratio: 1 / 1;
-        border-radius: 17px;
-    }
-
-    .lostfound-main-image {
-        border-radius: 17px;
-    }
-
-    .lostfound-carousel-button {
-        width: 38px;
-        height: 38px;
-        margin-left: 9px;
-        margin-right: 9px;
-    }
-
-    .lostfound-carousel-arrow {
-        width: 21px;
-        height: 21px;
-    }
-
-    .lostfound-thumbnail {
-        flex-basis: 64px;
-        width: 64px;
-        height: 64px;
-    }
-
-    .lostfound-profile-avatar {
-        flex-basis: 44px;
-        width: 44px;
-        height: 44px;
-    }
-
-    .lostfound-profile-name {
-        font-size: 0.92rem;
-    }
-
-    .lostfound-profile-meta {
-        font-size: 0.76rem;
-    }
-
-    .lostfound-title {
-        font-size: 1.7rem;
-        line-height: 1.22;
-        margin-bottom: 24px !important;
-    }
-
-    .lostfound-description {
-        font-size: 1rem;
-        line-height: 1.62;
-    }
-
-    .lostfound-information-row {
-        min-height: 49px;
-        padding: 11px 13px;
-        gap: 15px;
-    }
-
-    .lostfound-information-label {
-        font-size: 0.8rem;
-    }
-
-    .lostfound-information-value {
-        font-size: 0.84rem;
-    }
-
-    .lostfound-message-button {
-        min-height: 46px;
-        font-size: 0.9rem;
-    }
-}
-
-
-/* ==========================================================
-   LOST & FOUND DETAILS PAGE
-========================================================== */
-
-.lostfound-details-page {
-    width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 24px 20px 35px;
-    box-sizing: border-box;
-}
-
-
-/* ==========================================================
-   MAIN TWO-COLUMN LAYOUT
-========================================================== */
-
-.lostfound-details-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-    gap: 38px;
-    width: 100%;
-    height: calc(100vh - 120px);
-    min-height: 500px;
-    align-items: start;
-    overflow: hidden;
-}
-
-
-/* ==========================================================
-   LEFT SIDE - GALLERY
-========================================================== */
-
-.lostfound-gallery {
-    width: 100%;
-    min-width: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-
-/* ==========================================================
-   MAIN IMAGE
-========================================================== */
-
-.lostfound-main-image {
-    position: relative;
-    width: 100%;
-    height: min(65vh, 620px);
-    min-height: 400px;
-    overflow: hidden;
-    border-radius: 22px;
-    background: #F4F6F5;
-    flex-shrink: 0;
-}
-
-
-    /* ==========================================================
-   CAROUSEL
-========================================================== */
-
-    .lostfound-main-image .carousel,
-    .lostfound-main-image .carousel-inner,
-    .lostfound-main-image .carousel-item {
-        width: 100%;
-        height: 100%;
-    }
-
-
-        /* ==========================================================
-   MAIN IMAGE
-========================================================== */
-
-        .lostfound-main-image .carousel-item img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            border-radius: 22px;
-        }
-
-
-    /* ==========================================================
-   PREVIOUS / NEXT ARROWS
-========================================================== */
-
-    .lostfound-main-image .carousel-control-prev,
-    .lostfound-main-image .carousel-control-next {
-        width: 44px;
-        height: 44px;
-        top: 50%;
-        margin: 0 16px;
-        padding: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.88);
-        opacity: 1;
-        transform: translateY(-50%);
-        transition: background-color 0.2s ease, transform 0.2s ease;
-    }
-
-
-        .lostfound-main-image .carousel-control-prev:hover,
-        .lostfound-main-image .carousel-control-next:hover {
-            background: rgba(255, 255, 255, 0.98);
-        }
-
-
-        .lostfound-main-image .carousel-control-prev:hover {
-            transform: translateY(-50%) translateX(-1px);
-        }
-
-
-        .lostfound-main-image .carousel-control-next:hover {
-            transform: translateY(-50%) translateX(1px);
-        }
-
-
-    /* ==========================================================
-   CAROUSEL ICONS
-========================================================== */
-
-    .lostfound-main-image .carousel-control-prev-icon,
-    .lostfound-main-image .carousel-control-next-icon {
-        filter: invert(1);
-    }
-
-
-/* ==========================================================
-   NO IMAGE
-========================================================== */
-
-.lostfound-no-image {
-    width: 100%;
-    height: min(65vh, 620px);
-    min-height: 400px;
-    border-radius: 22px;
-    background: #F4F6F5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #9CA3AF;
-    text-align: center;
-}
-
-
-/* ==========================================================
-   THUMBNAILS
-========================================================== */
-
-.lostfound-thumbnail-grid {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    margin-top: 12px;
-    padding-bottom: 4px;
-    overflow-x: auto;
-    flex-shrink: 0;
-    scrollbar-width: thin;
-    scrollbar-color: #D1D5DB transparent;
-}
-
-
-    .lostfound-thumbnail-grid::-webkit-scrollbar {
-        height: 5px;
-    }
-
-
-    .lostfound-thumbnail-grid::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-
-    .lostfound-thumbnail-grid::-webkit-scrollbar-thumb {
-        background: #D1D5DB;
-        border-radius: 10px;
-    }
-
-
-/* ==========================================================
-   THUMBNAIL
-========================================================== */
-
-.lostfound-thumbnail {
-    flex: 0 0 72px;
-    width: 72px;
-    height: 72px;
-    padding: 0;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #F4F6F5;
-    cursor: pointer;
-    transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-
-    .lostfound-thumbnail img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-
-    .lostfound-thumbnail:hover {
-        border-color: #8ACE79;
-        transform: translateY(-1px);
-    }
-
-
-    .lostfound-thumbnail.active {
-        border-color: #8ACE79;
-    }
-
-
-/* ==========================================================
-   RIGHT SIDE
-   ONLY THIS PANEL SCROLLS
-========================================================== */
-
-.lostfound-info-panel {
-    width: 100%;
-    min-width: 0;
-    height: 100%;
-    padding: 0 14px 35px 0;
-    box-sizing: border-box;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-
-    .lostfound-info-panel::-webkit-scrollbar {
-        width: 0;
-        height: 0;
-    }
-
-
-/* ==========================================================
-   PROFILE
-========================================================== */
-
-.lostfound-profile {
-    position: relative;
-    width: 100%;
-    min-height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-
-/* ==========================================================
-   PROFILE LEFT
-========================================================== */
-
-.lostfound-profile-main {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
-    flex: 1;
-}
-
-
-/* ==========================================================
-   PROFILE AVATAR
-========================================================== */
-
-.lostfound-profile-avatar {
-    flex: 0 0 44px;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: #F5F6F7;
-}
-
-
-    .lostfound-profile-avatar img {
-        display: block;
-        width: 44px;
-        height: 44px;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-
-
-/* ==========================================================
-   PROFILE DETAILS
-========================================================== */
-
-.lostfound-profile-details {
-    min-width: 0;
-}
-
-
-.lostfound-profile-name {
-    margin: 0 0 4px;
-    padding: 0;
-    color: #102B4A;
-    font-size: 0.96rem;
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-
-.lostfound-profile-meta {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    color: #778394;
-    font-size: 0.82rem;
-    line-height: 1.3;
-}
-
-
-.lostfound-meta-dot {
-    color: #A0A6AD;
-}
-
-
-/* ==========================================================
-   LOST / FOUND BADGE
-========================================================== */
-
-.lostfound-type-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px 9px;
-    border-radius: 999px;
-    font-size: 0.73rem;
-    font-weight: 600;
-    line-height: 1;
-    white-space: nowrap;
-}
-
-
-    .lostfound-type-badge.lost {
-        color: #C96A6A;
-        background: #FFF0F0;
-        border: 1px solid #F2D1D1;
-    }
-
-
-    .lostfound-type-badge.found {
-        color: #5A9E52;
-        background: #EFF9EC;
-        border: 1px solid #D2E9CD;
-    }
-
-
-/* ==========================================================
-   PROFILE DIVIDER
-========================================================== */
-
-.lostfound-profile-divider {
-    width: 100%;
-    height: 1px;
-    margin: 18px 0 28px;
-    background: #E5E7EB;
-}
-
-
-/* ==========================================================
-   THREE DOT MENU
-========================================================== */
-
-.lostfound-more-menu {
-    position: relative;
-    flex-shrink: 0;
-    z-index: 20;
-}
-
-
-/* ==========================================================
-   THREE DOT BUTTON
-   NO CIRCLE BY DEFAULT
-========================================================== */
-
-.lostfound-more-button {
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    border: none;
-    outline: none;
-    border-radius: 50%;
-    background: transparent;
-    color: #6B7280;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-
-    /* ==========================================================
-   CIRCLE ONLY ON HOVER
-========================================================== */
-
-    .lostfound-more-button:hover {
-        background: #F3F4F6;
-        color: #374151;
-    }
-
-
-    .lostfound-more-button:focus {
-        outline: none;
-        box-shadow: none;
-    }
-
-
-    /* ==========================================================
-   THREE DOT ICON
-========================================================== */
-
-    .lostfound-more-button svg {
-        width: 21px;
-        height: 21px;
-        stroke-width: 2;
-    }
-
-
-/* ==========================================================
-   DROPDOWN
-========================================================== */
-
-.lostfound-more-dropdown {
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    z-index: 9999;
-    width: 190px;
-    padding: 6px;
-    background: #FFFFFF;
-    border: 1px solid #E0E4E7;
-    border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    display: none;
-}
-
-
-
-/* ==========================================================
-   SHOW DROPDOWN
-========================================================== */
-
-.lostfound-more-menu.show .lostfound-more-dropdown {
-    display: block;
-}
-
-
-/* ==========================================================
-   DROPDOWN FORMS
-========================================================== */
-
-.lostfound-more-dropdown form {
-    margin: 0;
-    padding: 0;
-}
-
-
-/* ==========================================================
-   DROPDOWN ITEMS
-========================================================== */
-
-.lostfound-dropdown-item {
-    width: 100%;
-    min-height: 40px;
-    padding: 9px 11px;
-    margin: 0;
-    border: none;
-    border-radius: 9px;
-    background: transparent;
-    color: #374151;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-sizing: border-box;
-    font-family: inherit;
-    font-size: 0.92rem;
-    font-weight: 500;
-    line-height: 1.2;
-    text-align: left;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-
-    /* ==========================================================
-   EDIT
-========================================================== */
-
-    .lostfound-dropdown-item.edit-action {
-        color: #374151;
-    }
-
-
-        .lostfound-dropdown-item.edit-action svg {
-            color: #64748B;
-        }
-
-
-        .lostfound-dropdown-item.edit-action:hover {
-            background: #F4F8F2;
-            color: #4D8E45;
-        }
-
-
-            .lostfound-dropdown-item.edit-action:hover svg {
-                color: #76B968;
-            }
-
-
-    /* ==========================================================
-   MARK AS FOUND / RESOLVED
-========================================================== */
-
-    .lostfound-dropdown-item.resolve-action {
-        color: #374151;
-    }
-
-
-        .lostfound-dropdown-item.resolve-action svg {
-            color: #64748B;
-        }
-
-
-        .lostfound-dropdown-item.resolve-action:hover {
-            background: #F4F8F2;
-            color: #4D8E45;
-        }
-
-
-            .lostfound-dropdown-item.resolve-action:hover svg {
-                color: #76B968;
-            }
-
-
-    /* ==========================================================
-   DELETE
-========================================================== */
-
-    .lostfound-dropdown-item.delete-action {
-        color: #C14B4B;
-    }
-
-
-        .lostfound-dropdown-item.delete-action svg {
-            color: #C14B4B;
-        }
-
-
-        .lostfound-dropdown-item.delete-action:hover {
-            background: #FFF0F0;
-            color: #B43C3C;
-        }
-
-
-            .lostfound-dropdown-item.delete-action:hover svg {
-                color: #B43C3C;
-            }
-
-
-    /* ==========================================================
-   DROPDOWN ICONS
-========================================================== */
-
-    .lostfound-dropdown-item svg {
-        flex: 0 0 auto;
-        width: 17px;
-        height: 17px;
-        stroke-width: 2;
-    }
-
-
-/* ==========================================================
-   DROPDOWN DIVIDER
-========================================================== */
-
-.lostfound-dropdown-divider {
-    width: calc(100% - 8px);
-    height: 1px;
-    margin: 5px auto;
-    background: #E5E7EB;
-}
-
-
-/* ==========================================================
-   TITLE
-========================================================== */
-
-.lostfound-title-section {
-    width: 100%;
-    margin: 0 0 28px;
-    padding: 0;
-}
-
-
-    .lostfound-title-section h1 {
-        margin: 0;
-        padding: 0;
-        color: #102B4A;
-        font-size: 2.2rem;
-        font-weight: 700;
-        line-height: 1.2;
-        letter-spacing: -0.02em;
-        overflow-wrap: anywhere;
-    }
-
-
-/* ==========================================================
-   INFORMATION SECTIONS
-========================================================== */
-
-.lostfound-info-section {
-    width: 100%;
-    margin: 0 0 29px;
-    padding: 0;
-}
-
-
-    /* ==========================================================
-   SECTION HEADINGS
-   ABOUT THIS REPORT / PET INFORMATION / WHERE TO FIND
-========================================================== */
-
-    .lostfound-info-section > h2 {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        margin: 0 0 12px;
-        padding: 0;
-        color: #6FB662;
-        font-size: 0.92rem;
-        font-weight: 700;
-        line-height: 1.35;
-        letter-spacing: 0.045em;
-        text-transform: uppercase;
-    }
-
-
-        /* ==========================================================
-   SECTION HEADING ICONS
-========================================================== */
-
-        .lostfound-info-section > h2 svg {
-            width: 17px;
-            height: 17px;
-            color: #6FB662;
-            stroke: #6FB662;
-            stroke-width: 2;
-        }
-
-
-/* ==========================================================
-   DESCRIPTION
-========================================================== */
-
-.lostfound-description {
-    margin: 0;
-    padding: 0;
-    color: #304866;
-    font-size: 1.03rem;
-    font-weight: 400;
-    line-height: 1.62;
-    overflow-wrap: anywhere;
-}
-
-
-/* ==========================================================
-   INFORMATION BOX
-========================================================== */
-
-.lostfound-information-box {
-    width: 100%;
-    overflow: hidden;
-    background: #FFFFFF;
-    border: 1px solid #DEDEDE;
-    border-radius: 16px;
-}
-
-
-/* ==========================================================
-   INFORMATION ROW
-========================================================== */
-
-.lostfound-information-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    min-height: 52px;
-    gap: 25px;
-    padding: 12px 18px;
-    box-sizing: border-box;
-    border-bottom: 1px solid #E2E2E2;
-}
-
-
-    .lostfound-information-row:last-child {
-        border-bottom: none;
-    }
-
-
-/* ==========================================================
-   INFORMATION LABEL
-========================================================== */
-
-.lostfound-information-label {
-    flex: 0 0 auto;
-    color: #68788C;
-    font-size: 0.88rem;
-    font-weight: 500;
-    line-height: 1.4;
-}
-
-
-/* ==========================================================
-   INFORMATION VALUE
-========================================================== */
-
-.lostfound-information-value {
-    min-width: 0;
-    color: #152D48;
-    font-size: 0.92rem;
-    font-weight: 600;
-    line-height: 1.4;
-    text-align: right;
-    overflow-wrap: anywhere;
-}
-
-/* ==========================================================
-   REPORT STATUS BADGE
-========================================================== */
-
-.lostfound-status-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    min-height: 30px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    line-height: 1.2;
-    white-space: nowrap;
-}
-
-
-    /* ==========================================================
-   STATUS DOT
-========================================================== */
-
-    .lostfound-status-badge::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        flex-shrink: 0;
-        border-radius: 50%;
-    }
-
-
-    /* ==========================================================
-   PENDING
-========================================================== */
-
-    .lostfound-status-badge.pending {
-        color: #B87900;
-        background: #FFF7DF;
-        border: none;
-    }
-
-        .lostfound-status-badge.pending::before {
-            background: #E3A000;
-        }
-
-
-    /* ==========================================================
-   APPROVED
-========================================================== */
-
-    .lostfound-status-badge.approved {
-        color: #3F9144;
-        background: #EAF8E8;
-        border: none;
-    }
-
-        .lostfound-status-badge.approved::before {
-            background: #5BAA55;
-        }
-
-
-    /* ==========================================================
-   REJECTED
-========================================================== */
-
-    .lostfound-status-badge.rejected {
-        color: #C44D4D;
-        background: #FFF0F0;
-        border: none;
-    }
-
-        .lostfound-status-badge.rejected::before {
-            background: #D85C5C;
-        }
-
-
-    /* ==========================================================
-   RESOLVED / FOUND
-========================================================== */
-
-    .lostfound-status-badge.resolved {
-        color: #4F9560;
-        background: #EEF8F0;
-        border: 1px solid #CEE5D2;
-    }
-
-
-/* ==========================================================
-   BACK TO MY POSTS CONTAINER
-========================================================== */
-
-.my-post-back-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-top: 30px;
-    padding: 10px 0 20px;
-    box-sizing: border-box;
-}
-
-
-/* ==========================================================
-   BACK TO MY POSTS BUTTON
-   FULL WIDTH OF THE INFORMATION CONTAINER
-========================================================== */
-
-.my-post-back-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    /*
-       IMPORTANT:
-       No max-width here.
-       This allows the button to reach the
-       exact width of the container.
-    */
-
-    min-height: 46px;
-    padding: 11px 20px;
-    box-sizing: border-box;
-    border: 1px solid #D7DDE1;
-    border-radius: 999px;
-    background: #FFFFFF;
-    color: #5F6B7A;
-    font-size: 0.92rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-
-
-    .my-post-back-btn:hover {
-        background: #F5F7F7;
-        border-color: #C8D0D5;
-        color: #4D8E45;
-        text-decoration: none;
-    }
-
-
-    .my-post-back-btn svg {
-        width: 18px;
-        height: 18px;
-        stroke-width: 2;
-    }
-
-
-/* ==========================================================
-   DESKTOP
-========================================================== */
-
-@media (min-width: 992px) {
-
-    .lostfound-details-page {
-        width: 100%;
-        max-width: 1280px;
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-
-
-    .lostfound-details-layout {
-        grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-        gap: 34px;
-    }
-}
-
-
-/* ==========================================================
-   TABLET
-========================================================== */
-
-@media (max-width: 991.98px) {
-
-    .lostfound-details-page {
-        max-width: 900px;
-        padding: 22px 18px 30px;
-    }
-
-
-    .lostfound-details-layout {
-        display: flex;
-        flex-direction: column;
-        height: auto;
-        min-height: 0;
-        gap: 30px;
-        overflow: visible;
-    }
-
-
-    .lostfound-gallery {
-        height: auto;
-        overflow: visible;
-    }
-
-
-    .lostfound-main-image {
-        height: auto;
-        aspect-ratio: 1.2 / 1;
-        min-height: 0;
-    }
-
-
-    .lostfound-no-image {
-        height: auto;
-        aspect-ratio: 1.2 / 1;
-        min-height: 0;
-    }
-
-
-    .lostfound-info-panel {
-        height: auto;
-        max-height: none;
-        padding-right: 0;
-        overflow: visible;
-    }
-}
-
-
-/* ==========================================================
-   MOBILE
-========================================================== */
-
-@media (max-width: 576px) {
-
-    .lostfound-details-page {
-        padding: 18px 14px 25px;
-    }
-
-
-    .lostfound-details-layout {
-        gap: 26px;
-    }
-
-
-    /* IMAGE */
-
-    .lostfound-main-image {
-        aspect-ratio: 1 / 1;
-        border-radius: 18px;
-    }
-
-
-        .lostfound-main-image .carousel-item img {
-            border-radius: 18px;
-        }
-
-
-    .lostfound-no-image {
-        aspect-ratio: 1 / 1;
-        border-radius: 18px;
-    }
-
-
-    /* ARROWS */
-
-    .lostfound-main-image .carousel-control-prev,
-    .lostfound-main-image .carousel-control-next {
-        width: 40px;
-        height: 40px;
-        margin: 0 10px;
-    }
-
-
-    /* THUMBNAILS */
-
-    .lostfound-thumbnail {
-        flex: 0 0 68px;
-        width: 68px;
-        height: 68px;
-    }
-
-
-    /* PROFILE */
-
-    .lostfound-profile-main {
-        gap: 9px;
-    }
-
-
-    .lostfound-profile-avatar {
-        width: 42px;
-        height: 42px;
-        flex-basis: 42px;
-    }
-
-
-        .lostfound-profile-avatar img {
-            width: 42px;
-            height: 42px;
-        }
-
-
-    .lostfound-profile-name {
-        font-size: 0.94rem;
-    }
-
-
-    .lostfound-profile-meta {
-        font-size: 0.78rem;
-    }
-
-
-    /* THREE DOTS */
-
-    .lostfound-more-button {
-        width: 38px;
-        height: 38px;
-    }
-
-
-    .lostfound-more-dropdown {
-        width: 185px;
-    }
-
-
-    /* TITLE */
-
-    .lostfound-title-section h1 {
-        font-size: 1.7rem;
-        line-height: 1.22;
-    }
-
-
-    /* DESCRIPTION */
-
-    .lostfound-description {
-        font-size: 1rem;
-        line-height: 1.6;
-    }
-
-
-    /* INFORMATION ROWS */
-
-    .lostfound-information-row {
-        min-height: 50px;
-        gap: 15px;
-        padding: 11px 13px;
-    }
-
-
-    .lostfound-information-label {
-        font-size: 0.8rem;
-    }
-
-
-    .lostfound-information-value {
-        font-size: 0.85rem;
-    }
-
-
-    /* BACK BUTTON */
-
-    .my-post-back-btn {
-        width: 100%;
-        max-width: none;
-        min-height: 46px;
-    }
-}
-
-
-
-
-
-/* ==========================================================
-   PETHUB — LOST & FOUND EDIT PAGE
-   FINAL CSS
-========================================================== */
-
-
-/* ==========================================================
-   PAGE
-========================================================== */
-
-.lostfound-edit-page {
-    width: 100%;
-    max-width: 1180px;
-    margin: 4px auto 50px;
-    padding: 0 20px;
-    box-sizing: border-box;
-    color: #263238;
-}
-
-
-/* ==========================================================
-   MAIN EDIT CARD
-========================================================== */
-
-.lostfound-edit-card {
-    width: 100%;
-    padding: 32px 32px 0;
-    box-sizing: border-box;
-    background: #ffffff;
-    border: 1px solid #e4e9ec;
-    border-radius: 17px;
-    box-shadow: 0 4px 16px rgba(31, 41, 55, 0.04);
-}
-
-
-/* ==========================================================
-   HEADER
-========================================================== */
-
-.lostfound-edit-header {
-    margin: 0 0 25px;
-}
-
-    .lostfound-edit-header h1 {
-        margin: 0 0 6px;
-        color: #132c4f;
-        font-size: 1.7rem;
-        font-weight: 700;
-        line-height: 1.25;
-        letter-spacing: -0.02em;
-    }
-
-    .lostfound-edit-header p {
-        margin: 0;
-        color: #64748b;
-        font-size: 0.86rem;
-        font-weight: 400;
-        line-height: 1.45;
-    }
-
-
-/* ==========================================================
-   MAIN CONTENT
-========================================================== */
-
-.lostfound-edit-content {
-    display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(285px, 0.65fr);
-    gap: 24px;
-    align-items: start;
-    width: 100%;
-}
-
-
-/* ==========================================================
-   LEFT SIDE
-========================================================== */
-
-.lostfound-edit-form-section {
-    width: 100%;
-    min-width: 0;
-}
-
-
-/* ==========================================================
-   REPORT TYPE
-========================================================== */
-
-.lostfound-report-type-section {
-    width: 100%;
-    margin: 0 0 23px;
-}
-
-.lostfound-section-title {
-    display: block;
-    margin: 0 0 5px;
-    color: #263238;
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.35;
-    text-transform: none;
-}
-
-.lostfound-section-subtitle {
-    display: block;
-    margin: 0 0 14px;
-    color: #64748b;
-    font-size: 0.76rem;
-    font-weight: 400;
-    line-height: 1.4;
-}
-
-
-/* ==========================================================
-   REPORT TYPE CARDS
-========================================================== */
-
-.lostfound-report-type-options {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-    width: 100%;
-}
-
-.lostfound-report-type-option {
-    position: relative;
-    width: 100%;
-    min-height: 145px;
-    padding: 18px 15px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border: 2px solid #dce3e8;
-    border-radius: 15px;
-    background: #ffffff;
-    cursor: pointer;
-    transition: none;
-}
-
-
-/* ==========================================================
-   HIDDEN RADIO
-========================================================== */
-
-.lostfound-report-type-radio {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    pointer-events: none;
-}
-
-
-/* ==========================================================
-   SELECTED TYPE
-========================================================== */
-
-.lostfound-report-type-option.selected {
-    border-color: #7ccc6d;
-    background: #f4fcf1;
-    box-shadow: 0 2px 7px rgba(124, 204, 109, 0.08);
-}
-
-
-/* ==========================================================
-   HOVER
-   UNSELECTED STAYS GRAY
-========================================================== */
-
-.lostfound-report-type-option:hover {
-    border-color: #dce3e8;
-    background: #ffffff;
-}
-
-.lostfound-report-type-option.selected:hover {
-    border-color: #7ccc6d;
-    background: #f4fcf1;
-}
-
-
-/* ==========================================================
-   LUCIDE ICON
-========================================================== */
-
-.lostfound-report-type-icon {
-    width: 45px;
-    height: 45px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #737b88;
-}
-
-    .lostfound-report-type-icon svg {
-        width: 35px;
-        height: 35px;
-        stroke-width: 1.8;
-    }
-
-.lostfound-report-type-option.selected
-.lostfound-report-type-icon {
-    color: #63b957;
-}
-
-
-/* ==========================================================
-   TYPE TEXT
-========================================================== */
-
-.lostfound-report-type-option strong {
-    display: block;
-    margin: 0 0 4px;
-    color: #172b46;
-    font-size: 0.93rem;
-    font-weight: 700;
-    line-height: 1.3;
-}
-
-.lostfound-report-type-option span {
-    display: block;
-    margin: 0;
-    color: #718096;
-    font-size: 0.72rem;
-    font-weight: 400;
-    line-height: 1.35;
-}
-
-
-/* ==========================================================
-   VALIDATION
-========================================================== */
-
-.lostfound-report-type-section > .text-danger {
-    display: block;
-    margin-top: 5px;
-    color: #dc2626;
-    font-size: 0.72rem;
-}
-
-
-/* ==========================================================
-   FORM FIELDS
-========================================================== */
-
-.lostfound-edit-field {
-    width: 100%;
-    margin-bottom: 17px;
-}
-
-    .lostfound-edit-field label {
-        display: block;
-        margin: 0 0 6px;
-        color: #263238;
-        font-size: 0.83rem;
-        font-weight: 500;
-        line-height: 1.35;
-    }
-
-
-/* ==========================================================
-   INPUTS
-========================================================== */
-
-.lostfound-edit-input {
-    display: block;
-    width: 100%;
-    height: 39px;
-    min-height: 39px;
-    padding: 0 12px;
-    box-sizing: border-box;
-    border: 1px solid #d2d9df;
-    border-radius: 7px;
-    background: #ffffff;
-    color: #263238;
-    font-family: inherit;
-    font-size: 0.84rem;
-    line-height: 1.3;
-    outline: none;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-    .lostfound-edit-input:focus {
-        border-color: #8ace79;
-        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
-        outline: none;
-    }
-
-
-/* ==========================================================
-   DESCRIPTION
-========================================================== */
-
-.lostfound-edit-textarea {
-    height: 88px;
-    min-height: 88px;
-    padding: 9px 12px;
-    resize: vertical;
-    line-height: 1.45;
-}
-
-
-/* ==========================================================
-   VALIDATION
-========================================================== */
-
-.lostfound-edit-field .text-danger {
-    display: block;
-    margin-top: 4px;
-    color: #dc2626;
-    font-size: 0.72rem;
-    line-height: 1.3;
-}
-
-
-/* ==========================================================
-   LOCATION
-========================================================== */
-
-.lostfound-edit-location {
-    width: 100%;
-    margin-top: 23px;
-}
-
-    .lostfound-edit-location h2 {
-        margin: 0 0 4px;
-        color: #172b46;
-        font-size: 1.05rem;
-        font-weight: 600;
-        line-height: 1.3;
-    }
-
-    .lostfound-edit-location > p {
-        margin: 0 0 14px;
-        color: #64748b;
-        font-size: 0.76rem;
-        line-height: 1.4;
-    }
-
-
-    /* ==========================================================
-   ADDRESS PARTIAL
-========================================================== */
-
-    .lostfound-edit-location .form-group,
-    .lostfound-edit-location .mb-3 {
-        margin-bottom: 12px !important;
-    }
-
-    .lostfound-edit-location label {
-        display: block;
-        margin: 0 0 5px;
-        color: #263238;
-        font-size: 0.82rem;
-        font-weight: 500;
-        line-height: 1.3;
-    }
-
-    .lostfound-edit-location input,
-    .lostfound-edit-location select {
-        width: 100%;
-        height: 39px;
-        min-height: 39px;
-        padding: 0 12px;
-        box-sizing: border-box;
-        border: 1px solid #d2d9df;
-        border-radius: 7px;
-        background: #ffffff;
-        color: #263238;
-        font-family: inherit;
-        font-size: 0.82rem;
-        outline: none;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-        .lostfound-edit-location input:focus,
-        .lostfound-edit-location select:focus {
-            border-color: #8ace79;
-            box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
-            outline: none;
-        }
-
-
-    /* ==========================================================
-   ADDRESS GRID
-========================================================== */
-
-    .lostfound-edit-location .row {
-        margin-left: -7px;
-        margin-right: -7px;
-    }
-
-        .lostfound-edit-location .row > [class*="col-"] {
-            padding-left: 7px;
-            padding-right: 7px;
-        }
-
-
-/* ==========================================================
-   RIGHT SIDE — PHOTO CARD
-========================================================== */
-
-.lostfound-edit-photos-section {
-    width: 100%;
-    min-width: 0;
-    min-height: 450px;
-    padding: 18px;
-    box-sizing: border-box;
-    background: #ffffff;
-    border: 1px solid #dfe5e8;
-    border-radius: 11px;
-    align-self: stretch;
-}
-
-
-/* ==========================================================
-   PHOTO HEADER
-========================================================== */
-
-.lostfound-photos-header {
-    margin: 0 0 13px;
-}
-
-    .lostfound-photos-header label {
-        display: block;
-        margin: 0;
-        color: #263238;
-        font-size: 0.98rem;
-        font-weight: 600;
-        line-height: 1.3;
-    }
-
-
-/* ==========================================================
-   UPLOAD SECTION
-========================================================== */
-
-.lostfound-upload-section {
-    width: 100%;
-    margin-bottom: 14px;
-}
-
-    .lostfound-upload-section small {
-        display: block;
-        margin-top: 6px;
-        color: #64748b;
-        font-size: 0.72rem;
-        line-height: 1.35;
-    }
-
-
-/* ==========================================================
-   FILE INPUT
-========================================================== */
-
-.lostfound-file-input {
-    display: block;
-    width: 100%;
-    height: 44px;
-    min-height: 44px;
-    padding: 0;
-    box-sizing: border-box;
-    border: 1px solid #d2d9df;
-    border-radius: 9px;
-    background: #ffffff;
-    color: #374151;
-    font-family: inherit;
-    font-size: 0.78rem;
-    cursor: pointer;
-}
-
-    .lostfound-file-input:focus {
-        border-color: #d2d9df;
-        outline: none;
-        box-shadow: none;
-    }
-
-    .lostfound-file-input::file-selector-button {
-        height: 42px;
-        margin-right: 12px;
-        padding: 0 15px;
-        border: none;
-        border-right: 1px solid #e5e7eb;
-        background: #f5f6f7;
-        color: #374151;
-        font-family: inherit;
-        font-size: 0.78rem;
-        font-weight: 500;
-        cursor: pointer;
-    }
-
-
-/* ==========================================================
-   PHOTO GRID
-========================================================== */
-
-.lostfound-existing-images {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    width: 100%;
-    margin-top: 12px;
-}
-
-
-/* ==========================================================
-   PHOTO ITEM
-========================================================== */
-
-.lostfound-edit-photo {
-    position: relative;
-    width: 100%;
-    min-width: 0;
-}
-
-    .lostfound-edit-photo > img {
-        display: block;
-        width: 100%;
-        height: 130px;
-        object-fit: cover;
-        border: 1px solid #e3e7ea;
-        border-radius: 9px;
-        background: #f3f4f6;
-    }
-
-
-    /* ==========================================================
-   REMOVED EXISTING PHOTO
-========================================================== */
-
-    .lostfound-edit-photo.marked-for-removal {
-        display: none !important;
-    }
-
-
-/* ==========================================================
-   REMOVE IMAGE BUTTON
-========================================================== */
-
-.lostfound-remove-image {
-    position: absolute;
-    top: 7px;
-    right: 7px;
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    border: none;
-    border-radius: 50%;
-    background: rgba(35, 35, 35, 0.86);
-    color: #ffffff;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
-    transition: background-color 0.15s ease, transform 0.15s ease;
-}
-
-    .lostfound-remove-image:hover {
-        background: rgba(20, 20, 20, 0.95);
-        transform: scale(1.05);
-    }
-
-    .lostfound-remove-image svg {
-        width: 16px;
-        height: 16px;
-        stroke-width: 2;
-    }
-
-
-/* ==========================================================
-   NEW PHOTO PREVIEWS
-
-   The container uses display: contents in the CSHTML,
-   so these styles apply to the preview items generated
-   by imagePreviewHelper.js.
-========================================================== */
-
-.lostfound-image-preview-container {
-    display: contents;
-}
-
-    .lostfound-image-preview-container > * {
-        position: relative;
-        min-width: 0;
-    }
-
-
-    /* Preview images generated by helper */
-
-    .lostfound-image-preview-container img {
-        display: block;
-        width: 100%;
-        height: 130px;
-        object-fit: cover;
-        border: 1px solid #e3e7ea;
-        border-radius: 9px;
-        background: #f3f4f6;
-    }
-
-
-    /* ==========================================================
-   NEW PHOTO PREVIEW WRAPPER
-========================================================== */
-
-    .lostfound-image-preview-container .image-preview-item {
-        position: relative;
-        width: 100%;
-    }
-
-
-    /* ==========================================================
-   MORE PHOTOS
-========================================================== */
-
-    .lostfound-image-preview-container .more-images {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 130px;
-        box-sizing: border-box;
-        border: 1px solid #dfe5e8;
-        border-radius: 9px;
-        background: #f5f6f7;
-        color: #52606d;
-        font-size: 0.78rem;
-        font-weight: 600;
-        text-align: center;
-    }
-
-
-/* ==========================================================
-   NO EXISTING PHOTOS
-========================================================== */
-
-.lostfound-no-existing-images {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 100px;
-    margin-top: 12px;
-    padding: 15px;
-    box-sizing: border-box;
-    border: 1px dashed #d2d9df;
-    border-radius: 9px;
-    background: #ffffff;
-    color: #64748b;
-    font-size: 0.78rem;
-    text-align: center;
-}
-
-
-/* ==========================================================
-   BOTTOM ACTIONS
-========================================================== */
-
-.lostfound-edit-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    width: 100%;
-    margin-top: 22px;
-    padding: 18px 0 24px;
-    border-top: 1px solid #e5e7eb;
-    box-sizing: border-box;
-}
-
-
-/* ==========================================================
-   CANCEL BUTTON
-========================================================== */
-
-.lostfound-cancel-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 72px;
-    height: 40px;
-    padding: 0 18px;
-    border: 1px solid #d1d5db;
-    border-radius: 999px;
-    background: #ffffff;
-    color: #374151;
-    font-family: inherit;
-    font-size: 0.82rem;
-    font-weight: 500;
-    line-height: 1;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-}
-
-    .lostfound-cancel-btn:hover {
-        background: #f8f9fa;
-        border-color: #c7cdd3;
-        color: #374151;
-        text-decoration: none;
-    }
-
-
-/* ==========================================================
-   UPDATE REPORT BUTTON
-========================================================== */
-
-.lostfound-save-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 120px;
-    height: 40px;
-    padding: 0 20px;
-    border: none;
-    border-radius: 999px;
-    background: #8ace79;
-    color: #ffffff;
-    font-family: inherit;
-    font-size: 0.82rem;
-    font-weight: 600;
-    line-height: 1;
-    cursor: pointer;
-    transition: background-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-    .lostfound-save-btn:hover {
-        background: #79c96b;
-        color: #ffffff;
-        box-shadow: 0 3px 8px rgba(138, 206, 121, 0.22);
-    }
-
-
-/* ==========================================================
-   TABLET
-========================================================== */
-
-@media (max-width: 991px) {
-
-    .lostfound-edit-page {
-        max-width: 95%;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-
-    .lostfound-edit-card {
-        padding-left: 24px;
-        padding-right: 24px;
-    }
-
-    .lostfound-edit-content {
-        grid-template-columns: minmax(0, 1fr) minmax(250px, 0.7fr);
-        gap: 18px;
-    }
-
-    .lostfound-edit-photos-section {
-        padding: 15px;
-    }
-}
-
-
-/* ==========================================================
-   MOBILE
-========================================================== */
-
-@media (max-width: 768px) {
-
-    .lostfound-edit-page {
-        margin-top: 18px;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .lostfound-edit-card {
-        padding: 22px 20px 0;
-    }
-
-    .lostfound-edit-content {
-        grid-template-columns: 1fr;
-        gap: 22px;
-    }
-
-    .lostfound-report-type-options {
-        grid-template-columns: 1fr;
-    }
-
-    .lostfound-edit-photos-section {
-        min-height: auto;
-    }
-
-    .lostfound-edit-actions {
-        margin-top: 20px;
-    }
-}
-
-
-/* ==========================================================
-   SMALL MOBILE
-========================================================== */
-
-@media (max-width: 480px) {
-
-    .lostfound-edit-page {
-        padding-left: 8px;
-        padding-right: 8px;
-    }
-
-    .lostfound-edit-card {
-        padding: 20px 17px 0;
-    }
-
-    .lostfound-edit-header h1 {
-        font-size: 1.4rem;
-    }
-
-    .lostfound-edit-header p {
-        font-size: 0.8rem;
-    }
-
-    .lostfound-report-type-option {
-        min-height: 125px;
-        padding: 15px 12px;
-    }
-
-    .lostfound-report-type-icon {
-        width: 42px;
-        height: 42px;
-    }
-
-        .lostfound-report-type-icon svg {
-            width: 32px;
-            height: 32px;
-        }
-
-    .lostfound-existing-images {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
-    }
-
-    .lostfound-edit-photo > img,
-    .lostfound-image-preview-container img,
-    .lostfound-image-preview-container .more-images {
-        height: 110px;
-    }
-
-    .lostfound-edit-actions {
-        gap: 8px;
-    }
-
-    .lostfound-cancel-btn,
-    .lostfound-save-btn {
-        height: 38px;
-        padding-left: 14px;
-        padding-right: 14px;
-        font-size: 0.78rem;
-    }
-}
-
-
-
-
-/* ==========================================================
-   LOST & FOUND
-========================================================== */
-
-
-/* ==========================================================
-   HERO
-========================================================== */
-
-.lost-found-hero {
-    position: relative;
-    width: calc(100% - 40px);
-    height: 280px;
-    margin-left: 20px;
-    margin-right: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-size: cover;
-    background-position: center 55%;
-    background-repeat: no-repeat;
-    border-radius: 18px;
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
-
-.lost-found-hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient( to bottom, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.48) );
-    z-index: 1;
-}
-
-
-.lost-found-hero-content {
-    position: relative;
-    z-index: 2;
-    width: min(800px, 90%);
-    padding: 20px;
-    text-align: center;
-    color: #ffffff;
-}
-
-
-.lost-found-hero-title {
-    margin: 0 0 10px;
-    color: #ffffff;
-    font-family: Georgia,serif;
-    font-size: clamp(34px, 4vw, 52px);
-    font-weight: 700;
-    line-height: 1.1;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-}
-
-
-.lost-found-hero-description {
-    max-width: 650px;
-    margin: 0 auto;
-    color: rgba(255, 255, 255, 0.95);
-    font-size: 1rem;
-    line-height: 1.6;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
-}
-
-
-
-/* ==========================================================
-   FILTER CONTAINER
-========================================================== */
-
-.lost-found-filter-container {
-    position: sticky;
-    top: 80px;
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: -30px;
-    margin-bottom: 44px;
-    padding: 0 20px;
-    box-sizing: border-box;
-}
-
-
-
-/* ==========================================================
-   FILTER BAR
-========================================================== */
-
-.lost-found-filter-bar {
-    width: auto;
-    min-height: 64px;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    padding: 10px 14px;
-    background: rgba(248, 251, 247, 0.82);
-    border: 1px solid rgba(228, 233, 230, 0.75);
-    border-radius: 22px;
-    box-shadow: 0 4px 14px rgba(31, 41, 55, 0.08), 0 8px 24px rgba(31, 41, 55, 0.06);
-    box-sizing: border-box;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-}
-
-/* ==========================================================
-   LOST & FOUND SEARCH
-========================================================== */
-
-.lost-found-search {
-    flex: 1;
-    min-width: 260px;
-}
-
-
-.lost-found-search-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-
-.lost-found-search-icon {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 17px;
-    height: 17px;
-    color: #344054;
-    stroke-width: 2;
-    pointer-events: none;
-    z-index: 1;
-}
-
-
-.lost-found-search-input {
-    width: 100%;
-    min-width: 260px;
-    height: 44px;
-    padding: 0 16px 0 40px;
-    border: 1px solid #dfe5e2;
-    border-radius: 999px;
-    background: #ffffff;
-    color: #344054;
-    font-family: inherit;
-    font-size: 0.79rem;
-    font-weight: 500;
-    outline: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-
-    .lost-found-search-input::placeholder {
-        color: #667085;
-        opacity: 1;
-    }
-
-
-    .lost-found-search-input:hover {
-        border-color: #cbd5d0;
-        background: #fbfdfb;
-    }
-
-
-    .lost-found-search-input:focus {
-        border-color: #8ace79;
-        background: #ffffff;
-        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
-    }
-
-/* ==========================================================
-   FILTER LABEL
-========================================================== */
-
-.lost-found-filter-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-    padding: 0 4px;
-    color: #344054;
-    font-size: 0.82rem;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-
-    .lost-found-filter-label svg {
-        width: 16px;
-        height: 16px;
-        color: #687783;
-        stroke-width: 2;
-    }
-
-
-
-/* ==========================================================
-   FILTER CONTROLS
-========================================================== */
-
-.lost-found-filter-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    min-width: 0;
-}
-
-
-.lost-found-filter-item {
-    position: relative;
-    flex-shrink: 0;
-}
-
-
-
-/* ==========================================================
-   DROPDOWN
-========================================================== */
-
-.lost-found-dropdown {
-    position: relative;
-}
-
-
-
-/* ==========================================================
-   DROPDOWN BUTTON
-========================================================== */
-
-.lost-found-dropdown-button {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    min-width: 190px;
-    min-height: 44px;
-    padding: 0 16px;
-    border: 1px solid #dfe5e2;
-    border-radius: 999px;
-    background: #ffffff;
-    color: #344054;
-    font-family: inherit;
-    font-size: 0.79rem;
-    font-weight: 500;
-    cursor: pointer;
-    outline: none;
-    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-    .lost-found-dropdown-button:hover {
-        border-color: #cbd5d0;
-        background: #fbfdfb;
-    }
-
-
-.lost-found-dropdown.open
-.lost-found-dropdown-button {
-    border-color: #8ace79;
-    box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
-}
-
-
-.lost-found-dropdown-button-content {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    min-width: 0;
-}
-
-
-.lost-found-filter-select-icon {
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-    color: #667085;
-    stroke-width: 2;
-}
-
-
-.lost-found-dropdown-current {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-
-.lost-found-dropdown-chevron {
-    flex-shrink: 0;
-    width: 15px;
-    height: 15px;
-    color: #667085;
-    stroke-width: 2;
-    transition: transform 0.2s ease;
-}
-
-
-.lost-found-dropdown.open
-.lost-found-dropdown-chevron {
-    transform: rotate(180deg);
-}
-
-
-
-/* ==========================================================
-   DROPDOWN MENU
-========================================================== */
-
-.lost-found-dropdown-menu {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    z-index: 1100;
-    min-width: 100%;
-    padding: 7px;
-    background: #ffffff;
-    border: 1px solid #e5e9e7;
-    border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.12);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-5px);
-    pointer-events: none;
-    transition: opacity 0.16s ease, visibility 0.16s ease, transform 0.16s ease;
-}
-
-
-.lost-found-dropdown.open
-.lost-found-dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-
-
-/* ==========================================================
-   DROPDOWN ITEM
-========================================================== */
-
-.lost-found-dropdown-item {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    min-height: 40px;
-    padding: 9px 11px;
-    border-radius: 9px;
-    color: #344054;
-    font-size: 0.78rem;
-    font-weight: 500;
-    line-height: 1.2;
-    text-decoration: none;
-    cursor: pointer;
-    box-sizing: border-box;
-    transition: background-color 0.18s ease, color 0.18s ease;
-}
-
-
-    .lost-found-dropdown-item:hover {
-        background: #eaf8e6;
-        color: #4f8d42;
-        text-decoration: none;
-    }
-
-
-    .lost-found-dropdown-item.active {
-        color: #4f8d42;
-        background: #eaf8e6;
-        font-weight: 600;
-    }
-
-
-        .lost-found-dropdown-item.active:hover {
-            background: #eaf8e6;
-            color: #4f8d42;
-        }
-
-
-.lost-found-dropdown-item-content {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    width: 100%;
-}
-
-
-
-/* ==========================================================
-   FILTER COUNT
-========================================================== */
-
-.lost-found-filter-count {
-    display: inline-flex;
-    align-items: baseline;
-    justify-content: flex-end;
-    gap: 5px;
-    margin-left: auto;
-    padding-left: 18px;
-    color: #718096;
-    font-size: 0.78rem;
-    font-weight: 500;
-    line-height: 1;
-    white-space: nowrap;
-}
-
-
-    .lost-found-filter-count strong {
-        color: #344054;
-        font-size: 0.9rem;
-        font-weight: 700;
-    }
-
-/* ==========================================================
-   CARD GRID
-========================================================== */
-
-.lost-found-card-grid {
-    display: grid !important;
-    grid-template-columns: repeat(4, 280px);
-    justify-content: space-between;
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 0;
-    padding-left: 8px;
-    padding-right: 8px;
-    column-gap: 20px;
-    row-gap: 20px;
-    box-sizing: border-box;
-}
-
-    /* ==========================================================
-   CARD GRID COLUMN RESET
-   Keeps the card at a fixed size when the sidebar changes.
-========================================================== */
-
-    .lost-found-card-grid > .col-md-3 {
-        width: 280px !important;
-        max-width: 280px !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        flex: none !important;
-        min-width: 0;
-    }
-
-/* ==========================================================
-   HERO WIDTH
-========================================================== */
-
-.lost-found-hero {
-    width: 920px;
-    max-width: calc(100% - 16px);
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
-}
-/* ==========================================================
-   HERO SIDEBAR RESPONSIVE
-========================================================== */
-
-/* Sidebar expanded */
-#sidebar-wrapper:not(.collapsed) ~ #mainContent .lost-found-hero {
-    width: calc(100% - 16px);
-    margin-left: 8px;
-    margin-right: 8px;
-}
-
-/* Sidebar collapsed */
-#sidebar-wrapper.collapsed ~ #mainContent .lost-found-hero {
-    width: calc(100% - 40px);
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-/* ==========================================================
-   LOST & FOUND CARD
-========================================================== */
 
 .lost-found-card {
     position: relative;
@@ -8162,24 +2943,17 @@
     height: 100%;
     overflow: hidden;
     background: #ffffff;
-    border: 1px solid #e1e7e4;
-    border-radius: 22px;
+    border: 1px solid #e2e8e6;
+    border-radius: 18px;
     box-shadow: 0 3px 10px rgba(31, 41, 55, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-
     .lost-found-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 14px 30px rgba(31, 41, 55, 0.11);
-        border-color: #d8e2dc;
+        transform: translateY(-5px);
+        border-color: #d9e5dc;
+        box-shadow: 0 12px 28px rgba(31, 41, 55, 0.10);
     }
-
-
-
-/* ==========================================================
-   CARD LINK
-========================================================== */
 
 .lost-found-card-link {
     display: block;
@@ -8189,17 +2963,10 @@
     text-decoration: none;
 }
 
-
     .lost-found-card-link:hover {
         color: inherit;
         text-decoration: none;
     }
-
-
-
-/* ==========================================================
-   CARD INNER
-========================================================== */
 
 .lost-found-card-inner {
     position: relative;
@@ -8209,12 +2976,6 @@
     height: 100%;
     overflow: hidden;
 }
-
-
-
-/* ==========================================================
-   STATUS RAIL
-========================================================== */
 
 .lost-found-status-rail {
     position: absolute;
@@ -8226,25 +2987,13 @@
     pointer-events: none;
 }
 
-
-/* LOST = CORAL */
-
 .lost-card .lost-found-status-rail {
     background: #ef6c60;
 }
 
-
-/* FOUND = PETHUB GREEN */
-
 .found-card .lost-found-status-rail {
     background: #8ace79;
 }
-
-
-
-/* ==========================================================
-   IMAGE
-========================================================== */
 
 .lost-found-card-image-wrapper {
     position: relative;
@@ -8254,7 +3003,6 @@
     background: #f1f3f2;
 }
 
-
 .lost-found-card-image {
     display: block;
     width: 100%;
@@ -8263,17 +3011,10 @@
     transition: transform 0.5s ease;
 }
 
-
 .lost-found-card:hover
 .lost-found-card-image {
     transform: scale(1.05);
 }
-
-
-
-/* ==========================================================
-   IMAGE GRADIENT
-========================================================== */
 
 .lost-found-card-image-gradient {
     position: absolute;
@@ -8281,12 +3022,6 @@
     pointer-events: none;
     background: linear-gradient( to top, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.08) 48%, transparent 75% );
 }
-
-
-
-/* ==========================================================
-   LOST / FOUND BADGE
-========================================================== */
 
 .lost-found-type-badge {
     position: absolute;
@@ -8308,38 +3043,19 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
-
     .lost-found-type-badge svg {
         width: 13px;
         height: 13px;
         stroke-width: 2.2;
     }
 
-
-
-/* ==========================================================
-   LOST BADGE
-========================================================== */
-
 .lost-found-type-badge-lost {
     background: #ef6c60;
 }
 
-
-
-/* ==========================================================
-   FOUND BADGE
-========================================================== */
-
 .lost-found-type-badge-found {
     background: #8ace79;
 }
-
-
-
-/* ==========================================================
-   PET TYPE BADGE
-========================================================== */
 
 .lost-found-pet-badge {
     position: absolute;
@@ -8361,19 +3077,12 @@
     box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
 }
 
-
     .lost-found-pet-badge svg {
         width: 13px;
         height: 13px;
         color: #667085;
         stroke-width: 2;
     }
-
-
-
-/* ==========================================================
-   CARD BODY
-========================================================== */
 
 .lost-found-card-body {
     display: flex;
@@ -8382,12 +3091,6 @@
     min-width: 0;
     padding: 18px 18px 15px 20px;
 }
-
-
-
-/* ==========================================================
-   CARD TITLE
-========================================================== */
 
 .lost-found-card-title {
     margin: 0 0 9px;
@@ -8402,17 +3105,10 @@
     transition: color 0.2s ease;
 }
 
-
 .lost-found-card:hover
 .lost-found-card-title {
     color: #67b95a;
 }
-
-
-
-/* ==========================================================
-   LOCATION ROW
-========================================================== */
 
 .lost-found-card-location-row {
     display: flex;
@@ -8424,7 +3120,6 @@
     line-height: 1.45;
 }
 
-
     .lost-found-card-location-row > svg {
         flex-shrink: 0;
         width: 15px;
@@ -8433,50 +3128,24 @@
         stroke-width: 2;
     }
 
-
-
-/* LOST LOCATION ICON */
-
 .lost-card
 .lost-found-card-location-row > svg {
     color: #ef6c60;
 }
-
-
-
-/* FOUND LOCATION ICON */
 
 .found-card
 .lost-found-card-location-row > svg {
     color: #8ace79;
 }
 
-
-
-/* ==========================================================
-   LOCATION LABEL
-========================================================== */
-
 .lost-found-location-label {
     color: #98a2b3;
 }
-
-
-
-/* ==========================================================
-   LOCATION VALUE
-========================================================== */
 
 .lost-found-location-value {
     color: #98a2b3;
     font-weight: 500;
 }
-
-
-
-/* ==========================================================
-   DESCRIPTION
-========================================================== */
 
 .lost-found-card-description {
     flex: 1;
@@ -8491,12 +3160,6 @@
     -webkit-line-clamp: 2;
 }
 
-
-
-/* ==========================================================
-   CARD FOOTER
-========================================================== */
-
 .lost-found-card-footer {
     display: flex;
     align-items: center;
@@ -8504,12 +3167,6 @@
     padding-top: 11px;
     border-top: 1px solid #e8ecea;
 }
-
-
-
-/* ==========================================================
-   DATE
-========================================================== */
 
 .lost-found-card-date {
     display: inline-flex;
@@ -8521,19 +3178,12 @@
     white-space: nowrap;
 }
 
-
     .lost-found-card-date svg {
         width: 13px;
         height: 13px;
         color: #78bf69;
         stroke-width: 2;
     }
-
-
-
-/* ==========================================================
-   FLOATING CREATE REPORT BUTTON
-========================================================== */
 
 .lost-found-floating-add {
     position: fixed;
@@ -8560,7 +3210,6 @@
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-
     .lost-found-floating-add:hover {
         background: #79c96b;
         border-color: #79c96b;
@@ -8570,7 +3219,6 @@
         box-shadow: 0 8px 20px rgba(76, 130, 67, 0.28);
     }
 
-
     .lost-found-floating-add:focus {
         color: #ffffff;
         text-decoration: none;
@@ -8578,18 +3226,11 @@
         box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.20), 0 5px 16px rgba(76, 130, 67, 0.22);
     }
 
-
     .lost-found-floating-add svg {
         width: 17px;
         height: 17px;
         stroke-width: 2.2;
     }
-
-
-
-/* ==========================================================
-   TABLET
-========================================================== */
 
 @media (max-width: 991px) {
 
@@ -8601,11 +3242,9 @@
         background-position: center;
     }
 
-
     .lost-found-hero-title {
         font-size: 40px;
     }
-
 
     .lost-found-filter-container {
         top: 74px;
@@ -8615,71 +3254,54 @@
         padding-right: 15px;
     }
 
-
     .lost-found-filter-bar {
         gap: 12px;
         padding: 11px 13px;
     }
 
-
     .lost-found-filter-controls {
         gap: 8px;
     }
-
 
     .lost-found-filter-count {
         padding-left: 12px;
         font-size: 0.75rem;
     }
 
-
         .lost-found-filter-count strong {
             font-size: 0.86rem;
         }
-
 
     .lost-found-dropdown-button {
         min-width: 170px;
     }
 
-
     .lost-found-dropdown-menu {
         min-width: 170px;
     }
-
 
     .lost-found-card-grid {
         padding-left: 5px;
         padding-right: 5px;
     }
 
-
     .lost-found-card-body {
         padding: 16px 16px 14px 18px;
     }
-
 
     .lost-found-card-title {
         font-size: 0.95rem;
     }
 
-
     .lost-found-card-description {
         font-size: 0.74rem;
     }
-
 
     .lost-found-floating-add {
         right: 22px;
         bottom: 22px;
     }
 }
-
-
-
-/* ==========================================================
-   MOBILE
-========================================================== */
 
 @media (max-width: 767px) {
 
@@ -8691,27 +3313,19 @@
         background-position: center;
     }
 
-
     .lost-found-hero-content {
         padding: 20px 15px;
     }
-
 
     .lost-found-hero-title {
         font-size: 32px;
         line-height: 1.15;
     }
 
-
     .lost-found-hero-description {
         font-size: 0.86rem;
         line-height: 1.5;
     }
-
-
-    /* ======================================================
-       MOBILE FILTER
-    ====================================================== */
 
     .lost-found-filter-container {
         top: 68px;
@@ -8720,7 +3334,6 @@
         padding-left: 12px;
         padding-right: 12px;
     }
-
 
     .lost-found-filter-bar {
         width: 100%;
@@ -8732,7 +3345,6 @@
         border-radius: 18px;
     }
 
-
     .lost-found-filter-controls {
         width: 100%;
         display: grid;
@@ -8740,24 +3352,20 @@
         gap: 8px;
     }
 
-
     .lost-found-filter-item,
     .lost-found-dropdown {
         width: 100%;
     }
-
 
     .lost-found-dropdown-button {
         width: 100%;
         min-width: 0;
     }
 
-
     .lost-found-dropdown-menu {
         width: 100%;
         min-width: 0;
     }
-
 
     .lost-found-filter-count {
         justify-content: flex-start;
@@ -8767,46 +3375,34 @@
         padding-top: 3px;
     }
 
-
     .lost-found-card-grid {
         padding-left: 2px;
         padding-right: 2px;
     }
 
-
     .lost-found-card {
         border-radius: 19px;
     }
 
-
     .lost-found-card-body {
         padding: 16px 16px 14px 18px;
     }
-
 
     .lost-found-type-badge {
         top: 11px;
         left: 15px;
     }
 
-
     .lost-found-pet-badge {
         left: 15px;
         bottom: 11px;
     }
-
 
     .lost-found-floating-add {
         right: 16px;
         bottom: 16px;
     }
 }
-
-
-
-/* ==========================================================
-   SMALL MOBILE
-========================================================== */
 
 @media (max-width: 480px) {
 
@@ -8818,16 +3414,13 @@
         background-position: center;
     }
 
-
     .lost-found-hero-title {
         font-size: 28px;
     }
 
-
     .lost-found-hero-description {
         font-size: 0.8rem;
     }
-
 
     .lost-found-filter-container {
         top: 64px;
@@ -8837,56 +3430,46 @@
         padding-right: 10px;
     }
 
-
     .lost-found-filter-bar {
         padding: 11px;
         border-radius: 15px;
     }
 
-
     .lost-found-filter-controls {
         grid-template-columns: 1fr;
     }
-
 
     .lost-found-filter-count {
         padding-top: 2px;
         font-size: 0.73rem;
     }
 
-
         .lost-found-filter-count strong {
             font-size: 0.84rem;
         }
-
 
     .lost-found-dropdown-button {
         min-height: 42px;
         font-size: 0.76rem;
     }
 
-
     .lost-found-dropdown-item {
         min-height: 42px;
         font-size: 0.76rem;
     }
-
 
     .lost-found-card-grid {
         padding-left: 0;
         padding-right: 0;
     }
 
-
     .lost-found-card {
         border-radius: 18px;
     }
 
-
     .lost-found-status-rail {
         width: 4px;
     }
-
 
     .lost-found-type-badge {
         top: 9px;
@@ -8896,38 +3479,31 @@
         font-size: 0.65rem;
     }
 
-
     .lost-found-pet-badge {
         left: 13px;
         bottom: 9px;
         font-size: 0.65rem;
     }
 
-
     .lost-found-card-body {
         padding: 15px 14px 13px 17px;
     }
-
 
     .lost-found-card-title {
         font-size: 0.92rem;
     }
 
-
     .lost-found-card-location-row {
         font-size: 0.72rem;
     }
-
 
     .lost-found-card-description {
         font-size: 0.73rem;
     }
 
-
     .lost-found-card-date {
         font-size: 0.64rem;
     }
-
 
     .lost-found-floating-add {
         right: 12px;
@@ -8937,15 +3513,11 @@
         font-size: 0.76rem;
     }
 
-
         .lost-found-floating-add svg {
             width: 16px;
             height: 16px;
         }
 }
-
-
-/*three dot menu*/
 
 .lostfound-post-menu {
     position: relative;
@@ -9017,1010 +3589,6 @@
     background: #e5e7eb;
     margin: 4px 0;
 }
-/* ==========================================================
-   EXPANDED SIDEBAR
-   Shows 3 cards per row.
-========================================================== */
-
-#sidebar-wrapper:not(.collapsed) ~ #mainContent .lost-found-card-grid {
-    grid-template-columns: repeat(3, 300px);
-    justify-content: center;
-    row-gap: 40px;
-}
-
-/* ==========================================================
-   HERO WIDTH
-========================================================== */
-
-.lost-found-hero {
-    width: 920px;
-    max-width: calc(100% - 16px);
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
-}
-
-/* ==========================================================
-   LOST & FOUND CARD
-========================================================== */
-
-.lost-found-card {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #ffffff;
-    border: 1px solid #e1e7e4;
-    border-radius: 22px;
-    box-shadow: 0 3px 10px rgba(31, 41, 55, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-
-    .lost-found-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 14px 30px rgba(31, 41, 55, 0.11);
-        border-color: #d8e2dc;
-    }
-
-
-
-/* ==========================================================
-   CARD LINK
-========================================================== */
-
-.lost-found-card-link {
-    display: block;
-    width: 100%;
-    height: 100%;
-    color: inherit;
-    text-decoration: none;
-}
-
-
-    .lost-found-card-link:hover {
-        color: inherit;
-        text-decoration: none;
-    }
-
-
-
-/* ==========================================================
-   CARD INNER
-========================================================== */
-
-.lost-found-card-inner {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-
-
-/* ==========================================================
-   STATUS RAIL
-========================================================== */
-
-.lost-found-status-rail {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 5px;
-    z-index: 5;
-    pointer-events: none;
-}
-
-
-/* LOST = CORAL */
-
-.lost-card .lost-found-status-rail {
-    background: #ef6c60;
-}
-
-
-/* FOUND = PETHUB GREEN */
-
-.found-card .lost-found-status-rail {
-    background: #8ace79;
-}
-
-
-
-/* ==========================================================
-   IMAGE
-========================================================== */
-
-.lost-found-card-image-wrapper {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    background: #f1f3f2;
-}
-
-
-.lost-found-card-image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-
-.lost-found-card:hover
-.lost-found-card-image {
-    transform: scale(1.05);
-}
-
-
-
-/* ==========================================================
-   IMAGE GRADIENT
-========================================================== */
-
-.lost-found-card-image-gradient {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient( to top, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.08) 48%, transparent 75% );
-}
-
-
-
-/* ==========================================================
-   LOST / FOUND BADGE
-========================================================== */
-
-.lost-found-type-badge {
-    position: absolute;
-    top: 13px;
-    left: 17px;
-    z-index: 3;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    min-height: 29px;
-    padding: 6px 11px;
-    border-radius: 999px;
-    color: #ffffff;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    line-height: 1;
-    white-space: nowrap;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-}
-
-
-    .lost-found-type-badge svg {
-        width: 13px;
-        height: 13px;
-        stroke-width: 2.2;
-    }
-
-
-
-/* ==========================================================
-   LOST BADGE
-========================================================== */
-
-.lost-found-type-badge-lost {
-    background: #ef6c60;
-}
-
-
-
-/* ==========================================================
-   FOUND BADGE
-========================================================== */
-
-.lost-found-type-badge-found {
-    background: #8ace79;
-}
-
-
-
-/* ==========================================================
-   PET TYPE BADGE
-========================================================== */
-
-.lost-found-pet-badge {
-    position: absolute;
-    left: 17px;
-    bottom: 13px;
-    z-index: 3;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    min-height: 26px;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.86);
-    color: #344054;
-    font-size: 0.68rem;
-    font-weight: 600;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
-}
-
-
-    .lost-found-pet-badge svg {
-        width: 13px;
-        height: 13px;
-        color: #667085;
-        stroke-width: 2;
-    }
-
-
-
-/* ==========================================================
-   CARD BODY
-========================================================== */
-
-.lost-found-card-body {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-    padding: 18px 18px 15px 20px;
-}
-
-
-
-/* ==========================================================
-   CARD TITLE
-========================================================== */
-
-.lost-found-card-title {
-    margin: 0 0 9px;
-    color: #172b46;
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.35;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    transition: color 0.2s ease;
-}
-
-
-.lost-found-card:hover
-.lost-found-card-title {
-    color: #67b95a;
-}
-
-
-
-/* ==========================================================
-   LOCATION ROW
-========================================================== */
-
-.lost-found-card-location-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 7px;
-    margin-bottom: 9px;
-    color: #344054;
-    font-size: 0.76rem;
-    line-height: 1.45;
-}
-
-
-    .lost-found-card-location-row > svg {
-        flex-shrink: 0;
-        width: 15px;
-        height: 15px;
-        margin-top: 2px;
-        stroke-width: 2;
-    }
-
-
-
-/* LOST LOCATION ICON */
-
-.lost-card
-.lost-found-card-location-row > svg {
-    color: #ef6c60;
-}
-
-
-
-/* FOUND LOCATION ICON */
-
-.found-card
-.lost-found-card-location-row > svg {
-    color: #8ace79;
-}
-
-
-
-/* ==========================================================
-   LOCATION LABEL
-========================================================== */
-
-.lost-found-location-label {
-    color: #98a2b3;
-}
-
-
-
-/* ==========================================================
-   LOCATION VALUE
-========================================================== */
-
-.lost-found-location-value {
-    color: #98a2b3;
-    font-weight: 500;
-}
-
-
-
-/* ==========================================================
-   DESCRIPTION
-========================================================== */
-
-.lost-found-card-description {
-    flex: 1;
-    min-height: 42px;
-    margin: 0 0 15px;
-    color: #697586;
-    font-size: 0.76rem;
-    line-height: 1.55;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-}
-
-
-
-/* ==========================================================
-   CARD FOOTER
-========================================================== */
-
-.lost-found-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 11px;
-    border-top: 1px solid #e8ecea;
-}
-
-
-
-/* ==========================================================
-   DATE
-========================================================== */
-
-.lost-found-card-date {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    color: #718096;
-    font-size: 0.68rem;
-    line-height: 1;
-    white-space: nowrap;
-}
-
-
-    .lost-found-card-date svg {
-        width: 13px;
-        height: 13px;
-        color: #78bf69;
-        stroke-width: 2;
-    }
-
-
-
-/* ==========================================================
-   FLOATING CREATE REPORT BUTTON
-========================================================== */
-
-.lost-found-floating-add {
-    position: fixed;
-    right: 28px;
-    bottom: 28px;
-    z-index: 1050;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    min-height: 46px;
-    padding: 0 20px;
-    border: 1px solid #82cf72;
-    border-radius: 999px;
-    background: #8ACE79;
-    color: #ffffff;
-    font-family: inherit;
-    font-size: 0.84rem;
-    font-weight: 600;
-    line-height: 1;
-    text-decoration: none;
-    cursor: pointer;
-    box-shadow: 0 5px 16px rgba(76, 130, 67, 0.22);
-    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-
-    .lost-found-floating-add:hover {
-        background: #79c96b;
-        border-color: #79c96b;
-        color: #ffffff;
-        text-decoration: none;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(76, 130, 67, 0.28);
-    }
-
-
-    .lost-found-floating-add:focus {
-        color: #ffffff;
-        text-decoration: none;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.20), 0 5px 16px rgba(76, 130, 67, 0.22);
-    }
-
-
-    .lost-found-floating-add svg {
-        width: 17px;
-        height: 17px;
-        stroke-width: 2.2;
-    }
-
-
-
-/* ==========================================================
-   TABLET
-========================================================== */
-
-@media (max-width: 991px) {
-
-    .lost-found-hero {
-        height: 260px;
-        width: calc(100% - 16px);
-        margin-left: 8px;
-        margin-right: 8px;
-        background-position: center;
-    }
-
-
-    .lost-found-hero-title {
-        font-size: 40px;
-    }
-
-
-    .lost-found-filter-container {
-        top: 74px;
-        margin-top: -28px;
-        margin-bottom: 38px;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-
-
-    .lost-found-filter-bar {
-        gap: 12px;
-        padding: 11px 13px;
-    }
-
-
-    .lost-found-filter-controls {
-        gap: 8px;
-    }
-
-
-    .lost-found-filter-count {
-        padding-left: 12px;
-        font-size: 0.75rem;
-    }
-
-
-        .lost-found-filter-count strong {
-            font-size: 0.86rem;
-        }
-
-
-    .lost-found-dropdown-button {
-        min-width: 170px;
-    }
-
-
-    .lost-found-dropdown-menu {
-        min-width: 170px;
-    }
-
-
-    .lost-found-card-grid {
-        padding-left: 5px;
-        padding-right: 5px;
-    }
-
-
-    .lost-found-card-body {
-        padding: 16px 16px 14px 18px;
-    }
-
-
-    .lost-found-card-title {
-        font-size: 0.95rem;
-    }
-
-
-    .lost-found-card-description {
-        font-size: 0.74rem;
-    }
-
-
-    .lost-found-floating-add {
-        right: 22px;
-        bottom: 22px;
-    }
-}
-
-
-
-/* ==========================================================
-   MOBILE
-========================================================== */
-
-@media (max-width: 767px) {
-
-    .lost-found-hero {
-        height: 245px;
-        width: calc(100% - 24px);
-        margin-left: 12px;
-        margin-right: 12px;
-        background-position: center;
-    }
-
-
-    .lost-found-hero-content {
-        padding: 20px 15px;
-    }
-
-
-    .lost-found-hero-title {
-        font-size: 32px;
-        line-height: 1.15;
-    }
-
-
-    .lost-found-hero-description {
-        font-size: 0.86rem;
-        line-height: 1.5;
-    }
-
-
-    /* ======================================================
-       MOBILE FILTER
-    ====================================================== */
-
-    .lost-found-filter-container {
-        top: 68px;
-        margin-top: -26px;
-        margin-bottom: 30px;
-        padding-left: 12px;
-        padding-right: 12px;
-    }
-
-
-    .lost-found-filter-bar {
-        width: 100%;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-        padding: 12px 14px;
-        min-height: auto;
-        border-radius: 18px;
-    }
-
-
-    .lost-found-filter-controls {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-    }
-
-
-    .lost-found-filter-item,
-    .lost-found-dropdown {
-        width: 100%;
-    }
-
-
-    .lost-found-dropdown-button {
-        width: 100%;
-        min-width: 0;
-    }
-
-
-    .lost-found-dropdown-menu {
-        width: 100%;
-        min-width: 0;
-    }
-
-
-    .lost-found-filter-count {
-        justify-content: flex-start;
-        width: 100%;
-        margin-left: 0;
-        padding-left: 2px;
-        padding-top: 3px;
-    }
-
-
-    .lost-found-card-grid {
-        padding-left: 2px;
-        padding-right: 2px;
-    }
-
-
-    .lost-found-card {
-        border-radius: 19px;
-    }
-
-
-    .lost-found-card-body {
-        padding: 16px 16px 14px 18px;
-    }
-
-
-    .lost-found-type-badge {
-        top: 11px;
-        left: 15px;
-    }
-
-
-    .lost-found-pet-badge {
-        left: 15px;
-        bottom: 11px;
-    }
-
-
-    .lost-found-floating-add {
-        right: 16px;
-        bottom: 16px;
-    }
-}
-
-
-
-/* ==========================================================
-   SMALL MOBILE
-========================================================== */
-
-@media (max-width: 480px) {
-
-    .lost-found-hero {
-        height: 230px;
-        width: calc(100% - 20px);
-        margin-left: 10px;
-        margin-right: 10px;
-        background-position: center;
-    }
-
-
-    .lost-found-hero-title {
-        font-size: 28px;
-    }
-
-
-    .lost-found-hero-description {
-        font-size: 0.8rem;
-    }
-
-
-    .lost-found-filter-container {
-        top: 64px;
-        margin-top: -22px;
-        margin-bottom: 25px;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-
-    .lost-found-filter-bar {
-        padding: 11px;
-        border-radius: 15px;
-    }
-
-
-    .lost-found-filter-controls {
-        grid-template-columns: 1fr;
-    }
-
-
-    .lost-found-filter-count {
-        padding-top: 2px;
-        font-size: 0.73rem;
-    }
-
-
-        .lost-found-filter-count strong {
-            font-size: 0.84rem;
-        }
-
-
-    .lost-found-dropdown-button {
-        min-height: 42px;
-        font-size: 0.76rem;
-    }
-
-
-    .lost-found-dropdown-item {
-        min-height: 42px;
-        font-size: 0.76rem;
-    }
-
-
-    .lost-found-card-grid {
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-
-    .lost-found-card {
-        border-radius: 18px;
-    }
-
-
-    .lost-found-status-rail {
-        width: 4px;
-    }
-
-
-    .lost-found-type-badge {
-        top: 9px;
-        left: 13px;
-        min-height: 26px;
-        padding: 5px 9px;
-        font-size: 0.65rem;
-    }
-
-
-    .lost-found-pet-badge {
-        left: 13px;
-        bottom: 9px;
-        font-size: 0.65rem;
-    }
-
-
-    .lost-found-card-body {
-        padding: 15px 14px 13px 17px;
-    }
-
-
-    .lost-found-card-title {
-        font-size: 0.92rem;
-    }
-
-
-    .lost-found-card-location-row {
-        font-size: 0.72rem;
-    }
-
-
-    .lost-found-card-description {
-        font-size: 0.73rem;
-    }
-
-
-    .lost-found-card-date {
-        font-size: 0.64rem;
-    }
-
-
-    .lost-found-floating-add {
-        right: 12px;
-        bottom: 12px;
-        min-height: 42px;
-        padding: 0 15px;
-        font-size: 0.76rem;
-    }
-
-
-        .lost-found-floating-add svg {
-            width: 16px;
-            height: 16px;
-        }
-}
-
-
-/*three dot menu*/
-
-.lostfound-post-menu {
-    position: relative;
-}
-
-.lostfound-post-menu-button {
-    width: 40px;
-    height: 40px;
-    border: none;
-    background: transparent;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-    .lostfound-post-menu-button:hover {
-        background: #f3f4f6;
-    }
-
-.lostfound-post-dropdown {
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    min-width: 180px;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 6px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    display: none;
-    z-index: 1000;
-}
-
-.lostfound-post-menu.show .lostfound-post-dropdown {
-    display: block;
-}
-
-.lostfound-post-dropdown button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border: none;
-    background: transparent;
-    padding: 10px 12px;
-    border-radius: 8px;
-    font-size: 14px;
-    color: #374151;
-    cursor: pointer;
-    text-align: left;
-}
-
-    .lostfound-post-dropdown button:hover {
-        background: #f3f4f6;
-    }
-
-.lostfound-post-dropdown .danger-action {
-    color: #C14B4B;
-}
-
-    .lostfound-post-dropdown .danger-action:hover {
-        background: #fef2f2;
-    }
-
-.lostfound-menu-divider {
-    height: 1px;
-    background: #e5e7eb;
-    margin: 4px 0;
-}
-
-
-/* ==========================================================
-   FINAL LOST & FOUND BROWSE RESPONSIVE OVERRIDE
-   Only controls the Browse card grid.
-========================================================== */
-
-/* ==========================================================
-   DESKTOP - SIDEBAR COLLAPSED
-========================================================== */
-
-@media (min-width: 992px) {
-
-    #sidebar-wrapper.collapsed ~ #mainContent .lost-found-card-grid {
-        grid-template-columns: repeat(4, 280px) !important;
-        justify-content: space-between !important;
-        column-gap: 20px !important;
-        row-gap: 20px !important;
-    }
-
-        #sidebar-wrapper.collapsed ~ #mainContent .lost-found-card-grid > .col-md-3 {
-            width: 280px !important;
-            max-width: 280px !important;
-        }
-
-
-    /* ==========================================================
-       DESKTOP - SIDEBAR EXPANDED
-    ========================================================== */
-
-    #sidebar-wrapper:not(.collapsed) ~ #mainContent .lost-found-card-grid {
-        grid-template-columns: repeat(3, 280px) !important;
-        justify-content: center !important;
-        column-gap: 40px !important;
-        row-gap: 40px !important;
-    }
-
-        #sidebar-wrapper:not(.collapsed) ~ #mainContent .lost-found-card-grid > .col-md-3 {
-            width: 280px !important;
-            max-width: 280px !important;
-        }
-}
-
-
-/* ==========================================================
-   TABLET
-   Shows 2 cards per row.
-========================================================== */
-
-@media (max-width: 991px) and (min-width: 768px) {
-
-    #mainContent .lost-found-card-grid {
-        grid-template-columns: repeat(2, 280px) !important;
-        justify-content: center !important;
-        column-gap: 24px !important;
-        row-gap: 20px !important;
-    }
-
-        #mainContent .lost-found-card-grid > .col-md-3 {
-            width: 280px !important;
-            max-width: 280px !important;
-        }
-}
-
-
-/* ==========================================================
-   MOBILE
-   Shows 1 card per row with small side spacing.
-========================================================== */
-
-@media (max-width: 767px) {
-
-    #mainContent .lost-found-card-grid {
-        grid-template-columns: minmax(0, 1fr) !important;
-        justify-content: stretch !important;
-        column-gap: 0 !important;
-        row-gap: 24px !important;
-        width: 100% !important;
-        padding-left: 8px !important;
-        padding-right: 8px !important;
-        box-sizing: border-box !important;
-    }
-
-        #mainContent .lost-found-card-grid > .col-md-3 {
-            width: 100% !important;
-            max-width: 100% !important;
-            min-width: 0 !important;
-        }
-}
-
-
-/* ==========================================================
-   SMALL MOBILE
-   Keeps 1 card per row with small side spacing.
-========================================================== */
-
-@media (max-width: 480px) {
-
-    #mainContent .lost-found-card-grid {
-        grid-template-columns: minmax(0, 1fr) !important;
-        column-gap: 0 !important;
-        row-gap: 22px !important;
-        padding-left: 8px !important;
-        padding-right: 8px !important;
-    }
-
-        #mainContent .lost-found-card-grid > .col-md-3 {
-            width: 100% !important;
-            max-width: 100% !important;
-        }
-}
-/* ==========================================================
-   ADDRESS FIELD SIZE
-   Match Province / City / Barangay / Street Address
-   with the other form fields.
-========================================================== */
 
 #reportForm .pethub-select-trigger,
 #reportForm .pethub-address-input {
@@ -10029,11 +3597,6 @@
     min-height: 44px !important;
     box-sizing: border-box;
 }
-
-
-/* Street Address
-   Match the same padding and overall sizing as the
-   other standard form-control inputs. */
 
 #reportForm .pethub-address-input {
     padding: 10px 12px !important;
@@ -10046,23 +3609,11 @@
     line-height: 1.5;
 }
 
-
-    /* Street Address focus */
-
     #reportForm .pethub-address-input:focus {
         border-color: #8ace79;
         outline: none;
         box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.13);
     }
-
-
-
-/* ==========================================================
-   LOST & FOUND EDIT - ADDRESS FIELD SIZE
-
-   Match Province / City / Barangay / Street Address
-   with the other Edit form fields.
-========================================================== */
 
 #editLostFoundForm .pethub-select-trigger,
 #editLostFoundForm .pethub-address-input {
@@ -10071,11 +3622,6 @@
     min-height: 39px !important;
     box-sizing: border-box;
 }
-
-
-/* ==========================================================
-   STREET ADDRESS
-========================================================== */
 
 #editLostFoundForm .pethub-address-input {
     padding: 0 12px !important;
@@ -10089,20 +3635,10 @@
     box-shadow: none;
 }
 
-
-    /* ==========================================================
-   STREET ADDRESS PLACEHOLDER
-========================================================== */
-
     #editLostFoundForm .pethub-address-input::placeholder {
         color: #9CA3AF;
         opacity: 1;
     }
-
-
-/* ==========================================================
-   ADDRESS SELECT TRIGGERS
-========================================================== */
 
 #editLostFoundForm .pethub-select-trigger {
     padding: 0 12px !important;
@@ -10110,14 +3646,276 @@
     box-sizing: border-box;
 }
 
-
-/* ==========================================================
-   STREET ADDRESS FOCUS
-========================================================== */
-
 #editLostFoundForm .pethub-address-input:focus {
     border-color: #8ACE79;
     box-shadow: 0 0 0 3px rgba(138, 206, 121, 0.12);
     outline: none;
 }
 
+/* ==========================================================
+   LOST & FOUND BROWSE - CLEAN RESPONSIVE OVERRIDES
+   Mirrors the working Marketplace behavior.
+========================================================== */
+
+/* Card grid */
+.lost-found-card-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 280px));
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
+
+    .lost-found-card-grid > .col-md-3 {
+        width: 100% !important;
+        max-width: 280px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-width: 0;
+    }
+
+@media (max-width: 1100px) {
+    .lost-found-card-grid {
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 20px;
+    }
+
+        .lost-found-card-grid > .col-md-3 {
+            max-width: 100% !important;
+        }
+}
+
+@media (max-width: 767px) {
+    .lost-found-card-grid {
+        grid-template-columns: 1fr;
+        padding-left: 12px;
+        padding-right: 12px;
+        gap: 20px;
+    }
+
+        .lost-found-card-grid > .col-md-3 {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+}
+
+
+/* Filter responsive behavior */
+@media (max-width: 1200px) {
+    .lost-found-filter-container {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 16px;
+        padding-right: 16px;
+        box-sizing: border-box;
+    }
+
+    .lost-found-filter-bar {
+        width: 100%;
+        max-width: 100%;
+        display: grid;
+        grid-template-columns: minmax(180px, 1fr) minmax(170px, 190px) minmax(170px, 190px) auto;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    .lost-found-search,
+    .lost-found-search-input {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .lost-found-filter-controls {
+        display: contents;
+    }
+
+    .lost-found-filter-item,
+    .lost-found-dropdown {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .lost-found-dropdown-button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .lost-found-filter-count {
+        margin-left: 0;
+        padding-left: 4px;
+    }
+}
+
+@media (max-width: 950px) {
+    .lost-found-filter-bar {
+        grid-template-columns: minmax(0, 1fr) minmax(150px, .65fr);
+        gap: 10px;
+    }
+
+    .lost-found-search {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+    }
+
+    .lost-found-filter-controls {
+        display: grid;
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .lost-found-filter-count {
+        grid-column: 1 / -1;
+        width: 100%;
+        justify-content: flex-end;
+        padding: 0 2px;
+    }
+}
+
+@media (max-width: 767px) {
+    .lost-found-filter-bar {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .lost-found-search {
+        width: 100%;
+    }
+
+    .lost-found-filter-controls {
+        display: grid;
+        width: 100%;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .lost-found-filter-count {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .lost-found-filter-controls {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* Dark mode - filter */
+html.dark-mode .lost-found-filter-bar {
+    background: rgba(27, 31, 28, .92);
+    border-color: #343b36;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .20);
+    backdrop-filter: blur(14px);
+}
+
+html.dark-mode .lost-found-search-input,
+html.dark-mode .lost-found-dropdown-button {
+    background: #202421;
+    border-color: #39413b;
+    color: #e5ebe6;
+}
+
+    html.dark-mode .lost-found-search-input::placeholder {
+        color: #8f9992;
+    }
+
+    html.dark-mode .lost-found-search-input:hover,
+    html.dark-mode .lost-found-dropdown-button:hover {
+        background: #252a26;
+        border-color: #4c574f;
+    }
+
+    html.dark-mode .lost-found-search-input:focus,
+    html.dark-mode .lost-found-dropdown.open .lost-found-dropdown-button {
+        background: #252a26;
+        border-color: #8ace79;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, .13);
+    }
+
+html.dark-mode .lost-found-search-icon,
+html.dark-mode .lost-found-filter-select-icon,
+html.dark-mode .lost-found-dropdown-chevron {
+    color: #aab4ad;
+}
+
+html.dark-mode .lost-found-dropdown-menu {
+    background: #202421;
+    border-color: #39413b;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .30);
+}
+
+html.dark-mode .lost-found-dropdown-item {
+    color: #d7ddd8;
+}
+
+    html.dark-mode .lost-found-dropdown-item:hover,
+    html.dark-mode .lost-found-dropdown-item.active {
+        background: #293327;
+        color: #8ace79;
+    }
+
+html.dark-mode .lost-found-filter-count {
+    color: #9ca69f;
+}
+
+    html.dark-mode .lost-found-filter-count strong {
+        color: #e7ece8;
+    }
+
+
+/* Dark mode - Browse cards */
+html.dark-mode .lost-found-card,
+html.dark-mode .lost-found-card-body {
+    background: #181c19;
+    border-color: #303630;
+}
+
+html.dark-mode .lost-found-card {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+}
+
+html.dark-mode .lost-found-card-title {
+    color: #edf2ee;
+}
+
+html.dark-mode .lost-found-card:hover .lost-found-card-title {
+    color: #8ace79;
+}
+
+html.dark-mode .lost-found-card-location-row,
+html.dark-mode .lost-found-card-description {
+    color: #aab3ad;
+}
+
+    html.dark-mode .lost-found-card-location-row svg,
+    html.dark-mode .lost-found-card-date svg {
+        color: #8ace79;
+    }
+
+html.dark-mode .lost-found-card-footer {
+    border-top-color: #303630;
+}
+
+html.dark-mode .lost-found-card-date {
+    color: #939e96;
+}
+
+html.dark-mode .lost-found-pet-badge {
+    background: rgba(30, 35, 31, .92);
+    border-color: #414941;
+    color: #d5ddd7;
+}
+
+    html.dark-mode .lost-found-pet-badge svg {
+        color: #aab5ad;
+    }

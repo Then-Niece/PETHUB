@@ -2,6 +2,16 @@
 @using PETHUB.ViewModels
 @model IEnumerable<PETHUB.ViewModels.PetFeedFeedViewModel>
 
+    @if (User.IsInRole("Member"))
+{
+    <form class="feed-save-token-form"
+          style="display:none;">
+
+        @Html.AntiForgeryToken()
+
+    </form>
+}
+
 @foreach (var post in Model)
 {
     // ==========================================================
@@ -230,13 +240,16 @@
 
 
                     <button type="button"
-                            class="feed-item-button feed-item-save-button"
-                            aria-label="Save Pet Tip">
+                            class="feed-item-button feed-item-save-button @(post.IsSaved ? "saved" : "")"
+                            data-save-type="petfeed"
+                            data-save-id="@post.PetFeedId"
+                            aria-label="@(post.IsSaved
+                                ? "Remove from saved"
+                                : "Save Pet Tip")">
 
                         <i data-lucide="heart"></i>
 
                     </button>
-
                 </div>
             }
             else if (User.Identity?.IsAuthenticated != true)
@@ -646,13 +659,32 @@
 
             <div class="feed-item-actions">
 
-                <button type="button"
-                        class="feed-item-button feed-item-save-button"
-                        aria-label="Save marketplace listing">
+                @if (User.IsInRole("Member"))
+                {
+                    <button type="button"
+                            class="feed-item-button feed-item-save-button @(post.IsSaved ? "saved" : "")"
+                            data-save-type="listing"
+                            data-save-id="@post.ContentId"
+                            aria-label="@(post.IsSaved
+                                ? "Remove from saved"
+                                : "Save marketplace listing")">
 
-                    <i data-lucide="heart"></i>
+                        <i data-lucide="heart"></i>
 
-                </button>
+                    </button>
+                }
+                else if (User.Identity?.IsAuthenticated != true)
+                {
+                    <button type="button"
+                            class="feed-item-button feed-item-save-button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#loginModal"
+                            aria-label="Login to save">
+
+                        <i data-lucide="heart"></i>
+
+                    </button>
+                }
 
 
                 @if (!string.IsNullOrWhiteSpace(post.DetailsUrl))
@@ -862,14 +894,32 @@
 
             <div class="feed-item-actions">
 
+            @if (User.IsInRole("Member"))
+            {
                 <button type="button"
-                        class="feed-item-button feed-item-save-button"
-                        aria-label="Save Lost and Found report">
+                        class="feed-item-button feed-item-save-button @(post.IsSaved ? "saved" : "")"
+                        data-save-type="lostfound"
+                        data-save-id="@post.ContentId"
+                        aria-label="@(post.IsSaved
+                            ? "Remove from saved"
+                            : "Save Lost and Found report")">
 
                     <i data-lucide="heart"></i>
 
-                
                 </button>
+            }
+            else if (User.Identity?.IsAuthenticated != true)
+            {
+                <button type="button"
+                        class="feed-item-button feed-item-save-button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#loginModal"
+                        aria-label="Login to save">
+
+                    <i data-lucide="heart"></i>
+
+                </button>
+            }
 
 
                 @if (!string.IsNullOrWhiteSpace(post.DetailsUrl))
@@ -991,6 +1041,182 @@
                 });
 
             });
+
+
+            /* ==========================================================
+               SAVE / FAVORITE
+               Handles:
+               - PetFeed
+               - Marketplace
+               - Lost & Found
+               ========================================================== */
+
+            document.addEventListener(
+                "click",
+                async function (event) {
+
+                    const button =
+                        event.target.closest(
+                            ".feed-item-save-button[data-save-type]"
+                        );
+
+                    if (!button) {
+                        return;
+                    }
+
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+
+                    const saveType =
+                        button.dataset.saveType;
+
+                    const itemId =
+                        button.dataset.saveId;
+
+
+                    if (!saveType || !itemId) {
+                        return;
+                    }
+
+
+                    let url = null;
+
+
+                    if (saveType === "petfeed") {
+
+                        url =
+                            "/SavedItems/TogglePetFeed";
+
+                    }
+                    else if (saveType === "listing") {
+
+                        url =
+                            "/SavedItems/ToggleListing";
+
+                    }
+                    else if (saveType === "lostfound") {
+
+                        url =
+                            "/SavedItems/ToggleLostFound";
+
+                    }
+
+
+                    if (!url) {
+                        return;
+                    }
+
+
+                    const token =
+                        document.querySelector(
+                            '.feed-save-token-form input[name="__RequestVerificationToken"]'
+                        )?.value;
+
+
+                    if (!token) {
+
+                        console.error(
+                            "Anti-forgery token was not found."
+                        );
+
+                        return;
+                    }
+
+
+                    button.disabled = true;
+
+
+                    try {
+
+                        const formData =
+                            new FormData();
+
+                        formData.append(
+                            "id",
+                            itemId
+                        );
+
+                        formData.append(
+                            "__RequestVerificationToken",
+                            token
+                        );
+
+
+                        const response =
+                            await fetch(
+                                url,
+                                {
+                                    method: "POST",
+                                    body: formData
+                                }
+                            );
+
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                "Save request failed."
+                            );
+
+                        }
+
+
+                        const result =
+                            await response.json();
+
+
+                        button.classList.toggle(
+                            "saved",
+                            result.saved
+                        );
+
+
+                        if (result.saved) {
+
+                            button.setAttribute(
+                                "aria-label",
+                                "Remove from saved"
+                            );
+
+                        }
+                        else {
+
+                            button.setAttribute(
+                                "aria-label",
+                                "Save item"
+                            );
+
+                        }
+
+
+                        if (
+                            typeof lucide !==
+                            "undefined"
+                        ) {
+
+                            lucide.createIcons();
+
+                        }
+
+                    }
+                    catch (error) {
+
+                        console.error(
+                            "Unable to save item:",
+                            error
+                        );
+
+                    }
+                    finally {
+
+                        button.disabled = false;
+
+                    }
+
+                }
+            );
 
     });
 </script>

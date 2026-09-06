@@ -25,8 +25,17 @@ namespace PETHUB.Data
         public DbSet<PetFeed> PetFeeds { get; set; }
         public DbSet<PetFeedComment> PetFeedComments { get; set; }
         public DbSet<PetFeedImage> PetFeedImages { get; set; }
-        public DbSet<SavedPetFeed> SavedPetFeeds { get; set; }
         public DbSet<PetFeedPaw> PetFeedPaws { get; set; }
+
+        // =========================================================
+        // SAVED ITEMS
+        // =========================================================
+
+        public DbSet<SavedListing> SavedListings { get; set; }
+
+        public DbSet<SavedLostFound> SavedLostFounds { get; set; }
+
+        public DbSet<SavedPetFeed> SavedPetFeeds { get; set; }
 
         // NOTIFICATIONS
         public DbSet<Notification> Notifications { get; set; }
@@ -85,22 +94,6 @@ namespace PETHUB.Data
                 .HasForeignKey(i => i.PetFeedId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-
-            // =========================================================
-            // SAVED PETFEEDS
-            // =========================================================
-
-            builder.Entity<SavedPetFeed>()
-                .HasOne(s => s.Member)
-                .WithMany()
-                .HasForeignKey(s => s.MemberId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<SavedPetFeed>()
-                .HasOne(s => s.PetFeed)
-                .WithMany(p => p.SavedByMembers)
-                .HasForeignKey(s => s.PetFeedId)
-                .OnDelete(DeleteBehavior.Cascade);
 
 
             // =========================================================
@@ -305,6 +298,111 @@ namespace PETHUB.Data
                 .WithMany(m => m.Images)
                 .HasForeignKey(mi => mi.MessageId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            // =========================================================
+            // SAVED MARKETPLACE LISTINGS
+            // =========================================================
+
+            builder.Entity<SavedListing>()
+                .HasOne(s => s.Member)
+                .WithMany()
+                .HasForeignKey(s => s.MemberId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<SavedListing>()
+                .HasOne(s => s.Listing)
+                .WithMany()
+                .HasForeignKey(s => s.ListingId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            // Prevent a Member from saving the same Listing twice.
+            builder.Entity<SavedListing>()
+                .HasIndex(s => new
+                {
+                    s.MemberId,
+                    s.ListingId
+                })
+                .IsUnique();
+
+
+            // =========================================================
+            // SAVED MARKETPLACE LISTINGS
+            // =========================================================
+
+            builder.Entity<SavedListing>()
+                .HasOne(s => s.Member)
+                .WithMany()
+                .HasForeignKey(s => s.MemberId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SavedListing>()
+                .HasOne(s => s.Listing)
+                .WithMany(l => l.SavedByMembers)
+                .HasForeignKey(s => s.ListingId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<SavedListing>()
+                .HasIndex(s => new
+                {
+                    s.MemberId,
+                    s.ListingId
+                })
+                .IsUnique();
+
+
+            // =========================================================
+            // SAVED LOST & FOUND REPORTS
+            // =========================================================
+
+            builder.Entity<SavedLostFound>()
+                .HasOne(s => s.Member)
+                .WithMany()
+                .HasForeignKey(s => s.MemberId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SavedLostFound>()
+                .HasOne(s => s.LostFound)
+                .WithMany(l => l.SavedByMembers)
+                .HasForeignKey(s => s.LostFoundId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<SavedLostFound>()
+                .HasIndex(s => new
+                {
+                    s.MemberId,
+                    s.LostFoundId
+                })
+                .IsUnique();
+
+
+            // =========================================================
+            // SAVED PETFEEDS
+            // =========================================================
+
+            builder.Entity<SavedPetFeed>()
+                .HasOne(s => s.Member)
+                .WithMany()
+                .HasForeignKey(s => s.MemberId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SavedPetFeed>()
+                .HasOne(s => s.PetFeed)
+                .WithMany(p => p.SavedByMembers)
+                .HasForeignKey(s => s.PetFeedId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SavedPetFeed>()
+                .HasIndex(s => new
+                {
+                    s.MemberId,
+                    s.PetFeedId
+                })
+                .IsUnique();
+
         }
     }
 }
