@@ -90,7 +90,9 @@
             @foreach (var post in Model.Posts)
             {
 
-                <div class="admin-my-posts-card">
+                <a asp-action="Details"
+                   asp-route-id="@post.PetFeedId"
+                   class="admin-my-posts-card">
 
 
                     @* =================================================
@@ -159,11 +161,6 @@
 
                             </span>
 
-
-
-
-
-
                         </div>
 
 
@@ -172,46 +169,10 @@
 
 
                     @* =================================================
-                       RIGHT SIDE ACTIONS
+                       RIGHT SIDE
                        ================================================= *@
 
                     <div class="admin-my-posts-actions">
-
-
-                        @* =================================================
-                           THREE-DOT MENU
-                           ================================================= *@
-
-                        <div class="dropdown">
-
-                            <button class="admin-my-posts-more-button"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    aria-label="PetFeed options">
-
-                                <i data-lucide="ellipsis"></i>
-
-                            </button>
-
-
-                            <ul class="dropdown-menu dropdown-menu-end">
-
-                                <li>
-
-                                    <a asp-action="Details"
-                                       asp-route-id="@post.PetFeedId"
-                                       class="dropdown-item">
-
-                                        View Details
-
-                                    </a>
-
-                                </li>
-
-                            </ul>
-
-                        </div>
 
 
                         @* =================================================
@@ -232,14 +193,10 @@
                             </span>
                         }
 
-
-                 
-
                     </div>
 
 
-
-                </div>
+                </a>
 
             }
 
@@ -254,7 +211,7 @@
 
     <script>
 
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
 
             if (typeof lucide !== "undefined") {
 

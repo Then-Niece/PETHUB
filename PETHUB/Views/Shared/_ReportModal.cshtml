@@ -8,39 +8,54 @@
      aria-labelledby="reportModalLabel"
      aria-hidden="true">
 
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered report-dialog">
 
-        <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-content report-content">
 
             <form asp-controller="Reports"
                   asp-action="Create"
-                  method="post">
+                  method="post"
+                  class="report-form">
 
                 @Html.AntiForgeryToken()
 
-                <div class="modal-header">
-                    <div>
-                        <h5 class="modal-title fw-bold"
+                <!-- ==================================================
+                     MODAL HEADER
+                =================================================== -->
+
+                <div class="modal-header report-header">
+
+                    <div class="report-header-content">
+
+                        <h5 class="modal-title report-title"
                             id="reportModalLabel">
                             Report Post
                         </h5>
 
-                        <small class="text-muted"
+                        <small class="report-post-title"
                                id="reportPostTitle">
                         </small>
+
                     </div>
 
                     <button type="button"
-                            class="btn-close"
+                            class="btn-close report-close"
                             data-bs-dismiss="modal"
                             aria-label="Close">
                     </button>
+
                 </div>
 
-                <div class="modal-body">
+
+                <!-- ==================================================
+                     MODAL BODY
+                =================================================== -->
+
+                <div class="modal-body report-body">
 
                     <!-- Hidden fields are populated by JavaScript from the
                          Report button that opened this modal. -->
+
                     <input type="hidden"
                            id="reportContentType"
                            name="ContentType" />
@@ -49,16 +64,21 @@
                            id="reportContentId"
                            name="ContentId" />
 
-                    <div class="mb-3">
+
+                    <!-- ==================================================
+                         REASON
+                    =================================================== -->
+
+                    <div class="report-field">
 
                         <label for="reportReason"
-                               class="form-label fw-semibold">
+                               class="report-label">
                             Reason
                         </label>
 
                         <select id="reportReason"
                                 name="Reason"
-                                class="form-select"
+                                class="report-select"
                                 required>
 
                             <option value="">
@@ -101,34 +121,44 @@
 
                     </div>
 
+
+                    <!-- ==================================================
+                         OTHER REASON
+                    =================================================== -->
                     <!-- This field is hidden until the member selects Other. -->
-                    <div class="mb-3 d-none"
+
+                    <div class="report-field d-none"
                          id="otherReasonContainer">
 
                         <label for="otherReason"
-                               class="form-label fw-semibold">
+                               class="report-label">
                             Please specify
                         </label>
 
                         <input type="text"
                                id="otherReason"
                                name="OtherReason"
-                               class="form-control"
+                               class="report-input"
                                maxlength="500"
                                placeholder="Tell us why you are reporting this post." />
 
                     </div>
 
-                    <div class="mb-3">
+
+                    <!-- ==================================================
+                         DESCRIPTION
+                    =================================================== -->
+
+                    <div class="report-description-field">
 
                         <label for="reportDescription"
-                               class="form-label fw-semibold">
+                               class="report-label">
                             Description
                         </label>
 
                         <textarea id="reportDescription"
                                   name="Description"
-                                  class="form-control"
+                                  class="report-textarea"
                                   rows="4"
                                   placeholder="Provide additional information about the report."></textarea>
 
@@ -136,17 +166,21 @@
 
                 </div>
 
-                <div class="modal-footer">
+
+                <!-- ==================================================
+                     MODAL FOOTER
+                =================================================== -->
+
+                <div class="modal-footer report-footer">
 
                     <button type="button"
-                            class="btn btn-light rounded-pill px-4"
+                            class="report-cancel"
                             data-bs-dismiss="modal">
                         Cancel
                     </button>
 
                     <button type="submit"
-                            class="btn text-white rounded-pill px-4"
-                            style="background-color:#8ACE79;">
+                            class="report-submit">
                         Submit Report
                     </button>
 
@@ -157,4 +191,5 @@
         </div>
 
     </div>
+
 </div>

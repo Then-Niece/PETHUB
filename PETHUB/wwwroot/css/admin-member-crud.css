@@ -570,10 +570,11 @@
 
 .member-password-input {
     width: 100%;
-    height: 54px;
+    height: 44px;
+    min-height: 44px;
     padding-right: 58px !important;
     border: 1px solid #d9dee7 !important;
-    border-radius: 14px !important;
+    border-radius: 10px !important;
     background: #ffffff !important;
     color: #273142;
     box-shadow: none !important;
@@ -986,3 +987,81 @@
     transition: background-color 9999s ease-in-out 0s;
 }
 
+/* ===========================================================
+   CREATE MEMBER - ADDRESS FIELDS
+=========================================================== */
+
+.create-member-address .pethub-select-trigger,
+.create-member-address .pethub-address-input {
+    width: 100%;
+    height: 44px !important;
+    min-height: 44px !important;
+    box-sizing: border-box;
+}
+
+.create-member-address .pethub-address-input {
+    padding: 0 12px !important;
+    border: 1px solid #d7dce1;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #374151;
+    font-size: .9rem;
+    line-height: 1.5;
+}
+
+.create-member-address .pethub-select-trigger {
+    padding: 0 12px !important;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.create-member-address .pethub-address-input::placeholder {
+    color: #9CA3AF;
+    opacity: 1;
+}
+
+.create-member-address .pethub-address-input:focus {
+    border-color: #84c96f;
+    box-shadow: 0 0 0 4px rgba(132, 201, 111, .13);
+    outline: none;
+}
+
+/* ===========================================================
+   CREATE MEMBER - BIRTHDATE FIELDS
+=========================================================== */
+
+.create-member-page .date-fields select,
+.create-member-page .date-fields input {
+    height: 44px !important;
+    min-height: 44px !important;
+    box-sizing: border-box;
+}
+
+/* ===========================================================
+   CREATE MEMBER - STREET ADDRESS
+=========================================================== */
+
+.create-member-address #StreetAddress {
+    width: 100%;
+    height: 44px !important;
+    min-height: 44px !important;
+    box-sizing: border-box;
+    padding: 0 12px !important;
+    border: 1px solid #d7dce1;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #374151;
+    font-size: .9rem;
+    line-height: 1.5;
+}
+
+    .create-member-address #StreetAddress::placeholder {
+        color: #9CA3AF;
+        opacity: 1;
+    }
+
+    .create-member-address #StreetAddress:focus {
+        border-color: #84c96f;
+        box-shadow: 0 0 0 4px rgba(132, 201, 111, .13);
+        outline: none;
+    }
