@@ -597,7 +597,7 @@ public class LostFoundsController : Controller
             lostFound.StreetAddress;
 
         existing.DateReported =
-            DateTime.Now;
+            PhilippineTime.Now;
 
 
         // ---------------------------------------------------------
@@ -867,10 +867,7 @@ public class LostFoundsController : Controller
     }
 
 
-    // =========================================================
     // CREATE - POST
-    // =========================================================
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     [AllowAnonymous]
@@ -879,38 +876,26 @@ public class LostFoundsController : Controller
         List<IFormFile> Images,
         IFormFile? ClientIdImage)
     {
-        // ---------------------------------------------------------
-        // REGISTERED MEMBER
-        // ---------------------------------------------------------
-
+        // Set member or validate guest details
         if (User.Identity?.IsAuthenticated == true)
         {
             lostFound.UserId = _userManager.GetUserId(User);
         }
-
-        // ---------------------------------------------------------
-        // GUEST SUBMISSION
-        // ---------------------------------------------------------
-
         else
         {
-            if (string.IsNullOrWhiteSpace(
-                lostFound.ClientName))
+            if (string.IsNullOrWhiteSpace(lostFound.ClientName))
             {
                 ModelState.AddModelError(
                     nameof(LostFound.ClientName),
                     "Name is required.");
             }
 
-
-            if (string.IsNullOrWhiteSpace(
-                lostFound.ClientContact))
+            if (string.IsNullOrWhiteSpace(lostFound.ClientContact))
             {
                 ModelState.AddModelError(
                     nameof(LostFound.ClientContact),
                     "Contact number is required.");
             }
-
 
             if (ClientIdImage == null)
             {
@@ -918,107 +903,59 @@ public class LostFoundsController : Controller
                     "ClientIdImage",
                     "A valid ID is required.");
             }
-
         }
 
-        // ---------------------------------------------------------
-        // LOST DATE VALIDATION
-        // ---------------------------------------------------------
-
+        // Validate lost date
         if (lostFound.Type == LostFoundType.Lost &&
             lostFound.LostDate.HasValue &&
-            lostFound.LostDate.Value.Date > DateTime.Today)
+            lostFound.LostDate.Value.Date > PhilippineTime.Now.Date)
         {
             ModelState.AddModelError(
                 nameof(LostFound.LostDate),
-                "The lost date cannot be in the future."
-            );
+                "The lost date cannot be in the future.");
         }
-
 
         if (!ModelState.IsValid)
         {
             return View(lostFound);
         }
 
+        // Set initial values
+        lostFound.DateReported = PhilippineTime.Now;
+        lostFound.Status = ApprovalStatus.Pending;
 
-        // ---------------------------------------------------------
-        // INITIAL REPORT VALUES
-        // ---------------------------------------------------------
-
-        lostFound.DateReported =
-            DateTime.Now;
-
-        lostFound.Status =
-            ApprovalStatus.Pending;
-
-
-        // ---------------------------------------------------------
-        // SAVE GUEST ID IMAGE
-        // ---------------------------------------------------------
-
-        if (User.Identity?.IsAuthenticated != true &&
-            ClientIdImage != null)
+        // Save guest ID image
+        if (User.Identity?.IsAuthenticated != true && ClientIdImage != null)
         {
             lostFound.ClientIdImagePath =
-                await ClientIdUploadHelper
-                    .SaveClientIdAsync(
-                        ClientIdImage);
+                await ClientIdUploadHelper.SaveClientIdAsync(ClientIdImage);
         }
 
-
-        // ---------------------------------------------------------
-        // SAVE REPORT FIRST
-        // ---------------------------------------------------------
-
-        _context.LostFounds.Add(
-            lostFound);
-
+        // Save report
+        _context.LostFounds.Add(lostFound);
         await _context.SaveChangesAsync();
-
 
         string? imagePath = null;
 
-
-        // ---------------------------------------------------------
-        // SAVE REPORT IMAGES
-        // ---------------------------------------------------------
-
-        if (Images != null &&
-            Images.Count > 0)
+        // Save report images
+        if (Images != null && Images.Count > 0)
         {
             try
             {
-                var savedImages =
-                    await ImageHelper
-                        .SaveImagesAsync(
-                            Images,
-                            lostFound.LostFoundId,
+                var savedImages = await ImageHelper.SaveImagesAsync(
+                    Images,
+                    lostFound.LostFoundId,
+                    (lostFoundId, path) => new LostFoundImage
+                    {
+                        LostFoundId = lostFoundId,
+                        ImagePath = path
+                    },
+                    "lostfound");
 
-                            (lostFoundId, path) =>
-                                new LostFoundImage
-                                {
-                                    LostFoundId =
-                                        lostFoundId,
+                _context.LostFoundImages.AddRange(savedImages);
+                await _context.SaveChangesAsync();
 
-                                    ImagePath =
-                                        path
-                                },
-
-                            "lostfound");
-
-
-                _context.LostFoundImages
-                    .AddRange(savedImages);
-
-                await _context
-                    .SaveChangesAsync();
-
-
-                imagePath =
-                    savedImages
-                        .FirstOrDefault()
-                        ?.ImagePath;
+                imagePath = savedImages.FirstOrDefault()?.ImagePath;
             }
             catch (Exception)
             {
@@ -1030,20 +967,10 @@ public class LostFoundsController : Controller
             }
         }
 
-
-        // ---------------------------------------------------------
-        // AUDIT LOG
-        // ---------------------------------------------------------
-        //
-        // Guest-created reports do not have an Identity account
-        // and therefore do not generate a Member audit record.
-        // ---------------------------------------------------------
-
+        // Log registered member activity
         if (User.Identity?.IsAuthenticated == true)
         {
-            var currentUser =
-                await _userManager
-                    .GetUserAsync(User);
+            var currentUser = await _userManager.GetUserAsync(User);
 
             if (currentUser != null)
             {
@@ -1053,56 +980,34 @@ public class LostFoundsController : Controller
             }
         }
 
-
-        // ---------------------------------------------------------
-        // NOTIFY ADMINS
-        // ---------------------------------------------------------
-
-        var admins =
-            await _userManager
-                .GetUsersInRoleAsync(
-                    "Admin");
-
+        // Notify admins
+        var admins = await _userManager.GetUsersInRoleAsync("Admin");
 
         string notificationTitle;
         string notificationMessage;
 
-
-        if (lostFound.Type ==
-            LostFoundType.Lost)
+        if (lostFound.Type == LostFoundType.Lost)
         {
-            notificationTitle =
-                "Lost Report Approval";
-
-            notificationMessage =
-                "A new Lost Report is waiting for Approval.";
+            notificationTitle = "Lost Report Approval";
+            notificationMessage = "A new Lost Report is waiting for Approval.";
         }
         else
         {
-            notificationTitle =
-                "Found Report Approval";
-
-            notificationMessage =
-                "A new Found Report is waiting for Approval.";
+            notificationTitle = "Found Report Approval";
+            notificationMessage = "A new Found Report is waiting for Approval.";
         }
-
 
         foreach (var admin in admins)
         {
-            await _notificationService
-                .CreateNotificationAsync(
-                    admin.Id,
-                    NotificationType
-                        .NewLostFoundSubmission,
-                    notificationTitle,
-                    notificationMessage,
-                    imagePath,
-                    "/LostFounds/Details/" +
-                        lostFound.LostFoundId,
-                    lostFoundId:
-                        lostFound.LostFoundId);
+            await _notificationService.CreateNotificationAsync(
+                admin.Id,
+                NotificationType.NewLostFoundSubmission,
+                notificationTitle,
+                notificationMessage,
+                imagePath,
+                "/LostFounds/Details/" + lostFound.LostFoundId,
+                lostFoundId: lostFound.LostFoundId);
         }
-
 
         TempData["SuccessMessage"] =
             "Your lost and found report was submitted successfully and is now waiting for admin approval.";

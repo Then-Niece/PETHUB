@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Models;
+using PETHUB.Helpers;
 using PETHUB.Services;
 using PETHUB.ViewModels;
 
@@ -167,7 +168,7 @@ namespace PETHUB.Controllers
                 OtherReason = model.OtherReason,
                 Description = model.Description,
                 Status = UserReportStatus.Pending,
-                DateCreated = DateTime.UtcNow
+                DateCreated = PhilippineTime.Now
             };
 
 
@@ -1049,7 +1050,7 @@ namespace PETHUB.Controllers
             appeal.AdminActionReason = adminActionReason;
 
             // Records when the Admin made the decision.
-            appeal.DateResolved = DateTime.Now;
+            appeal.DateResolved = PhilippineTime.Now;
 
 
             // Saves the Appeal and the associated post restoration together.
@@ -1151,7 +1152,7 @@ namespace PETHUB.Controllers
             appeal.AdminActionReason = adminActionReason;
 
             // Records when the decision was made.
-            appeal.DateResolved = DateTime.Now;
+            appeal.DateResolved = PhilippineTime.Now;
 
 
             // IMPORTANT:

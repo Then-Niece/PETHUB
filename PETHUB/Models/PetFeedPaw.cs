@@ -1,4 +1,6 @@
-﻿namespace PETHUB.Models
+﻿using PETHUB.Helpers;
+
+namespace PETHUB.Models
 {
     public class PetFeedPaw
     {
@@ -15,6 +17,6 @@
         public ApplicationUser Member { get; set; }
 
 
-        public DateTime DatePawed { get; set; } = DateTime.Now;
+        public DateTime DatePawed { get; set; } = PhilippineTime.Now;
     }
 }

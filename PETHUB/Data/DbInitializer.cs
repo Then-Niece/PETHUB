@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PETHUB.Models;
+using PETHUB.Helpers;
 
 
 // This class is responsible for seeding the database with an initial admin user and roles.
@@ -36,7 +37,7 @@ namespace PETHUB.Data
                     LastName = "Authorize",
                     ContactNumber = "09123456789",
                     Status = UserStatus.Active,
-                    CreatedAt = DateTime.UtcNow,
+                    CreatedAt = PhilippineTime.Now,
                     EmailConfirmed = true
                 };
 

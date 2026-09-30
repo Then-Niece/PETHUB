@@ -3919,3 +3919,93 @@ html.dark-mode .lost-found-pet-badge {
     html.dark-mode .lost-found-pet-badge svg {
         color: #aab5ad;
     }
+
+
+/* ==========================================================
+   LOST & FOUND EMPTY STATE
+========================================================== */
+
+.lost-found-card-grid > .lost-found-empty-state {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: 620px;
+    min-height: 280px;
+    margin: 20px auto 0;
+    padding: 45px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid #E4E9E6;
+    border-radius: 20px;
+    background: #FFFFFF;
+    box-shadow: 0 4px 16px rgba(31, 41, 55, .05);
+    box-sizing: border-box;
+}
+
+.lost-found-empty-icon {
+    width: 58px;
+    height: 58px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #EFF9EC;
+    color: #79C86C;
+}
+
+    .lost-found-empty-icon svg {
+        width: 27px;
+        height: 27px;
+    }
+
+.lost-found-empty-state h3 {
+    margin: 0 0 8px;
+    color: #26384F;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.lost-found-empty-state p {
+    max-width: 390px;
+    margin: 0;
+    color: #718096;
+    font-size: .88rem;
+    line-height: 1.6;
+}
+
+
+/* DARK MODE */
+
+html.dark-mode .lost-found-empty-state {
+    background: #181C19;
+    border-color: #303630;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .18);
+}
+
+html.dark-mode .lost-found-empty-icon {
+    background: #223020;
+    color: #8ACE79;
+}
+
+html.dark-mode .lost-found-empty-state h3 {
+    color: #EDF2EE;
+}
+
+html.dark-mode .lost-found-empty-state p {
+    color: #9EA8A1;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 576px) {
+
+    .lost-found-card-grid > .lost-found-empty-state {
+        min-height: 230px;
+        margin-top: 8px;
+        padding: 35px 20px;
+    }
+}

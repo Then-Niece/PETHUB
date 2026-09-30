@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PETHUB.Helpers;
 
 namespace PETHUB.Models
 {
@@ -16,7 +17,7 @@ namespace PETHUB.Models
         public int ConversationId { get; set; }
 
         // When the conversation was created
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = PhilippineTime.Now;
 
         [Required]
         public ConversationType Type { get; set; }

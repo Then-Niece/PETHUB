@@ -268,10 +268,7 @@ namespace PETHUB.Controllers
             return View();
         }
 
-        // =========================================================
         // CREATE MEMBER - POST
-        // =========================================================
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MemberViewModel model)
@@ -281,41 +278,27 @@ namespace PETHUB.Controllers
                 return View(model);
             }
 
-            // =====================================================
-            // CREATE MEMBER OBJECT
-            // =====================================================
-
+            // Create member
             var member = new ApplicationUser
-                {
-                    UserName = model.UserName,
-                    Email = model.Email,
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                ContactNumber = model.ContactNumber,
+                Province = model.Province,
+                City = model.City,
+                Barangay = model.Barangay,
+                StreetAddress = model.StreetAddress,
+                Gender = model.Gender,
+                Birthdate = model.Birthdate,
+                Status = UserStatus.Pending
+            };
 
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    ContactNumber = model.ContactNumber,
-
-                    Province = model.Province,
-                    City = model.City,
-                    Barangay = model.Barangay,
-                    StreetAddress = model.StreetAddress,
-
-                    Gender = model.Gender,
-                    Birthdate = model.Birthdate,
-
-                    Status = UserStatus.Pending
-                };
-
-
-            // =====================================================
-            // CREATE IDENTITY ACCOUNT
-            // =====================================================
-
-            var result =
-                await _userManager.CreateAsync(
-                    member,
-                    model.Password
-                );
-
+            // Create Identity account
+            var result = await _userManager.CreateAsync(
+                member,
+                model.Password);
 
             if (!result.Succeeded)
             {
@@ -323,24 +306,14 @@ namespace PETHUB.Controllers
                 {
                     ModelState.AddModelError(
                         string.Empty,
-                        error.Description
-                    );
+                        error.Description);
                 }
 
                 return View(model);
             }
 
-
-            // =====================================================
-            // ASSIGN MEMBER ROLE
-            // =====================================================
-
-            var roleResult =
-                await _userManager.AddToRoleAsync(
-                    member,
-                    "Member"
-                );
-
+            // Assign member role
+            var roleResult = await _userManager.AddToRoleAsync(member, "Member");
 
             if (!roleResult.Succeeded)
             {
@@ -350,28 +323,19 @@ namespace PETHUB.Controllers
                 {
                     ModelState.AddModelError(
                         string.Empty,
-                        error.Description
-                    );
+                        error.Description);
                 }
 
                 return View(model);
             }
 
-
-            // =====================================================
-            // SAVE VALID ID
-            // =====================================================
-
+            // Save valid ID
             if (model.IdPhoto != null)
             {
                 member.IdPhotoPath =
-                    await IdPhotoUploadHelper
-                        .SaveIdPhotoAsync(model.IdPhoto);
+                    await IdPhotoUploadHelper.SaveIdPhotoAsync(model.IdPhoto);
 
-
-                var updateResult =
-                    await _userManager.UpdateAsync(member);
-
+                var updateResult = await _userManager.UpdateAsync(member);
 
                 if (!updateResult.Succeeded)
                 {
@@ -379,53 +343,37 @@ namespace PETHUB.Controllers
                     {
                         ModelState.AddModelError(
                             string.Empty,
-                            error.Description
-                        );
+                            error.Description);
                     }
 
                     return View(model);
                 }
             }
 
-
-            // =====================================================
-            // GENERATE EMAIL VERIFICATION TOKEN
-            // =====================================================
-
+            // Generate email verification
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(member);
 
+            var confirmationLink = Url.Action(
+                "ConfirmEmail",
+                "UserAccount",
+                new
+                {
+                    userId = member.Id,
+                    token
+                },
+                Request.Scheme);
 
-            var confirmationLink =
-                Url.Action(
-                    "ConfirmEmail",
-                    "UserAccount",
-                    new
-                    {
-                        userId = member.Id,
-                        token
-                    },
-                    Request.Scheme
-                );
-
-
-            // =====================================================
-            // SEND VERIFICATION EMAIL
-            // =====================================================
-
+            // Send verification email
             try
             {
-                var body =
-                    EmailTemplateHelper
-                        .AdminCreatedMemberVerification(
-                            member.FirstName,
-                            confirmationLink!
-                        );
+                var body = EmailTemplateHelper.AdminCreatedMemberVerification(
+                    member.FirstName,
+                    confirmationLink!);
 
                 await _emailSender.SendEmailAsync(
                     member.Email!,
                     "Your PETHUB Member Account Has Been Created",
-                    body
-                );
+                    body);
 
                 TempData["SuccessMessage"] =
                     "Member account created. A verification email has been sent.";
@@ -436,9 +384,7 @@ namespace PETHUB.Controllers
                     "The member account was created, but the verification email could not be sent.";
             }
 
-            return RedirectToAction(
-                nameof(Index)
-            );
+            return RedirectToAction(nameof(Index));
         }
 
 

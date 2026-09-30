@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PETHUB.Helpers;
 
 namespace PETHUB.Models
 {
@@ -49,7 +50,7 @@ namespace PETHUB.Models
 
 
         // Records when the Member submitted the appeal.
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateCreated { get; set; } = PhilippineTime.Now;
 
 
         // Records when an Admin makes the final decision.

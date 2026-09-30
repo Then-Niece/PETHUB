@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
+using PETHUB.Helpers;
 using PETHUB.Models;
 
 namespace PETHUB.Services
@@ -35,7 +36,7 @@ namespace PETHUB.Services
                 ListingId = listingId,
                 LostFoundId = lostFoundId,
                 PetFeedId = petFeedId,
-                CreatedAt = DateTime.Now
+                CreatedAt = PhilippineTime.Now
             };
 
             _context.Notifications.Add(notification);
@@ -149,7 +150,7 @@ namespace PETHUB.Services
                         IsSeen = false,
 
                         // Record when the aggregate notification was created/updated.
-                        CreatedAt = DateTime.Now
+                        CreatedAt = PhilippineTime.Now
                     };
 
                     // Add the new notification to EF Core's change tracker.
@@ -168,7 +169,7 @@ namespace PETHUB.Services
 
                     // Refresh the timestamp so the updated notification moves to the
                     // current position in the existing notification list.
-                    notification.CreatedAt = DateTime.Now;
+                    notification.CreatedAt = PhilippineTime.Now;
                 }
             }
 

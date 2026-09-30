@@ -1234,7 +1234,7 @@ namespace PETHUB.Services
                         MessageType.Text,
 
                     CreatedAt =
-                        DateTime.UtcNow
+                        PhilippineTime.Now
                 };
 
 

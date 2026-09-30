@@ -1,4 +1,6 @@
-﻿namespace PETHUB.Models
+﻿using PETHUB.Helpers;
+
+namespace PETHUB.Models
 {
     public class AuditLog
     {
@@ -26,6 +28,6 @@
 
         // Stores the exact date and time when the action occurred.
         // UTC is used so the database has one consistent time standard.
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = PhilippineTime.Now;
     }
 }

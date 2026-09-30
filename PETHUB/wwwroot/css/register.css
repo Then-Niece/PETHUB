@@ -857,3 +857,76 @@
     box-shadow: 0 0 0 1000px #ffffff inset !important;
     transition: background-color 9999s ease-in-out 0s;
 }
+
+
+.password-requirements {
+    margin-top: 0.25rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid #dce7dc;
+    border-radius: 14px;
+    background: #f8fbf7;
+}
+
+.password-requirements-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+}
+
+.password-requirements-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eaf6e7;
+    flex-shrink: 0;
+}
+
+    .password-requirements-icon svg {
+        width: 18px;
+        height: 18px;
+        stroke: #6fc35f;
+    }
+
+.password-requirements-header strong {
+    display: block;
+    font-size: 0.9rem;
+    color: #1f2937;
+    margin-bottom: 0.1rem;
+}
+
+.password-requirements-header span {
+    display: block;
+    font-size: 0.78rem;
+    color: #7b8794;
+}
+
+.password-requirements-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.55rem 1rem;
+}
+
+.password-rule {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: #5f6b76;
+}
+
+    .password-rule svg {
+        width: 15px;
+        height: 15px;
+        stroke: #8bcf7b;
+        flex-shrink: 0;
+    }
+
+@media (max-width: 600px) {
+    .password-requirements-grid {
+        grid-template-columns: 1fr;
+    }
+}

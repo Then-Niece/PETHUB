@@ -139,47 +139,37 @@ public class PetFeedsController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(PetFeedViewModel model)
     {
-        // Return to the form when validation fails.
+        // Validate form
         if (!ModelState.IsValid)
         {
             return View(model);
         }
 
-        // Get the administrator creating the PetFeed.
         var adminId = _userManager.GetUserId(User);
 
-        // An authenticated admin must have an Identity ID.
         if (adminId == null)
         {
             return Unauthorized();
         }
 
-        // Create the new PetFeed entity using the submitted form data.
+        // Create PetFeed
         var petFeed = new PetFeed
         {
             Title = model.Title,
             Content = model.Content,
             Type = model.Type,
-            DateCreated = DateTime.Now,
+            DateCreated = PhilippineTime.Now,
             AdminId = adminId
         };
 
-        // Add the new PetFeed to EF Core.
         _context.PetFeeds.Add(petFeed);
-
-        // Save first so PetFeedId becomes available for its images.
         await _context.SaveChangesAsync();
 
-
-        // Store the first uploaded image path for notification purposes.
         string? imagePath = null;
 
-        // Save uploaded images when the administrator provided any files.
-        if (model.Images != null &&
-            model.Images.Any(i => i.Length > 0))
+        // Save uploaded images
+        if (model.Images != null && model.Images.Any(i => i.Length > 0))
         {
-            // ImageHelper handles saving the physical files and
-            // creates PetFeedImage entities using the supplied factory.
             var savedImages = await ImageHelper.SaveImagesAsync(
                 model.Images,
                 petFeed.PetFeedId,
@@ -188,52 +178,34 @@ public class PetFeedsController : Controller
                     PetFeedId = id,
                     ImagePath = path
                 },
-                "petfeedimages"
-            );
+                "petfeedimages");
 
-            // Add all saved image records to the database.
             _context.PetFeedImages.AddRange(savedImages);
-
             await _context.SaveChangesAsync();
 
-            // Use the first image for the member notification.
-            imagePath = savedImages
-                .FirstOrDefault()
-                ?.ImagePath;
+            imagePath = savedImages.FirstOrDefault()?.ImagePath;
         }
 
-
-        // Retrieve all members so each member can receive the
-        // existing new Announcement / Pet Tip notification.
+        // Notify members
         var members = await _userManager.GetUsersInRoleAsync("Member");
-
 
         foreach (var member in members)
         {
-            // Create the existing notification for the newly created PetFeed.
             await _notificationService.CreateNotificationAsync(
                 member.Id,
-
                 petFeed.Type == PetFeedType.Announcement
                     ? NotificationType.NewAnnouncement
                     : NotificationType.NewPetTip,
-
                 petFeed.Type == PetFeedType.Announcement
                     ? "New Announcement"
                     : "New Pet Tip",
-
                 petFeed.Type == PetFeedType.Announcement
                     ? "A new announcement has been posted."
                     : "A new pet care tip has been posted.",
-
                 imagePath,
-
                 $"/PetFeeds/Feed?postId={petFeed.PetFeedId}#post-{petFeed.PetFeedId}",
-
-                petFeedId: petFeed.PetFeedId
-            );
+                petFeedId: petFeed.PetFeedId);
         }
-
 
         return RedirectToAction(nameof(Index));
     }
@@ -520,14 +492,14 @@ public class PetFeedsController : Controller
         // Retrieve announcements created within the last 24 hours.
         // Announcements are public administrator content, so anonymous visitors
         // can also see the announcement carousel.
-        var announcementCutoff = DateTime.Now.AddDays(-1);
+        var announcementCutoff = PhilippineTime.Now.AddDays(-1);
 
         var announcements = await _context.PetFeeds
             .AsNoTracking()
             .Where(p =>
                 p.Type == PetFeedType.Announcement &&
                 p.DateCreated >= announcementCutoff &&
-                p.DateCreated <= DateTime.Now)
+                p.DateCreated <= PhilippineTime.Now)
             .Include(p => p.Images)
             .OrderByDescending(p => p.DateCreated)
             .ToListAsync();
@@ -889,7 +861,7 @@ public class PetFeedsController : Controller
             {
                 PetFeedId = id,
                 MemberId = userId,
-                DatePawed = DateTime.Now
+                DatePawed = PhilippineTime.Now
             };
 
             _context.PetFeedPaws.Add(paw);
@@ -1024,7 +996,7 @@ public class PetFeedsController : Controller
             PetFeedId = id,
             MemberId = userId,
             Content = content,
-            DatePosted = DateTime.Now
+            DatePosted = PhilippineTime.Now
         };
 
         // Add the comment to EF Core.
@@ -1323,7 +1295,9 @@ public class PetFeedsController : Controller
                 l.Status == ListApprovalStatus.Approved &&
                 l.ListStatus == ListingStatus.Pending &&
                 l.City == city &&
-                l.MemberId != userId)
+                l.MemberId != userId &&
+                l.Member != null &&
+                l.Member.Status == UserStatus.Active)
             .AsQueryable();
 
 
@@ -1408,9 +1382,15 @@ public class PetFeedsController : Controller
                 l.Status == ApprovalStatus.Approved &&
                 l.RStatus == ReportStatus.Active &&
                 l.City == city &&
-                l.UserId != userId)
+                l.UserId != userId &&
+                (
+                    l.UserId == null ||
+                    (
+                        l.User != null &&
+                        l.User.Status == UserStatus.Active
+                    )
+                ))
             .AsQueryable();
-
 
         if (!string.IsNullOrWhiteSpace(search))
         {

@@ -454,66 +454,40 @@ namespace PETHUB.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Member")]
-        public async Task<IActionResult> Create(
-            Listing listing,
-            List<IFormFile> ImageFiles)
+        public async Task<IActionResult> Create(Listing listing, 
+        List<IFormFile> ImageFiles)
         {
             if (!ModelState.IsValid)
-            {
                 return View(listing);
-            }
 
-
-            // -----------------------------------------------------
-            // PREPARE AND SAVE LISTING
-            // -----------------------------------------------------
-
-            listing.DatePosted =
-                DateTime.Now;
-
-            listing.MemberId =
-                _userManager.GetUserId(User);
+            // Save listing
+            listing.DatePosted = PhilippineTime.Now;
+            listing.MemberId = _userManager.GetUserId(User);
 
             _context.Listings.Add(listing);
-
             await _context.SaveChangesAsync();
-
 
             string? imagePath = null;
 
-
-            // -----------------------------------------------------
-            // SAVE IMAGES
-            // -----------------------------------------------------
-
-            if (ImageFiles != null &&
-                ImageFiles.Count > 0)
+            // Save uploaded images
+            if (ImageFiles != null && ImageFiles.Count > 0)
             {
                 try
                 {
-                    var savedImages =
-                        await ImageHelper.SaveImagesAsync(
-                            ImageFiles,
-                            listing.ListingId,
-                            (id, path) =>
-                                new ListingImage
-                                {
-                                    ListingId = id,
-                                    ImagePath = path
-                                },
-                            "marketplace");
+                    var savedImages = await ImageHelper.SaveImagesAsync(
+                        ImageFiles,
+                        listing.ListingId,
+                        (id, path) => new ListingImage
+                        {
+                            ListingId = id,
+                            ImagePath = path
+                        },
+                        "marketplace");
 
-
-                    _context.ListingImages
-                        .AddRange(savedImages);
-
+                    _context.ListingImages.AddRange(savedImages);
                     await _context.SaveChangesAsync();
 
-
-                    imagePath =
-                        savedImages
-                            .FirstOrDefault()
-                            ?.ImagePath;
+                    imagePath = savedImages.FirstOrDefault()?.ImagePath;
                 }
                 catch (Exception)
                 {
@@ -525,18 +499,8 @@ namespace PETHUB.Controllers
                 }
             }
 
-
-            // -----------------------------------------------------
-            // AUDIT LOG
-            // -----------------------------------------------------
-            //
-            // Log only after the listing and its images have
-            // successfully completed the normal save process.
-            // -----------------------------------------------------
-
-            var currentUser =
-                await _userManager
-                    .GetUserAsync(User);
+            // Add audit log
+            var currentUser = await _userManager.GetUserAsync(User);
 
             if (currentUser != null)
             {
@@ -545,62 +509,39 @@ namespace PETHUB.Controllers
                     "Created Post");
             }
 
-
-            // -----------------------------------------------------
-            // NOTIFY ADMINISTRATORS
-            // -----------------------------------------------------
-
-            var admins =
-                await _userManager
-                    .GetUsersInRoleAsync("Admin");
-
+            // Notify administrators
+            var admins = await _userManager.GetUsersInRoleAsync("Admin");
 
             string notificationTitle;
             string notificationMessage;
 
-
-            if (listing.Type ==
-                ListType.For_Adoption)
+            if (listing.Type == ListType.For_Adoption)
             {
-                notificationTitle =
-                    "Adoption Request";
-
-                notificationMessage =
-                    "A new Adoption Request is waiting for Approval.";
+                notificationTitle = "Adoption Request";
+                notificationMessage = "A new Adoption Request is waiting for Approval.";
             }
             else
             {
-                notificationTitle =
-                    "Marketplace Listing Request";
-
-                notificationMessage =
-                    "A new Marketplace Listing Request is waiting for Approval.";
+                notificationTitle = "Marketplace Listing Request";
+                notificationMessage = "A new Marketplace Listing Request is waiting for Approval.";
             }
-
 
             foreach (var admin in admins)
             {
-                await _notificationService
-                    .CreateNotificationAsync(
-                        admin.Id,
-                        NotificationType
-                            .NewMarketplaceSubmission,
-                        notificationTitle,
-                        notificationMessage,
-                        imagePath,
-                        "/Listings/Details/" +
-                            listing.ListingId,
-                        listingId:
-                            listing.ListingId);
+                await _notificationService.CreateNotificationAsync(
+                    admin.Id,
+                    NotificationType.NewMarketplaceSubmission,
+                    notificationTitle,
+                    notificationMessage,
+                    imagePath,
+                    "/Listings/Details/" + listing.ListingId,
+                    listingId: listing.ListingId);
             }
-
 
             TempData["SuccessMessage"] =
                 "Your Marketplace listing has been submitted for approval.";
 
-
-            return RedirectToAction(
-                nameof(Marketplace));
+            return RedirectToAction(nameof(Marketplace));
         }
 
 
@@ -772,7 +713,7 @@ namespace PETHUB.Controllers
                 listing.Type;
 
             existingListing.DatePosted =
-                DateTime.Now;
+                PhilippineTime.Now;
 
 
             // -----------------------------------------------------

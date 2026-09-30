@@ -39,7 +39,10 @@
 
 <body>
 
-    @await Component.InvokeAsync("Navigation")
+    @if (!(ViewData["HideNavbar"] as bool? ?? false))
+    {
+        @await Component.InvokeAsync("Navigation")
+    }
 
     <main class="public-main">
         @RenderBody()
@@ -52,6 +55,8 @@
 
     <partial name="_SystemModal" />
 
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 

@@ -48,7 +48,6 @@ namespace PETHUB.Controllers
             _auditLogService = auditLogService;
         }
 
-
         // =========================================================
         // REGISTER
         // =========================================================
@@ -96,10 +95,6 @@ namespace PETHUB.Controllers
             // =====================================================
             // CREATE USER OBJECT
             // =====================================================
-            //
-            // New accounts remain Pending until their email
-            // address has been successfully verified.
-            // =====================================================
 
             var user = new ApplicationUser
             {
@@ -121,12 +116,12 @@ namespace PETHUB.Controllers
 
                 Status = UserStatus.Pending,
 
-                AcceptedTermsDate = DateTime.UtcNow
+                AcceptedTermsDate = PhilippineTime.Now
             };
 
 
             // =====================================================
-            // CREATE IDENTITY ACCOUNT FIRST
+            // CREATE IDENTITY ACCOUNT
             // =====================================================
 
             var result =
@@ -160,8 +155,6 @@ namespace PETHUB.Controllers
 
             if (!roleResult.Succeeded)
             {
-                // Account creation is incomplete without the role,
-                // so remove the newly created Identity account.
                 await _userManager.DeleteAsync(user);
 
                 foreach (var error in roleResult.Errors)
@@ -177,10 +170,6 @@ namespace PETHUB.Controllers
 
             // =====================================================
             // SAVE ID PHOTO
-            // =====================================================
-            //
-            // Save the uploaded ID only after the Identity account
-            // and Member role have both been created successfully.
             // =====================================================
 
             if (model.IdPhoto != null)
@@ -245,7 +234,6 @@ namespace PETHUB.Controllers
                 body);
 
 
-            // Do not automatically sign in the new Member.
             return RedirectToAction(
                 nameof(EmailConfirmationSent));
         }

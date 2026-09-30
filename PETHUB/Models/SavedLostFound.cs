@@ -1,4 +1,6 @@
-﻿namespace PETHUB.Models
+﻿using PETHUB.Helpers;
+
+namespace PETHUB.Models
 {
     public class SavedLostFound
     {
@@ -27,6 +29,6 @@
         // DATE SAVED
         // =========================================================
 
-        public DateTime DateSaved { get; set; } = DateTime.Now;
+        public DateTime DateSaved { get; set; } = PhilippineTime.Now;
     }
 }

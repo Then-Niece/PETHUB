@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Models;
+using PETHUB.Helpers;
 using PETHUB.Services;
 using PETHUB.ViewModels;
 
@@ -290,8 +291,6 @@ namespace PETHUB.Controllers
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AdminInvitationViewModel model)
@@ -301,20 +300,13 @@ namespace PETHUB.Controllers
                 return View(model);
             }
 
-            // Identity already checks the email
-
-            // ==========================================
-            // CREATE PENDING USER
-            // ==========================================
-
+            // Create pending admin user
             var user = new ApplicationUser
             {
                 UserName = model.Email,
                 Email = model.Email,
-
                 Status = UserStatus.Pending,
-
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = PhilippineTime.Now
             };
 
             var result = await _userManager.CreateAsync(user);
@@ -323,80 +315,52 @@ namespace PETHUB.Controllers
             {
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError("", error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
 
                 return View(model);
             }
 
-
-            // ==========================================
-            // ASSIGN ADMIN ROLE
-            // ==========================================
-
+            // Assign admin role
             var roleResult = await _userManager.AddToRoleAsync(user, "Admin");
 
             if (!roleResult.Succeeded)
             {
                 foreach (var error in roleResult.Errors)
                 {
-                    ModelState.AddModelError("", error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
 
-                // Remove the pending user if role assignment fails
+                // Remove user if role assignment fails
                 await _userManager.DeleteAsync(user);
 
                 return View(model);
             }
 
-
-            // ==========================================
-            // GENERATE INVITATION TOKEN
-            // ==========================================
-
+            // Generate invitation token
             var token = await _userManager.GenerateUserTokenAsync(
                 user,
                 "PETHubAdminInvitation",
                 "AdminInvitation");
 
-
-
-            // ==========================================
-            // CREATE INVITATION LINK
-            // ==========================================
-
+            // Create invitation link
             var invitationLink = Url.Action(
                 "AdminSetup",
                 "UserAccount",
                 new
                 {
                     userId = user.Id,
-                    token = token
+                    token
                 },
                 Request.Scheme);
 
-
-            // ==========================================
-            // CREATE EMAIL
-            // ==========================================
-
-            var emailBody = Helpers.EmailTemplateHelper.AdminInvitation(
-                invitationLink);
-
-
-            // ==========================================
-            // SEND EMAIL
-            // ==========================================
+            // Send invitation email
+            var emailBody = Helpers.EmailTemplateHelper.AdminInvitation(invitationLink);
 
             await _emailSender.SendEmailAsync(
-                user.Email,
+                user.Email!,
                 "PETHUB Administrator Invitation",
                 emailBody);
-
-
-            // ==========================================
-            // DONE
-            // ==========================================
 
             TempData["SuccessMessage"] =
                 "Administrator invitation sent successfully.";

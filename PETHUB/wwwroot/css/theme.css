@@ -6007,3 +6007,857 @@ html.dark-mode .lostfound-save-btn {
     border-color: #8ACE79 !important;
     color: #FFFFFF !important;
 }
+
+
+/* ==========================================================
+   ANNOUNCEMENT - DARK MODE
+========================================================== */
+
+html.dark-mode .announcement-card {
+    background: #181C19;
+    border-color: #3A5638;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, .22);
+}
+
+
+/* Header */
+
+html.dark-mode .announcement-author-name {
+    color: #EDF2EE;
+}
+
+html.dark-mode .announcement-meta {
+    color: #929D96;
+}
+
+html.dark-mode .announcement-verified {
+    color: #8ACE79;
+}
+
+
+/* Content */
+
+html.dark-mode .announcement-title {
+    color: #F0F4F1;
+}
+
+html.dark-mode .announcement-description {
+    color: #AAB4AD;
+}
+
+html.dark-mode .announcement-see-more {
+    color: #8ACE79;
+}
+
+    html.dark-mode .announcement-see-more:hover {
+        color: #9EDB8F;
+    }
+
+
+/* Media area */
+
+html.dark-mode .announcement-media {
+    background: #141815;
+}
+
+html.dark-mode .announcement-no-image {
+    background: #171C18;
+    border-color: #343C35;
+}
+
+
+/* No-image placeholder */
+
+html.dark-mode .announcement-placeholder {
+    color: #939E96;
+}
+
+    html.dark-mode .announcement-placeholder svg {
+        color: #7F8A82;
+    }
+
+
+/* Announcement navigation arrows */
+
+html.dark-mode .announcement-control-icon,
+html.dark-mode .announcement-photo-control-icon {
+    background: #232824;
+    border-color: #3A423B;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .25);
+}
+
+    html.dark-mode .announcement-control-icon svg,
+    html.dark-mode .announcement-photo-control-icon svg {
+        color: #E6ECE7;
+    }
+
+html.dark-mode
+.announcement-carousel-control:hover
+.announcement-control-icon,
+html.dark-mode
+.announcement-photo-control:hover
+.announcement-photo-control-icon {
+    background: #29302A;
+    border-color: #52704D;
+}
+
+
+/* Photo counter */
+
+html.dark-mode .announcement-photo-counter {
+    background: rgba(20, 24, 21, .88);
+    color: #EDF2EE;
+}
+
+
+/* Carousel indicators */
+
+html.dark-mode .announcement-indicators button {
+    background: #3B463C;
+}
+
+    html.dark-mode .announcement-indicators button.active {
+        background: #8ACE79;
+    }
+
+
+
+
+/* ==========================================================
+   MEMBER MY POSTS + PROFILE
+   DARK MODE
+   ========================================================== */
+
+
+/* ==========================================================
+   MY POSTS - PROFILE SUMMARY CARD
+   ========================================================== */
+
+html.dark-mode .my-posts-profile-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .25) !important;
+}
+
+html.dark-mode .my-posts-profile-picture {
+    border-color: var(--dark-surface) !important;
+}
+
+html.dark-mode .my-posts-profile-details h3 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .my-posts-profile-details p {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .my-posts-profile-menu {
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .my-posts-profile-menu:hover {
+        background: var(--dark-surface-3) !important;
+        color: #ffffff !important;
+    }
+
+html.dark-mode .my-posts-profile-dropdown .dropdown-menu {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+html.dark-mode .my-posts-profile-dropdown .dropdown-item {
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .my-posts-profile-dropdown .dropdown-item:hover {
+        background: var(--dark-surface-3) !important;
+        color: #8ACE79 !important;
+    }
+
+
+/* ==========================================================
+   MY POSTS - ACTIVITY SUMMARY
+   ========================================================== */
+
+html.dark-mode .my-posts-activity-summary {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .my-posts-stat {
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .my-posts-stat strong {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .my-posts-stat span {
+        color: var(--dark-text-3) !important;
+    }
+
+
+/* ==========================================================
+   MY POSTS - HEADING
+   ========================================================== */
+
+html.dark-mode .my-posts-heading h2 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .my-posts-heading p {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   MY POSTS - TOOLBAR
+   ========================================================== */
+
+html.dark-mode .my-posts-toolbar {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .25) !important;
+}
+
+html.dark-mode .my-post-filter-label {
+    color: var(--dark-text-2) !important;
+}
+
+html.dark-mode .my-posts-count {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   MY POSTS - FILTER BUTTON
+   ========================================================== */
+
+html.dark-mode .my-post-filter-button {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .my-post-filter-button:hover {
+        background: var(--dark-surface-3) !important;
+        border-color: #505050 !important;
+    }
+
+    html.dark-mode .my-post-filter-button svg {
+        color: var(--dark-text-3) !important;
+    }
+
+html.dark-mode .my-post-filter.open .my-post-filter-button {
+    border-color: #8ACE79 !important;
+    box-shadow: 0 0 0 2px rgba(138, 206, 121, .14) !important;
+}
+
+
+/* ==========================================================
+   MY POSTS - FILTER MENU
+   ========================================================== */
+
+html.dark-mode .my-post-filter-menu {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .35) !important;
+}
+
+html.dark-mode .my-post-filter-option {
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .my-post-filter-option:hover {
+        background: var(--dark-surface-3) !important;
+        color: #8ACE79 !important;
+    }
+
+    html.dark-mode .my-post-filter-option.selected {
+        background: var(--dark-green-surface) !important;
+        color: #8ACE79 !important;
+    }
+
+        html.dark-mode .my-post-filter-option.selected:hover {
+            background: #293827 !important;
+            color: #8ACE79 !important;
+        }
+
+
+/* ==========================================================
+   MY POSTS - CARDS
+   ========================================================== */
+
+html.dark-mode .my-post-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .22) !important;
+}
+
+    html.dark-mode .my-post-card:hover {
+        background: #202020 !important;
+        border-color: var(--dark-border-strong) !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, .3) !important;
+    }
+
+html.dark-mode .my-post-card-content h3 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .my-post-card:hover
+.my-post-card-content h3 {
+    color: #8ACE79 !important;
+}
+
+html.dark-mode .my-post-card-type {
+    color: var(--dark-text-2) !important;
+}
+
+html.dark-mode .my-post-card-date {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   MY POSTS - STATUS PILLS
+   Preserve status meaning
+   ========================================================== */
+
+html.dark-mode .my-post-status-pending {
+    background: var(--dark-yellow-surface) !important;
+    color: #E3B553 !important;
+}
+
+    html.dark-mode .my-post-status-pending::before {
+        background: #E3A000 !important;
+    }
+
+html.dark-mode .my-post-status-approved {
+    background: var(--dark-green-surface) !important;
+    color: #8ACE79 !important;
+}
+
+    html.dark-mode .my-post-status-approved::before {
+        background: #8ACE79 !important;
+    }
+
+html.dark-mode .my-post-status-rejected {
+    background: var(--dark-red-surface) !important;
+    color: #E47878 !important;
+}
+
+    html.dark-mode .my-post-status-rejected::before {
+        background: #E47878 !important;
+    }
+
+
+/* ==========================================================
+   VIEW PROFILE + EDIT PROFILE
+   COMMON CARDS
+   ========================================================== */
+
+html.dark-mode .profile-member-card,
+html.dark-mode .profile-activity-card,
+html.dark-mode .profile-information-card,
+html.dark-mode .profile-actions-card {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .22) !important;
+}
+
+
+/* ==========================================================
+   PROFILE COVER
+   PetHub green stays green
+   ========================================================== */
+
+html.dark-mode .profile-card-cover {
+    background: #8ACE79 !important;
+}
+
+
+/* ==========================================================
+   PROFILE PHOTO
+   ========================================================== */
+
+html.dark-mode .profile-picture {
+    border-color: var(--dark-surface) !important;
+}
+
+
+/* ==========================================================
+   PROFILE MEMBER TEXT
+   ========================================================== */
+
+html.dark-mode .profile-member-name {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .profile-member-role {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .profile-member-joined {
+    color: var(--dark-text-4) !important;
+}
+
+
+/* ==========================================================
+   PROFILE SECTION HEADERS
+   ========================================================== */
+
+html.dark-mode .profile-section-header h3,
+html.dark-mode .profile-section-header h4 {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .profile-section-header p {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   PROFILE ACTIVITY
+   ========================================================== */
+
+html.dark-mode .profile-activity-item {
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .profile-activity-content strong {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .profile-activity-content span {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   PROFILE SUBSECTION TITLES
+   ========================================================== */
+
+html.dark-mode .profile-subsection-title {
+    color: var(--dark-text-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+
+/* ==========================================================
+   VIEW PROFILE - INFORMATION BOXES
+   ========================================================== */
+
+html.dark-mode .profile-information-item {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .profile-information-label {
+    color: var(--dark-text-3) !important;
+}
+
+html.dark-mode .profile-information-value {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .profile-information-item .text-muted {
+    color: var(--dark-text-4) !important;
+}
+
+
+/* ==========================================================
+   EDIT PROFILE - FORM FIELDS
+   ========================================================== */
+
+html.dark-mode
+.profile-information-item .form-control,
+html.dark-mode
+.profile-information-item .form-select {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode
+    .profile-information-item .form-control:focus,
+    html.dark-mode
+    .profile-information-item .form-select:focus {
+        background: var(--dark-surface-2) !important;
+        border-color: #8ACE79 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, .15) !important;
+    }
+
+    html.dark-mode
+    .profile-information-item .form-control[readonly] {
+        background: #202020 !important;
+        border-color: var(--dark-border) !important;
+        color: var(--dark-text-3) !important;
+    }
+
+
+    /* ==========================================================
+   SELECT OPTIONS
+   ========================================================== */
+
+    html.dark-mode
+    .profile-information-item .form-select option {
+        background: var(--dark-surface-2) !important;
+        color: var(--dark-text) !important;
+    }
+
+
+/* ==========================================================
+   VALID ID
+   ========================================================== */
+
+html.dark-mode .profile-id-image {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+html.dark-mode .profile-id-placeholder {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-3) !important;
+}
+
+    html.dark-mode .profile-id-placeholder strong {
+        color: var(--dark-text) !important;
+    }
+
+    html.dark-mode .profile-id-placeholder span {
+        color: var(--dark-text-3) !important;
+    }
+
+
+/* ==========================================================
+   SMALL / MUTED PROFILE TEXT
+   ========================================================== */
+
+html.dark-mode
+.profile-verification-container .text-muted {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   EDIT PROFILE - CANCEL
+   ========================================================== */
+
+html.dark-mode .profile-cancel-button {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .profile-cancel-button:hover {
+        background: var(--dark-surface-3) !important;
+        border-color: #8ACE79 !important;
+        color: #8ACE79 !important;
+    }
+
+
+/* ==========================================================
+   EDIT PROFILE - GREEN BUTTONS
+   ========================================================== */
+
+html.dark-mode .profile-edit-button,
+html.dark-mode .profile-save-button,
+html.dark-mode .profile-valid-id-button {
+    background: #8ACE79 !important;
+    border-color: #8ACE79 !important;
+    color: #ffffff !important;
+}
+
+    html.dark-mode .profile-edit-button:hover,
+    html.dark-mode .profile-save-button:hover,
+    html.dark-mode .profile-valid-id-button:hover {
+        background: #8ACE79 !important;
+        border-color: #8ACE79 !important;
+        color: #ffffff !important;
+        box-shadow: inset 0 0 0 100px rgba(255, 255, 255, .10) !important;
+    }
+
+
+/* ==========================================================
+   PROFILE PHOTO MODAL
+   ========================================================== */
+
+html.dark-mode .profile-photo-modal-backdrop {
+    background: rgba(0, 0, 0, .65) !important;
+}
+
+html.dark-mode .profile-photo-modal-content {
+    background: var(--dark-surface) !important;
+    border: 1px solid var(--dark-border) !important;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, .45) !important;
+}
+
+html.dark-mode .profile-photo-modal-header {
+    border-color: var(--dark-border) !important;
+}
+
+    html.dark-mode .profile-photo-modal-header h4 {
+        color: var(--dark-text) !important;
+    }
+
+html.dark-mode .profile-photo-modal-button {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .profile-photo-modal-button:hover {
+        background: var(--dark-surface-3) !important;
+    }
+
+html.dark-mode .profile-photo-remove-button {
+    color: #E47878 !important;
+}
+
+html.dark-mode .profile-photo-cancel-button {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* ==========================================================
+   BOOTSTRAP ALERT ON PROFILE
+   ========================================================== */
+
+html.dark-mode .profile-page-layout
+.alert-success {
+    background: var(--dark-green-surface) !important;
+    border-color: #365034 !important;
+    color: #BCE5B4 !important;
+}
+
+
+/* ==========================================================
+   MOBILE PROFILE / MY POSTS BORDERS
+   ========================================================== */
+
+@media (max-width: 650px) {
+
+    html.dark-mode .my-posts-stat {
+        border-color: var(--dark-border) !important;
+    }
+}
+
+/* ==========================================================
+   MEMBER REPORT MODAL - DARK MODE
+   ========================================================== */
+
+
+/* Main modal */
+
+html.dark-mode .report-content {
+    background: var(--dark-surface) !important;
+    border: 1px solid var(--dark-border) !important;
+    color: var(--dark-text) !important;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, .45) !important;
+}
+
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+html.dark-mode .report-header {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html.dark-mode .report-title {
+    color: var(--dark-text) !important;
+}
+
+html.dark-mode .report-post-title {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* Bootstrap close button */
+
+html.dark-mode .report-close {
+    filter: invert(1) grayscale(100%) brightness(180%);
+    opacity: .75;
+}
+
+    html.dark-mode .report-close:hover {
+        opacity: 1;
+    }
+
+
+/* ==========================================================
+   BODY
+   ========================================================== */
+
+html.dark-mode .report-body {
+    background: var(--dark-surface) !important;
+    color: var(--dark-text) !important;
+}
+
+
+/* ==========================================================
+   LABELS
+   ========================================================== */
+
+html.dark-mode .report-label {
+    color: var(--dark-text-2) !important;
+}
+
+
+/* ==========================================================
+   CUSTOM REASON DROPDOWN
+   ========================================================== */
+
+html.dark-mode .report-dropdown-trigger {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .report-dropdown-trigger:hover {
+        background: var(--dark-surface-3) !important;
+        border-color: #505050 !important;
+    }
+
+html.dark-mode .report-custom-dropdown.open
+.report-dropdown-trigger {
+    border-color: #8ACE79 !important;
+    box-shadow: 0 0 0 3px rgba(138, 206, 121, .14) !important;
+}
+
+html.dark-mode .report-dropdown-trigger svg {
+    color: var(--dark-text-3) !important;
+}
+
+
+/* Dropdown menu */
+
+html.dark-mode .report-dropdown-menu {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .4) !important;
+}
+
+
+/* Dropdown options */
+
+html.dark-mode .report-dropdown-option {
+    background: transparent !important;
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .report-dropdown-option:hover,
+    html.dark-mode .report-dropdown-option:focus {
+        background: var(--dark-surface-3) !important;
+        color: #ffffff !important;
+    }
+
+
+    /* Selected option */
+
+    html.dark-mode .report-dropdown-option.selected {
+        background: var(--dark-green-surface) !important;
+        color: #8ACE79 !important;
+    }
+
+
+/* ==========================================================
+   OTHER REASON INPUT
+   ========================================================== */
+
+html.dark-mode .report-input {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .report-input::placeholder {
+        color: var(--dark-text-4) !important;
+    }
+
+    html.dark-mode .report-input:focus {
+        background: var(--dark-surface-2) !important;
+        border-color: #8ACE79 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, .15) !important;
+    }
+
+
+/* ==========================================================
+   DESCRIPTION
+   ========================================================== */
+
+html.dark-mode .report-textarea {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text) !important;
+}
+
+    html.dark-mode .report-textarea::placeholder {
+        color: var(--dark-text-4) !important;
+    }
+
+    html.dark-mode .report-textarea:focus {
+        background: var(--dark-surface-2) !important;
+        border-color: #8ACE79 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 0 3px rgba(138, 206, 121, .15) !important;
+    }
+
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
+
+html.dark-mode .report-footer {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+
+/* ==========================================================
+   CANCEL BUTTON
+   ========================================================== */
+
+html.dark-mode .report-cancel {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border-strong) !important;
+    color: var(--dark-text-2) !important;
+}
+
+    html.dark-mode .report-cancel:hover {
+        background: var(--dark-surface-3) !important;
+        border-color: #505050 !important;
+        color: #ffffff !important;
+    }
+
+
+/* ==========================================================
+   SUBMIT REPORT
+   Keep the report action red
+   ========================================================== */
+
+html.dark-mode .report-submit {
+    background: #C95C5C !important;
+    border-color: #C95C5C !important;
+    color: #ffffff !important;
+}
+
+    html.dark-mode .report-submit:hover {
+        background: #D66A6A !important;
+        border-color: #D66A6A !important;
+        color: #ffffff !important;
+    }
+
+
+/* ==========================================================
+   MODAL BACKDROP
+   ========================================================== */
+
+html.dark-mode .modal-backdrop.show {
+    opacity: .72 !important;
+}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using PETHUB.Helpers;
 
 namespace PETHUB.Models
 {
@@ -14,7 +15,7 @@ namespace PETHUB.Models
         public UserStatus Status { get; set; } = UserStatus.Active;
 
         // Store registration date for  admins and members
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = PhilippineTime.Now;
         // Member-only fields (nullable for Admins)
         public string? Gender { get; set; }
         public DateTime? Birthdate { get; set; }

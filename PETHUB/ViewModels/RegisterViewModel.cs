@@ -31,6 +31,7 @@ namespace PETHUB.ViewModels
         [StringLength(200)]
         public string? StreetAddress { get; set; }
 
+        [Required(ErrorMessage = "Gender is required.")]
         public string Gender { get; set; }
 
         [Required(ErrorMessage = "Birthdate is required.")]
@@ -42,15 +43,27 @@ namespace PETHUB.ViewModels
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password is required.")]
         [DataType(DataType.Password)]
+        [StringLength(
+            100,
+            MinimumLength = 8,
+            ErrorMessage = "Password must be at least 8 characters long."
+        )]
+        [RegularExpression(
+            @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$",
+            ErrorMessage = "Password must contain an uppercase letter, lowercase letter, number, and special character."
+        )]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "Please confirm your password.")]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Passwords do not match.")]
+        [Compare(
+            "Password",
+            ErrorMessage = "Passwords do not match."
+        )]
         public string ConfirmPassword { get; set; }
 
-        [Required(ErrorMessage = "You must accept the Terms and Conditions.")]
         [Display(Name = "I agree to the Terms and Conditions")]
         public bool AcceptTerms { get; set; }
 

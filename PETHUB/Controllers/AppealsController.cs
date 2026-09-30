@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PETHUB.Data;
 using PETHUB.Models;
+using PETHUB.Helpers;
 using PETHUB.ViewModels;
 
 namespace PETHUB.Controllers
@@ -229,7 +230,7 @@ namespace PETHUB.Controllers
                     LostFoundId = null,
                     AppealMessage = model.AppealMessage,
                     Status = AppealStatus.Pending,
-                    DateCreated = DateTime.Now
+                    DateCreated = PhilippineTime.Now
                 };
 
                 _context.Appeals.Add(appeal);
@@ -297,7 +298,7 @@ namespace PETHUB.Controllers
                     LostFoundId = lostFound.LostFoundId,
                     AppealMessage = model.AppealMessage,
                     Status = AppealStatus.Pending,
-                    DateCreated = DateTime.Now
+                    DateCreated = PhilippineTime.Now
                 };
 
                 _context.Appeals.Add(appeal);

@@ -1015,33 +1015,51 @@
             });
 
 
-        /* ==========================================================
-           PET TIP COMMENT THREAD TOGGLE
-           ========================================================== */
+            /* ==========================================================
+       PET TIP COMMENT THREAD TOGGLE
+       Works for initial, searched, and dynamically loaded posts.
+       ========================================================== */
 
-        document.querySelectorAll("[data-comment-toggle]")
-            .forEach(function (button) {
+    document.addEventListener("click", function (event) {
 
-                button.addEventListener("click", function () {
+        const button =
+            event.target.closest("[data-comment-toggle]");
 
-                    const postId =
-                        button.getAttribute("data-comment-toggle");
+        if (!button) {
+            return;
+        }
 
-                    const comments =
-                        document.querySelector(
-                            '[data-comments-for="' + postId + '"]'
-                        );
+        event.preventDefault();
 
-                    if (!comments) {
-                        return;
-                    }
+        const postId =
+            button.getAttribute("data-comment-toggle");
 
-                    comments.hidden = !comments.hidden;
+        const comments =
+            document.querySelector(
+                '[data-comments-for="' + postId + '"]'
+            );
 
-                });
+        if (!comments) {
+            return;
+        }
 
-            });
+        comments.hidden = !comments.hidden;
 
+
+        // Focus the comment box when opened.
+        if (!comments.hidden) {
+
+            const input =
+                comments.querySelector(
+                    "[data-comment-input]"
+                );
+
+            if (input) {
+                input.focus();
+            }
+        }
+
+    });
 
             /* ==========================================================
                SAVE / FAVORITE

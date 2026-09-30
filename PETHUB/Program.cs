@@ -20,6 +20,14 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     // Require users to confirm their email before logging in
     options.SignIn.RequireConfirmedEmail = true;
 
+    // require a strong password with at least 8 characters, including uppercase, lowercase, digit, and special character
+    options.Password.RequiredLength = 8;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireDigit = true;
+    options.Password.RequireNonAlphanumeric = true;
+
+
     // Uses the custom 10-minute provider for password resets
     options.Tokens.PasswordResetTokenProvider = "PETHubPasswordReset";
 
@@ -92,6 +100,9 @@ using (var scope = app.Services.CreateScope())
 
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseAuthentication(); //Added to identify the user and redirect appropriately to the guest page if not authenticated

@@ -1,4 +1,5 @@
 @model PETHUB.Models.LostFound
+@using PETHUB.Helpers
 
 @{
     ViewData["Title"] = "Create Lost & Found Report";
@@ -218,7 +219,7 @@
                         <input asp-for="LostDate"
                                type="date"
                                class="form-control"
-                               max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                               max="@PhilippineTime.Now.Date.ToString("yyyy-MM-dd")" />
 
                         <span asp-validation-for="LostDate"
                               class="text-danger">

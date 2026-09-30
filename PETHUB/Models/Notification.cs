@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PETHUB.Helpers;   
 
 namespace PETHUB.Models
 {
@@ -71,6 +72,6 @@ namespace PETHUB.Models
         public bool IsSeen { get; set; } = false;
 
         // Created date
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = PhilippineTime.Now;
     }
 }

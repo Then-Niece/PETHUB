@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using PETHUB.Helpers;
 using PETHUB.Models;
 
 namespace PETHUB.Services
@@ -46,7 +47,7 @@ namespace PETHUB.Services
                 Role = role,
                 Action = action,
                 Description = description,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = PhilippineTime.Now
             };
 
             // Add the new record to EF Core's change tracker.

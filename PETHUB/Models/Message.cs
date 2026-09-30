@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PETHUB.Helpers;
 
 namespace PETHUB.Models
 {
@@ -51,6 +52,6 @@ namespace PETHUB.Models
         // TIMESTAMP
         // =========================================================
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = PhilippineTime.Now;
     }
 }

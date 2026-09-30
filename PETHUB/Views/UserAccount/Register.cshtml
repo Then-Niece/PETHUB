@@ -5,10 +5,12 @@
     ViewData["Title"] = "Register";
     ViewData["HideSidebar"] = true;
 
-    ViewData["Province"] = "";
-    ViewData["City"] = "";
-    ViewData["Barangay"] = "";
+    ViewData["Province"] ??= Model?.Province ?? "";
+    ViewData["City"] ??= Model?.City ?? "";
+    ViewData["Barangay"] ??= Model?.Barangay ?? "";
+    ViewData["StreetAddress"] ??= Model?.StreetAddress ?? "";
 }
+
 
 <link rel="stylesheet"
       href="~/css/register.css"
@@ -18,9 +20,55 @@
       href="~/css/terms-modal.css"
       asp-append-version="true" />
 
+
+<style>
+
+    /* =========================================================
+           REQUIRED FIELD MARK
+        ========================================================== */
+
+    .required-mark {
+        color: #dc3545;
+        margin-left: 2px;
+        font-weight: 700;
+    }
+
+
+    /* Birthdate comes from a reusable partial,
+           so add the required mark only on Register. */
+
+    .register-birthdate-required .form-label::after {
+        content: " *";
+        color: #dc3545;
+        font-weight: 700;
+    }
+
+
+    /* Address fields are also from a reusable partial.
+           Only show the required marks while inside Register. */
+
+    .register-address label[for="Province"]::after,
+    .register-address label[for="City"]::after,
+    .register-address label[for="Barangay"]::after {
+        content: " *";
+        color: #dc3545;
+        font-weight: 700;
+    }
+
+
+    .register-required-note {
+        margin: 0 0 1.25rem;
+        font-size: 0.82rem;
+        color: #6b7280;
+    }
+
+</style>
+
+
 <div class="register-page">
 
     <div class="register-wrapper">
+
 
         <!-- =====================================================
              HEADER
@@ -33,15 +81,20 @@
                  class="register-logo" />
 
             <div>
-                <h1>Create your PetHub account</h1>
+
+                <h1>
+                    Create your PetHub account
+                </h1>
 
                 <p>
                     Join the community and help pets find loving homes,
                     reconnect with their families, and meet responsible owners.
                 </p>
+
             </div>
 
         </div>
+
 
 
         <!-- =====================================================
@@ -53,14 +106,17 @@
             <form asp-action="Register"
                   method="post"
                   enctype="multipart/form-data"
-                  class="register-form">
+                  class="register-form"
+                  id="registerForm">
 
                 @Html.AntiForgeryToken()
 
+                <!-- VALIDATION SUMMARY -->
 
                 <div asp-validation-summary="ModelOnly"
                      class="register-validation-summary text-danger">
                 </div>
+
 
 
                 <!-- =================================================
@@ -72,18 +128,31 @@
                     <div class="register-section-heading">
 
                         <div class="register-section-icon">
+
                             <i data-lucide="user-round"></i>
+
                         </div>
 
                         <div>
-                            <h2>Personal information</h2>
-                            <p>Tell us a little about yourself.</p>
+
+                            <h2>
+                                Personal information
+                            </h2>
+
+                            <p>
+                                Tell us a little about yourself.
+                            </p>
+
                         </div>
 
                     </div>
 
 
+
                     <div class="register-grid">
+
+
+                        <!-- FIRST NAME -->
 
                         <div class="floating-field">
 
@@ -94,7 +163,10 @@
 
                             <label asp-for="FirstName"
                                    class="floating-label">
+
                                 First Name
+                                <span class="required-mark">*</span>
+
                             </label>
 
                             <span asp-validation-for="FirstName"
@@ -102,6 +174,10 @@
                             </span>
 
                         </div>
+
+
+
+                        <!-- MIDDLE NAME -->
 
                         <div class="floating-field">
 
@@ -112,7 +188,9 @@
 
                             <label asp-for="MiddleName"
                                    class="floating-label">
+
                                 Middle Name
+
                             </label>
 
                             <span asp-validation-for="MiddleName"
@@ -121,6 +199,9 @@
 
                         </div>
 
+
+
+                        <!-- LAST NAME -->
 
                         <div class="floating-field">
 
@@ -131,7 +212,10 @@
 
                             <label asp-for="LastName"
                                    class="floating-label">
+
                                 Last Name
+                                <span class="required-mark">*</span>
+
                             </label>
 
                             <span asp-validation-for="LastName"
@@ -140,6 +224,9 @@
 
                         </div>
 
+
+
+                        <!-- EMAIL -->
 
                         <div class="floating-field">
 
@@ -150,7 +237,10 @@
 
                             <label asp-for="Email"
                                    class="floating-label">
+
                                 Email Address
+                                <span class="required-mark">*</span>
+
                             </label>
 
                             <span asp-validation-for="Email"
@@ -159,6 +249,9 @@
 
                         </div>
 
+
+
+                        <!-- CONTACT NUMBER -->
 
                         <div class="floating-field register-contact-field">
 
@@ -172,7 +265,10 @@
 
                             <label asp-for="ContactNumber"
                                    class="floating-label">
+
                                 Contact Number
+                                <span class="required-mark">*</span>
+
                             </label>
 
                             <span asp-validation-for="ContactNumber"
@@ -182,9 +278,12 @@
                         </div>
 
 
-                        <div class="register-field">
 
-                           <partial name="Components/_DateFields"
+                        <!-- BIRTHDATE -->
+
+                        <div class="register-field register-birthdate-required">
+
+                            <partial name="Components/_DateFields"
                                      model='new PETHUB.ViewModels.DateFieldsViewModel
                                      {
                                          FieldName = "Birthdate",
@@ -194,44 +293,67 @@
                                          MinimumAge = 18
                                      }' />
 
-                            <span asp-validation-for="Birthdate"
+<span asp-validation-for="Birthdate"
                                   class="field-error">
                             </span>
 
                         </div>
 
 
-                        <div class="register-field register-full-width register-gender-field">
+
+                        <!-- GENDER -->
+
+                        <div class="register-field
+                            register-full-width
+                            register-gender-field">
 
                             <label class="register-field-label">
+
                                 Gender
+                                <span class="required-mark">*</span>
+
                             </label>
+
 
                             <div class="gender-options">
 
+
                                 <label class="gender-option">
+
                                     <input asp-for="Gender"
                                            type="radio"
                                            value="Male" />
 
                                     <span>
+
                                         <i data-lucide="user"></i>
+
                                         Male
+
                                     </span>
+
                                 </label>
 
+
                                 <label class="gender-option">
+
                                     <input asp-for="Gender"
                                            type="radio"
                                            value="Female" />
 
                                     <span>
+
                                         <i data-lucide="user"></i>
+
                                         Female
+
                                     </span>
+
                                 </label>
 
+
                             </div>
+
 
                             <span asp-validation-for="Gender"
                                   class="field-error">
@@ -239,9 +361,11 @@
 
                         </div>
 
+
                     </div>
 
                 </section>
+
 
 
                 <!-- =================================================
@@ -253,12 +377,21 @@
                     <div class="register-section-heading">
 
                         <div class="register-section-icon">
+
                             <i data-lucide="map-pin"></i>
+
                         </div>
 
                         <div>
-                            <h2>Address</h2>
-                            <p>Provide your current location information.</p>
+
+                            <h2>
+                                Address
+                            </h2>
+
+                            <p>
+                                Provide your current location information.
+                            </p>
+
                         </div>
 
                     </div>
@@ -273,6 +406,7 @@
                 </section>
 
 
+
                 <!-- =================================================
                      ACCOUNT INFORMATION
                 ================================================== -->
@@ -282,18 +416,31 @@
                     <div class="register-section-heading">
 
                         <div class="register-section-icon">
+
                             <i data-lucide="shield-check"></i>
+
                         </div>
 
                         <div>
-                            <h2>Account information</h2>
-                            <p>Choose your username and secure your account.</p>
+
+                            <h2>
+                                Account information
+                            </h2>
+
+                            <p>
+                                Choose your username and secure your account.
+                            </p>
+
                         </div>
 
                     </div>
 
 
+
                     <div class="register-grid">
+
+
+                        <!-- USERNAME -->
 
                         <div class="floating-field register-full-width">
 
@@ -304,7 +451,10 @@
 
                             <label asp-for="UserName"
                                    class="floating-label">
+
                                 Username
+                                <span class="required-mark">*</span>
+
                             </label>
 
                             <span asp-validation-for="UserName"
@@ -313,6 +463,9 @@
 
                         </div>
 
+
+
+                        <!-- PASSWORD -->
 
                         <div class="floating-field password-field">
 
@@ -325,8 +478,12 @@
 
                             <label asp-for="Password"
                                    class="floating-label">
+
                                 Password
+                                <span class="required-mark">*</span>
+
                             </label>
+
 
                             <button type="button"
                                     class="register-password-toggle password-toggle"
@@ -337,12 +494,16 @@
 
                             </button>
 
+
                             <span asp-validation-for="Password"
                                   class="field-error">
                             </span>
 
                         </div>
 
+
+
+                        <!-- CONFIRM PASSWORD -->
 
                         <div class="floating-field password-field">
 
@@ -355,8 +516,12 @@
 
                             <label asp-for="ConfirmPassword"
                                    class="floating-label">
+
                                 Confirm Password
+                                <span class="required-mark">*</span>
+
                             </label>
+
 
                             <button type="button"
                                     class="register-password-toggle password-toggle"
@@ -367,15 +532,114 @@
 
                             </button>
 
+
                             <span asp-validation-for="ConfirmPassword"
                                   class="field-error">
                             </span>
 
                         </div>
 
+
+
+                        <!-- =================================================
+                             PASSWORD REQUIREMENTS
+                        ================================================== -->
+
+                        <div class="password-requirements register-full-width">
+
+                            <div class="password-requirements-header">
+
+                                <div class="password-requirements-icon">
+
+                                    <i data-lucide="shield-check"></i>
+
+                                </div>
+
+
+                                <div>
+
+                                    <strong>
+                                        Password requirements
+                                    </strong>
+
+                                    <span>
+                                        Use a secure password with all
+                                        of the following:
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="password-requirements-grid">
+
+
+                                <div class="password-rule">
+
+                                    <i data-lucide="check-circle-2"></i>
+
+                                    <span>
+                                        8+ characters
+                                    </span>
+
+                                </div>
+
+
+                                <div class="password-rule">
+
+                                    <i data-lucide="check-circle-2"></i>
+
+                                    <span>
+                                        Uppercase letter
+                                    </span>
+
+                                </div>
+
+
+                                <div class="password-rule">
+
+                                    <i data-lucide="check-circle-2"></i>
+
+                                    <span>
+                                        Lowercase letter
+                                    </span>
+
+                                </div>
+
+
+                                <div class="password-rule">
+
+                                    <i data-lucide="check-circle-2"></i>
+
+                                    <span>
+                                        Number
+                                    </span>
+
+                                </div>
+
+
+                                <div class="password-rule">
+
+                                    <i data-lucide="check-circle-2"></i>
+
+                                    <span>
+                                        Special character
+                                    </span>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
                     </div>
 
                 </section>
+
 
 
                 <!-- =================================================
@@ -387,40 +651,67 @@
                     <div class="register-section-heading">
 
                         <div class="register-section-icon">
+
                             <i data-lucide="badge-check"></i>
+
                         </div>
 
                         <div>
-                            <h2>Identity verification</h2>
+
+                            <h2>
+                                Identity verification
+                            </h2>
+
                             <p>
                                 Upload a valid ID photo to help us maintain
                                 a safer PetHub community.
                             </p>
+
                         </div>
 
                     </div>
 
 
+
                     <div class="id-upload-field">
+
 
                         <label asp-for="IdPhoto"
                                class="register-field-label">
+
                             ID Photo
+                            <span class="required-mark">*</span>
+
                         </label>
+
+
 
                         <label for="IdPhotoInput"
                                class="id-upload-box">
 
+
                             <div class="id-upload-icon">
+
                                 <i data-lucide="upload-cloud"></i>
+
                             </div>
+
 
                             <div class="id-upload-text">
-                                <strong>Choose an ID photo</strong>
-                                <span>Click here to select an image</span>
+
+                                <strong>
+                                    Choose an ID photo
+                                </strong>
+
+                                <span>
+                                    Click here to select an image
+                                </span>
+
                             </div>
 
+
                         </label>
+
 
 
                         <input asp-for="IdPhoto"
@@ -429,28 +720,34 @@
                                class="id-file-input"
                                accept="image/*" />
 
+
                         <span asp-validation-for="IdPhoto"
                               class="field-error">
                         </span>
+
 
 
                         <div id="idPhotoPreview"
                              class="id-photo-preview">
                         </div>
 
+
                     </div>
 
                 </section>
 
 
+
                 <!-- =================================================
-                     TERMS
+                     TERMS AND CONDITIONS
                 ================================================== -->
 
                 <div class="register-terms">
 
                     <input asp-for="AcceptTerms"
+                           id="AcceptTerms"
                            class="form-check-input" />
+
 
                     <label asp-for="AcceptTerms">
 
@@ -459,16 +756,22 @@
                         <a href="#"
                            data-bs-toggle="modal"
                            data-bs-target="#termsModal">
+
                             PetHub Terms and Conditions
-                        </a>.
+
+                        </a>
+
+                        <span class="required-mark">*</span>
 
                     </label>
 
                 </div>
 
+
                 <span asp-validation-for="AcceptTerms"
                       class="field-error terms-error">
                 </span>
+
 
 
                 <!-- =================================================
@@ -476,6 +779,7 @@
                 ================================================== -->
 
                 <div class="register-actions">
+
 
                     <button type="submit"
                             class="register-submit-btn">
@@ -485,16 +789,22 @@
                     </button>
 
 
+
                     <div class="register-login-link">
 
-                        <span>Already have an account?</span>
+                        <span>
+                            Already have an account?
+                        </span>
 
                         <a asp-controller="UserAccount"
                            asp-action="Login">
+
                             Log in
+
                         </a>
 
                     </div>
+
 
 
                     <a asp-controller="Home"
@@ -507,7 +817,9 @@
 
                     </a>
 
+
                 </div>
+
 
             </form>
 
@@ -518,20 +830,137 @@
 </div>
 
 
+
 <partial name="_TermsAndConditionsModal" />
+
 
 
 @section Scripts {
 
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial"
+        );
     }
+
+    <script>
+        $(function () {
+
+            const form = $("#registerForm");
+            const terms = $("#AcceptTerms");
+            const termsError =
+                $('[data-valmsg-for="AcceptTerms"]');
+
+
+            form.on("submit", function (event) {
+
+                if (!terms.is(":checked")) {
+
+                    event.preventDefault();
+
+                    termsError
+                        .removeClass("field-validation-valid")
+                        .addClass("field-validation-error")
+                        .text("You must accept the Terms and Conditions.");
+
+
+                    document
+                        .querySelector(".register-terms")
+                        .scrollIntoView({
+                            behavior: "smooth",
+                            block: "center"
+                        });
+
+                    return false;
+                }
+
+
+                termsError
+                    .removeClass("field-validation-error")
+                    .addClass("field-validation-valid")
+                    .text("");
+
+            });
+
+
+            terms.on("change", function () {
+
+                if (this.checked) {
+
+                    termsError
+                        .removeClass("field-validation-error")
+                        .addClass("field-validation-valid")
+                        .text("");
+                }
+
+            });
+
+        });
+    </script>
+
+
+    <!-- =====================================================
+         SCROLL TO FIRST INVALID FIELD
+    ====================================================== -->
+
+    <script>
+
+        $(function () {
+
+            const form = $("#registerForm");
+
+
+            form.on(
+                "invalid-form.validate",
+                function () {
+
+                    const firstError =
+                        document.querySelector(
+                            "#registerForm .input-validation-error"
+                        );
+
+
+                    if (!firstError)
+                        return;
+
+
+                    firstError.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+
+
+                    setTimeout(
+                        function () {
+
+                            firstError.focus({
+                                preventScroll: true
+                            });
+
+                        },
+                        300
+                    );
+
+                }
+            );
+
+        });
+
+    </script>
+
+
+
+    <!-- =====================================================
+         IMAGE PREVIEW
+    ====================================================== -->
 
     <script src="~/js/imagePreviewHelper.js"
             asp-append-version="true">
     </script>
 
+
     <script>
+
         setupImagePreview(
             "IdPhotoInput",
             "idPhotoPreview",
@@ -541,10 +970,17 @@
                 previewHeight: 150
             }
         );
+
     </script>
 
-    <script src="~/js/address-helper.js" asp-append-version="true"></script>
 
-   
+
+    <!-- =====================================================
+         ADDRESS
+    ====================================================== -->
+
+    <script src="~/js/address-helper.js"
+            asp-append-version="true">
+    </script>
 
 }

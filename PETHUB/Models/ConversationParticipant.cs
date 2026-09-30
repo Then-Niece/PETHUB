@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PETHUB.Helpers;
 
 namespace PETHUB.Models
 {
@@ -20,7 +21,7 @@ namespace PETHUB.Models
 
 
         // When the member joined/was added to the conversation
-        public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
+        public DateTime JoinedAt { get; set; } = PhilippineTime.Now;
 
 
         // ID of the most recent message this user has read

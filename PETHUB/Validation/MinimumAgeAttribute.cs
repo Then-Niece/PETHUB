@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PETHUB.Helpers;
 
 namespace PETHUB.Validation
 {
@@ -32,7 +33,7 @@ namespace PETHUB.Validation
             }
 
 
-            var today = DateTime.Today;
+            var today = PhilippineTime.Now.Date;
 
 
             // =====================================================
