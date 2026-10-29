@@ -186,7 +186,9 @@
         </div>
 
 
-        <div class="settings-row settings-row-disabled">
+        <a asp-controller="UserAccount"
+           asp-action="ChangePassword"
+           class="settings-row settings-row-link text-decoration-none text-reset">
 
             <div class="settings-row-info">
 
@@ -195,25 +197,17 @@
                 </div>
 
                 <div>
-
-                    <h3>
-                        Password
-                    </h3>
-
-                    <p>
-                        Change your account password.
-                    </p>
-
+                    <h3>Password</h3>
+                    <p>Change your account password.</p>
                 </div>
 
             </div>
 
-
             <span class="settings-coming-soon">
-                Coming next
+                Change
             </span>
 
-        </div>
+        </a>
 
     </section>
 
