@@ -126,8 +126,10 @@
         </div>
 
 
-        <div class="settings-row settings-row-disabled">
-
+        <a asp-controller="UserAccount"
+           asp-action="ChangeUsername"
+           class="settings-row settings-row-link text-decoration-none text-reset">
+        
             <div class="settings-row-info">
 
                 <div class="settings-row-icon">
@@ -150,10 +152,11 @@
 
 
             <span class="settings-coming-soon">
-                Coming next
+                Change Username
             </span>
+                    
 
-        </div>
+        </a>
 
 
         <div class="settings-row settings-row-disabled">
@@ -204,7 +207,7 @@
             </div>
 
             <span class="settings-coming-soon">
-                Change
+                Change Password
             </span>
 
         </a>

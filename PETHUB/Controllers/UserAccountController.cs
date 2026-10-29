@@ -1372,12 +1372,54 @@ namespace PETHUB.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
 
-                TempData["SuccessMessage"] = "Password Changed successfully.";
                 return View(model);
             }
+
+            TempData["SuccessMessage"] = "Password Changed successfully.";
 
             return RedirectToAction(nameof(Settings));
         }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult ChangeUsername()
+        {
+            return View(new ChangeUsernameViewModel());
+        }
+
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeUsername(ChangeUsernameViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if(user == null)
+            {
+                return Challenge();
+            }
+            
+            var result = await _userManager.SetUserNameAsync(user, model.NewUsername);
+
+            if(!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(model);
+            }
+            await _signInManager.RefreshSignInAsync(user);
+
+            TempData["SuccessMessage"] = "Your username has been changed successfully.";
+
+            return RedirectToAction(nameof(Settings));
+        }
     }
 }
